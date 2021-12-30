@@ -1,0 +1,32 @@
+[package]
+name = "numera"
+description = "numbers, arithmetic"
+version = "0.0.0"
+edition = "2021"
+rust-version = "1.57"
+authors = ["José Luis Cruz <joseluis@andamira.net>"]
+repository = "https://github.com/andamira/numera"
+documentation = "https://docs.rs/numera"
+license = "MIT/Apache-2.0"
+include = [
+	"src/**/*.rs",
+	"Cargo.toml",
+	"LICENSE*",
+	"README.md",
+]
+categories = ["mathematics", "data-structures"]
+keywords = ["math", "mathematics", "number", "numeral", "numeric"]
+publish = false
+
+[dependencies]
+
+[dev-dependencies]
+
+[build-dependencies]
+
+[package.metadata.docs.rs]
+rustdoc-args = [ "--html-in-header", "./src/docs-header.html" ]
+
+[badges]
+# https://doc.rust-lang.org/cargo/reference/manifest.html#the-badges-section
+maintenance = { status = "actively-developed" }
