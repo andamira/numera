@@ -40,4 +40,4 @@ t = "test -- --nocapture"
 t1 = "test -- --test-threads 1 --nocapture"
 
 [build]
-rustdocflags = [ "--html-in-header", "./res/docs-header.html"]
+rustdocflags = [ "--html-in-header", "./src/docs-header.html"]
