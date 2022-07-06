@@ -7,12 +7,16 @@ use num_traits::float::{Float, FloatConst};
 ///
 /// [w1]: https://en.wikipedia.org/wiki/Real_number
 /// [m1]: https://mathworld.wolfram.com/RealNumber.html
+///
+/// See also:
+/// - <https://en.wikipedia.org/wiki/Real_data_type>
 #[repr(transparent)]
 #[derive(Debug, Clone, Copy, Default, PartialEq, PartialOrd)]
 pub struct Real<F>(F)
+where
     // Float already includes:
     // Copy + PartialEq + PartialOrd + Zero + One + Neg + NumOps + NumCast
-    where F: Float;
+    F: Float;
 
 impl<F: Float> Real<F> {
     /// Returns a new `Real` with any value supported by the underlying type.
@@ -65,50 +69,12 @@ crate::impl_ops![F, Real, Real<F>, Self, Float];
 
 mod impl_from {
     use super::Real;
-    use half::{bf16, f16};
-    // use twofloat::TwoFloat; // WIP
-
-    impl From<Real<f16>> for Real<f32> {
-        fn from(f: Real<f16>) -> Self {
-            Self(f.0.to_f32())
-        }
-    }
-
-    impl From<Real<bf16>> for Real<f32> {
-        fn from(f: Real<bf16>) -> Self {
-            Self(f.0.to_f32())
-        }
-    }
-
-    impl From<Real<f16>> for Real<f64> {
-        fn from(f: Real<f16>) -> Self {
-            Self(f.0.to_f64())
-        }
-    }
-
-    impl From<Real<bf16>> for Real<f64> {
-        fn from(f: Real<bf16>) -> Self {
-            Self(f.0.to_f64())
-        }
-    }
 
     impl From<Real<f32>> for Real<f64> {
         fn from(f: Real<f32>) -> Self {
             Self(f.0.into())
         }
     }
-
-    // impl From<Real<f32>> for Real<TwoFloat> {
-    //     fn from(f: Real<f32>) -> Self {
-    //         Self(TwoFloat::from(f.0))
-    //     }
-    // }
-
-    // impl From<Real<f64>> for Real<TwoFloat> {
-    //     fn from(f: Real<f64>) -> Self {
-    //         Self(TwoFloat::from(f.0))
-    //     }
-    // }
 
     // /// From `f64` to `f32`.
     // impl TryFrom<Real<f64>> for Real<f32> {
@@ -123,8 +89,6 @@ mod impl_from {
 #[cfg(test)]
 mod tests {
     use super::Real;
-    // use half::{bf16, f16};
-    // use twofloat::TwoFloat; // WIP
     use float_eq::assert_float_eq;
 
     #[test]

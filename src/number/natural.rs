@@ -3,17 +3,30 @@
 use num_integer::Integer as NumInt;
 use num_traits::Unsigned;
 
-/// A `Natural` number ([w][w1]/[m][m1]),
-/// from the set $\natnums \lbrace 0, 1, 2, 3 … \rbrace $
+/// A `Natural` number ([w][w1]/[m][m1]), from the set
+/// $\N \lbrace 0, 1, 2, 3 … \rbrace $ of non-negative integers.
 ///
-/// AKA $\natnums _0$, AKA the set of positive integers $|\Z|$
+/// Alternative notations:
+/// $ \N _0 = \N ^0 = \Z^+_0 = \Z _{\ge 0} = \lbrace 0 \rbrace \cup \Z^+ $
+///
+/// # About 0
+/// There's no unanimous consensus on whether the natural numbers include 0 or
+/// not. This library is opinionated in this regard, for the sake of clarity
+/// and simplicity, to include 0 in the set of $\N$. This have the following
+/// advantages:
+/// - Simpler implementation. No need to distinguish between *naturals* and
+///   *whole* numbers in the code, (also whole numbers don't have a dedicated
+///   mathematical symbol, and don't have a dedicated word in many languages).
+/// - There are methods to manage unwated zeroes in `Natural` and `Integer`.
+/// - Agrees with the *[ISO 80000-2]* standard.
 ///
 /// [w1]: https://en.wikipedia.org/wiki/Natural_number
 /// [m1]: https://mathworld.wolfram.com/NaturalNumber.html
+/// [ISO 80000-2]: https://en.wikipedia.org/wiki/ISO/IEC_80000#Part_2:_Mathematics
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord)]
 #[repr(transparent)]
 pub struct Natural<N>(N)
-    where
+where
     // NumInt already includes:
     // Sized + PartialEq + Eq + PartialOrd + Ord + Zero + One + NumOps
     N: NumInt + Unsigned;
@@ -45,7 +58,7 @@ impl<N: NumInt + Unsigned> Natural<N> {
     /// If the inner value is `0` then it is changed to `1` and returns `true`.
     ///
     /// Returns `false` otherwise.
-    pub fn let0be1(&mut self) -> bool {
+    pub fn if0_set1(&mut self) -> bool {
         if self.0.is_zero() {
             self.0 = N::one();
             true
@@ -57,9 +70,21 @@ impl<N: NumInt + Unsigned> Natural<N> {
     /// If the inner value is `1` then it is changed to `0` and returns `true`.
     ///
     /// Returns `false` otherwise.
-    pub fn let1be0(&mut self) -> bool {
+    pub fn if1_set0(&mut self) -> bool {
         if self.0.is_zero() {
             self.0 = N::one();
+            true
+        } else {
+            false
+        }
+    }
+
+    /// If the inner value is `x` then it is changed to `y` and returns `true`.
+    ///
+    /// Returns `false` otherwise.
+    pub fn ifx_sety(&mut self, x: N, y: N) -> bool {
+        if self.0 == x {
+            self.0 = y;
             true
         } else {
             false
@@ -75,7 +100,7 @@ impl<N: NumInt + Unsigned + Clone> Natural<N> {
 }
 
 mod traits_implementations {
-    use super::{Natural, Unsigned, NumInt};
+    use super::{Natural, NumInt, Unsigned};
     use core::hash::{Hash, Hasher};
     use num_traits::{One, Zero};
     use std::fmt;

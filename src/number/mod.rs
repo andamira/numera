@@ -17,11 +17,9 @@
 
 #![allow(non_camel_case_types)]
 
-use num_traits::{Zero, One};
+use num_traits::{One, Zero};
 
 mod macros;
-
-pub mod naming;
 
 pub mod integer;
 // pub mod irrational;
@@ -36,11 +34,11 @@ pub use {
     integer::Integer,
     // irrational::Irrational,
     natural::Natural,
-    rational::{Fraction, FractionType, Rational},
+    rational::Rational,
     real::Real,
 };
 
-/// A common API for all 
+/// A common API for all numbers.
 pub trait NumberApi: Zero + One {
     type Value;
 
@@ -92,7 +90,6 @@ pub enum NumberType {
 
     ///
     Complex,
-
     // ///
     // Quaternion,
     //

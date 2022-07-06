@@ -1,7 +1,7 @@
 [package]
 name = "numera"
 description = "numbers, arithmetic"
-version = "0.0.1"
+version = "0.0.2"
 edition = "2021"
 rust-version = "1.57"
 authors = ["José Luis Cruz <joseluis@andamira.net>"]
@@ -9,10 +9,11 @@ repository = "https://github.com/andamira/numera"
 documentation = "https://docs.rs/numera"
 license = "MIT/Apache-2.0"
 include = [
-	"src/**/*.rs",
-	"Cargo.toml",
-	"LICENSE*",
-	"README.md",
+	"/src/**/*.rs",
+	"/Cargo.toml",
+	"/res/*",
+	"/LICENSE-*.md",
+	"/README.md",
 ]
 categories = ["mathematics", "data-structures"]
 keywords = ["math", "mathematics", "number", "numeral", "numeric"]
@@ -24,23 +25,12 @@ num-traits = "^0.2"  # https://docs.rs/num-traits/
 
 float_eq = "^0.7"
 
-# f16 & bf16
-half = { version = "^1.8", features = ["num-traits"] }
-
-# ± f8
-# ufloat8 = "0.1.0"
-
-# ± f128
-# twofloat = "0.4.1" # WAITING for 0.5 with num-traits support
-# twofloat =  { git = "https://github.com/ajtribick/twofloat/" }
-
 [dev-dependencies]
 
 [build-dependencies]
 
 [package.metadata.docs.rs]
-rustdoc-args = [ "--html-in-header", "./src/docs-header.html" ]
+rustdoc-args = [ "--html-in-header", "./res/header.html" ]
 
 [badges]
-# https://doc.rust-lang.org/cargo/reference/manifest.html#the-badges-section
 maintenance = { status = "actively-developed" }

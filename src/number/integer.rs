@@ -46,7 +46,7 @@ impl<I: NumInt + Neg> Integer<I> {
     /// If the inner value is `0` then it is changed to `1`, and returns `true`.
     ///
     /// Returns `false` otherwise.
-    pub fn let0be1(&mut self) -> bool {
+    pub fn if0_set1(&mut self) -> bool {
         if self.0.is_zero() {
             self.0 = I::one();
             true
@@ -58,9 +58,21 @@ impl<I: NumInt + Neg> Integer<I> {
     /// If the inner value is `1` then it is changed to `0`, and returns `true`.
     ///
     /// Returns `false` otherwise.
-    pub fn let1be0(&mut self) -> bool {
+    pub fn if1_set0(&mut self) -> bool {
         if self.0.is_zero() {
             self.0 = I::one();
+            true
+        } else {
+            false
+        }
+    }
+
+    /// If the inner value is `x` then it is changed to `y` and returns `true`.
+    ///
+    /// Returns `false` otherwise.
+    pub fn ifx_sety(&mut self, x: I, y: I) -> bool {
+        if self.0 == x {
+            self.0 = y;
             true
         } else {
             false
@@ -77,6 +89,7 @@ impl<I: NumInt + Neg + Clone> Integer<I> {
 
 mod traits_implementations {
     use super::{Integer, Neg, NumInt};
+
     use core::hash::{Hash, Hasher};
     use num_traits::{One, Zero};
     use std::fmt;
