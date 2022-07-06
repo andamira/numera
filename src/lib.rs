@@ -5,5 +5,3 @@
 
 pub mod number;
 
-#[doc(inline)]
-pub use number::{Integer, Natural, NumberType, Rational, Real};

@@ -20,10 +20,11 @@ keywords = ["math", "mathematics", "number", "numeral", "numeric"]
 publish = false
 
 [dependencies]
-num-integer = "^0.1" # https://docs.rs/num-integer/
-num-traits = "^0.2"  # https://docs.rs/num-traits/
+num-integer = "0.1.45" # https://docs.rs/num-integer/
+num-traits = "0.2.15"  # https://docs.rs/num-traits/
 
-float_eq = "^0.7"
+float_eq = "1.0.0"
+min_max_traits = "0.1.0"
 
 [dev-dependencies]
 

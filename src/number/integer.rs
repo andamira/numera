@@ -1,205 +1,340 @@
-//! An integer [] is a number that can be written without a fractional component.
+// numera::number::integer
+//
+//!
+//
+
+//! An *integer* ([w][0w]/[m][0m]) is a number that can be written
+//! without a fractional component.
 //!
 //! For example, 21, 4, 0, and −2048 are integers, while 9.75, 5+1/2, and √2 are not.
 //!
+//! # Integer subsets
+//!
+//! *Natural numbers* ([m][1m]), *Counting numbers* ([m][2m]) and *Whole numbers*
+//! ([m][3m]) are tradicitonal ambiguous ways to refer to different subsets of
+//! integers, without consensus on whether *zero* ([m][4m]) is included in
+//! any of those sets.
+//!
+//! This is why the integer types defined here are named using a more explicit,
+//! unambiguous notation.
+//!
 //! [0w]: https://en.wikipedia.org/wiki/Integer
+//! [0m]: https://mathworld.wolfram.com/Integer.html
+//! [1m]: https://mathworld.wolfram.com/NaturalNumber.html
+//! [2m]: https://mathworld.wolfram.com/NaturalNumber.html
+//! [3m]: https://mathworld.wolfram.com/NaturalNumber.html
+//! [4m]: https://mathworld.wolfram.com/Zero.html
 
 use core::ops::Neg;
+use min_max_traits::{Max, Min};
 use num_integer::Integer as NumInt;
 
-/// An `Integer` number ([w][w1]/[m][m1]),
-/// from the set $\Z \lbrace …, -2, -1, 0, 1, 2, … \rbrace $.
+/// An `Integer` number ([w][w0]/[m][m0]), from the set $\Z$.
 ///
-/// [w1]: https://en.wikipedia.org/wiki/Integer
-/// [m1]: https://mathworld.wolfram.com/Integer.html
-#[derive(Debug, Default, PartialEq, Eq, PartialOrd, Ord)]
-#[repr(transparent)]
+/// $ \Z = \lbrace …, -2, -1, 0, 1, 2, … \rbrace $
+///
+/// This type exactly corresponds to the signed primitives (i8…i128)
+///
+/// [w0]: https://en.wikipedia.org/wiki/Integer
+/// [m0]: https://mathworld.wolfram.com/Integer.html
+#[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub struct Integer<I>(I)
 where
     // NumInt already includes:
     // Sized + PartialEq + Eq + PartialOrd + Ord + Zero + One + NumOps + NumCast
-    I: NumInt + Neg;
+    I: NumInt + Max + Min + Neg;
 
-impl<I: NumInt + Neg> Integer<I> {
-    /// Returns a new `Integer` number.
-    pub fn new(value: I) -> Self {
-        Self(value)
-    }
+/// A *non-negative* `Integer` number ([m][0m]/[o][0o]), from the set $\Z^*$.
+///
+/// $ \Z^* = \lbrace 0, 1, 2, … \rbrace $
+///
+/// Also called *Natural*.
+///
+/// This type exactly corresponds to the unsigned primitives (u8…u128).
+///
+/// [0m]: https://mathworld.wolfram.com/NonnegativeInteger.html
+/// [0o]: http://oeis.org/A001477
+#[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
+pub struct NonNegative<I>(I)
+where
+    I: NumInt + Max + Min;
 
-    /// Returns a new `Integer` number,
-    /// where a `value` of `0` is converted to `1`.
-    pub fn new_0to1(value: I) -> Self {
-        let value = if value == I::zero() { I::one() } else { value };
-        Self(value)
-    }
+/// A *positive* `Integer` number ([m][0m]), from the set $\Z^+$.
+///
+/// $ \Z^+ = \lbrace 1, 2, … \rbrace $
+///
+/// Doesn't include 0.
+///
+/// [0m]: https://mathworld.wolfram.com/PositiveInteger.html
+#[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
+pub struct Positive<I>(I)
+where
+    I: NumInt + Max + Min;
 
-    /// Returns a new `Integer`,
-    /// but only if `value` $!= 0$.
-    pub fn new_nonzero(value: I) -> Option<Self> {
-        if value == I::zero() {
-            None
-        } else {
-            Some(Self(value))
-        }
-    }
+/// A *negative* `Integer` number ([m][0m]/[o][0o]), from the set $\Z^-$.
+///
+/// $ \Z^- = \lbrace …, -2, -1 \rbrace $
+///
+/// Doesn't include 0.
+///
+/// [0m]: https://mathworld.wolfram.com/NegativeInteger.html
+/// [0o]: http://oeis.org/A001478
+#[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
+pub struct Negative<I>(I)
+where
+    I: NumInt + Max + Min + Neg;
 
-    /// If the inner value is `0` then it is changed to `1`, and returns `true`.
-    ///
-    /// Returns `false` otherwise.
-    pub fn if0_set1(&mut self) -> bool {
-        if self.0.is_zero() {
-            self.0 = I::one();
-            true
-        } else {
-            false
-        }
-    }
+/// A *non-positive* `Integer` number ([m][0m]), from the set ${0} \cup \Z^-$.
+///
+/// $ {0} \cup Z^- = \lbrace …, -2, -1, 0 \rbrace $
+///
+/// [0m]: https://mathworld.wolfram.com/NonpositiveInteger.html
+#[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
+pub struct NonPositive<I>(I)
+where
+    I: NumInt + Max + Min + Neg;
 
-    /// If the inner value is `1` then it is changed to `0`, and returns `true`.
-    ///
-    /// Returns `false` otherwise.
-    pub fn if1_set0(&mut self) -> bool {
-        if self.0.is_zero() {
-            self.0 = I::one();
-            true
-        } else {
-            false
-        }
-    }
+/// implements the Number trait
+mod number_impls {
+    use super::{Integer, Max, Min, Neg, Negative, NonNegative, NonPositive, NumInt, Positive};
+    use crate::number::Number;
 
-    /// If the inner value is `x` then it is changed to `y` and returns `true`.
-    ///
-    /// Returns `false` otherwise.
-    pub fn ifx_sety(&mut self, x: I, y: I) -> bool {
-        if self.0 == x {
-            self.0 = y;
-            true
-        } else {
-            false
-        }
-    }
-}
-
-impl<I: NumInt + Neg + Clone> Integer<I> {
-    /// Returns a clone of the underlying data type.
-    pub fn get(&self) -> I {
-        self.0.clone()
-    }
-}
-
-mod traits_implementations {
-    use super::{Integer, Neg, NumInt};
-
-    use core::hash::{Hash, Hasher};
-    use num_traits::{One, Zero};
-    use std::fmt;
-
-    /// Implements `Copy` iff the inner type implements it.
-    impl<I: NumInt + Neg + Copy> Copy for Integer<I> {}
-
-    /// Implements `Clone` iff the inner type implements it.
-    impl<I: NumInt + Neg + Clone> Clone for Integer<I> {
-        fn clone(&self) -> Self {
-            Self(self.0.clone())
-        }
-    }
-
-    /// Implements `Hash` iff the inner type implements it.
-    #[allow(clippy::derive_hash_xor_eq)]
-    // This is OK since both PartialEq & Hash are derived from the inner type:
-    impl<I: NumInt + Neg + Hash> Hash for Integer<I> {
-        fn hash<H: Hasher>(&self, hasher: &mut H) {
-            self.0.hash(hasher);
-        }
-    }
-
-    /// Implements `PartialEq` against the inner type.
-    ///
-    /// This allows, for example, to compare containers of both types.
-    impl<I: NumInt + Neg> PartialEq<I> for Integer<I> {
-        fn eq(&self, other: &I) -> bool {
-            self.0 == *other
-        }
-    }
-
-    /// Implements `Display` iff the inner type implements it.
-    impl<I: NumInt + Neg + fmt::Display> fmt::Display for Integer<I> {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            write!(f, "{}", self.0)
-        }
-    }
-
-    // Implements the aritmetic operators iff the inner type implements `Clone`.
-    crate::impl_ops![I, Integer, Integer<I>, Self, NumInt + Neg + Clone];
-
-    /// Implements the `Zero` identity.
-    impl<I: NumInt + Neg + Clone> Zero for Integer<I> {
-        fn zero() -> Self {
-            Self(I::zero())
-        }
-        fn is_zero(&self) -> bool {
-            self.0.is_zero()
-        }
-    }
-
-    /// Implements the `One` identity.
-    impl<I: NumInt + Neg + Clone> One for Integer<I> {
-        fn one() -> Self {
-            Self(I::one())
-        }
-        fn is_one(&self) -> bool {
-            self.0.is_one()
-        }
-    }
-
-    /// Implements `From` from the inner type.
-    impl<I: NumInt + Neg> From<I> for Integer<I> {
-        fn from(value: I) -> Self {
+    impl<I: NumInt + Max + Min + Neg> Number for Integer<I> {
+        type Value = I;
+        /// Returns a new `Integer`.
+        #[inline]
+        fn new(value: Self::Value) -> Self {
             Self(value)
         }
+        #[inline]
+        fn largest() -> Self {
+            Self::new(Self::Value::MAX)
+        }
+        #[inline]
+        fn smallest() -> Self {
+            Self::new(Self::Value::MIN)
+        }
     }
+    impl<I: NumInt + Max + Min> Number for NonNegative<I> {
+        type Value = I;
+        /// Returns a new *non-negative* `Integer`.
+        /// The smallest value saturates to 0.
+        #[inline]
+        fn new(value: Self::Value) -> Self {
+            Self(if value < Self::Value::zero() {
+                Self::Value::zero()
+            } else {
+                value
+            })
+        }
+        #[inline]
+        fn largest() -> Self {
+            Self::new(Self::Value::MAX)
+        }
+        #[inline]
+        fn smallest() -> Self {
+            Self::new(Self::Value::zero())
+        }
+    }
+    impl<I: NumInt + Max + Min> Number for Positive<I> {
+        type Value = I;
+        /// Returns a new *positive* `Integer`.
+        /// The smallest value saturates to 1.
+        #[inline]
+        fn new(value: Self::Value) -> Self {
+            Self(if value < Self::Value::one() {
+                Self::Value::one()
+            } else {
+                value
+            })
+        }
+        #[inline]
+        fn largest() -> Self {
+            Self::new(Self::Value::MAX)
+        }
+        #[inline]
+        fn smallest() -> Self {
+            Self::new(Self::Value::one())
+        }
+    }
+    impl<I: NumInt + Max + Min + Neg> Number for NonPositive<I> {
+        type Value = I;
+        /// Returns a new *positive* `Integer`.
+        /// The largest value Saturates to 0.
+        #[inline]
+        fn new(value: Self::Value) -> Self {
+            Self(if value > Self::Value::zero() {
+                Self::Value::zero()
+            } else {
+                value
+            })
+        }
+        #[inline]
+        fn largest() -> Self {
+            Self::new(Self::Value::zero())
+        }
+        #[inline]
+        fn smallest() -> Self {
+            Self::new(Self::Value::MIN)
+        }
+    }
+    impl<I: NumInt + Max + Min + Neg<Output = I>> Number for Negative<I> {
+        type Value = I;
+        /// Returns a new *positive* `Integer`.
+        /// The largest value saturates to -1.
+        #[inline]
+        fn new(value: Self::Value) -> Self {
+            Self(if value > Self::Value::zero() {
+                Self::Value::one().neg()
+            } else {
+                value
+            })
+        }
+        #[inline]
+        fn largest() -> Self {
+            Self::new(Self::Value::one().neg())
+        }
+        #[inline]
+        fn smallest() -> Self {
+            Self::new(Self::Value::MIN)
+        }
+    }
+}
+
+/// implements std traits: Default, From…
+mod std_impls {
+    use super::{Integer, Max, Min, Neg, Negative, NonNegative, NonPositive, NumInt, Positive};
+    use crate::number::Number;
+    use num_traits::{One, Zero};
+
+    use core::hash::{Hash, Hasher};
+    use std::fmt;
+
+    // impl Default
+
+    /// Default: 0.
+    impl<I: NumInt + Max + Min + Neg> Default for Integer<I> {
+        #[inline]
+        fn default() -> Self {
+            Self(Zero::zero())
+        }
+    }
+    /// Default: 0.
+    impl<I: NumInt + Max + Min> Default for NonNegative<I> {
+        #[inline]
+        fn default() -> Self {
+            Self(Zero::zero())
+        }
+    }
+    /// Default: 1.
+    impl<I: NumInt + Max + Min> Default for Positive<I> {
+        #[inline]
+        fn default() -> Self {
+            Self(One::one())
+        }
+    }
+    /// Default: -1.
+    impl<I: NumInt + Max + Min + Neg<Output = I>> Default for Negative<I> {
+        #[inline]
+        fn default() -> Self {
+            <Self as Number>::largest()
+        }
+    }
+    /// Default: 0.
+    impl<I: NumInt + Max + Min + Neg> Default for NonPositive<I> {
+        #[inline]
+        fn default() -> Self {
+            Self::new(Zero::zero())
+        }
+    }
+
+    /// Derives several traits when the inner type supports them (neg version).
+    macro_rules! derive_traits_neg {
+        (all: $($int:ident),+) => {
+            $( derive_traits_neg!($int); )+
+        };
+        ($int:ident) => {
+            impl<I: NumInt + Max + Min + Neg + Copy> Copy for $int<I> {}
+            impl<I: NumInt + Max + Min + Neg + Clone> Clone for $int<I> {
+                fn clone(&self) -> Self{ Self(self.0.clone()) }
+            }
+            // This is OK since both PartialEq & Hash are derived from the inner type:
+            #[allow(clippy::derive_hash_xor_eq)]
+            impl<I: NumInt + Max + Min + Neg + Hash> Hash for $int<I> {
+                fn hash<H: Hasher>(&self, hasher: &mut H) {
+                    self.0.hash(hasher);
+                }
+            }
+            impl<I: NumInt + Max + Min + Neg + fmt::Display> fmt::Display for $int<I> {
+                fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+                    write!(f, "{}", self.0)
+                }
+            }
+        };
+    }
+
+    /// Derives several traits when the inner type supports them (non-neg version).
+    macro_rules! derive_traits_non_neg {
+        (all: $($int:ident),+) => {
+            $( derive_traits_non_neg!($int); )+
+        };
+        ($int:ident) => {
+            impl<I: NumInt + Max + Min + Copy> Copy for $int<I> {}
+            impl<I: NumInt + Max + Min + Clone> Clone for $int<I> {
+                fn clone(&self) -> Self{ Self(self.0.clone()) }
+            }
+            // This is OK since both PartialEq & Hash are derived from the inner type:
+            #[allow(clippy::derive_hash_xor_eq)]
+            impl<I: NumInt + Max + Min + Hash> Hash for $int<I> {
+                fn hash<H: Hasher>(&self, hasher: &mut H) {
+                    self.0.hash(hasher);
+                }
+            }
+            impl<I: NumInt + Max + Min + fmt::Display> fmt::Display for $int<I> {
+                fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+                    write!(f, "{}", self.0)
+                }
+            }
+        };
+    }
+
+    derive_traits_neg!(all: Integer, Negative, NonPositive);
+    derive_traits_non_neg!(all: Positive, NonNegative);
 }
 
 #[cfg(test)]
 mod tests {
-    use super::Integer;
+    use super::{Integer, Negative, NonNegative, NonPositive, Positive};
+    use crate::number::Number;
 
     #[test]
-    /// Testing that the type implements a set of traits.
-    fn check_traits() {
-        // Copy
-        fn is_copy<T: Copy>() {}
-        is_copy::<Integer<i32>>();
+    fn number_api() {
+        // new
 
-        // PartialEq
-        assert_eq![Integer::new(-1), -1];
-    }
+        assert_eq![Negative::new(23), Negative::new(-1)];
+        assert_eq![NonPositive::new(23), NonPositive::new(0)];
+        assert_eq![NonNegative::new(-23), NonNegative::new(0)];
+        assert_eq![Positive::new(-23), Positive::new(1)];
 
-    #[test]
-    fn constructors() {
-        let i0 = Integer::new(0);
-        let i1 = Integer::new(1);
-        let i0to1 = Integer::new_0to1(0);
-        assert_ne![i0, i0to1];
-        assert_eq![i1, i0to1];
+        // scope
 
-        assert_eq![None, Integer::new_nonzero(0)];
-        assert_eq![Some(Integer::new(3)), Integer::new_nonzero(3)];
-    }
+        assert_eq![Integer::new(i8::MIN), Integer::<i8>::smallest()];
+        assert_eq![Integer::new(i8::MAX), Integer::<i8>::largest()];
 
-    #[test]
-    fn conversions() {
-        assert_eq![1, Integer::new(1).get()];
-        assert_eq![1_i32, Integer::new(1).get()];
-        assert_eq![1_i64, Integer::new(1).get()];
-        assert_eq![1, Integer::new(1_i16).get()];
-    }
+        assert_eq![Negative::new(i8::MIN), Negative::<i8>::smallest()];
+        assert_eq![Negative::new(-1), Negative::<i8>::largest()];
 
-    #[test]
-    fn ops() {
-        let i1 = Integer::new(-10);
-        let i2 = Integer::new(2);
-        let results = [i1 + i2, i1 - i2, i1 * i2, i1 / i2, i1 % i2];
-        assert_eq![results, [-8, -12, -20, -5, 0]];
+        assert_eq![NonPositive::new(i8::MIN), NonPositive::<i8>::smallest()];
+        assert_eq![NonPositive::new(0), NonPositive::<i8>::largest()];
+
+        assert_eq![Positive::new(1), Positive::<i8>::smallest()];
+        assert_eq![Positive::new(i8::MAX), Positive::<i8>::largest()];
+        assert_eq![Positive::new(1), Positive::<u8>::smallest()];
+        assert_eq![Positive::new(u8::MAX), Positive::<u8>::largest()];
+
+        assert_eq![NonNegative::new(0), NonNegative::<i8>::smallest()];
+        assert_eq![NonNegative::new(i8::MAX), NonNegative::<i8>::largest()];
+        assert_eq![NonNegative::new(0), NonNegative::<u8>::smallest()];
+        assert_eq![NonNegative::new(u8::MAX), NonNegative::<u8>::largest()];
     }
 }
