@@ -3,12 +3,12 @@
 //!
 //
 
-use super::{Identities, MaxMin, Sign};
+use super::{MaxMin, One, Sign, Zero};
 
 /// The inner representation for the [`Number`] trait.
-pub trait InnerNumber: PartialOrd + Identities + MaxMin + Sign {}
+pub trait InnerNumber: PartialOrd + One + Zero + MaxMin + Sign {}
 
-impl<T> InnerNumber for T where T: PartialOrd + Identities + MaxMin + Sign {}
+impl<T> InnerNumber for T where T: PartialOrd + One + Zero + MaxMin + Sign {}
 
 /// The main number API trait.
 pub trait Number {

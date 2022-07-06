@@ -3,27 +3,8 @@
 //!
 //
 
-use core::ops::{Add, Div, Mul, Sub};
-
-/// Defines both the additive and multiplicative identity elements.
-pub trait Identities:
-    Sized
-    + Add<Self, Output = Self>
-    + Mul<Self, Output = Self>
-    + Sub<Self, Output = Self>
-    + Div<Self, Output = Self>
-{
-    ///
-    fn zero() -> Self;
-
-    ///
-    fn is_zero(&self) -> bool;
-
-    ///
-    fn set_zero(&mut self) {
-        *self = Self::zero();
-    }
-
+/// The multiplicative identity `1`.
+pub trait One: Sized {
     ///
     fn one() -> Self;
 
@@ -35,14 +16,31 @@ pub trait Identities:
         *self = Self::one();
     }
 }
+
+/// The additive identity `0`.
+pub trait Zero: Sized {
+    ///
+    fn zero() -> Self;
+
+    ///
+    fn is_zero(&self) -> bool;
+
+    ///
+    fn set_zero(&mut self) {
+        *self = Self::zero();
+    }
+}
+
 macro_rules! impl_identities {
     (all: $($ty:ty, $zero:expr, $one:expr),+) => {
         $( impl_identities![$ty, $zero, $one]; )+
     };
     ($ty:ty, $zero:expr, $one:expr) => {
-        impl Identities for $ty {
+        impl Zero for $ty {
             fn zero() -> Self { $zero }
             fn is_zero(&self) -> bool { *self == $zero }
+        }
+        impl One for $ty {
             fn one() -> Self { $one }
             fn is_one(&self) -> bool { *self == $one }
         }

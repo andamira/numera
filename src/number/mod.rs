@@ -19,5 +19,5 @@ pub mod integer;
 #[doc(inline)]
 pub use {
     integer::{Integer, Negative, NonNegative, NonPositive, Positive},
-    traits::{Number, InnerNumber, Sign, Identities, MaxMin},
+    traits::{InnerNumber, MaxMin, Number, One, Sign, Zero},
 };
