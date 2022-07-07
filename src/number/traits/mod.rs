@@ -3,6 +3,9 @@
 //!
 //
 
+#[cfg(test)]
+mod tests;
+
 mod identities;
 mod maxmin;
 mod number;

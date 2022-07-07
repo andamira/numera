@@ -53,8 +53,40 @@ impl_identities![all:
     i64, 0, 1, u64, 0, 1, i128, 0, 1, u128, 0, 1, isize, 0, 1, usize, 0, 1
 ];
 
+#[rustfmt::skip]
 #[cfg(feature = "twofloat")]
-impl_identities![twofloat::TwoFloat, 0.0, 1.0];
+mod impl_twofloat {
+    use super::{One, Zero};
+    use twofloat::TwoFloat;
 
+    impl Zero for TwoFloat {
+        fn zero() -> Self { TwoFloat::from(0.0) }
+        fn is_zero(&self) -> bool { self != &Self::zero() }
+    }
+    impl One for TwoFloat {
+        fn one() -> Self { TwoFloat::from(1.0) }
+        fn is_one(&self) -> bool { self != &Self::one() }
+    }
+}
+
+#[rustfmt::skip]
 #[cfg(feature = "half")]
-impl_identities![all: half::f16, 0.0, 1.0, half::bf16, 0.0, 1.0];
+mod impl_half {
+    use half::{bf16, f16};
+    use super::{One, Zero};
+    macro_rules! impl_identities {
+        ($($ty:ty),+) => {
+            $(
+            impl Zero for $ty {
+                fn zero() -> Self { <$ty>::from_f32_const(0.0) }
+                fn is_zero(&self) -> bool { self != &Self::zero() }
+            }
+            impl One for $ty {
+                fn one() -> Self { <$ty>::from_f32_const(1.0) }
+                fn is_one(&self) -> bool { self != &Self::one() }
+            }
+            )+
+        };
+    }
+    impl_identities![bf16, f16];
+}

@@ -43,11 +43,12 @@ use crate::number::InnerNumber;
 #[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub struct Integer<I: InnerNumber>(I);
 
-/// A *non-negative* integer number ([m][0m]/[o][0o]), from the set $\Z^*$.
+/// An only *non-negative* integer number ([m][0m]/[o][0o]), from the set $\Z^*$.
 ///
 /// $ \Z^* = \lbrace 0, 1, 2, … \rbrace $
 ///
-/// Sometimes called *Natural number* ([w][1w]).
+/// Sometimes called *Natural number* ([w][1w]) or *counting number*,
+/// but in that case it can be confounded with [`Positive`].
 ///
 /// This type exactly corresponds to the unsigned primitives (u8…u128).
 ///
@@ -58,13 +59,14 @@ pub struct Integer<I: InnerNumber>(I);
 #[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub struct NonNegative<I: InnerNumber>(I);
 
-/// A *positive* integer number ([m][0m]), from the set $\Z^+$.
+/// An only *positive* integer number ([m][0m]), from the set $\Z^+$.
 ///
 /// $ \Z^+ = \lbrace 1, 2, … \rbrace $
 ///
 /// Doesn't include 0.
 ///
-/// Sometimes called *Natural number* ([w][1w]).
+/// Sometimes called *Natural number* ([w][1w]) or *counting number*,
+/// but in that case it can be confounded with [`NonNegative`].
 ///
 /// [0m]: https://mathworld.wolfram.com/PositiveInteger.html
 /// [1w]: https://en.wikipedia.org/wiki/Natural_number
@@ -72,7 +74,7 @@ pub struct NonNegative<I: InnerNumber>(I);
 #[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub struct Positive<I: InnerNumber>(I);
 
-/// A *negative* integer number ([m][0m]/[o][0o]), from the set $\Z^-$.
+/// An only *negative* integer number ([m][0m]/[o][0o]), from the set $\Z^-$.
 ///
 /// $ \Z^- = \lbrace …, -2, -1 \rbrace $
 ///
@@ -84,7 +86,7 @@ pub struct Positive<I: InnerNumber>(I);
 #[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub struct Negative<I: InnerNumber>(I);
 
-/// A *non-positive* integer number ([m][0m]), from the set ${0} \cup \Z^-$.
+/// An only *non-positive* integer number ([m][0m]), from the set ${0} \cup \Z^-$.
 ///
 /// $ {0} \cup Z^- = \lbrace …, -2, -1, 0 \rbrace $
 ///
