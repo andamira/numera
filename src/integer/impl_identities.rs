@@ -1,17 +1,18 @@
-// numera::number::integer::impl_onezero
+// numera::integer::impl_identities
 //
 //! implements the `[Const][NegOne|One|Zero|]` traits for all integer types.
 //
 
-use crate::number::integer::{
+use crate::integer::{
     Integer, NegativeInteger, NonNegativeInteger, NonPositiveInteger, NonZeroInteger,
     PositiveInteger,
 };
-use crate::number::traits::NumberAble;
-use crate::number::traits::{ConstNegOne, ConstOne, ConstZero, NegOne, NonZero, One, Zero};
+use crate::traits::NumberAble;
+use crate::traits::{ConstNegOne, ConstOne, ConstZero, NegOne, NonZero, One, Zero};
 
 /// Implements the One trait.
 macro_rules! impl_onezero {
+    // @ = all
     (@zero: $($ty:ident),+) => {
         $( impl_onezero![zero: $ty]; )+
     };

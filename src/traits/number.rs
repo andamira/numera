@@ -1,4 +1,4 @@
-// numera::number::traits::number
+// numera::::traits::number
 //
 //!
 //

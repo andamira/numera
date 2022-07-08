@@ -1,10 +1,10 @@
-// numera::number::integer::impl_std
+// numera::integer::impl_util
 //
-//! implements std/core utility traits.
+//! implements core/std utility traits.
 //
 
 use super::{Integer, NegativeInteger, NonNegativeInteger, NonPositiveInteger, PositiveInteger};
-use crate::number::traits::{NegOne, Number, NumberAble, One, Zero};
+use crate::traits::{NegOne, Number, NumberAble, One, Zero};
 
 use core::hash::{Hash, Hasher};
 

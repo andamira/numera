@@ -1,5 +1,7 @@
-// numera::number::integer
+// numera:::integer
 //
+//! Integer types.
+//!
 //! An *integer* ([w][0w]/[m][0m]) is a number that can be written
 //! without a fractional component.
 //!
@@ -25,12 +27,13 @@
 //
 
 mod impl_bounded;
+mod impl_discrete;
 mod impl_identities;
 mod impl_number;
 mod impl_ops;
-mod impl_std;
+mod impl_util;
 
-use crate::number::traits::NumberAble;
+use crate::traits::NumberAble;
 
 /// An integer number ([w][w0]/[m][m0]), from the set $\Z$.
 ///

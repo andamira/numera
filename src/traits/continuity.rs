@@ -1,4 +1,4 @@
-// numera::number::traits::continuity
+// numera::::traits::continuity
 //
 //! defines the `Continous` & `Discrete` traits
 //! and implements them for primitive and supported external types.

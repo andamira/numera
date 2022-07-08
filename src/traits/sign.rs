@@ -1,4 +1,4 @@
-// numera::number::traits::sign
+// numera::::traits::sign
 //
 //! defines the Sign trait.
 //

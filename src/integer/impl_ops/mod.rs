@@ -1,4 +1,4 @@
-// numera::number::integer::impl_ops
+// numera::integer::impl_ops
 //
 //! implements the arithmetic operations.
 //

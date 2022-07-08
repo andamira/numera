@@ -1,11 +1,11 @@
-// numera::number::integer::impl_ops::integer
+// numera::integer::impl_ops::integer
 //
 //! implements the arithmetic operations on `Integer`.
 
-use crate::number::traits::{
+use crate::traits::{
     CheckedAdd, CheckedDiv, CheckedMul, CheckedNeg, CheckedRem, CheckedSub, NumberAble,
 };
-use crate::number::Integer;
+use crate::Integer;
 use core::ops::{Add, Div, Mul, Neg, Rem, Sub};
 
 // Core
@@ -41,7 +41,7 @@ impl_core_ops![binary: Rem, rem, Integer, NumberAble + Rem<Output = I>];
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::number::Number;
+    use crate::Number;
 
     #[test]
     fn core() {

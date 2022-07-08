@@ -1,14 +1,14 @@
-// numera::number::integer::impl_number
+// numera::integer::impl_bounded
 //
 //! implements the `[Const][Lower|Upper]Bounded` trait for all integer types.
 //
 
-use crate::number::integer::{
+use crate::integer::{
     Integer, NegativeInteger, NonNegativeInteger, NonPositiveInteger, NonZeroInteger,
     PositiveInteger,
 };
-use crate::number::traits::NumberAble;
-use crate::number::traits::{
+use crate::traits::NumberAble;
+use crate::traits::{
     ConstLowerBounded, ConstNegOne, ConstOne, ConstUpperBounded, ConstZero, LowerBounded, NegOne,
     One, UpperBounded, Zero,
 };
@@ -137,7 +137,7 @@ impl<I: NumberAble + UpperBounded + NegOne> UpperBounded for NegativeInteger<I> 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::number::traits::{Bounded, ConstBounded};
+    use crate::traits::{Bounded, ConstBounded};
     use static_assertions::*;
 
     macro_rules! assert_impl_bounded {

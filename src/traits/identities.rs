@@ -1,4 +1,4 @@
-// numera::number::traits::identities
+// numera::::traits::identities
 //
 //! defines the `[const][Zero|One]` & `NonZero` traits
 //! and implements them for primitive and supported external types.

@@ -1,4 +1,4 @@
-// numera::number::integer::impl_number
+// numera::integer::impl_number
 //
 //! implements the `Number` trait for all integer types.
 //
@@ -7,7 +7,7 @@ use super::{
     Integer, NegativeInteger, NonNegativeInteger, NonPositiveInteger, NonZeroInteger,
     PositiveInteger,
 };
-use crate::number::traits::{NegOne, Number, NumberAble, One, Zero};
+use crate::traits::{NegOne, Number, NumberAble, One, Zero};
 
 #[rustfmt::skip]
 impl<I: NumberAble + Zero + One + NegOne> Number for Integer<I> {
