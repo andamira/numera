@@ -11,13 +11,12 @@
 
 #![allow(non_camel_case_types)]
 
-mod macros;
-mod traits;
-
 pub mod integer;
+mod macros;
+pub mod traits;
 
 #[doc(inline)]
 pub use {
     integer::{Integer, Negative, NonNegative, NonPositive, Positive},
-    traits::{InnerNumber, MaxMin, Number, One, Sign, Zero},
+    traits::{Bounded, InnerNumber, Number, One, Sign, Zero},
 };

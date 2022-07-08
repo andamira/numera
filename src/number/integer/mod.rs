@@ -24,12 +24,11 @@
 //! [4m]: https://mathworld.wolfram.com/Zero.html
 //
 
+mod impl_bounded;
 mod impl_number;
 mod impl_std;
-#[cfg(test)]
-mod tests;
 
-use crate::number::InnerNumber;
+use crate::number::traits::InnerNumber;
 
 /// An integer number ([w][w0]/[m][m0]), from the set $\Z$.
 ///

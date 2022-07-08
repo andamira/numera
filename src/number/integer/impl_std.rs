@@ -4,7 +4,7 @@
 //
 
 use super::{Integer, Negative, NonNegative, NonPositive, Positive};
-use crate::number::{InnerNumber, Number};
+use crate::number::traits::{InnerNumber, Number};
 use core::ops::Neg;
 
 use core::hash::{Hash, Hasher};
@@ -18,35 +18,35 @@ use std::fmt;
 impl<I: InnerNumber> Default for Integer<I> {
     #[inline]
     fn default() -> Self {
-        Self(I::zero())
+        Self(I::new_zero())
     }
 }
 /// Default: 0.
 impl<I: InnerNumber> Default for NonNegative<I> {
     #[inline]
     fn default() -> Self {
-        Self(I::zero())
+        Self(I::new_zero())
     }
 }
 /// Default: 1.
 impl<I: InnerNumber> Default for Positive<I> {
     #[inline]
     fn default() -> Self {
-        Self(I::one())
+        Self(I::new_one())
     }
 }
 /// Default: 0.
 impl<I: InnerNumber> Default for NonPositive<I> {
     #[inline]
     fn default() -> Self {
-        Self::new(I::zero())
+        Self::new(I::new_zero())
     }
 }
 /// Default: -1.
 impl<I: InnerNumber + Neg<Output = I>> Default for Negative<I> {
     #[inline]
     fn default() -> Self {
-        Self(I::one().neg())
+        Self(I::new_one().neg())
     }
 }
 

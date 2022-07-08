@@ -4,7 +4,7 @@
 //
 
 use super::{Integer, Negative, NonNegative, NonPositive, Positive};
-use crate::number::{InnerNumber, Number};
+use crate::number::traits::{InnerNumber, Number};
 use core::ops::Neg;
 
 #[rustfmt::skip]
@@ -13,10 +13,6 @@ impl<I: InnerNumber> Number for Integer<I> {
     /// Returns a new `Integer`.
     #[inline]
     fn new(value: Self::Inner) -> Self { Self(value) }
-    #[inline]
-    fn new_max() -> Self { Self::new(Self::Inner::MAX) }
-    #[inline]
-    fn new_min() -> Self { Self::new(Self::Inner::MIN) }
     #[inline]
     fn can_negative() -> bool { true }
     #[inline]
@@ -42,16 +38,12 @@ impl<I: InnerNumber> Number for NonNegative<I> {
     /// The smallest value saturates to `0`.
     #[inline]
     fn new(value: Self::Inner) -> Self {
-        Self(if value < Self::Inner::zero() {
-            Self::Inner::zero()
+        Self(if value < Self::Inner::new_zero() {
+            Self::Inner::new_zero()
         } else {
             value
         })
     }
-    #[inline]
-    fn new_max() -> Self { Self::new(Self::Inner::MAX) }
-    #[inline]
-    fn new_min() -> Self { Self::new(Self::Inner::zero()) }
     #[inline]
     fn can_negative() -> bool { false }
     #[inline]
@@ -77,16 +69,12 @@ impl<I: InnerNumber> Number for Positive<I> {
     /// The smallest value saturates to `1`.
     #[inline]
     fn new(value: Self::Inner) -> Self {
-        Self(if value < Self::Inner::one() {
-            Self::Inner::one()
+        Self(if value < Self::Inner::new_one() {
+            Self::Inner::new_one()
         } else {
             value
         })
     }
-    #[inline]
-    fn new_max() -> Self { Self::new(Self::Inner::MAX) }
-    #[inline]
-    fn new_min() -> Self { Self::new(Self::Inner::one()) }
     #[inline]
     fn can_negative() -> bool { false }
     #[inline]
@@ -112,16 +100,12 @@ impl<I: InnerNumber> Number for NonPositive<I> {
     /// The largest value Saturates to `0`.
     #[inline]
     fn new(value: Self::Inner) -> Self {
-        Self(if value > Self::Inner::zero() {
-            Self::Inner::zero()
+        Self(if value > Self::Inner::new_zero() {
+            Self::Inner::new_zero()
         } else {
             value
         })
     }
-    #[inline]
-    fn new_max() -> Self { Self::new(Self::Inner::zero()) }
-    #[inline]
-    fn new_min() -> Self { Self::new(Self::Inner::MIN) }
     #[inline]
     fn can_negative() -> bool { true }
     #[inline]
@@ -147,16 +131,12 @@ impl<I: InnerNumber + Neg<Output = I>> Number for Negative<I> {
     /// The largest value saturates to `-1`.
     #[inline]
     fn new(value: Self::Inner) -> Self {
-        Self(if value >= Self::Inner::zero() {
-            Self::Inner::one().neg()
+        Self(if value >= Self::Inner::new_zero() {
+            Self::Inner::new_one().neg()
         } else {
             value
         })
     }
-    #[inline]
-    fn new_max() -> Self { Self::new(Self::Inner::one().neg()) }
-    #[inline]
-    fn new_min() -> Self { Self::new(Self::Inner::MIN) }
     #[inline]
     fn can_negative() -> bool { true }
     #[inline]

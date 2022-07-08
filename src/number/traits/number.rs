@@ -3,12 +3,12 @@
 //!
 //
 
-use super::{MaxMin, One, Sign, Zero};
+use super::{One, Sign, Zero};
 
 /// The inner representation for the [`Number`] trait.
-pub trait InnerNumber: PartialOrd + One + Zero + MaxMin + Sign {}
+pub trait InnerNumber: PartialOrd + One + Zero + Sign {}
 
-impl<T> InnerNumber for T where T: PartialOrd + One + Zero + MaxMin + Sign {}
+impl<T> InnerNumber for T where T: PartialOrd + One + Zero + Sign {}
 
 /// The main number API trait.
 pub trait Number {
@@ -19,12 +19,6 @@ pub trait Number {
     ///
     /// This method must ensure the inner value is in a correct format.
     fn new(value: Self::Inner) -> Self;
-
-    /// Returns the largest number that can be represented with the current type.
-    fn new_max() -> Self;
-
-    /// Returns the smallest number that can be represented with the current type.
-    fn new_min() -> Self;
 
     //
 
