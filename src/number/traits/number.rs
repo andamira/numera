@@ -3,12 +3,12 @@
 //!
 //
 
-use super::{One, Sign, Zero};
+use super::Sign;
 
 /// The inner representation for the [`Number`] trait.
-pub trait InnerNumber: PartialOrd + One + Zero + Sign {}
+pub trait InnerNumber: PartialOrd + Sign {}
 
-impl<T> InnerNumber for T where T: PartialOrd + One + Zero + Sign {}
+impl<T> InnerNumber for T where T: PartialOrd + Sign {}
 
 /// The main number API trait.
 pub trait Number {
@@ -38,6 +38,9 @@ pub trait Number {
     /// Returns true if the number is the multiplicative identity `1`.
     fn is_one(&self) -> bool;
 
+    /// Returns true if the number is the inverse multiplicative identity `-1`.
+    fn is_neg_one(&self) -> bool;
+
     //
 
     /// Returns true if the number can be made negative.
@@ -51,4 +54,7 @@ pub trait Number {
 
     /// Returns true if the number can be made the multiplicative identity `1`.
     fn can_one() -> bool;
+
+    /// Returns true if the number can be made the inverse multiplicative identity `-1`.
+    fn can_neg_one() -> bool;
 }

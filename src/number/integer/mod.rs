@@ -26,6 +26,7 @@
 
 mod impl_bounded;
 mod impl_number;
+mod impl_onezero;
 mod impl_std;
 
 use crate::number::traits::InnerNumber;
@@ -42,12 +43,21 @@ use crate::number::traits::InnerNumber;
 #[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub struct Integer<I: InnerNumber>(I);
 
+/// A *non-zero* integer number ([o][o0]), from the set $\Z \setminus 0$.
+///
+/// $ \Z = \lbrace …, -2, -1, 1, 2, … \rbrace $
+///
+/// [o0]: https://oeis.org/wiki/Nonzero_integers
+#[repr(transparent)]
+#[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
+pub struct NonZeroInteger<I: InnerNumber>(I);
+
 /// An only *non-negative* integer number ([m][0m]/[o][0o]), from the set $\Z^*$.
 ///
 /// $ \Z^* = \lbrace 0, 1, 2, … \rbrace $
 ///
 /// Sometimes called *Natural number* ([w][1w]) or *counting number*,
-/// but in that case it can be confounded with [`Positive`].
+/// but in that case it can be confounded with [`PositiveInteger`].
 ///
 /// This type exactly corresponds to the unsigned primitives (u8…u128).
 ///
@@ -56,7 +66,7 @@ pub struct Integer<I: InnerNumber>(I);
 /// [1w]: https://en.wikipedia.org/wiki/Natural_number
 #[repr(transparent)]
 #[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
-pub struct NonNegative<I: InnerNumber>(I);
+pub struct NonNegativeInteger<I: InnerNumber>(I);
 
 /// An only *positive* integer number ([m][0m]), from the set $\Z^+$.
 ///
@@ -65,13 +75,13 @@ pub struct NonNegative<I: InnerNumber>(I);
 /// Doesn't include 0.
 ///
 /// Sometimes called *Natural number* ([w][1w]) or *counting number*,
-/// but in that case it can be confounded with [`NonNegative`].
+/// but in that case it can be confounded with [`NonNegativeInteger`].
 ///
 /// [0m]: https://mathworld.wolfram.com/PositiveInteger.html
 /// [1w]: https://en.wikipedia.org/wiki/Natural_number
 #[repr(transparent)]
 #[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
-pub struct Positive<I: InnerNumber>(I);
+pub struct PositiveInteger<I: InnerNumber>(I);
 
 /// An only *negative* integer number ([m][0m]/[o][0o]), from the set $\Z^-$.
 ///
@@ -83,7 +93,7 @@ pub struct Positive<I: InnerNumber>(I);
 /// [0o]: http://oeis.org/A001478
 #[repr(transparent)]
 #[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
-pub struct Negative<I: InnerNumber>(I);
+pub struct NegativeInteger<I: InnerNumber>(I);
 
 /// An only *non-positive* integer number ([m][0m]), from the set ${0} \cup \Z^-$.
 ///
@@ -92,4 +102,4 @@ pub struct Negative<I: InnerNumber>(I);
 /// [0m]: https://mathworld.wolfram.com/NonpositiveInteger.html
 #[repr(transparent)]
 #[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
-pub struct NonPositive<I: InnerNumber>(I);
+pub struct NonPositiveInteger<I: InnerNumber>(I);

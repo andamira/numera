@@ -1,7 +1,10 @@
 // numera::number::traits::onezero
 //
-//! implements the `[const][Zero|One]` traits.
+//! implements the `[const][Zero|One]` & `NonZero` traits.
 //
+
+/// Indicates this type doesn't have z zero (`0`) value.
+pub trait NonZero {}
 
 /// Indicates this type has a const zero (`0`) value.
 pub trait ConstZero {

@@ -64,7 +64,12 @@ macro_rules! impl_sign {
             fn is_negative(&self) -> bool { self.is_sign_negative() && *self != 0.0 }
             fn is_positive(&self) -> bool { self.is_sign_positive() && *self != 0.0 }
             fn inverse(&self) -> Option<Self> { Some(-self) }
+            #[cfg(feature="std")]
             fn abs(&self) -> Option<Self> { Some(<$ty>::abs(*self)) }
+            #[cfg(not(feature="std"))]
+            fn abs(&self) -> Option<Self> {
+                if *self < 0.0 { Some(-*self) } else { Some(*self) }
+            }
         }
     };
 }

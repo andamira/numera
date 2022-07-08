@@ -3,9 +3,8 @@
 //! implements std/core utility traits.
 //
 
-use super::{Integer, Negative, NonNegative, NonPositive, Positive};
-use crate::number::traits::{InnerNumber, Number};
-use core::ops::Neg;
+use super::{Integer, NegativeInteger, NonNegativeInteger, NonPositiveInteger, PositiveInteger};
+use crate::number::traits::{InnerNumber, NegOne, Number, One, Zero};
 
 use core::hash::{Hash, Hasher};
 
@@ -14,39 +13,42 @@ use std::fmt;
 
 // impl Default
 
+// NOTE: NonZeroInteger doesn't implement Default.
+
 /// Default: 0.
-impl<I: InnerNumber> Default for Integer<I> {
+impl<I: InnerNumber + Zero> Default for Integer<I> {
     #[inline]
     fn default() -> Self {
         Self(I::new_zero())
     }
 }
+
 /// Default: 0.
-impl<I: InnerNumber> Default for NonNegative<I> {
+impl<I: InnerNumber + Zero> Default for NonNegativeInteger<I> {
     #[inline]
     fn default() -> Self {
         Self(I::new_zero())
     }
 }
 /// Default: 1.
-impl<I: InnerNumber> Default for Positive<I> {
+impl<I: InnerNumber + One> Default for PositiveInteger<I> {
     #[inline]
     fn default() -> Self {
         Self(I::new_one())
     }
 }
 /// Default: 0.
-impl<I: InnerNumber> Default for NonPositive<I> {
+impl<I: InnerNumber + Zero + NegOne> Default for NonPositiveInteger<I> {
     #[inline]
     fn default() -> Self {
         Self::new(I::new_zero())
     }
 }
 /// Default: -1.
-impl<I: InnerNumber + Neg<Output = I>> Default for Negative<I> {
+impl<I: InnerNumber + NegOne> Default for NegativeInteger<I> {
     #[inline]
     fn default() -> Self {
-        Self(I::new_one().neg())
+        Self(I::new_neg_one())
     }
 }
 
@@ -78,4 +80,7 @@ macro_rules! derive_std_traits {
     };
 }
 
-derive_std_traits!(all: Integer, Negative, NonPositive, Positive, NonNegative);
+#[rustfmt::skip]
+derive_std_traits![all:
+    Integer, NegativeInteger, NonPositiveInteger, PositiveInteger, NonNegativeInteger
+];
