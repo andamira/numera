@@ -38,23 +38,23 @@ pub trait Number {
     /// Returns true if the number is the multiplicative identity `1`.
     fn is_one(&self) -> bool;
 
-    /// Returns true if the number is the inverse multiplicative identity `-1`.
+    /// Returns true if the number is the negative multiplicative identity `-1`.
     fn is_neg_one(&self) -> bool;
 
     //
 
-    /// Returns true if the number can be made negative.
+    /// Returns true if the number can represent negative numbers.
     fn can_negative() -> bool;
 
-    /// Returns true if the number can be made positive.
+    /// Returns true if the number can represent positive numbers.
     fn can_positive() -> bool;
 
-    /// Returns true if the number can be made the additive identity `0`.
+    /// Returns true if the number can represent the additive identity `0`.
     fn can_zero() -> bool;
 
-    /// Returns true if the number can be made the multiplicative identity `1`.
+    /// Returns true if the number can represent the multiplicative identity `1`.
     fn can_one() -> bool;
 
-    /// Returns true if the number can be made the inverse multiplicative identity `-1`.
+    /// Returns true if the number can represent the negative multiplicative identity `-1`.
     fn can_neg_one() -> bool;
 }

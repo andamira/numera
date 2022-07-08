@@ -3,7 +3,7 @@
 //! implements the `[Const][Lower|Upper]Bounded` traits.
 //
 
-/// Indicates this type as both const lower and upper bounds.
+/// Indicates this type has both const lower and upper bounds.
 pub trait ConstBounded: ConstLowerBounded + ConstUpperBounded {}
 
 /// Indicates this type has a const lower bound.
@@ -72,6 +72,18 @@ macro_rules! impl_const_bounded {
     }
 }
 
+/// Implements only the *non-const* Bounded traits.
+#[rustfmt::skip]
+#[cfg(feature = "ibig")]
+macro_rules! impl_nonconst_bounded {
+    (lower: $ty:ty, $bound:expr) => {
+        impl LowerBounded for $ty { fn new_min() -> Self { $bound } }
+    };
+    (upper: $ty:ty, $bound:expr) => {
+        impl UpperBounded for $ty { fn new_max() -> Self { $bound } }
+    };
+}
+
 #[rustfmt::skip]
 impl_const_bounded![all:
     f32, f64, i8, u8, i16, u16, i32, u32, i64, u64, i128, u128, isize, usize];
@@ -82,35 +94,63 @@ impl_const_bounded![both: twofloat::TwoFloat];
 #[cfg(feature = "half")]
 impl_const_bounded![all: half::bf16, half::f16];
 
+#[cfg(feature = "ibig")]
+impl_nonconst_bounded![lower: ibig::UBig, ibig::UBig::from(0u8)];
+
 /// Tests
 #[cfg(test)]
 mod tests {
     use super::*;
-    use static_assertions::assert_impl_all;
+    use static_assertions::*;
 
-    /// Checks the `[[Const][Lower|Upper]Bounded]` traits for primitives.
+    macro_rules! assert_impl_bounded {
+        (both: $($ty:ty),+) => {
+            assert_impl_bounded![@const: $($ty),+];
+            assert_impl_bounded![@nonconst: $($ty),+];
+        };
+        (@const: $($ty:ty),+) => {
+            $( assert_impl_all![$ty: ConstLowerBounded, ConstUpperBounded, ConstBounded];)+
+        };
+        (@nonconst: $($ty:ty),+) => {
+            $( assert_impl_all![$ty: LowerBounded, UpperBounded, Bounded];)+
+        };
+    }
+
+    /// Checks the bounded traits for primitives.
     #[test]
     fn bounded_primitives() {
-        macro_rules! assert_impl_bounded {
-            (both: $($ty:ty),+) => {
-                assert_impl_bounded![@const: $($ty),+];
-                assert_impl_bounded![@nonconst: $($ty),+];
-            };
-            (@const: $($ty:ty),+) => {
-                $( assert_impl_all![$ty: ConstLowerBounded, ConstUpperBounded, ConstBounded];)+
-            };
-            (@nonconst: $($ty:ty),+) => {
-                $( assert_impl_all![$ty: LowerBounded, UpperBounded, Bounded];)+
-            };
-        }
         assert_impl_bounded![both: i8, i16, i32, i64, i128, isize];
         assert_impl_bounded![both: u8, u16, u32, u64, u128, usize];
         assert_impl_bounded![both: f32, f64];
+    }
 
-        #[cfg(feature = "twofloat")]
+    /// Checks the bounded traits for `twofloat` types.
+    #[test]
+    #[cfg(feature = "twofloat")]
+    fn bounded_twofloat() {
         assert_impl_bounded![both: twofloat::TwoFloat];
+    }
 
-        #[cfg(feature = "half")]
+    /// Checks the bounded traits for `half` types.
+    #[test]
+    #[cfg(feature = "half")]
+    fn bounded_half() {
         assert_impl_bounded![both: half::f16, half::bf16];
+    }
+
+    /// Checks the bounded traits for `ibig` types.
+    #[test]
+    #[cfg(feature = "ibig")]
+    fn bounded_ibig() {
+        use ibig::{IBig, UBig};
+
+        assert_impl_all![UBig: LowerBounded];
+
+        // BUG like: https://github.com/nvzqz/static-assertions-rs/issues/46
+        // assert_not_impl_any![UBig: LowerBounded];
+        // assert_not_impl_any![IBig: LowerBounded, UpperBounded];
+        assert_not_impl_all![UBig: UpperBounded];
+        assert_not_impl_all![IBig: LowerBounded];
+        assert_not_impl_all![IBig: UpperBounded];
     }
 }

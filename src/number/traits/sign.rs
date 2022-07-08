@@ -6,9 +6,9 @@
 /// Information about the sign of a number.
 #[rustfmt::skip]
 pub trait Sign {
-    /// Returns true if the number type can be made negative.
+    /// Returns true if the number type can represent negative numbers.
     fn can_negative() -> bool;
-    /// Returns true if the number type can be made positive.
+    /// Returns true if the number type can represent positive numbers.
     fn can_positive() -> bool;
 
     /// Returns true if the number is $<0$.
@@ -117,4 +117,28 @@ mod impl_half {
         };
     }
     impl_sign![bf16, f16];
+}
+
+#[rustfmt::skip]
+#[cfg(feature = "ibig")]
+mod impl_ibig {
+    use super::Sign;
+    use ibig::{ops::Abs, IBig, UBig};
+
+    impl Sign for UBig {
+        fn can_negative() -> bool { false }
+        fn can_positive() -> bool { true }
+        fn is_negative(&self) -> bool { false }
+        fn is_positive(&self) -> bool { *self != Self::from(0u8) }
+        fn inverse(&self) -> Option<Self> { None }
+        fn abs(&self) -> Option<Self> { Some(self.clone()) }
+    }
+    impl Sign for IBig {
+        fn can_negative() -> bool { true }
+        fn can_positive() -> bool { true }
+        fn is_negative(&self) -> bool { *self < IBig::from(0u8) }
+        fn is_positive(&self) -> bool { *self > IBig::from(0u8) }
+        fn inverse(&self) -> Option<Self> { Some(-self) }
+        fn abs(&self) -> Option<Self> { Some(Abs::abs(self)) }
+    }
 }

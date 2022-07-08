@@ -35,7 +35,7 @@ use crate::number::traits::InnerNumber;
 ///
 /// $ \Z = \lbrace …, -2, -1, 0, 1, 2, … \rbrace $
 ///
-/// This type perfectly encapsulates the signed primitives ([`i8`] … [`i128`]).
+/// This type corresponds with the signed primitives ([`i8`]…[`i128`]).
 ///
 /// [w0]: https://en.wikipedia.org/wiki/Integer
 /// [m0]: https://mathworld.wolfram.com/Integer.html
@@ -59,7 +59,7 @@ pub struct NonZeroInteger<I: InnerNumber>(I);
 /// Sometimes called *Natural number* ([w][1w]) or *counting number*,
 /// but in that case it can be confounded with [`PositiveInteger`].
 ///
-/// This type exactly corresponds to the unsigned primitives (u8…u128).
+/// This type corresponds with the unsigned primitives ([`u8`]…[`u128`]).
 ///
 /// [0m]: https://mathworld.wolfram.com/NonnegativeInteger.html
 /// [0o]: http://oeis.org/A001477

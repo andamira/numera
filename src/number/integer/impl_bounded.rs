@@ -132,3 +132,49 @@ impl<I: InnerNumber + UpperBounded + NegOne> UpperBounded for NegativeInteger<I>
         Self(I::new_neg_one())
     }
 }
+
+/// Tests
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::number::traits::{Bounded, ConstBounded};
+    use static_assertions::*;
+
+    macro_rules! assert_impl_bounded {
+        (both: $($ty:ty),+) => {
+            assert_impl_bounded![@const: $($ty),+];
+            assert_impl_bounded![@nonconst: $($ty),+];
+        };
+        (@const: $($ty:ty),+) => {
+            $( assert_impl_all![$ty: ConstLowerBounded, ConstUpperBounded, ConstBounded];)+
+        };
+        (@nonconst: $($ty:ty),+) => {
+            $( assert_impl_all![$ty: LowerBounded, UpperBounded, Bounded];)+
+        };
+    }
+
+    /// Checks the `[Const][Lower|Upper]Bounded]` traits for integers.
+    #[test]
+    fn bounded_integers() {
+        assert_impl_bounded![
+            both: Integer<i8>,
+            NonNegativeInteger<i8>,
+            NonPositiveInteger<i8>,
+            NegativeInteger<i8>,
+            PositiveInteger<i8>,
+            NonZeroInteger<i8>
+        ];
+    }
+
+    /// Checks the bounds for `ibig` big integers.
+    #[test]
+    #[cfg(feature = "ibig")]
+    fn bounded_integers_ibig() {
+        use ibig::{IBig, UBig};
+
+        assert_impl_all![Integer<UBig>: LowerBounded];
+
+        assert_not_impl_any![Integer<UBig>: UpperBounded];
+        assert_not_impl_any![Integer<IBig>: LowerBounded, UpperBounded];
+    }
+}

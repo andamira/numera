@@ -21,5 +21,8 @@ pub use {
         Integer, NegativeInteger, NonNegativeInteger, NonPositiveInteger, NonZeroInteger,
         PositiveInteger,
     },
-    traits::{Bounded, InnerNumber, Number, One, Sign, Zero},
+    traits::{
+        Bounded, ConstBounded, ConstLowerBounded, ConstNegOne, ConstOne, ConstUpperBounded,
+        ConstZero, InnerNumber, LowerBounded, NegOne, NonZero, Number, One, UpperBounded, Zero,
+    },
 };

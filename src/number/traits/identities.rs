@@ -1,4 +1,4 @@
-// numera::number::traits::onezero
+// numera::number::traits::identities
 //
 //! implements the `[const][Zero|One]` & `NonZero` traits.
 //
@@ -20,7 +20,7 @@ pub trait ConstOne {
 
 /// Indicates this type has a const (`-1`) value.
 pub trait ConstNegOne {
-    /// The inverse of the multiplicative identity `-1`.
+    /// The negative multiplicative identity `-1`.
     const NEG_ONE: Self;
 }
 
@@ -91,6 +91,24 @@ macro_rules! impl_const_onezero {
     };
 }
 
+/// implements only the *non-const* One & Zero traits.
+#[cfg(feature = "ibig")]
+macro_rules! impl_nonconst_onezero {
+    (all: $($ty:ty, $zero:expr, $one:expr),+) => {
+        $( impl_nonconst_onezero![$ty, $zero, $one]; )+
+    };
+    ($ty:ty, $zero:expr, $one:expr) => {
+        impl One for $ty {
+            fn new_one() -> Self { $one }
+            fn is_one(&self) -> bool { *self == $one }
+        }
+        impl Zero for $ty {
+            fn new_zero() -> Self { $zero }
+            fn is_zero(&self) -> bool { *self == $zero }
+        }
+    };
+}
+
 /// implements both `ConstNegOne` & `NegOne` traits.
 macro_rules! impl_const_neg1 {
     (all: $($ty:ty, $neg1:expr),+) => {
@@ -100,6 +118,20 @@ macro_rules! impl_const_neg1 {
         impl ConstNegOne for $ty {
             const NEG_ONE: Self = $neg1;
         }
+        impl NegOne for $ty {
+            fn new_neg_one() -> Self { $neg1 }
+            fn is_neg_one(&self) -> bool { *self == $neg1 }
+        }
+    };
+}
+
+/// implements only the `NegOne` trait.
+#[cfg(feature = "ibig")]
+macro_rules! impl_nonconst_neg1 {
+    (all: $($ty:ty, $neg1:expr),+) => {
+        $( impl_nonconst_neg1![$ty, $neg1]; )+
+    };
+    ($ty:ty, $neg1:expr) => {
         impl NegOne for $ty {
             fn new_neg_one() -> Self { $neg1 }
             fn is_neg_one(&self) -> bool { *self == $neg1 }
@@ -136,6 +168,8 @@ mod impl_twofloat {
         fn new_neg_one() -> Self { TwoFloat::from(-1.0) }
         fn is_neg_one(&self) -> bool { self != &Self::new_neg_one() }
     }
+
+    // WIP:twofloat_const_onezero
 }
 
 #[rustfmt::skip]
@@ -166,6 +200,19 @@ mod impl_half {
         };
     }
     impl_const_onezero![bf16, f16];
+}
+
+#[rustfmt::skip]
+#[cfg(feature = "ibig")]
+mod impl_ibig {
+    use super::*;
+    use ibig::{IBig, UBig};
+
+    impl_nonconst_onezero![all:
+        UBig, UBig::from(0_u8), UBig::from(1_u8),
+        IBig, IBig::from(0_u8), IBig::from(1_u8)
+    ];
+    impl_nonconst_neg1![all: IBig, IBig::from(-1_i8)];
 }
 
 /// Tests
