@@ -1,6 +1,7 @@
 // numera::number::traits::identities
 //
-//! implements the `[const][Zero|One]` & `NonZero` traits.
+//! defines the `[const][Zero|One]` & `NonZero` traits
+//! and implements them for primitive and supported external types.
 //
 
 /// Indicates this type doesn't have z zero (`0`) value.

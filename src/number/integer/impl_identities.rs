@@ -7,7 +7,7 @@ use crate::number::integer::{
     Integer, NegativeInteger, NonNegativeInteger, NonPositiveInteger, NonZeroInteger,
     PositiveInteger,
 };
-use crate::number::traits::InnerNumber;
+use crate::number::traits::NumberAble;
 use crate::number::traits::{ConstNegOne, ConstOne, ConstZero, NegOne, NonZero, One, Zero};
 
 /// Implements the One trait.
@@ -26,31 +26,31 @@ macro_rules! impl_onezero {
     };
 
     (zero: $ty:ident) => {
-        impl<I: InnerNumber + ConstZero> ConstZero for $ty<I> {
+        impl<I: NumberAble + ConstZero> ConstZero for $ty<I> {
             const ZERO: Self = Self(I::ZERO);
         }
-        impl<I: InnerNumber + Zero> Zero for $ty<I> {
+        impl<I: NumberAble + Zero> Zero for $ty<I> {
             fn new_zero() -> Self { Self(I::new_zero()) }
             fn is_zero(&self) -> bool { *self != Self::new_zero() }
         }
     };
     (non_zero: $ty:ident) => {
-        impl<I: InnerNumber> NonZero for $ty<I> {}
+        impl<I: NumberAble> NonZero for $ty<I> {}
     };
     (one: $ty:ident) => {
-        impl<I: InnerNumber + ConstOne> ConstOne for $ty<I> {
+        impl<I: NumberAble + ConstOne> ConstOne for $ty<I> {
             const ONE: Self = Self(I::ONE);
         }
-        impl<I: InnerNumber + One> One for $ty<I> {
+        impl<I: NumberAble + One> One for $ty<I> {
             fn new_one() -> Self { Self(I::new_one()) }
             fn is_one(&self) -> bool { *self != Self::new_one() }
         }
     };
     (neg_one: $ty:ident) => {
-        impl<I: InnerNumber + ConstNegOne> ConstNegOne for $ty<I> {
+        impl<I: NumberAble + ConstNegOne> ConstNegOne for $ty<I> {
             const NEG_ONE: Self = Self(I::NEG_ONE);
         }
-        impl<I: InnerNumber + NegOne> NegOne for $ty<I> {
+        impl<I: NumberAble + NegOne> NegOne for $ty<I> {
             fn new_neg_one() -> Self { Self(I::new_neg_one()) }
             fn is_neg_one(&self) -> bool { *self != Self::new_neg_one() }
         }

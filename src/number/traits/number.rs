@@ -6,14 +6,14 @@
 use super::Sign;
 
 /// The inner representation for the [`Number`] trait.
-pub trait InnerNumber: PartialOrd + Sign {}
+pub trait NumberAble: PartialOrd + Sign {}
 
-impl<T> InnerNumber for T where T: PartialOrd + Sign {}
+impl<T> NumberAble for T where T: PartialOrd + Sign {}
 
 /// The main number API trait.
 pub trait Number {
     /// The inner numeric value that underlies this number.
-    type Inner: InnerNumber;
+    type Inner: NumberAble;
 
     /// Returns a new number of the current type.
     ///

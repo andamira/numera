@@ -7,10 +7,10 @@ use super::{
     Integer, NegativeInteger, NonNegativeInteger, NonPositiveInteger, NonZeroInteger,
     PositiveInteger,
 };
-use crate::number::traits::{InnerNumber, NegOne, Number, One, Zero};
+use crate::number::traits::{NegOne, Number, NumberAble, One, Zero};
 
 #[rustfmt::skip]
-impl<I: InnerNumber + Zero + One + NegOne> Number for Integer<I> {
+impl<I: NumberAble + Zero + One + NegOne> Number for Integer<I> {
     type Inner = I;
     /// Returns a new `Integer`.
     #[inline]
@@ -39,7 +39,7 @@ impl<I: InnerNumber + Zero + One + NegOne> Number for Integer<I> {
 }
 
 #[rustfmt::skip]
-impl<I: InnerNumber + One + NegOne> Number for NonZeroInteger<I> {
+impl<I: NumberAble + One + NegOne> Number for NonZeroInteger<I> {
     type Inner = I;
     /// Returns a new `NonZeroInteger`.
     #[inline]
@@ -68,7 +68,7 @@ impl<I: InnerNumber + One + NegOne> Number for NonZeroInteger<I> {
 }
 
 #[rustfmt::skip]
-impl<I: InnerNumber + Zero + One> Number for NonNegativeInteger<I> {
+impl<I: NumberAble + Zero + One> Number for NonNegativeInteger<I> {
     type Inner = I;
     /// Returns a new *non-negative* `Integer`.
     /// The smallest value saturates to `0`.
@@ -104,7 +104,7 @@ impl<I: InnerNumber + Zero + One> Number for NonNegativeInteger<I> {
 }
 
 #[rustfmt::skip]
-impl<I: InnerNumber + One> Number for PositiveInteger<I> {
+impl<I: NumberAble + One> Number for PositiveInteger<I> {
     type Inner = I;
     /// Returns a new *positive* `Integer`.
     /// The smallest value saturates to `1`.
@@ -140,7 +140,7 @@ impl<I: InnerNumber + One> Number for PositiveInteger<I> {
 }
 
 #[rustfmt::skip]
-impl<I: InnerNumber + Zero + NegOne> Number for NonPositiveInteger<I> {
+impl<I: NumberAble + Zero + NegOne> Number for NonPositiveInteger<I> {
     type Inner = I;
     /// Returns a new *non-positive* `Integer`.
     /// The largest value Saturates to `0`.
@@ -176,7 +176,7 @@ impl<I: InnerNumber + Zero + NegOne> Number for NonPositiveInteger<I> {
 }
 
 #[rustfmt::skip]
-impl<I: InnerNumber + NegOne + Zero> Number for NegativeInteger<I> {
+impl<I: NumberAble + NegOne + Zero> Number for NegativeInteger<I> {
     type Inner = I;
     /// Returns a new *negative* `Integer`.
     /// The largest value saturates to `-1`.

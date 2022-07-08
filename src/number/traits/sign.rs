@@ -1,6 +1,6 @@
 // numera::number::traits::sign
 //
-//!
+//! defines the Sign trait.
 //
 
 /// Information about the sign of a number.

@@ -12,7 +12,6 @@
 #![allow(non_camel_case_types)]
 
 pub mod integer;
-mod macros;
 pub mod traits;
 
 #[doc(inline)]
@@ -23,6 +22,6 @@ pub use {
     },
     traits::{
         Bounded, ConstBounded, ConstLowerBounded, ConstNegOne, ConstOne, ConstUpperBounded,
-        ConstZero, InnerNumber, LowerBounded, NegOne, NonZero, Number, One, UpperBounded, Zero,
+        ConstZero, LowerBounded, NegOne, NonZero, Number, NumberAble, One, UpperBounded, Zero,
     },
 };

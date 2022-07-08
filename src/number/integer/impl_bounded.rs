@@ -7,7 +7,7 @@ use crate::number::integer::{
     Integer, NegativeInteger, NonNegativeInteger, NonPositiveInteger, NonZeroInteger,
     PositiveInteger,
 };
-use crate::number::traits::InnerNumber;
+use crate::number::traits::NumberAble;
 use crate::number::traits::{
     ConstLowerBounded, ConstNegOne, ConstOne, ConstUpperBounded, ConstZero, LowerBounded, NegOne,
     One, UpperBounded, Zero,
@@ -15,19 +15,19 @@ use crate::number::traits::{
 
 // Integer (MIN..MAX)
 
-impl<I: InnerNumber + ConstLowerBounded> ConstLowerBounded for Integer<I> {
+impl<I: NumberAble + ConstLowerBounded> ConstLowerBounded for Integer<I> {
     const MIN: Self = Self(I::MIN);
 }
-impl<I: InnerNumber + ConstUpperBounded> ConstUpperBounded for Integer<I> {
+impl<I: NumberAble + ConstUpperBounded> ConstUpperBounded for Integer<I> {
     const MAX: Self = Self(I::MAX);
 }
 
-impl<I: InnerNumber + LowerBounded> LowerBounded for Integer<I> {
+impl<I: NumberAble + LowerBounded> LowerBounded for Integer<I> {
     fn new_min() -> Self {
         Self(I::new_min())
     }
 }
-impl<I: InnerNumber + UpperBounded> UpperBounded for Integer<I> {
+impl<I: NumberAble + UpperBounded> UpperBounded for Integer<I> {
     fn new_max() -> Self {
         Self(I::new_max())
     }
@@ -35,19 +35,19 @@ impl<I: InnerNumber + UpperBounded> UpperBounded for Integer<I> {
 
 // NonZeroInteger (MIN..MAX)
 
-impl<I: InnerNumber + ConstLowerBounded> ConstLowerBounded for NonZeroInteger<I> {
+impl<I: NumberAble + ConstLowerBounded> ConstLowerBounded for NonZeroInteger<I> {
     const MIN: Self = Self(I::MIN);
 }
-impl<I: InnerNumber + ConstUpperBounded> ConstUpperBounded for NonZeroInteger<I> {
+impl<I: NumberAble + ConstUpperBounded> ConstUpperBounded for NonZeroInteger<I> {
     const MAX: Self = Self(I::MAX);
 }
 
-impl<I: InnerNumber + LowerBounded> LowerBounded for NonZeroInteger<I> {
+impl<I: NumberAble + LowerBounded> LowerBounded for NonZeroInteger<I> {
     fn new_min() -> Self {
         Self(I::new_min())
     }
 }
-impl<I: InnerNumber + UpperBounded> UpperBounded for NonZeroInteger<I> {
+impl<I: NumberAble + UpperBounded> UpperBounded for NonZeroInteger<I> {
     fn new_max() -> Self {
         Self(I::new_max())
     }
@@ -55,19 +55,19 @@ impl<I: InnerNumber + UpperBounded> UpperBounded for NonZeroInteger<I> {
 
 // NonNegativeInteger (ZERO..=MAX)
 
-impl<I: InnerNumber + ConstLowerBounded + ConstZero> ConstLowerBounded for NonNegativeInteger<I> {
+impl<I: NumberAble + ConstLowerBounded + ConstZero> ConstLowerBounded for NonNegativeInteger<I> {
     const MIN: Self = Self(I::ZERO);
 }
-impl<I: InnerNumber + ConstUpperBounded> ConstUpperBounded for NonNegativeInteger<I> {
+impl<I: NumberAble + ConstUpperBounded> ConstUpperBounded for NonNegativeInteger<I> {
     const MAX: Self = Self(I::MAX);
 }
 
-impl<I: InnerNumber + LowerBounded + Zero> LowerBounded for NonNegativeInteger<I> {
+impl<I: NumberAble + LowerBounded + Zero> LowerBounded for NonNegativeInteger<I> {
     fn new_min() -> Self {
         Self(I::new_zero())
     }
 }
-impl<I: InnerNumber + UpperBounded> UpperBounded for NonNegativeInteger<I> {
+impl<I: NumberAble + UpperBounded> UpperBounded for NonNegativeInteger<I> {
     fn new_max() -> Self {
         Self(I::new_max())
     }
@@ -75,19 +75,19 @@ impl<I: InnerNumber + UpperBounded> UpperBounded for NonNegativeInteger<I> {
 
 // PositiveInteger (ONE..=MAX)
 
-impl<I: InnerNumber + ConstLowerBounded + ConstOne> ConstLowerBounded for PositiveInteger<I> {
+impl<I: NumberAble + ConstLowerBounded + ConstOne> ConstLowerBounded for PositiveInteger<I> {
     const MIN: Self = Self(I::ONE);
 }
-impl<I: InnerNumber + ConstUpperBounded> ConstUpperBounded for PositiveInteger<I> {
+impl<I: NumberAble + ConstUpperBounded> ConstUpperBounded for PositiveInteger<I> {
     const MAX: Self = Self(I::MAX);
 }
 
-impl<I: InnerNumber + LowerBounded + One> LowerBounded for PositiveInteger<I> {
+impl<I: NumberAble + LowerBounded + One> LowerBounded for PositiveInteger<I> {
     fn new_min() -> Self {
         Self(I::new_one())
     }
 }
-impl<I: InnerNumber + UpperBounded> UpperBounded for PositiveInteger<I> {
+impl<I: NumberAble + UpperBounded> UpperBounded for PositiveInteger<I> {
     fn new_max() -> Self {
         Self(I::new_max())
     }
@@ -95,19 +95,19 @@ impl<I: InnerNumber + UpperBounded> UpperBounded for PositiveInteger<I> {
 
 // NonPositiveInteger (MIN..=ZERO)
 
-impl<I: InnerNumber + ConstLowerBounded> ConstLowerBounded for NonPositiveInteger<I> {
+impl<I: NumberAble + ConstLowerBounded> ConstLowerBounded for NonPositiveInteger<I> {
     const MIN: Self = Self(I::MIN);
 }
-impl<I: InnerNumber + ConstUpperBounded + ConstZero> ConstUpperBounded for NonPositiveInteger<I> {
+impl<I: NumberAble + ConstUpperBounded + ConstZero> ConstUpperBounded for NonPositiveInteger<I> {
     const MAX: Self = Self(I::ZERO);
 }
 
-impl<I: InnerNumber + LowerBounded> LowerBounded for NonPositiveInteger<I> {
+impl<I: NumberAble + LowerBounded> LowerBounded for NonPositiveInteger<I> {
     fn new_min() -> Self {
         Self(I::new_min())
     }
 }
-impl<I: InnerNumber + UpperBounded + Zero> UpperBounded for NonPositiveInteger<I> {
+impl<I: NumberAble + UpperBounded + Zero> UpperBounded for NonPositiveInteger<I> {
     fn new_max() -> Self {
         Self(I::new_zero())
     }
@@ -115,19 +115,19 @@ impl<I: InnerNumber + UpperBounded + Zero> UpperBounded for NonPositiveInteger<I
 
 // NegativeInteger (MIN..=NEG_ONE)
 
-impl<I: InnerNumber + ConstLowerBounded> ConstLowerBounded for NegativeInteger<I> {
+impl<I: NumberAble + ConstLowerBounded> ConstLowerBounded for NegativeInteger<I> {
     const MIN: Self = Self(I::MIN);
 }
-impl<I: InnerNumber + ConstUpperBounded + ConstNegOne> ConstUpperBounded for NegativeInteger<I> {
+impl<I: NumberAble + ConstUpperBounded + ConstNegOne> ConstUpperBounded for NegativeInteger<I> {
     const MAX: Self = Self(I::NEG_ONE);
 }
 
-impl<I: InnerNumber + LowerBounded> LowerBounded for NegativeInteger<I> {
+impl<I: NumberAble + LowerBounded> LowerBounded for NegativeInteger<I> {
     fn new_min() -> Self {
         Self(I::new_min())
     }
 }
-impl<I: InnerNumber + UpperBounded + NegOne> UpperBounded for NegativeInteger<I> {
+impl<I: NumberAble + UpperBounded + NegOne> UpperBounded for NegativeInteger<I> {
     fn new_max() -> Self {
         Self(I::new_neg_one())
     }

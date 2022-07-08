@@ -1,6 +1,7 @@
 // numera::number::traits::bounded
 //
-//! implements the `[Const][Lower|Upper]Bounded` traits.
+//! defines the `[Const][Lower|Upper]Bounded` traits
+//! and implements them for primitive and supported external types.
 //
 
 /// Indicates this type has both const lower and upper bounds.
@@ -146,7 +147,7 @@ mod tests {
 
         assert_impl_all![UBig: LowerBounded];
 
-        // BUG like: https://github.com/nvzqz/static-assertions-rs/issues/46
+        // BUG:static_assertions ±(https://github.com/nvzqz/static-assertions-rs/issues/46)
         // assert_not_impl_any![UBig: LowerBounded];
         // assert_not_impl_any![IBig: LowerBounded, UpperBounded];
         assert_not_impl_all![UBig: UpperBounded];

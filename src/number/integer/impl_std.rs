@@ -4,7 +4,7 @@
 //
 
 use super::{Integer, NegativeInteger, NonNegativeInteger, NonPositiveInteger, PositiveInteger};
-use crate::number::traits::{InnerNumber, NegOne, Number, One, Zero};
+use crate::number::traits::{NegOne, Number, NumberAble, One, Zero};
 
 use core::hash::{Hash, Hasher};
 
@@ -16,7 +16,7 @@ use std::fmt;
 // NOTE: NonZeroInteger doesn't implement Default.
 
 /// Default: 0.
-impl<I: InnerNumber + Zero> Default for Integer<I> {
+impl<I: NumberAble + Zero> Default for Integer<I> {
     #[inline]
     fn default() -> Self {
         Self(I::new_zero())
@@ -24,28 +24,28 @@ impl<I: InnerNumber + Zero> Default for Integer<I> {
 }
 
 /// Default: 0.
-impl<I: InnerNumber + Zero> Default for NonNegativeInteger<I> {
+impl<I: NumberAble + Zero> Default for NonNegativeInteger<I> {
     #[inline]
     fn default() -> Self {
         Self(I::new_zero())
     }
 }
 /// Default: 1.
-impl<I: InnerNumber + One> Default for PositiveInteger<I> {
+impl<I: NumberAble + One> Default for PositiveInteger<I> {
     #[inline]
     fn default() -> Self {
         Self(I::new_one())
     }
 }
 /// Default: 0.
-impl<I: InnerNumber + Zero + NegOne> Default for NonPositiveInteger<I> {
+impl<I: NumberAble + Zero + NegOne> Default for NonPositiveInteger<I> {
     #[inline]
     fn default() -> Self {
         Self::new(I::new_zero())
     }
 }
 /// Default: -1.
-impl<I: InnerNumber + NegOne> Default for NegativeInteger<I> {
+impl<I: NumberAble + NegOne> Default for NegativeInteger<I> {
     #[inline]
     fn default() -> Self {
         Self(I::new_neg_one())
@@ -60,19 +60,19 @@ macro_rules! derive_std_traits {
         $( derive_std_traits!($int); )+
     };
     ($int:ident) => {
-        impl<I: InnerNumber + Copy> Copy for $int<I> {}
-        impl<I: InnerNumber + Clone> Clone for $int<I> {
+        impl<I: NumberAble + Copy> Copy for $int<I> {}
+        impl<I: NumberAble + Clone> Clone for $int<I> {
             fn clone(&self) -> Self{ Self(self.0.clone()) }
         }
         // This is OK since both PartialEq & Hash are derived from the inner type:
         #[allow(clippy::derive_hash_xor_eq)]
-        impl<I: InnerNumber + Hash> Hash for $int<I> {
+        impl<I: NumberAble + Hash> Hash for $int<I> {
             fn hash<H: Hasher>(&self, hasher: &mut H) {
                 self.0.hash(hasher);
             }
         }
         #[cfg(feature = "std")]
-        impl<I: InnerNumber + fmt::Display> fmt::Display for $int<I> {
+        impl<I: NumberAble + fmt::Display> fmt::Display for $int<I> {
             fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
                 write!(f, "{}", self.0)
             }
