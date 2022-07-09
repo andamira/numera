@@ -12,15 +12,15 @@ mod fraction;
 pub use fraction::Fraction;
 
 use crate::integer::{Integer, NonNegativeInteger, NonZeroInteger, PositiveInteger};
-use crate::traits::NumberAble;
+use crate::traits::Number;
 
 /// A rational number.
 ///
 #[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub struct Rational<N, D>
 where
-    N: NumberAble,
-    D: NumberAble,
+    N: Number,
+    D: Number,
 {
     /// The numerator.
     pub num: Integer<N>,
@@ -31,8 +31,8 @@ where
 /// A variation of a [`Rational`] where the component must always be positive.
 pub struct PositiveRational<N, D>
 where
-    N: NumberAble,
-    D: NumberAble,
+    N: Number,
+    D: Number,
 {
     /// The numerator.
     pub num: NonNegativeInteger<N>,

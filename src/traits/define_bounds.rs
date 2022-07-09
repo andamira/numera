@@ -1,4 +1,4 @@
-// numera::traits::bounded
+// numera::traits::define_bounds
 //
 //! defines the `[Const][Lower|Upper]Bounded` traits
 //! and implements them for primitive and supported external types.

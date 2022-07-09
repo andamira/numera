@@ -18,7 +18,4 @@ pub mod rational;
 pub mod traits;
 
 #[doc(inline)]
-pub use {
-    integer::Integer,
-    rational::Rational,
-};
+pub use {integer::Integer, rational::Rational};

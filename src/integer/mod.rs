@@ -31,10 +31,9 @@ mod impl_discrete;
 mod impl_identities;
 mod impl_number;
 mod impl_ops;
-mod impl_sign;
 mod impl_util;
 
-use crate::traits::NumberAble;
+use crate::traits::Number;
 
 /// An integer number ([w][w0]/[m][m0]), from the set $\Z$.
 ///
@@ -45,8 +44,8 @@ use crate::traits::NumberAble;
 /// [w0]: https://en.wikipedia.org/wiki/Integer
 /// [m0]: https://mathworld.wolfram.com/Integer.html
 #[repr(transparent)]
-#[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
-pub struct Integer<I: NumberAble>(I);
+#[derive(Clone, Debug, Eq, Ord, PartialEq, PartialOrd)]
+pub struct Integer<I: Number>(I);
 
 /// An alias of [`Integer`].
 pub type SignedInteger<I> = Integer<I>;
@@ -57,8 +56,8 @@ pub type SignedInteger<I> = Integer<I>;
 ///
 /// [o0]: https://oeis.org/wiki/Nonzero_integers
 #[repr(transparent)]
-#[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
-pub struct NonZeroInteger<I: NumberAble>(I);
+#[derive(Clone, Debug, Eq, Ord, PartialEq, PartialOrd)]
+pub struct NonZeroInteger<I: Number>(I);
 
 /// An only *non-negative* integer number ([m][0m]/[o][0o]), from the set $\Z^*$.
 ///
@@ -73,8 +72,8 @@ pub struct NonZeroInteger<I: NumberAble>(I);
 /// [0o]: http://oeis.org/A001477
 /// [1w]: https://en.wikipedia.org/wiki/Natural_number
 #[repr(transparent)]
-#[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
-pub struct NonNegativeInteger<I: NumberAble>(I);
+#[derive(Clone, Debug, Eq, Ord, PartialEq, PartialOrd)]
+pub struct NonNegativeInteger<I: Number>(I);
 
 /// An alias of [`NonNegativeInteger`].
 pub type UnsignedInteger<I> = Integer<I>;
@@ -91,8 +90,8 @@ pub type UnsignedInteger<I> = Integer<I>;
 /// [0m]: https://mathworld.wolfram.com/PositiveInteger.html
 /// [1w]: https://en.wikipedia.org/wiki/Natural_number
 #[repr(transparent)]
-#[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
-pub struct PositiveInteger<I: NumberAble>(I);
+#[derive(Clone, Debug, Eq, Ord, PartialEq, PartialOrd)]
+pub struct PositiveInteger<I: Number>(I);
 
 /// An only *negative* integer number ([m][0m]/[o][0o]), from the set $\Z^-$.
 ///
@@ -103,8 +102,8 @@ pub struct PositiveInteger<I: NumberAble>(I);
 /// [0m]: https://mathworld.wolfram.com/NegativeInteger.html
 /// [0o]: http://oeis.org/A001478
 #[repr(transparent)]
-#[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
-pub struct NegativeInteger<I: NumberAble>(I);
+#[derive(Clone, Debug, Eq, Ord, PartialEq, PartialOrd)]
+pub struct NegativeInteger<I: Number>(I);
 
 /// An only *non-positive* integer number ([m][0m]), from the set ${0} \cup \Z^-$.
 ///
@@ -112,5 +111,5 @@ pub struct NegativeInteger<I: NumberAble>(I);
 ///
 /// [0m]: https://mathworld.wolfram.com/NonpositiveInteger.html
 #[repr(transparent)]
-#[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
-pub struct NonPositiveInteger<I: NumberAble>(I);
+#[derive(Clone, Debug, Eq, Ord, PartialEq, PartialOrd)]
+pub struct NonPositiveInteger<I: Number>(I);

@@ -7,14 +7,15 @@ use super::{
     Integer, NegativeInteger, NonNegativeInteger, NonPositiveInteger, NonZeroInteger,
     PositiveInteger,
 };
-use crate::traits::{NegOne, Number, NumberAble, One, Zero};
+use crate::traits::Number;
 
 #[rustfmt::skip]
-impl<I: NumberAble + Zero + One + NegOne> Number for Integer<I> {
-    type Inner = I;
+impl<N: Number> Number for Integer<N> {
+    type Inner = N;
     /// Returns a new `Integer`.
     #[inline]
     fn new(value: Self::Inner) -> Self { Self(value) }
+
     #[inline]
     fn can_negative() -> bool { true }
     #[inline]
@@ -39,11 +40,16 @@ impl<I: NumberAble + Zero + One + NegOne> Number for Integer<I> {
 }
 
 #[rustfmt::skip]
-impl<I: NumberAble + One + NegOne> Number for NonZeroInteger<I> {
+impl<I: Number> Number for NonZeroInteger<I> {
     type Inner = I;
     /// Returns a new `NonZeroInteger`.
+    ///
+    /// Panics if `value` == `0`.
     #[inline]
-    fn new(value: Self::Inner) -> Self { Self(value) }
+    fn new(value: Self::Inner) -> Self {
+        assert![!value.is_zero()];
+        Self(value)
+    }
     #[inline]
     fn can_negative() -> bool { true }
     #[inline]
@@ -68,17 +74,15 @@ impl<I: NumberAble + One + NegOne> Number for NonZeroInteger<I> {
 }
 
 #[rustfmt::skip]
-impl<I: NumberAble + Zero + One> Number for NonNegativeInteger<I> {
+impl<I: Number> Number for NonNegativeInteger<I> {
     type Inner = I;
     /// Returns a new *non-negative* `Integer`.
-    /// The smallest value saturates to `0`.
+    ///
+    /// Panics if `value` < `0`.
     #[inline]
     fn new(value: Self::Inner) -> Self {
-        Self(if value < Self::Inner::new_zero() {
-            Self::Inner::new_zero()
-        } else {
-            value
-        })
+        assert![value.is_positive()];
+        Self(value)
     }
     #[inline]
     fn can_negative() -> bool { false }
@@ -104,17 +108,15 @@ impl<I: NumberAble + Zero + One> Number for NonNegativeInteger<I> {
 }
 
 #[rustfmt::skip]
-impl<I: NumberAble + One> Number for PositiveInteger<I> {
+impl<I: Number> Number for PositiveInteger<I> {
     type Inner = I;
     /// Returns a new *positive* `Integer`.
-    /// The smallest value saturates to `1`.
+    ///
+    /// Panics if `value` <= `0`.
     #[inline]
     fn new(value: Self::Inner) -> Self {
-        Self(if value < Self::Inner::new_one() {
-            Self::Inner::new_one()
-        } else {
-            value
-        })
+        assert![value.is_positive() && !value.is_zero()];
+        Self(value)
     }
     #[inline]
     fn can_negative() -> bool { false }
@@ -140,17 +142,15 @@ impl<I: NumberAble + One> Number for PositiveInteger<I> {
 }
 
 #[rustfmt::skip]
-impl<I: NumberAble + Zero + NegOne> Number for NonPositiveInteger<I> {
+impl<I: Number> Number for NonPositiveInteger<I> {
     type Inner = I;
     /// Returns a new *non-positive* `Integer`.
-    /// The largest value Saturates to `0`.
+    ///
+    /// Panics if `value` > `0`.
     #[inline]
     fn new(value: Self::Inner) -> Self {
-        Self(if value > Self::Inner::new_zero() {
-            Self::Inner::new_zero()
-        } else {
-            value
-        })
+        assert![!value.is_positive()];
+        Self(value)
     }
     #[inline]
     fn can_negative() -> bool { true }
@@ -176,17 +176,15 @@ impl<I: NumberAble + Zero + NegOne> Number for NonPositiveInteger<I> {
 }
 
 #[rustfmt::skip]
-impl<I: NumberAble + NegOne + Zero> Number for NegativeInteger<I> {
+impl<I: Number> Number for NegativeInteger<I> {
     type Inner = I;
     /// Returns a new *negative* `Integer`.
-    /// The largest value saturates to `-1`.
+    ///
+    /// Panics if `value` >= `0`.
     #[inline]
     fn new(value: Self::Inner) -> Self {
-        Self(if value >= Self::Inner::new_zero() {
-            Self::Inner::new_neg_one()
-        } else {
-            value
-        })
+        assert![value.is_negative() && !value.is_zero()];
+        Self(value)
     }
     #[inline]
     fn can_negative() -> bool { true }

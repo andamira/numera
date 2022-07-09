@@ -1,6 +1,6 @@
-// numera::traits::bounded
+// numera::traits::define_ops
 //
-//! defines arithmetic traits operations
+//! defines arithmetic operations traits
 //! and implements them for primitive and supported external types.
 //
 
@@ -67,6 +67,3 @@ macro_rules! impl_checked {
 
 #[rustfmt::skip]
 impl_checked![all_primitives: CheckedAdd, checked_add];
-
-// Inv
-

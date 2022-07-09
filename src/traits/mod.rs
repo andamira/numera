@@ -2,29 +2,34 @@
 //
 //! Numeric traits.
 //!
-//! All traits are re-exported from the root of this module,
-//! and from thematic submodules.
+//! All traits are re-exported both from here and the thematic submodules.
 //
 
-mod define;
+mod define_bounds;
+mod define_continuity;
+mod define_identities;
+mod define_number;
+mod define_ops;
 
-// public root re-exports
+// re-export all here
 
+#[doc(inline)]
+pub use self::{bounds::*, identities::*, number::*, ops::*};
 pub use crate::rational::Fraction;
-pub use define::*;
+pub use define_number::Number;
 
-// public sub-modules re-exports
+// & grouped thematically:
 
 /// Lower and upper bounds.
-pub mod bounded {
-    pub use super::define::bounded::{
+pub mod bounds {
+    pub use super::define_bounds::{
         Bounded, ConstBounded, ConstLowerBounded, ConstUpperBounded, LowerBounded, UpperBounded,
     };
 }
 
 /// Related with `0`, `1` and `-1`.
 pub mod identities {
-    pub use super::define::identities::{
+    pub use super::define_identities::{
         ConstNegOne, ConstOne, ConstZero, NegOne, NonZero, One, Zero,
     };
 }
@@ -36,7 +41,7 @@ pub mod ops {
 
     /// Operators that returns `None` instead of panicking.
     pub mod checked {
-        pub use crate::traits::define::ops::{
+        pub use crate::traits::define_ops::{
             CheckedAdd, CheckedDiv, CheckedMul, CheckedNeg, CheckedRem, CheckedSub,
         };
     }
@@ -44,7 +49,6 @@ pub mod ops {
 
 /// General number traits.
 pub mod number {
-    pub use super::define::continuity::{Continuous, Discrete};
-    pub use super::define::number::{Number, NumberAble};
-    pub use super::define::sign::Sign;
+    pub use super::define_continuity::{Continuous, Discrete};
+    pub use super::define_number::Number;
 }

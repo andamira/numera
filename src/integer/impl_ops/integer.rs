@@ -3,7 +3,7 @@
 //! implements the arithmetic operations on `Integer`.
 
 use crate::traits::{
-    CheckedAdd, CheckedDiv, CheckedMul, CheckedNeg, CheckedRem, CheckedSub, NumberAble,
+    CheckedAdd, CheckedDiv, CheckedMul, CheckedNeg, CheckedRem, CheckedSub, Number,
 };
 use crate::Integer;
 use core::ops::{Add, Div, Mul, Neg, Rem, Sub};
@@ -31,17 +31,16 @@ macro_rules! impl_core_ops {
         }
     };
 }
-impl_core_ops![unary: Neg, neg, Integer, NumberAble + Neg<Output = I>];
-impl_core_ops![binary: Add, add, Integer, NumberAble + Add<Output = I>];
-impl_core_ops![binary: Sub, sub, Integer, NumberAble + Sub<Output = I>];
-impl_core_ops![binary: Mul, mul, Integer, NumberAble + Mul<Output = I>];
-impl_core_ops![binary: Div, div, Integer, NumberAble + Div<Output = I>];
-impl_core_ops![binary: Rem, rem, Integer, NumberAble + Rem<Output = I>];
+impl_core_ops![unary: Neg, neg, Integer, Number + Neg<Output = I>];
+impl_core_ops![binary: Add, add, Integer, Number + Add<Output = I>];
+impl_core_ops![binary: Sub, sub, Integer, Number + Sub<Output = I>];
+impl_core_ops![binary: Mul, mul, Integer, Number + Mul<Output = I>];
+impl_core_ops![binary: Div, div, Integer, Number + Div<Output = I>];
+impl_core_ops![binary: Rem, rem, Integer, Number + Rem<Output = I>];
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::traits::Number;
 
     #[test]
     fn core() {

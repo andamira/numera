@@ -7,11 +7,11 @@ use crate::integer::{
     Integer, NegativeInteger, NonNegativeInteger, NonPositiveInteger, NonZeroInteger,
     PositiveInteger,
 };
-use crate::traits::{Discrete, NumberAble};
+use crate::traits::{Discrete, Number};
 
-impl<I: NumberAble> Discrete for Integer<I> where I: Discrete {}
-impl<I: NumberAble> Discrete for NonZeroInteger<I> where I: Discrete {}
-impl<I: NumberAble> Discrete for PositiveInteger<I> where I: Discrete {}
-impl<I: NumberAble> Discrete for NonNegativeInteger<I> where I: Discrete {}
-impl<I: NumberAble> Discrete for NonPositiveInteger<I> where I: Discrete {}
-impl<I: NumberAble> Discrete for NegativeInteger<I> where I: Discrete {}
+impl<I: Number> Discrete for Integer<I> where I: Discrete {}
+impl<I: Number> Discrete for NonZeroInteger<I> where I: Discrete {}
+impl<I: Number> Discrete for PositiveInteger<I> where I: Discrete {}
+impl<I: Number> Discrete for NonNegativeInteger<I> where I: Discrete {}
+impl<I: Number> Discrete for NonPositiveInteger<I> where I: Discrete {}
+impl<I: Number> Discrete for NegativeInteger<I> where I: Discrete {}

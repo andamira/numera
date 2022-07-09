@@ -1,10 +1,10 @@
-// numera::traits::identities
+// numera::traits::define_identities
 //
 //! defines the `[const][Zero|One]` & `NonZero` traits
 //! and implements them for primitive and supported external types.
 //
 
-/// Indicates this type doesn't have z zero (`0`) value.
+/// Indicates this type doesn't have a zero (`0`) value.
 pub trait NonZero {}
 
 /// Indicates this type has a const zero (`0`) value.
@@ -159,15 +159,15 @@ mod impl_twofloat {
 
     impl Zero for TwoFloat {
         fn new_zero() -> Self { TwoFloat::from(0.0) }
-        fn is_zero(&self) -> bool { self != &Self::new_zero() }
+        fn is_zero(&self) -> bool { self == &Self::new_zero() }
     }
     impl One for TwoFloat {
         fn new_one() -> Self { TwoFloat::from(1.0) }
-        fn is_one(&self) -> bool { self != &Self::new_one() }
+        fn is_one(&self) -> bool { self == &Self::new_one() }
     }
     impl NegOne for TwoFloat {
         fn new_neg_one() -> Self { TwoFloat::from(-1.0) }
-        fn is_neg_one(&self) -> bool { self != &Self::new_neg_one() }
+        fn is_neg_one(&self) -> bool { self == &Self::new_neg_one() }
     }
 
     // WIP:twofloat_const_onezero
