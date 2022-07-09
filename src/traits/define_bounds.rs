@@ -4,31 +4,31 @@
 //! and implements them for primitive and supported external types.
 //
 
-/// Indicates this type has both const lower and upper bounds.
+/// Both *const* lower and upper bounds.
 pub trait ConstBounded: ConstLowerBounded + ConstUpperBounded {}
 
-/// Indicates this type has a const lower bound.
+/// A *const* lower bound.
 pub trait ConstLowerBounded {
     /// The smallest value that can be represented with this type.
     const MIN: Self;
 }
 
-/// Indicates this type has a const upper bound.
+/// A *const* upper bound.
 pub trait ConstUpperBounded {
     /// The smallest value that can be represented with this type.
     const MAX: Self;
 }
 
-/// Indicates this type as both lower and upper bounds.
+/// Both lower and upper bounds.
 pub trait Bounded: LowerBounded + UpperBounded {}
 
-/// Indicates this type has a lower bound.
+/// A lower bound.
 pub trait LowerBounded {
     /// The smallest value that can be represented with this type.
     fn new_min() -> Self;
 }
 
-/// Indicates this type has an upper bound.
+/// An upper bound.
 pub trait UpperBounded {
     /// The largest value that can be represented with this type.
     fn new_max() -> Self;

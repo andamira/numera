@@ -5,13 +5,13 @@
 
 use crate::integer::{
     Integer, NegativeInteger, NonNegativeInteger, NonPositiveInteger, NonZeroInteger,
-    PositiveInteger,
+    PositiveInteger, Signed,
 };
 use crate::traits::{Discrete, Number};
 
-impl<I: Number> Discrete for Integer<I> where I: Discrete {}
-impl<I: Number> Discrete for NonZeroInteger<I> where I: Discrete {}
-impl<I: Number> Discrete for PositiveInteger<I> where I: Discrete {}
-impl<I: Number> Discrete for NonNegativeInteger<I> where I: Discrete {}
-impl<I: Number> Discrete for NonPositiveInteger<I> where I: Discrete {}
-impl<I: Number> Discrete for NegativeInteger<I> where I: Discrete {}
+impl<N: Number + Signed> Discrete for Integer<N> where N: Discrete {}
+impl<N: Number + Signed> Discrete for NonZeroInteger<N> where N: Discrete {}
+impl<N: Number + Signed> Discrete for NonPositiveInteger<N> where N: Discrete {}
+impl<N: Number + Signed> Discrete for NegativeInteger<N> where N: Discrete {}
+impl<N: Number> Discrete for PositiveInteger<N> where N: Discrete {}
+impl<N: Number> Discrete for NonNegativeInteger<N> where N: Discrete {}

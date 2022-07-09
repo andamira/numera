@@ -4,64 +4,64 @@
 //! and implements them for primitive and supported external types.
 //
 
-/// Indicates this type doesn't have a zero (`0`) value.
+/// No additive identity `0`.
 pub trait NonZero {}
 
-/// Indicates this type has a const zero (`0`) value.
+/// Has a *const* additive identity `0`.
 pub trait ConstZero {
     /// The additive identity `0`.
     const ZERO: Self;
 }
 
-/// Indicates this type has a const (`1`) value.
+/// Has a *const* multiplicative identity `1`.
 pub trait ConstOne {
     /// The multiplicative identity `1`.
     const ONE: Self;
 }
 
-/// Indicates this type has a const (`-1`) value.
+/// Has a *const* negative multiplicative identity `-1`.
 pub trait ConstNegOne {
     /// The negative multiplicative identity `-1`.
     const NEG_ONE: Self;
 }
 
-/// The multiplicative identity `1`.
-pub trait One: Sized {
-    /// Returns a new number `1`.
-    fn new_one() -> Self;
-
-    /// Is this number `1`?
-    fn is_one(&self) -> bool;
-
-    /// Sets this number to `1`.
-    fn set_one(&mut self) {
-        *self = Self::new_one();
-    }
-}
-
 /// The additive identity `0`.
 pub trait Zero: Sized {
-    /// Returns a new number `0`.
+    /// A new additive identity `-1`.
     fn new_zero() -> Self;
 
-    /// Is this number `0`?
+    /// Is this `0`?
     fn is_zero(&self) -> bool;
 
-    /// Sets this number to `0`.
+    /// Sets this to `0`.
     fn set_zero(&mut self) {
         *self = Self::new_zero();
     }
 }
 
+/// The multiplicative identity `1`.
+pub trait One: Sized {
+    /// A new multiplicative identity `-1`.
+    fn new_one() -> Self;
+
+    /// Is this `1`?
+    fn is_one(&self) -> bool;
+
+    /// Sets this to `1`.
+    fn set_one(&mut self) {
+        *self = Self::new_one();
+    }
+}
+
 /// The negative multiplicative identity `-1`.
 pub trait NegOne: Sized {
-    /// Returns a new number `-1`.
+    /// A new negative multiplicative identity `-1`.
     fn new_neg_one() -> Self;
 
-    /// Is this number `-1`?
+    /// Is this `-1`?
     fn is_neg_one(&self) -> bool;
 
-    /// Sets this number to `-1`.
+    /// Sets this to `-1`.
     fn set_neg_one(&mut self) {
         *self = Self::new_neg_one();
     }

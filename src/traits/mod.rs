@@ -10,11 +10,12 @@ mod define_continuity;
 mod define_identities;
 mod define_number;
 mod define_ops;
+mod define_sign;
 
 // re-export all here
 
 #[doc(inline)]
-pub use self::{bounds::*, continuity::*, identities::*, number::*, ops::checked::*};
+pub use self::{bounds::*, continuity::*, identities::*, number::*, ops::checked::*, sign::*};
 pub use define_number::Number;
 
 // & grouped thematically:
@@ -57,4 +58,9 @@ pub mod number {
 
     // traits not defined in crate::traits
     pub use crate::rational::Fraction;
+}
+
+/// To have sign or not.
+pub mod sign {
+    pub use super::define_sign::{Signed, Unsigned};
 }

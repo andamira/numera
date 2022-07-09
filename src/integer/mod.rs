@@ -32,11 +32,10 @@ mod impl_discrete;
 mod impl_identities;
 mod impl_number;
 mod impl_ops;
+mod impl_sign;
 mod impl_util;
 
-use crate::traits::Number;
-
-pub use crate::traits::Discrete;
+pub use crate::traits::{Number, Signed};
 
 /// An integer number ([w][w0]/[m][m0]), from the set $\Z$.
 ///
@@ -48,10 +47,10 @@ pub use crate::traits::Discrete;
 /// [m0]: https://mathworld.wolfram.com/Integer.html
 #[repr(transparent)]
 #[derive(Clone, Debug, Eq, Ord, PartialEq, PartialOrd)]
-pub struct Integer<I: Number>(I);
+pub struct Integer<N: Number + Signed>(N);
 
 /// An alias of [`Integer`].
-pub type SignedInteger<I> = Integer<I>;
+pub type SignedInteger<N> = Integer<N>;
 
 /// A *non-zero* integer number ([o][o0]), from the set $\Z \setminus 0$.
 ///
@@ -60,7 +59,7 @@ pub type SignedInteger<I> = Integer<I>;
 /// [o0]: https://oeis.org/wiki/Nonzero_integers
 #[repr(transparent)]
 #[derive(Clone, Debug, Eq, Ord, PartialEq, PartialOrd)]
-pub struct NonZeroInteger<I: Number>(I);
+pub struct NonZeroInteger<N: Number + Signed>(N);
 
 /// An only *non-negative* integer number ([m][0m]/[o][0o]), from the set $\Z^*$.
 ///
@@ -76,10 +75,10 @@ pub struct NonZeroInteger<I: Number>(I);
 /// [1w]: https://en.wikipedia.org/wiki/Natural_number
 #[repr(transparent)]
 #[derive(Clone, Debug, Eq, Ord, PartialEq, PartialOrd)]
-pub struct NonNegativeInteger<I: Number>(I);
+pub struct NonNegativeInteger<N: Number>(N);
 
 /// An alias of [`NonNegativeInteger`].
-pub type UnsignedInteger<I> = Integer<I>;
+pub type UnsignedInteger<N> = Integer<N>;
 
 /// An only *positive* integer number ([m][0m]), from the set $\Z^+$.
 ///
@@ -94,7 +93,7 @@ pub type UnsignedInteger<I> = Integer<I>;
 /// [1w]: https://en.wikipedia.org/wiki/Natural_number
 #[repr(transparent)]
 #[derive(Clone, Debug, Eq, Ord, PartialEq, PartialOrd)]
-pub struct PositiveInteger<I: Number>(I);
+pub struct PositiveInteger<N: Number>(N);
 
 /// An only *negative* integer number ([m][0m]/[o][0o]), from the set $\Z^-$.
 ///
@@ -106,7 +105,7 @@ pub struct PositiveInteger<I: Number>(I);
 /// [0o]: http://oeis.org/A001478
 #[repr(transparent)]
 #[derive(Clone, Debug, Eq, Ord, PartialEq, PartialOrd)]
-pub struct NegativeInteger<I: Number>(I);
+pub struct NegativeInteger<N: Number + Signed>(N);
 
 /// An only *non-positive* integer number ([m][0m]), from the set ${0} \cup \Z^-$.
 ///
@@ -115,4 +114,4 @@ pub struct NegativeInteger<I: Number>(I);
 /// [0m]: https://mathworld.wolfram.com/NonpositiveInteger.html
 #[repr(transparent)]
 #[derive(Clone, Debug, Eq, Ord, PartialEq, PartialOrd)]
-pub struct NonPositiveInteger<I: Number>(I);
+pub struct NonPositiveInteger<N: Number + Signed>(N);

@@ -4,12 +4,12 @@
 //! and implements them for primitive and supported external types.
 //
 
-/// Indicates this number is *discrete* ([w][0w]).
+/// A *discrete* value ([w][0w]).
 ///
 /// [0w]: https://en.wikipedia.org/wiki/Continuous_or_discrete_variable#Discrete_variable
 pub trait Discrete {}
 
-/// Indicates this number is *continuous* ([w][0w]).
+/// A *continuous* value ([w][0w]).
 ///
 /// [0w]: https://en.wikipedia.org/wiki/Continuous_or_discrete_variable#Continuous_variable
 pub trait Continuous {}
