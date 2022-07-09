@@ -11,10 +11,10 @@ use crate::traits::Number;
 
 #[rustfmt::skip]
 impl<N: Number> Number for Integer<N> {
-    type Inner = N;
+    type Value = N;
     /// Returns a new `Integer`.
     #[inline]
-    fn new(value: Self::Inner) -> Self { Self(value) }
+    fn new(value: Self::Value) -> Self { Self(value) }
 
     #[inline]
     fn can_negative() -> bool { true }
@@ -41,12 +41,12 @@ impl<N: Number> Number for Integer<N> {
 
 #[rustfmt::skip]
 impl<I: Number> Number for NonZeroInteger<I> {
-    type Inner = I;
+    type Value = I;
     /// Returns a new `NonZeroInteger`.
     ///
     /// Panics if `value` == `0`.
     #[inline]
-    fn new(value: Self::Inner) -> Self {
+    fn new(value: Self::Value) -> Self {
         assert![!value.is_zero()];
         Self(value)
     }
@@ -75,12 +75,12 @@ impl<I: Number> Number for NonZeroInteger<I> {
 
 #[rustfmt::skip]
 impl<I: Number> Number for NonNegativeInteger<I> {
-    type Inner = I;
+    type Value = I;
     /// Returns a new *non-negative* `Integer`.
     ///
     /// Panics if `value` < `0`.
     #[inline]
-    fn new(value: Self::Inner) -> Self {
+    fn new(value: Self::Value) -> Self {
         assert![value.is_positive()];
         Self(value)
     }
@@ -109,12 +109,12 @@ impl<I: Number> Number for NonNegativeInteger<I> {
 
 #[rustfmt::skip]
 impl<I: Number> Number for PositiveInteger<I> {
-    type Inner = I;
+    type Value = I;
     /// Returns a new *positive* `Integer`.
     ///
     /// Panics if `value` <= `0`.
     #[inline]
-    fn new(value: Self::Inner) -> Self {
+    fn new(value: Self::Value) -> Self {
         assert![value.is_positive() && !value.is_zero()];
         Self(value)
     }
@@ -143,12 +143,12 @@ impl<I: Number> Number for PositiveInteger<I> {
 
 #[rustfmt::skip]
 impl<I: Number> Number for NonPositiveInteger<I> {
-    type Inner = I;
+    type Value = I;
     /// Returns a new *non-positive* `Integer`.
     ///
     /// Panics if `value` > `0`.
     #[inline]
-    fn new(value: Self::Inner) -> Self {
+    fn new(value: Self::Value) -> Self {
         assert![!value.is_positive()];
         Self(value)
     }
@@ -177,12 +177,12 @@ impl<I: Number> Number for NonPositiveInteger<I> {
 
 #[rustfmt::skip]
 impl<I: Number> Number for NegativeInteger<I> {
-    type Inner = I;
+    type Value = I;
     /// Returns a new *negative* `Integer`.
     ///
     /// Panics if `value` >= `0`.
     #[inline]
-    fn new(value: Self::Inner) -> Self {
+    fn new(value: Self::Value) -> Self {
         assert![value.is_negative() && !value.is_zero()];
         Self(value)
     }

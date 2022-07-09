@@ -2,14 +2,12 @@
 //
 //! implements the arithmetic operations on `Integer`.
 
-use crate::traits::{
-    CheckedAdd, CheckedDiv, CheckedMul, CheckedNeg, CheckedRem, CheckedSub, Number,
-};
+// use crate::traits::{CheckedAdd, CheckedDiv, CheckedMul, CheckedNeg, CheckedRem, CheckedSub};
+use crate::Number;
 use crate::Integer;
 use core::ops::{Add, Div, Mul, Neg, Rem, Sub};
 
-// Core
-
+/// implements the core/std operations
 macro_rules! impl_core_ops {
     ($trait:ident, $method:ident, $ty:ident) => {
         impl_core_ops![unary: ]
@@ -31,6 +29,9 @@ macro_rules! impl_core_ops {
         }
     };
 }
+
+//
+
 impl_core_ops![unary: Neg, neg, Integer, Number + Neg<Output = I>];
 impl_core_ops![binary: Add, add, Integer, Number + Add<Output = I>];
 impl_core_ops![binary: Sub, sub, Integer, Number + Sub<Output = I>];

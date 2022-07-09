@@ -2,7 +2,7 @@
 //
 //! Numeric traits.
 //!
-//! All traits are re-exported both from here and the thematic submodules.
+//! All traits are re-exported both from here and from the appropriate submodule.
 //
 
 mod define_bounds;
@@ -14,8 +14,7 @@ mod define_ops;
 // re-export all here
 
 #[doc(inline)]
-pub use self::{bounds::*, identities::*, number::*, ops::*};
-pub use crate::rational::Fraction;
+pub use self::{bounds::*, continuity::*, identities::*, number::*, ops::checked::*};
 pub use define_number::Number;
 
 // & grouped thematically:
@@ -25,6 +24,11 @@ pub mod bounds {
     pub use super::define_bounds::{
         Bounded, ConstBounded, ConstLowerBounded, ConstUpperBounded, LowerBounded, UpperBounded,
     };
+}
+
+/// To be continuous or not.
+pub mod continuity {
+    pub use super::define_continuity::{Continuous, Discrete};
 }
 
 /// Related with `0`, `1` and `-1`.
@@ -49,6 +53,8 @@ pub mod ops {
 
 /// General number traits.
 pub mod number {
-    pub use super::define_continuity::{Continuous, Discrete};
     pub use super::define_number::Number;
+
+    // traits not defined in crate::traits
+    pub use crate::rational::Fraction;
 }

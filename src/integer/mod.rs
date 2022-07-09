@@ -5,7 +5,8 @@
 //! An *integer* ([w][0w]/[m][0m]) is a number that can be written
 //! without a fractional component.
 //!
-//! For example, 21, 4, 0, and −2048 are integers, while 9.75, 5+1/2, and √2 are not.
+//! For example, $ 21 , 4 , 0 , −2048 $ are integers,
+//! while $9.75, \dfrac{1}{2} , \sqrt{2} $ are not.
 //!
 //! # Integer subsets
 //!
@@ -34,6 +35,8 @@ mod impl_ops;
 mod impl_util;
 
 use crate::traits::Number;
+
+pub use crate::traits::Discrete;
 
 /// An integer number ([w][w0]/[m][m0]), from the set $\Z$.
 ///

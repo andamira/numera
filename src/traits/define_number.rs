@@ -4,18 +4,21 @@
 //! and implements it for all the supported primitives and external types.
 //
 
-/// A shared number API.
+/// A number *number* ([w][1w]/[m][1m]) is a mathematical object used to count, measure,
+/// and label. A general term which refers to a member of a given set.
 ///
+/// [1w]: https://en.wikipedia.org/wiki/Number
+/// [1m]: https://mathworld.wolfram.com/Number.html
 //
 #[rustfmt::skip]
 pub trait Number: PartialOrd + Clone {
     /// The inner value representation for this number.
-    type Inner;
+    type Value;
 
     /// Returns a new number.
     ///
     /// Must ensure the inner value is in a valid format.
-    fn new(value: Self::Inner) -> Self;
+    fn new(value: Self::Value) -> Self;
 
     // sign
 
@@ -35,17 +38,17 @@ pub trait Number: PartialOrd + Clone {
 
     // identities
 
-    /// Returns true if the number can represent the additive identity `0`.
+    /// Returns true if the number can represent `0`, the additive identity.
     fn can_zero() -> bool;
     /// Returns true if the number is the additive identity `0`.
     fn is_zero(&self) -> bool;
 
-    /// Returns true if the number can represent the multiplicative identity `1`.
+    /// Returns true if the number can represent `1`, the multiplicative identity.
     fn can_one() -> bool;
     /// Returns true if the number is the multiplicative identity `1`.
     fn is_one(&self) -> bool;
 
-    /// Returns true if the number can represent the negative multiplicative identity `-1`.
+    /// Returns true if the number can represent `-1`, the negative multiplicative identity.
     fn can_neg_one() -> bool;
     /// Returns true if the number is the negative multiplicative identity `-1`.
     fn is_neg_one(&self) -> bool;
@@ -64,7 +67,7 @@ mod macros {
         };
         (float: $ty:ty, $zero:expr, $one:expr, $neg1:expr) =>  {
             impl crate::traits::Number for $ty {
-                type Inner = $ty;
+                type Value = $ty;
                 fn new(value: $ty) -> Self { value }
 
                 fn can_negative() -> bool { true }
@@ -87,7 +90,7 @@ mod macros {
         };
         (signed: $ty:ty, $zero:expr, $one:expr, $neg1:expr) =>  {
             impl Number for $ty {
-                type Inner = $ty;
+                type Value = $ty;
                 fn new(value: $ty) -> Self { value }
 
                 fn can_negative() -> bool { true }
@@ -111,7 +114,7 @@ mod macros {
         };
         (unsigned: $ty:ty, $zero:expr, $one:expr) =>  {
             impl Number for $ty {
-                type Inner = $ty;
+                type Value = $ty;
                 fn new(value: $ty) -> Self { value }
 
                 fn can_negative() -> bool { false }
@@ -163,8 +166,8 @@ impl_numberable![all_unsigned:
 mod impl_ibig {
     use ibig::{IBig, UBig};
     impl crate::traits::Number for UBig {
-        type Inner = UBig;
-        fn new(value: Self::Inner) -> Self { value }
+        type Value = UBig;
+        fn new(value: Self::Value) -> Self { value }
 
         fn can_negative() -> bool { false }
         fn is_negative(&self) -> bool { false }
@@ -182,8 +185,8 @@ mod impl_ibig {
     }
 
     impl crate::traits::Number for IBig {
-        type Inner = IBig;
-        fn new(value: Self::Inner) -> Self { value }
+        type Value = IBig;
+        fn new(value: Self::Value) -> Self { value }
 
         fn can_negative() -> bool { true }
         fn is_negative(&self) -> bool { *self < Self::from(0i8) }
@@ -217,8 +220,8 @@ mod impl_half {
 mod impl_twofloat {
     use twofloat::TwoFloat;
     impl crate::traits::Number for TwoFloat {
-        type Inner = TwoFloat;
-        fn new(value: Self::Inner) -> Self { value }
+        type Value = TwoFloat;
+        fn new(value: Self::Value) -> Self { value }
 
         fn can_negative() -> bool { true }
         fn is_negative(&self) -> bool { self.is_sign_negative() }
