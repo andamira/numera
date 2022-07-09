@@ -41,7 +41,7 @@ impl_core_ops![binary: Rem, rem, Integer, NumberAble + Rem<Output = I>];
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::Number;
+    use crate::traits::Number;
 
     #[test]
     fn core() {

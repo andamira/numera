@@ -1,15 +1,15 @@
-// numera::::traits::continuity
+// numera::traits::continuity
 //
 //! defines the `Continous` & `Discrete` traits
 //! and implements them for primitive and supported external types.
 //
 
-/// Indicates this number is *discrete* (([w][1w]).
+/// Indicates this number is *discrete* (([w][0w]).
 ///
 /// [0w]: https://en.wikipedia.org/wiki/Continuous_or_discrete_variable#Discrete_variable
 pub trait Discrete {}
 
-/// Indicates this number is *continuous* (([w][1w]).
+/// Indicates this number is *continuous* (([w][0w]).
 ///
 /// [0w]: https://en.wikipedia.org/wiki/Continuous_or_discrete_variable#Continuous_variable
 pub trait Continuous {}

@@ -1,4 +1,4 @@
-// numera::::traits::bounded
+// numera::traits::bounded
 //
 //! defines arithmetic traits operations
 //! and implements them for primitive and supported external types.

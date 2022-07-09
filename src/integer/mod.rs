@@ -1,6 +1,6 @@
-// numera:::integer
+// numera::integer
 //
-//! Integer types.
+//! Integer number types.
 //!
 //! An *integer* ([w][0w]/[m][0m]) is a number that can be written
 //! without a fractional component.
@@ -31,6 +31,7 @@ mod impl_discrete;
 mod impl_identities;
 mod impl_number;
 mod impl_ops;
+mod impl_sign;
 mod impl_util;
 
 use crate::traits::NumberAble;
@@ -46,6 +47,9 @@ use crate::traits::NumberAble;
 #[repr(transparent)]
 #[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub struct Integer<I: NumberAble>(I);
+
+/// An alias of [`Integer`].
+pub type SignedInteger<I> = Integer<I>;
 
 /// A *non-zero* integer number ([o][o0]), from the set $\Z \setminus 0$.
 ///
@@ -71,6 +75,9 @@ pub struct NonZeroInteger<I: NumberAble>(I);
 #[repr(transparent)]
 #[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub struct NonNegativeInteger<I: NumberAble>(I);
+
+/// An alias of [`NonNegativeInteger`].
+pub type UnsignedInteger<I> = Integer<I>;
 
 /// An only *positive* integer number ([m][0m]), from the set $\Z^+$.
 ///

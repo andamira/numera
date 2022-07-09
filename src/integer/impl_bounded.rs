@@ -166,14 +166,32 @@ mod tests {
         ];
     }
 
+    /// Checks the bounds for `half` types.
+    #[test]
+    #[cfg(feature = "half")]
+    fn bounded_integers_half() {
+        use half::{bf16, f16};
+        assert_impl_all![Integer<bf16>:
+            ConstLowerBounded, ConstUpperBounded, LowerBounded, UpperBounded];
+        assert_impl_all![Integer<f16>:
+            ConstLowerBounded, ConstUpperBounded, LowerBounded, UpperBounded];
+    }
+
+    /// Checks the bounds for `twofloat` type.
+    #[test]
+    #[cfg(feature = "twofloat")]
+    fn bounded_integers_twoflat() {
+        use twofloat::TwoFloat;
+        assert_impl_all![Integer<TwoFloat>:
+            ConstLowerBounded, ConstUpperBounded, LowerBounded, UpperBounded];
+    }
+
     /// Checks the bounds for `ibig` big integers.
     #[test]
     #[cfg(feature = "ibig")]
     fn bounded_integers_ibig() {
         use ibig::{IBig, UBig};
-
         assert_impl_all![Integer<UBig>: LowerBounded];
-
         assert_not_impl_any![Integer<UBig>: UpperBounded];
         assert_not_impl_any![Integer<IBig>: LowerBounded, UpperBounded];
     }

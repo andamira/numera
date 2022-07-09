@@ -1,4 +1,4 @@
-// numera::::traits::number
+// numera::traits::number
 //
 //!
 //
@@ -6,9 +6,9 @@
 use super::Sign;
 
 /// The inner representation for the [`Number`] trait.
-pub trait NumberAble: PartialOrd + Sign {}
+pub trait NumberAble: PartialOrd + Clone + Sign {}
 
-impl<T> NumberAble for T where T: PartialOrd + Sign {}
+impl<T> NumberAble for T where T: PartialOrd + Clone + Sign {}
 
 /// The main number API trait.
 pub trait Number {
