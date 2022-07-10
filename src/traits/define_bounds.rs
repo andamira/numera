@@ -50,26 +50,26 @@ impl<T: LowerBounded + UpperBounded> Bounded for T {}
 
 /// Implements *both* const & non-const Bounded traits.
 macro_rules! impl_const_bounded {
-    (all: $($ty:ty),+) => {
-        $( impl_const_bounded![both: $ty]; )+
+    (all: $($t:ty),+) => {
+        $( impl_const_bounded![both: $t]; )+
     };
-    (both: $ty:ty) => {
-        impl_const_bounded![lower: $ty];
-        impl_const_bounded![upper: $ty];
+    (both: $t:ty) => {
+        impl_const_bounded![lower: $t];
+        impl_const_bounded![upper: $t];
     };
-    (all_lower: $($ty:ty),+) => {
-        $( impl_const_bounded![lower: $ty]; )+
+    (all_lower: $($t:ty),+) => {
+        $( impl_const_bounded![lower: $t]; )+
     };
-    (lower: $ty:ty) => {
-        impl ConstLowerBounded for $ty { const MIN: Self = <$ty>::MIN; }
-        impl LowerBounded for $ty { fn new_min() -> Self { <$ty>::MIN }}
+    (lower: $t:ty) => {
+        impl ConstLowerBounded for $t { const MIN: Self = <$t>::MIN; }
+        impl LowerBounded for $t { fn new_min() -> Self { <$t>::MIN }}
     };
-    (all_upper: $($ty:ty),+) => {
-        $( impl_const_bounded![upper: $ty]; )+
+    (all_upper: $($t:ty),+) => {
+        $( impl_const_bounded![upper: $t]; )+
     };
-    (upper: $ty:ty) => {
-        impl ConstUpperBounded for $ty { const MAX: Self = <$ty>::MAX; }
-        impl UpperBounded for $ty { fn new_max() -> Self { <$ty>::MAX }}
+    (upper: $t:ty) => {
+        impl ConstUpperBounded for $t { const MAX: Self = <$t>::MAX; }
+        impl UpperBounded for $t { fn new_max() -> Self { <$t>::MAX }}
     }
 }
 
@@ -77,11 +77,11 @@ macro_rules! impl_const_bounded {
 #[rustfmt::skip]
 #[cfg(feature = "ibig")]
 macro_rules! impl_nonconst_bounded {
-    (lower: $ty:ty, $bound:expr) => {
-        impl LowerBounded for $ty { fn new_min() -> Self { $bound } }
+    (lower: $t:ty, $bound:expr) => {
+        impl LowerBounded for $t { fn new_min() -> Self { $bound } }
     };
-    (upper: $ty:ty, $bound:expr) => {
-        impl UpperBounded for $ty { fn new_max() -> Self { $bound } }
+    (upper: $t:ty, $bound:expr) => {
+        impl UpperBounded for $t { fn new_max() -> Self { $bound } }
     };
 }
 
@@ -105,15 +105,15 @@ mod tests {
     use static_assertions::*;
 
     macro_rules! assert_impl_bounded {
-        (both: $($ty:ty),+) => {
-            assert_impl_bounded![@const: $($ty),+];
-            assert_impl_bounded![@nonconst: $($ty),+];
+        (both: $($t:ty),+) => {
+            assert_impl_bounded![@const: $($t),+];
+            assert_impl_bounded![@nonconst: $($t),+];
         };
-        (@const: $($ty:ty),+) => {
-            $( assert_impl_all![$ty: ConstLowerBounded, ConstUpperBounded, ConstBounded];)+
+        (@const: $($t:ty),+) => {
+            $( assert_impl_all![$t: ConstLowerBounded, ConstUpperBounded, ConstBounded];)+
         };
-        (@nonconst: $($ty:ty),+) => {
-            $( assert_impl_all![$ty: LowerBounded, UpperBounded, Bounded];)+
+        (@nonconst: $($t:ty),+) => {
+            $( assert_impl_all![$t: LowerBounded, UpperBounded, Bounded];)+
         };
     }
 

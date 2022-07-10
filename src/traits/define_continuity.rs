@@ -17,15 +17,15 @@ pub trait Continuous {}
 // macro impls
 
 macro_rules! impl_discrete {
-    (all: $($ty:ty),+) => { $( impl_discrete![$ty]; )+ };
-    ($ty:ty) => {
-        impl Discrete for $ty { }
+    (all: $($t:ty),+) => { $( impl_discrete![$t]; )+ };
+    ($t:ty) => {
+        impl Discrete for $t { }
     };
 }
 macro_rules! impl_continuous {
-    (all: $($ty:ty),+) => { $( impl_continuous![$ty]; )+ };
-    ($ty:ty) => {
-        impl Continuous for $ty { }
+    (all: $($t:ty),+) => { $( impl_continuous![$t]; )+ };
+    ($t:ty) => {
+        impl Continuous for $t { }
     };
 }
 
@@ -48,18 +48,18 @@ mod tests {
     use static_assertions::*;
 
     macro_rules! assert_impl {
-        (continuous: $($ty:ty),+) => {
-            $( assert_impl_all![$ty: Continuous];)+
+        (continuous: $($t:ty),+) => {
+            $( assert_impl_all![$t: Continuous];)+
         };
-        (discrete: $($ty:ty),+) => {
-            $( assert_impl_all![$ty: Discrete];)+
+        (discrete: $($t:ty),+) => {
+            $( assert_impl_all![$t: Discrete];)+
         };
         // BUG:static_assertions
-        // (not_continuous: $($ty:ty),+) => {
-        //     $( assert_not_impl_all![$ty: Continuous];)+
+        // (not_continuous: $($t:ty),+) => {
+        //     $( assert_not_impl_all![$t: Continuous];)+
         // };
-        // (not_discrete: $($ty:ty),+) => {
-        //     $( assert_not_impl_all![$ty: Discrete];)+
+        // (not_discrete: $($t:ty),+) => {
+        //     $( assert_not_impl_all![$t: Discrete];)+
         // };
     }
 

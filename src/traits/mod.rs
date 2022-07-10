@@ -60,7 +60,7 @@ pub mod number {
     pub use crate::rational::Fraction;
 }
 
-/// To have sign or not.
+/// Positive and/or negative.
 pub mod sign {
-    pub use super::define_sign::{Signed, Unsigned};
+    pub use super::define_sign::{NegSigned, Signed, Unsigned};
 }

@@ -15,6 +15,12 @@ impl<N: Number + Signed> Number for Integer<N> {
     /// Returns a new `Integer`.
     #[inline]
     fn new(value: Self::Value) -> Self { Self(value) }
+    /// Returns some new `Integer`.
+    #[inline]
+    fn new_checked(value: Self::Value) -> Option<Self> { Some(Self(value)) }
+
+    #[inline]
+    fn clone_value(&self) -> Self::Value { self.0.clone() }
 
     #[inline]
     fn can_negative() -> bool { true }
@@ -41,15 +47,24 @@ impl<N: Number + Signed> Number for Integer<N> {
 
 #[rustfmt::skip]
 impl<N: Number + Signed> Number for NonZeroInteger<N> {
-    type Value = I;
+    type Value = N;
     /// Returns a new `NonZeroInteger`.
     ///
-    /// Panics if `value` == `0`.
+    /// Panics if `value == 0`.
     #[inline]
     fn new(value: Self::Value) -> Self {
         assert![!value.is_zero()];
         Self(value)
     }
+    /// Returns some new `NonZeroInteger` or `None` if `value == 0`.
+    #[inline]
+    fn new_checked(value: Self::Value) -> Option<Self> {
+        if value.is_zero() { None } else { Some(Self(value)) }
+    }
+
+    #[inline]
+    fn clone_value(&self) -> Self::Value { self.0.clone() }
+
     #[inline]
     fn can_negative() -> bool { true }
     #[inline]
@@ -74,22 +89,31 @@ impl<N: Number + Signed> Number for NonZeroInteger<N> {
 }
 
 #[rustfmt::skip]
-impl<N: Number + Signed> Number for NonPositiveInteger<N> {
-    type Value = I;
+impl<N: Number> Number for NonPositiveInteger<N> {
+    type Value = N;
     /// Returns a new *non-positive* `Integer`.
     ///
     /// Panics if `value` > `0`.
     #[inline]
     fn new(value: Self::Value) -> Self {
-        assert![!Signed::is_positive(&value)];
+        assert![!value.is_positive()];
         Self(value)
     }
+    /// Returns some new `NonPositiveInteger` or `None` if `value > 0`.
+    #[inline]
+    fn new_checked(value: Self::Value) -> Option<Self> {
+        if value.is_positive() { None } else { Some(Self(value)) }
+    }
+
+    #[inline]
+    fn clone_value(&self) -> Self::Value { self.0.clone() }
+
     #[inline]
     fn can_negative() -> bool { true }
     #[inline]
     fn can_positive() -> bool { false }
     #[inline]
-    fn is_negative(&self) -> bool { Signed::is_negative(&self.0) }
+    fn is_negative(&self) -> bool { self.0.is_negative() }
     #[inline]
     fn is_positive(&self) -> bool { false }
     #[inline]
@@ -108,17 +132,25 @@ impl<N: Number + Signed> Number for NonPositiveInteger<N> {
 }
 
 #[rustfmt::skip]
-impl<N: Number + Signed> Number for NegativeInteger<N> {
-    type Value = I;
+impl<N: Number> Number for NegativeInteger<N> {
+    type Value = N;
     /// Returns a new *negative* `Integer`.
     ///
-    /// Panics if `value` >= `0`.
+    /// Panics if `value >= 0`.
     #[inline]
     fn new(value: Self::Value) -> Self {
-        assert![Signed::is_negative(&value)];
-        assert![!value.is_zero()];
+        assert![value.is_negative()];
         Self(value)
     }
+    /// Returns some new `NegativeInteger` or `None` if `value >= 0`.
+    #[inline]
+    fn new_checked(value: Self::Value) -> Option<Self> {
+        if value.is_negative() { Some(Self(value)) } else { None}
+    }
+
+    #[inline]
+    fn clone_value(&self) -> Self::Value { self.0.clone() }
+
     #[inline]
     fn can_negative() -> bool { true }
     #[inline]
@@ -144,15 +176,24 @@ impl<N: Number + Signed> Number for NegativeInteger<N> {
 
 #[rustfmt::skip]
 impl<N: Number> Number for NonNegativeInteger<N> {
-    type Value = I;
+    type Value = N;
     /// Returns a new *non-negative* `Integer`.
     ///
-    /// Panics if `value` < `0`.
+    /// Panics if `value < 0`.
     #[inline]
     fn new(value: Self::Value) -> Self {
-        assert![value.is_positive()];
+        assert![!value.is_negative()];
         Self(value)
     }
+    /// Returns some new `NonNegativeInteger` or `None` if `value < 0`.
+    #[inline]
+    fn new_checked(value: Self::Value) -> Option<Self> {
+        if value.is_negative() { None } else { Some(Self(value)) }
+    }
+
+    #[inline]
+    fn clone_value(&self) -> Self::Value { self.0.clone() }
+
     #[inline]
     fn can_negative() -> bool { false }
     #[inline]
@@ -178,16 +219,24 @@ impl<N: Number> Number for NonNegativeInteger<N> {
 
 #[rustfmt::skip]
 impl<N: Number> Number for PositiveInteger<N> {
-    type Value = I;
+    type Value = N;
     /// Returns a new *positive* `Integer`.
     ///
-    /// Panics if `value` <= `0`.
+    /// Panics if `value <= 0`.
     #[inline]
     fn new(value: Self::Value) -> Self {
         assert![value.is_positive()];
-        assert![!value.is_zero()];
         Self(value)
     }
+    /// Returns some new `PositiveInteger` or `None` if `value <= 0`.
+    #[inline]
+    fn new_checked(value: Self::Value) -> Option<Self> {
+        if value.is_positive() { Some(Self(value)) } else { None }
+    }
+
+    #[inline]
+    fn clone_value(&self) -> Self::Value { self.0.clone() }
+
     #[inline]
     fn can_negative() -> bool { false }
     #[inline]
@@ -209,4 +258,71 @@ impl<N: Number> Number for PositiveInteger<N> {
     fn is_one(&self) -> bool { self.0.is_one() }
     #[inline]
     fn is_neg_one(&self) -> bool { false }
+}
+
+/// Tests
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::integer::a::*;
+
+    /// tests the checked constructor for all integers
+    #[test]
+    fn new_checked() {
+        // Integer
+        assert![Z::new_checked(-1).is_some()];
+        assert![Z::new_checked(0).is_some()];
+        assert![Z::new_checked(1).is_some()];
+        // NonZeroInteger
+        assert![N0z::new_checked(-1).is_some()];
+        assert![N0z::new_checked(0).is_none()];
+        assert![N0z::new_checked(1).is_some()];
+        // NegativeInteger
+        assert![Nz::new_checked(-1).is_some()];
+        assert![Nz::new_checked(0).is_none()];
+        assert![Nz::new_checked(1).is_none()];
+        // NonPositiveInteger
+        assert![Npz::new_checked(-1).is_some()];
+        assert![Npz::new_checked(0).is_some()];
+        assert![Npz::new_checked(1).is_none()];
+        // PositiveInteger
+        assert![Pz::new_checked(-1).is_none()];
+        assert![Pz::new_checked(0).is_none()];
+        assert![Pz::new_checked(1).is_some()];
+        // NonNegativeInteger
+        assert![Nnz::new_checked(-1).is_none()];
+        assert![Nnz::new_checked(0).is_some()];
+        assert![Nnz::new_checked(1).is_some()];
+    }
+
+    /// tests the panicking constructor for all integers.
+    #[test]
+    #[cfg(feature = "std")]
+    fn new_panic() {
+        use std::panic::catch_unwind;
+        // Integer
+        assert![catch_unwind(|| { Z::new(-1) }).is_ok()];
+        assert![catch_unwind(|| { Z::new(0) }).is_ok()];
+        assert![catch_unwind(|| { Z::new(1) }).is_ok()];
+        // NonZeroInteger
+        assert![catch_unwind(|| { N0z::new(-1) }).is_ok()];
+        assert![catch_unwind(|| { N0z::new(0) }).is_err()];
+        assert![catch_unwind(|| { N0z::new(1) }).is_ok()];
+        // NegativeInteger
+        assert![catch_unwind(|| { Nz::new(-1) }).is_ok()];
+        assert![catch_unwind(|| { Nz::new(0) }).is_err()];
+        assert![catch_unwind(|| { Nz::new(1) }).is_err()];
+        // NonPositiveInteger
+        assert![catch_unwind(|| { Npz::new(-1) }).is_ok()];
+        assert![catch_unwind(|| { Npz::new(0) }).is_ok()];
+        assert![catch_unwind(|| { Npz::new(1) }).is_err()];
+        // PositiveInteger
+        assert![catch_unwind(|| { Pz::new(-1) }).is_err()];
+        assert![catch_unwind(|| { Pz::new(0) }).is_err()];
+        assert![catch_unwind(|| { Pz::new(1) }).is_ok()];
+        // NonNegativeInteger
+        assert![catch_unwind(|| { Nnz::new(-1) }).is_err()];
+        assert![catch_unwind(|| { Nnz::new(0) }).is_ok()];
+        assert![catch_unwind(|| { Nnz::new(1) }).is_ok()];
+    }
 }

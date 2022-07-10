@@ -52,14 +52,14 @@ macro_rules! impl_checked {
             i8, u8, i16, u16, i32, u32, i64, u64, isize, usize, i128, u128
         ];
     };
-    (all: $trait:ident, $method:ident, $($ty:ty),+) => {
-        $( impl_checked![$trait, $method, $ty]; )+
+    (all: $trait:ident, $method:ident, $($t:ty),+) => {
+        $( impl_checked![$trait, $method, $t]; )+
     };
-    ($trait:ident, $method:ident, $ty:ty) => {
-        impl $trait for $ty {
+    ($trait:ident, $method:ident, $t:ty) => {
+        impl $trait for $t {
             #[inline]
-            fn $method(&self, v: &$ty) -> Option<$ty> {
-                <$ty>::$method(*self, *v)
+            fn $method(&self, v: &$t) -> Option<$t> {
+                <$t>::$method(*self, *v)
             }
         }
     };

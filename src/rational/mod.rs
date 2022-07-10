@@ -14,6 +14,15 @@ pub use fraction::Fraction;
 use crate::integer::{Integer, NonNegativeInteger, NonZeroInteger, PositiveInteger};
 use crate::traits::{Number, Signed};
 
+/// Acronyms for rational types ([`Q`][a::Q], [`Pq`][a::Pq]).
+pub mod a {
+    use super::*;
+    /// Acronym for [`Rational`].
+    pub type Q<N, D> = Rational<N, D>;
+    /// Acronym for [`PositiveRational`].
+    pub type Pq<N, D> = PositiveRational<N, D>;
+}
+
 /// A rational number.
 ///
 #[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]

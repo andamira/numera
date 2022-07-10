@@ -29,13 +29,32 @@
 
 mod impl_bounded;
 mod impl_discrete;
+mod impl_from;
 mod impl_identities;
 mod impl_number;
 mod impl_ops;
-mod impl_sign;
+mod impl_signed;
 mod impl_util;
 
-pub use crate::traits::{Number, Signed};
+use crate::traits::{Number, Signed};
+
+/// Acronyms for integer types ([`Z`][a::Z], [`Nz`][a::Nz], [`Nnz`][a::Nnz],
+/// [`Npz`][a::Npz], [`N0z`][a::N0z], [`Pz`][a::Pz]).
+pub mod a {
+    use super::*;
+    /// Acronym for [`Integer`].
+    pub type Z<N> = Integer<N>;
+    /// Acronym for [`NegativeInteger`].
+    pub type Nz<N> = NegativeInteger<N>;
+    /// Acronym for [`NonNegativeInteger`]
+    pub type Nnz<N> = NonNegativeInteger<N>;
+    /// Acronym for [`NonPositiveInteger`]
+    pub type Npz<N> = NonPositiveInteger<N>;
+    /// Acronym for [`NonZeroInteger`].
+    pub type N0z<N> = NonZeroInteger<N>;
+    /// Acronym for [`PositiveInteger`].
+    pub type Pz<N> = PositiveInteger<N>;
+}
 
 /// An integer number ([w][w0]/[m][m0]), from the set $\Z$.
 ///
@@ -49,10 +68,7 @@ pub use crate::traits::{Number, Signed};
 #[derive(Clone, Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub struct Integer<N: Number + Signed>(N);
 
-/// An alias of [`Integer`].
-pub type SignedInteger<N> = Integer<N>;
-
-/// A *non-zero* integer number ([o][o0]), from the set $\Z \setminus 0$.
+/// A *non-zero* integer number ([o][o0]), from the set $\Z \setminus 0$ (`!= 0`).
 ///
 /// $ \Z = \lbrace …, -2, -1, 1, 2, … \rbrace $
 ///
@@ -61,7 +77,8 @@ pub type SignedInteger<N> = Integer<N>;
 #[derive(Clone, Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub struct NonZeroInteger<N: Number + Signed>(N);
 
-/// An only *non-negative* integer number ([m][0m]/[o][0o]), from the set $\Z^*$.
+/// An only *non-negative* integer number ([m][0m]/[o][0o]), from the set $\Z^*$
+/// (`>= 0`).
 ///
 /// $ \Z^* = \lbrace 0, 1, 2, … \rbrace $
 ///
@@ -77,10 +94,7 @@ pub struct NonZeroInteger<N: Number + Signed>(N);
 #[derive(Clone, Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub struct NonNegativeInteger<N: Number>(N);
 
-/// An alias of [`NonNegativeInteger`].
-pub type UnsignedInteger<N> = Integer<N>;
-
-/// An only *positive* integer number ([m][0m]), from the set $\Z^+$.
+/// An only *positive* integer number ([m][0m]), from the set $\Z^+$ (`> 0`).
 ///
 /// $ \Z^+ = \lbrace 1, 2, … \rbrace $
 ///
@@ -95,7 +109,8 @@ pub type UnsignedInteger<N> = Integer<N>;
 #[derive(Clone, Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub struct PositiveInteger<N: Number>(N);
 
-/// An only *negative* integer number ([m][0m]/[o][0o]), from the set $\Z^-$.
+/// An only *negative* integer number ([m][0m]/[o][0o]), from the set $\Z^-$
+/// (`< 0`).
 ///
 /// $ \Z^- = \lbrace …, -2, -1 \rbrace $
 ///
@@ -105,13 +120,14 @@ pub struct PositiveInteger<N: Number>(N);
 /// [0o]: http://oeis.org/A001478
 #[repr(transparent)]
 #[derive(Clone, Debug, Eq, Ord, PartialEq, PartialOrd)]
-pub struct NegativeInteger<N: Number + Signed>(N);
+pub struct NegativeInteger<N: Number>(N);
 
-/// An only *non-positive* integer number ([m][0m]), from the set ${0} \cup \Z^-$.
+/// An only *non-positive* integer number ([m][0m]), from the set ${0} \cup \Z^-$
+/// (`> 0`).
 ///
 /// $ {0} \cup Z^- = \lbrace …, -2, -1, 0 \rbrace $
 ///
 /// [0m]: https://mathworld.wolfram.com/NonpositiveInteger.html
 #[repr(transparent)]
 #[derive(Clone, Debug, Eq, Ord, PartialEq, PartialOrd)]
-pub struct NonPositiveInteger<N: Number + Signed>(N);
+pub struct NonPositiveInteger<N: Number>(N);

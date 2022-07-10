@@ -4,7 +4,7 @@
 //! and implements them for the primitives and supported external types.
 //
 
-/// Can represent negative numbers.
+/// Can represent both positive and negative numbers.
 #[rustfmt::skip]
 pub trait Signed {
     /// The value is > `0`.
@@ -16,41 +16,43 @@ pub trait Signed {
 /// Can *not* represent negative numbers.
 pub trait Unsigned {}
 
+/// Can *not* represent positive numbers.
+pub trait NegSigned {
+    type Value;
+    /// Returns a new number that contains the negation of the `value`.
+    ///
+    /// This allows using an unsigned type value to store only negative numbers.
+    fn new_neg(value: Self::Value) -> Self;
+}
+
 /// Implements `Signed` on primitives
 macro_rules! impl_sign {
     // Primitives that can not be negative.
-    (all_unsigned: $($ty:ty),+) => {
-        $( impl_sign![unsigned: $ty]; )+
+    (all_unsigned: $($t:ty),+) => {
+        $( impl_sign![unsigned: $t]; )+
     };
-    (unsigned: $ty:ty) => {
-        impl Unsigned for $ty { }
+    (unsigned: $t:ty) => {
+        impl Unsigned for $t { }
     };
     // Primitives that can be both positive and negative.
-    (all_signed: $($ty:ty),+) => {
-        $( impl_sign![signed: $ty]; )+
+    (all_signed: $($t:ty),+) => {
+        $( impl_sign![signed: $t]; )+
     };
-    (signed: $ty:ty) => {
-        impl Signed for $ty {
-            fn is_negative(&self) -> bool { <$ty>::is_negative(*self) }
-            fn is_positive(&self) -> bool { <$ty>::is_positive(*self) }
+    (signed: $t:ty) => {
+        impl Signed for $t {
+            fn is_negative(&self) -> bool { <$t>::is_negative(*self) }
+            fn is_positive(&self) -> bool { <$t>::is_positive(*self) }
         }
     };
     // Floating point primitives that can be both positive and negative.
-    (all_float: $($ty:ty),+) => {
-        $( impl_sign![float: $ty]; )+
+    (all_float: $($t:ty),+) => {
+        $( impl_sign![float: $t]; )+
     };
-    (float: $ty:ty) => {
-        impl Signed for $ty {
+    (float: $t:ty) => {
+        impl Signed for $t {
             // −0.0 = +0.0
             fn is_negative(&self) -> bool { self.is_sign_negative() && *self != 0.0 }
             fn is_positive(&self) -> bool { self.is_sign_positive() && *self != 0.0 }
-            // fn inverse(&self) -> Option<Self> { Some(-self) }
-            // #[cfg(feature="std")]
-            // fn abs(&self) -> Option<Self> { Some(<$ty>::abs(*self)) }
-            // #[cfg(not(feature="std"))]
-            // fn abs(&self) -> Option<Self> {
-            //     if *self < 0.0 { Some(-*self) } else { Some(*self) }
-            // }
         }
     };
 }
@@ -77,14 +79,14 @@ mod impl_half {
     use super::Signed;
     use half::{bf16, f16};
     macro_rules! impl_sign {
-        ($($ty:ty),+) => {
+        ($($t:ty),+) => {
             $(
-            impl Signed for $ty {
+            impl Signed for $t {
                 fn is_negative(&self) -> bool {
-                    self.is_sign_negative() && *self != <$ty>::from_f32_const(0.0)
+                    self.is_sign_negative() && *self != <$t>::from_f32_const(0.0)
                 }
                 fn is_positive(&self) -> bool {
-                    self.is_sign_positive() && *self != <$ty>::from_f32_const(0.0)
+                    self.is_sign_positive() && *self != <$t>::from_f32_const(0.0)
                 }
             }
             )+
@@ -104,5 +106,24 @@ mod impl_ibig {
     impl Signed for IBig {
         fn is_negative(&self) -> bool { *self < IBig::from(0u8) }
         fn is_positive(&self) -> bool { *self > IBig::from(0u8) }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use static_assertions::*;
+
+    /// Checks types only have one trait
+    #[test]
+    fn only_one_sign_trait() {
+        macro_rules! assert_impl1 {
+            (all: $($t:ty),+) => {
+                $( assert_impl_one![$t: NegSigned, Signed, Unsigned]; )+
+            };
+        }
+        #[rustfmt::skip]
+        assert_impl1![all:
+            f32, f64, i8, u8, i16, u16, i32, u32, i64, u64, i128, u128, isize, usize];
     }
 }

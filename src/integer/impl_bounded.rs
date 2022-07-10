@@ -144,15 +144,15 @@ mod tests {
     use static_assertions::*;
 
     macro_rules! assert_impl_bounded {
-        (both: $($ty:ty),+) => {
-            assert_impl_bounded![@const: $($ty),+];
-            assert_impl_bounded![@nonconst: $($ty),+];
+        (both: $($t:ty),+) => {
+            assert_impl_bounded![@const: $($t),+];
+            assert_impl_bounded![@nonconst: $($t),+];
         };
-        (@const: $($ty:ty),+) => {
-            $( assert_impl_all![$ty: ConstLowerBounded, ConstUpperBounded, ConstBounded];)+
+        (@const: $($t:ty),+) => {
+            $( assert_impl_all![$t: ConstLowerBounded, ConstUpperBounded, ConstBounded];)+
         };
-        (@nonconst: $($ty:ty),+) => {
-            $( assert_impl_all![$ty: LowerBounded, UpperBounded, Bounded];)+
+        (@nonconst: $($t:ty),+) => {
+            $( assert_impl_all![$t: LowerBounded, UpperBounded, Bounded];)+
         };
     }
 

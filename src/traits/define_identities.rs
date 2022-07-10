@@ -71,21 +71,21 @@ pub trait NegOne: Sized {
 
 /// implements *both* const & non-const One & Zero traits.
 macro_rules! impl_const_onezero {
-    (all: $($ty:ty, $zero:expr, $one:expr),+) => {
-        $( impl_const_onezero![$ty, $zero, $one]; )+
+    (all: $($t:ty, $zero:expr, $one:expr),+) => {
+        $( impl_const_onezero![$t, $zero, $one]; )+
     };
-    ($ty:ty, $zero:expr, $one:expr) => {
-        impl ConstOne for $ty {
+    ($t:ty, $zero:expr, $one:expr) => {
+        impl ConstOne for $t {
             const ONE: Self = $one;
         }
-        impl ConstZero for $ty {
+        impl ConstZero for $t {
             const ZERO: Self = $zero;
         }
-        impl One for $ty {
+        impl One for $t {
             fn new_one() -> Self { $one }
             fn is_one(&self) -> bool { *self == $one }
         }
-        impl Zero for $ty {
+        impl Zero for $t {
             fn new_zero() -> Self { $zero }
             fn is_zero(&self) -> bool { *self == $zero }
         }
@@ -95,15 +95,15 @@ macro_rules! impl_const_onezero {
 /// implements only the *non-const* One & Zero traits.
 #[cfg(feature = "ibig")]
 macro_rules! impl_nonconst_onezero {
-    (all: $($ty:ty, $zero:expr, $one:expr),+) => {
-        $( impl_nonconst_onezero![$ty, $zero, $one]; )+
+    (all: $($t:ty, $zero:expr, $one:expr),+) => {
+        $( impl_nonconst_onezero![$t, $zero, $one]; )+
     };
-    ($ty:ty, $zero:expr, $one:expr) => {
-        impl One for $ty {
+    ($t:ty, $zero:expr, $one:expr) => {
+        impl One for $t {
             fn new_one() -> Self { $one }
             fn is_one(&self) -> bool { *self == $one }
         }
-        impl Zero for $ty {
+        impl Zero for $t {
             fn new_zero() -> Self { $zero }
             fn is_zero(&self) -> bool { *self == $zero }
         }
@@ -112,14 +112,14 @@ macro_rules! impl_nonconst_onezero {
 
 /// implements both `ConstNegOne` & `NegOne` traits.
 macro_rules! impl_const_neg1 {
-    (all: $($ty:ty, $neg1:expr),+) => {
-        $( impl_const_neg1![$ty, $neg1]; )+
+    (all: $($t:ty, $neg1:expr),+) => {
+        $( impl_const_neg1![$t, $neg1]; )+
     };
-    ($ty:ty, $neg1:expr) => {
-        impl ConstNegOne for $ty {
+    ($t:ty, $neg1:expr) => {
+        impl ConstNegOne for $t {
             const NEG_ONE: Self = $neg1;
         }
-        impl NegOne for $ty {
+        impl NegOne for $t {
             fn new_neg_one() -> Self { $neg1 }
             fn is_neg_one(&self) -> bool { *self == $neg1 }
         }
@@ -129,11 +129,11 @@ macro_rules! impl_const_neg1 {
 /// implements only the `NegOne` trait.
 #[cfg(feature = "ibig")]
 macro_rules! impl_nonconst_neg1 {
-    (all: $($ty:ty, $neg1:expr),+) => {
-        $( impl_nonconst_neg1![$ty, $neg1]; )+
+    (all: $($t:ty, $neg1:expr),+) => {
+        $( impl_nonconst_neg1![$t, $neg1]; )+
     };
-    ($ty:ty, $neg1:expr) => {
-        impl NegOne for $ty {
+    ($t:ty, $neg1:expr) => {
+        impl NegOne for $t {
             fn new_neg_one() -> Self { $neg1 }
             fn is_neg_one(&self) -> bool { *self == $neg1 }
         }
@@ -180,21 +180,21 @@ mod impl_half {
     use half::{bf16, f16};
 
     macro_rules! impl_const_onezero {
-        ($($ty:ty),+) => {
+        ($($t:ty),+) => {
             $(
-            impl ConstZero for $ty { const ZERO: Self = Self::from_f32_const(0.0); }
-            impl ConstOne for $ty { const ONE: Self = Self::from_f32_const(1.0); }
-            impl ConstNegOne for $ty { const NEG_ONE: Self = Self::from_f32_const(-1.0); }
-            impl Zero for $ty {
-                fn new_zero() -> Self { <$ty>::from_f32_const(0.0) }
+            impl ConstZero for $t { const ZERO: Self = Self::from_f32_const(0.0); }
+            impl ConstOne for $t { const ONE: Self = Self::from_f32_const(1.0); }
+            impl ConstNegOne for $t { const NEG_ONE: Self = Self::from_f32_const(-1.0); }
+            impl Zero for $t {
+                fn new_zero() -> Self { <$t>::from_f32_const(0.0) }
                 fn is_zero(&self) -> bool { self != &Self::new_zero() }
             }
-            impl One for $ty {
-                fn new_one() -> Self { <$ty>::from_f32_const(1.0) }
+            impl One for $t {
+                fn new_one() -> Self { <$t>::from_f32_const(1.0) }
                 fn is_one(&self) -> bool { self != &Self::new_one() }
             }
-            impl NegOne for $ty {
-                fn new_neg_one() -> Self { <$ty>::from_f32_const(-1.0) }
+            impl NegOne for $t {
+                fn new_neg_one() -> Self { <$t>::from_f32_const(-1.0) }
                 fn is_neg_one(&self) -> bool { self != &Self::new_neg_one() }
             }
             )+
@@ -226,15 +226,15 @@ mod tests {
     #[test]
     fn onezero_primitives() {
         macro_rules! assert_impl_onezero {
-            (both: $($ty:ty),+) => {
-                assert_impl_onezero![@const: $($ty),+];
-                assert_impl_onezero![@nonconst: $($ty),+];
+            (both: $($t:ty),+) => {
+                assert_impl_onezero![@const: $($t),+];
+                assert_impl_onezero![@nonconst: $($t),+];
             };
-            (@const: $($ty:ty),+) => {
-                $( assert_impl_all![$ty: ConstOne, ConstZero];)+
+            (@const: $($t:ty),+) => {
+                $( assert_impl_all![$t: ConstOne, ConstZero];)+
             };
-            (@nonconst: $($ty:ty),+) => {
-                $( assert_impl_all![$ty: One, Zero];)+
+            (@nonconst: $($t:ty),+) => {
+                $( assert_impl_all![$t: One, Zero];)+
             };
         }
         assert_impl_onezero![both: i8, i16, i32, i64, i128, isize];
@@ -252,15 +252,15 @@ mod tests {
     #[test]
     fn neg1_primitives() {
         macro_rules! assert_impl_neg1 {
-            (both: $($ty:ty),+) => {
-                assert_impl_neg1![@const: $($ty),+];
-                assert_impl_neg1![@nonconst: $($ty),+];
+            (both: $($t:ty),+) => {
+                assert_impl_neg1![@const: $($t),+];
+                assert_impl_neg1![@nonconst: $($t),+];
             };
-            (@const: $($ty:ty),+) => {
-                $( assert_impl_all![$ty: ConstNegOne];)+
+            (@const: $($t:ty),+) => {
+                $( assert_impl_all![$t: ConstNegOne];)+
             };
-            (@nonconst: $($ty:ty),+) => {
-                $( assert_impl_all![$ty: NegOne];)+
+            (@nonconst: $($t:ty),+) => {
+                $( assert_impl_all![$t: NegOne];)+
             };
         }
         assert_impl_neg1![both: i8, i16, i32, i64, i128, isize];
