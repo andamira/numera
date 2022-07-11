@@ -4,6 +4,8 @@
 //! and implements it for all the supported primitives and external types.
 //
 
+use crate::error::Result;
+
 /// A *number* is a mathematical object used to count, measure, and label
 /// ([w][1w]/[m][1m]).
 ///
@@ -14,57 +16,70 @@
 //
 #[rustfmt::skip]
 pub trait Number: PartialOrd + Clone {
-    /// The inner value representation for this number.
-    type Value;
+    /// The inner value representation.
+    type Inner;
+
+    // constructors
 
     /// Returns a new number.
     ///
     /// # Panics
+    /// Panics if the `value` is not in a valid state for this number type.
+    fn new(value: Self::Inner) -> Self;
+
+    /// Returns some new number, or `None` instead of panicking.
+    fn new_checked(value: Self::Inner) -> Option<Self>;
+
+    // getters
+
+    /// Returns the inner value representation.
+    fn get_inner(&self) -> Self::Inner;
+
+    // setters
+
+    /// Sets the inner `value` representation.
     ///
-    /// Panics if `value` is in an invalid format.
-    /// E.g. $= 0$ for [`PositiveInteger`][crate::integer::PositiveInteger].
-    fn new(value: Self::Value) -> Self;
+    /// # Panics
+    /// Panics if the `value` is not in a valid state for this number type.
+    fn set_inner(&mut self, value: Self::Inner);
 
-    /// Returns a new number, or `None` instead of panicking.
-    fn new_checked(value: Self::Value) -> Option<Self>;
+    /// Tries to set the inner `value` representation, returning an error
+    /// if the `value`
+    fn try_set_inner(&mut self, value: Self::Inner) -> Result<()>;
 
-    /// Returns the inner value representation datatype.
-    fn clone_value(&self) -> Self::Value;
-
-    // sign
+    // sign queries
 
     /// Returns true if the number can represent negative numbers.
     fn can_negative() -> bool;
+    /// Returns true if the number can represent positive numbers.
+    fn can_positive() -> bool;
     /// Returns true if the number is negative.
     ///
     /// `0` returns false, since it is not positive or negative.
     fn is_negative(&self) -> bool;
-
-    /// Returns true if the number can represent positive numbers.
-    fn can_positive() -> bool;
     /// Returns true if the number is positive.
     ///
     /// `0` returns false, since it is not positive or negative.
     fn is_positive(&self) -> bool;
 
-    // identities
+    // identity queries
 
     /// Returns true if the number can represent `0`, the additive identity.
     fn can_zero() -> bool;
-    /// Returns true if the number is the additive identity `0`.
-    fn is_zero(&self) -> bool;
-
     /// Returns true if the number can represent `1`, the multiplicative identity.
     fn can_one() -> bool;
-    /// Returns true if the number is the multiplicative identity `1`.
-    fn is_one(&self) -> bool;
-
     /// Returns true if the number can represent `-1`, the negative multiplicative identity.
     fn can_neg_one() -> bool;
+
+    /// Returns true if the number is the additive identity `0`.
+    fn is_zero(&self) -> bool;
+    /// Returns true if the number is the multiplicative identity `1`.
+    fn is_one(&self) -> bool;
     /// Returns true if the number is the negative multiplicative identity `-1`.
     fn is_neg_one(&self) -> bool;
 
-    // continuity
+    // continuity queries
+
     // fn is_discrete(&self) -> bool;
     // fn is_continuous(&self) -> bool { !self.is_discrete() }
 }
@@ -78,14 +93,22 @@ mod macros {
         };
         (float: $t:ty, $zero:expr, $one:expr, $neg1:expr) =>  {
             impl crate::traits::Number for $t {
-                type Value = $t;
+                type Inner = $t;
                 #[inline]
                 fn new(value: $t) -> Self { value }
                 #[inline]
                 fn new_checked(value: $t) -> Option<Self> { Some(value) }
 
                 #[inline]
-                fn clone_value(&self) -> Self::Value { *self }
+                fn get_inner(&self) -> Self::Inner { *self }
+
+                #[inline]
+                fn set_inner(&mut self, value: Self::Inner) { *self = value; }
+                #[inline]
+                fn try_set_inner(&mut self, value: Self::Inner) -> crate::Result<()> {
+                    *self = value;
+                    Ok(())
+                }
 
                 #[inline]
                 fn can_negative() -> bool { true }
@@ -115,14 +138,22 @@ mod macros {
         };
         (signed: $t:ty, $zero:expr, $one:expr, $neg1:expr) =>  {
             impl Number for $t {
-                type Value = $t;
+                type Inner = $t;
                 #[inline]
                 fn new(value: $t) -> Self { value }
                 #[inline]
                 fn new_checked(value: $t) -> Option<Self> { Some(value) }
 
                 #[inline]
-                fn clone_value(&self) -> Self::Value { *self }
+                fn get_inner(&self) -> Self::Inner { *self }
+
+                #[inline]
+                fn set_inner(&mut self, value: Self::Inner) { *self = value; }
+                #[inline]
+                fn try_set_inner(&mut self, value: Self::Inner) -> crate::Result<()> {
+                    *self = value;
+                    Ok(())
+                }
 
                 #[inline]
                 fn can_negative() -> bool { true }
@@ -152,14 +183,22 @@ mod macros {
         };
         (unsigned: $t:ty, $zero:expr, $one:expr) =>  {
             impl Number for $t {
-                type Value = $t;
+                type Inner = $t;
                 #[inline]
                 fn new(value: $t) -> Self { value }
                 #[inline]
                 fn new_checked(value: $t) -> Option<Self> { Some(value) }
 
                 #[inline]
-                fn clone_value(&self) -> Self::Value { *self }
+                fn get_inner(&self) -> Self::Inner { *self }
+
+                #[inline]
+                fn set_inner(&mut self, value: Self::Inner) { *self = value; }
+                #[inline]
+                fn try_set_inner(&mut self, value: Self::Inner) -> crate::Result<()> {
+                    *self = value;
+                    Ok(())
+                }
 
                 #[inline]
                 fn can_negative() -> bool { false }
@@ -217,14 +256,22 @@ impl_number![all_unsigned:
 mod impl_ibig {
     use ibig::{IBig, UBig};
     impl crate::traits::Number for UBig {
-        type Value = UBig;
+        type Inner = UBig;
         #[inline]
-        fn new(value: Self::Value) -> Self { value }
+        fn new(value: Self::Inner) -> Self { value }
         #[inline]
-        fn new_checked(value: Self::Value) -> Option<Self> { Some(value) }
+        fn new_checked(value: Self::Inner) -> Option<Self> { Some(value) }
 
         #[inline]
-        fn clone_value(&self) -> Self::Value { self.clone() }
+        fn get_inner(&self) -> Self::Inner { self.clone() }
+
+        #[inline]
+        fn set_inner(&mut self, value: Self::Inner) { *self = value; }
+        #[inline]
+        fn try_set_inner(&mut self, value: Self::Inner) -> crate::Result<()> {
+            *self = value;
+            Ok(())
+        }
 
         #[inline]
         fn can_negative() -> bool { false }
@@ -250,13 +297,21 @@ mod impl_ibig {
     }
 
     impl crate::traits::Number for IBig {
-        type Value = IBig;
+        type Inner = IBig;
         #[inline]
-        fn new(value: Self::Value) -> Self { value }
-        fn new_checked(value: Self::Value) -> Option<Self> { Some(value) }
+        fn new(value: Self::Inner) -> Self { value }
+        fn new_checked(value: Self::Inner) -> Option<Self> { Some(value) }
 
         #[inline]
-        fn clone_value(&self) -> Self::Value { self.clone() }
+        fn get_inner(&self) -> Self::Inner { self.clone() }
+
+        #[inline]
+        fn set_inner(&mut self, value: Self::Inner) { *self = value; }
+        #[inline]
+        fn try_set_inner(&mut self, value: Self::Inner) -> crate::Result<()> {
+            *self = value;
+            Ok(())
+        }
 
         #[inline]
         fn can_negative() -> bool { true }
@@ -298,14 +353,22 @@ mod impl_half {
 mod impl_twofloat {
     use twofloat::TwoFloat;
     impl crate::traits::Number for TwoFloat {
-        type Value = TwoFloat;
+        type Inner = TwoFloat;
         #[inline]
-        fn new(value: Self::Value) -> Self { value }
+        fn new(value: Self::Inner) -> Self { value }
         #[inline]
-        fn new_checked(value: Self::Value) -> Option<Self> { Some(value) }
+        fn new_checked(value: Self::Inner) -> Option<Self> { Some(value) }
 
         #[inline]
-        fn clone_value(&self) -> Self::Value { *self }
+        fn get_inner(&self) -> Self::Inner { *self }
+
+        #[inline]
+        fn set_inner(&mut self, value: Self::Inner) { *self = value; }
+        #[inline]
+        fn try_set_inner(&mut self, value: Self::Inner) -> crate::Result<()> {
+            *self = value;
+            Ok(())
+        }
 
         #[inline]
         fn can_negative() -> bool { true }

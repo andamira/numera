@@ -60,7 +60,7 @@ impl<N: Number + Signed + Neg<Output = N>> Neg for NonNegativeInteger<N> {
 
 // WAIT:specialization, until then...
 //
-/// implements [`Neg`] for an integer<N: Unsigned>,
+/// implements `Neg` for an integer<N: Unsigned>,
 /// returning the sign complementary type.
 macro_rules! impl_neg_unsigned {
     // negative to positive:

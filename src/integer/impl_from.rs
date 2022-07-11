@@ -3,12 +3,15 @@
 //! implements From between integer types.
 //
 
-use crate::integer::{
-    a::*, Integer, NegativeInteger, NonNegativeInteger, NonPositiveInteger, NonZeroInteger,
-    PositiveInteger,
+use crate::{
+    error::{Error, IntegerError, Result},
+    integer::{
+        a::*, Integer, NegativeInteger, NonNegativeInteger, NonPositiveInteger, NonZeroInteger,
+        PositiveInteger,
+    },
+    traits::{sign::*, Number},
 };
-use crate::traits::{sign::*, Number};
-use core::{convert::TryFrom, num::IntErrorKind};
+use core::convert::TryFrom;
 
 // # From more strict types for less strict ones
 // -----------------------------------------------------------------------------
@@ -86,13 +89,13 @@ impl<N: Number> From<PositiveInteger<N>> for NonNegativeInteger<N> {
 
 /// TryFrom `<= 0` for `!= 0`
 impl<N: Number + Signed> TryFrom<NonPositiveInteger<N>> for NonZeroInteger<N> {
-    type Error = IntErrorKind;
+    type Error = Error;
 
     /// Errors if the value is `0`.
     #[inline]
-    fn try_from(v: Npz<N>) -> Result<N0z<N>, Self::Error> {
+    fn try_from(v: NonPositiveInteger<N>) -> Result<NonZeroInteger<N>> {
         if v.is_zero() {
-            Err(IntErrorKind::Zero)
+            Err(IntegerError::Zero.into())
         } else {
             Ok(Self(v.0))
         }
@@ -104,22 +107,22 @@ impl<N: Number + Signed> TryFrom<NonPositiveInteger<N>> for NonZeroInteger<N> {
 //     NIN: Number + Unsigned, //
 //     NOUT: Number + Signed,
 // {
-//     type Error = IntErrorKind;
+//     type Error = Error;
 //     #[inline]
-//     fn try_from(v: Npz<NIN>) -> Result<N0z<NOUT>, Self::Error> {
+//     fn try_from(v: Npz<NIN>) -> Result<N0z<NOUT>> {
 //         todo![]
 //     }
 // }
 
 /// TryFrom `>= 0` for `!= 0`
 impl<N: Number + Signed> TryFrom<NonNegativeInteger<N>> for NonZeroInteger<N> {
-    type Error = IntErrorKind;
+    type Error = Error;
 
     /// Errors if the value is `0`.
     #[inline]
-    fn try_from(v: Nnz<N>) -> Result<N0z<N>, Self::Error> {
+    fn try_from(v: NonNegativeInteger<N>) -> Result<NonZeroInteger<N>> {
         if v.is_zero() {
-            Err(IntErrorKind::Zero)
+            Err(IntegerError::Zero.into())
         } else {
             Ok(Self(v.0))
         }
@@ -128,13 +131,13 @@ impl<N: Number + Signed> TryFrom<NonNegativeInteger<N>> for NonZeroInteger<N> {
 
 /// TryFrom `<= 0` for `< 0`
 impl<N: Number> TryFrom<NonPositiveInteger<N>> for NegativeInteger<N> {
-    type Error = IntErrorKind;
+    type Error = Error;
 
     /// Errors if the value is `0`.
     #[inline]
-    fn try_from(v: Npz<N>) -> Result<Nz<N>, Self::Error> {
+    fn try_from(v: NonPositiveInteger<N>) -> Result<NegativeInteger<N>> {
         if v.is_zero() {
-            Err(IntErrorKind::Zero)
+            Err(IntegerError::Zero.into())
         } else {
             Ok(Self(v.0))
         }
@@ -143,13 +146,13 @@ impl<N: Number> TryFrom<NonPositiveInteger<N>> for NegativeInteger<N> {
 
 /// TryFrom `>= 0` for `> 0`
 impl<N: Number> TryFrom<NonNegativeInteger<N>> for PositiveInteger<N> {
-    type Error = IntErrorKind;
+    type Error = Error;
 
     /// Errors if the value is `0`.
     #[inline]
-    fn try_from(v: Nnz<N>) -> Result<Pz<N>, Self::Error> {
+    fn try_from(v: Nnz<N>) -> Result<Pz<N>> {
         if v.is_zero() {
-            Err(IntErrorKind::Zero)
+            Err(IntegerError::Zero.into())
         } else {
             Ok(Self(v.0))
         }

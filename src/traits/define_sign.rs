@@ -18,11 +18,12 @@ pub trait Unsigned {}
 
 /// Can *not* represent positive numbers.
 pub trait NegSigned {
-    type Value;
+    /// The number's [`Inner`][crate::Number::Inner] value representation.
+    type Inner;
     /// Returns a new number that contains the negation of the `value`.
     ///
     /// This allows using an unsigned type value to store only negative numbers.
-    fn new_neg(value: Self::Value) -> Self;
+    fn new_neg(value: Self::Inner) -> Self;
 }
 
 /// Implements `Signed` on primitives

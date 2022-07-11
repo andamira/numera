@@ -31,14 +31,14 @@ impl<N: Number> Unsigned for PositiveInteger<N> {}
 // can't hold positive values
 
 impl<N: Number> NegSigned for NonPositiveInteger<N> {
-    type Value = N;
-    fn new_neg(value: Self::Value) -> Self {
+    type Inner = N;
+    fn new_neg(value: Self::Inner) -> Self {
         Self(value)
     }
 }
 impl<N: Number> NegSigned for NegativeInteger<N> {
-    type Value = N;
-    fn new_neg(value: Self::Value) -> Self {
+    type Inner = N;
+    fn new_neg(value: Self::Inner) -> Self {
         Self(value)
     }
 }

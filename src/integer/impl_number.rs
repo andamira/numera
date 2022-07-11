@@ -7,20 +7,31 @@ use super::{
     Integer, NegativeInteger, NonNegativeInteger, NonPositiveInteger, NonZeroInteger,
     PositiveInteger,
 };
-use crate::traits::{Number, Signed};
+use crate::{
+    error::{Error, IntegerError, Result},
+    traits::{Number, Signed},
+};
 
+// Z: Received values are always valid.
 #[rustfmt::skip]
 impl<N: Number + Signed> Number for Integer<N> {
-    type Value = N;
+    type Inner = N;
     /// Returns a new `Integer`.
     #[inline]
-    fn new(value: Self::Value) -> Self { Self(value) }
+    fn new(value: Self::Inner) -> Self { Self(value) }
     /// Returns some new `Integer`.
     #[inline]
-    fn new_checked(value: Self::Value) -> Option<Self> { Some(Self(value)) }
+    fn new_checked(value: Self::Inner) -> Option<Self> { Some(Self(value)) }
 
     #[inline]
-    fn clone_value(&self) -> Self::Value { self.0.clone() }
+    fn get_inner(&self) -> Self::Inner { self.0.clone() }
+
+    #[inline]
+    fn set_inner(&mut self, value: Self::Inner) { self.0 = value; }
+    #[inline]
+    fn try_set_inner(&mut self, value: Self::Inner) -> Result<()> {
+        self.0 = value; Ok(())
+    }
 
     #[inline]
     fn can_negative() -> bool { true }
@@ -45,25 +56,38 @@ impl<N: Number + Signed> Number for Integer<N> {
     fn is_neg_one(&self) -> bool { self.0.is_neg_one() }
 }
 
+// N0z: Received values are only valid iff `!= 0`.
 #[rustfmt::skip]
 impl<N: Number + Signed> Number for NonZeroInteger<N> {
-    type Value = N;
+    type Inner = N;
     /// Returns a new `NonZeroInteger`.
     ///
+    /// # Panics
     /// Panics if `value == 0`.
     #[inline]
-    fn new(value: Self::Value) -> Self {
+    fn new(value: Self::Inner) -> Self {
         assert![!value.is_zero()];
         Self(value)
     }
     /// Returns some new `NonZeroInteger` or `None` if `value == 0`.
     #[inline]
-    fn new_checked(value: Self::Value) -> Option<Self> {
+    fn new_checked(value: Self::Inner) -> Option<Self> {
         if value.is_zero() { None } else { Some(Self(value)) }
     }
 
     #[inline]
-    fn clone_value(&self) -> Self::Value { self.0.clone() }
+    fn get_inner(&self) -> Self::Inner { self.0.clone() }
+
+    #[inline]
+    fn set_inner(&mut self, value: Self::Inner) {
+        assert![!value.is_zero()];
+        self.0 = value;
+    }
+    #[inline]
+    fn try_set_inner(&mut self, value: Self::Inner) -> Result<()> {
+        if value.is_zero() { Err(Error::Integer(IntegerError::Zero)) }
+        else { self.0 = value; Ok(()) }
+    }
 
     #[inline]
     fn can_negative() -> bool { true }
@@ -88,25 +112,37 @@ impl<N: Number + Signed> Number for NonZeroInteger<N> {
     fn is_neg_one(&self) -> bool { self.0.is_neg_one() }
 }
 
+// Npi: Received values are valid iff `<= 0`.
 #[rustfmt::skip]
 impl<N: Number> Number for NonPositiveInteger<N> {
-    type Value = N;
+    type Inner = N;
     /// Returns a new *non-positive* `Integer`.
     ///
     /// Panics if `value` > `0`.
     #[inline]
-    fn new(value: Self::Value) -> Self {
+    fn new(value: Self::Inner) -> Self {
         assert![!value.is_positive()];
         Self(value)
     }
     /// Returns some new `NonPositiveInteger` or `None` if `value > 0`.
     #[inline]
-    fn new_checked(value: Self::Value) -> Option<Self> {
+    fn new_checked(value: Self::Inner) -> Option<Self> {
         if value.is_positive() { None } else { Some(Self(value)) }
     }
 
     #[inline]
-    fn clone_value(&self) -> Self::Value { self.0.clone() }
+    fn get_inner(&self) -> Self::Inner { self.0.clone() }
+
+    #[inline]
+    fn set_inner(&mut self, value: Self::Inner) {
+        assert![!value.is_positive()];
+        self.0 = value;
+    }
+    #[inline]
+    fn try_set_inner(&mut self, value: Self::Inner) -> Result<()> {
+        if value.is_positive() { Err(IntegerError::Zero.into()) }
+        else { self.0 = value; Ok(()) }
+    }
 
     #[inline]
     fn can_negative() -> bool { true }
@@ -131,25 +167,37 @@ impl<N: Number> Number for NonPositiveInteger<N> {
     fn is_neg_one(&self) -> bool {self.0.is_neg_one() }
 }
 
+// Received values are valid iff `< 0`.
 #[rustfmt::skip]
 impl<N: Number> Number for NegativeInteger<N> {
-    type Value = N;
+    type Inner = N;
     /// Returns a new *negative* `Integer`.
     ///
     /// Panics if `value >= 0`.
     #[inline]
-    fn new(value: Self::Value) -> Self {
+    fn new(value: Self::Inner) -> Self {
         assert![value.is_negative()];
         Self(value)
     }
     /// Returns some new `NegativeInteger` or `None` if `value >= 0`.
     #[inline]
-    fn new_checked(value: Self::Value) -> Option<Self> {
+    fn new_checked(value: Self::Inner) -> Option<Self> {
         if value.is_negative() { Some(Self(value)) } else { None}
     }
 
     #[inline]
-    fn clone_value(&self) -> Self::Value { self.0.clone() }
+    fn get_inner(&self) -> Self::Inner { self.0.clone() }
+
+    #[inline]
+    fn set_inner(&mut self, value: Self::Inner) {
+        assert![value.is_negative()];
+        self.0 = value;
+    }
+    #[inline]
+    fn try_set_inner(&mut self, value: Self::Inner) -> Result<()> {
+        if value.is_negative() { self.0 = value; Ok(()) }
+        else { Err(IntegerError::ZeroOrMore.into()) }
+    }
 
     #[inline]
     fn can_negative() -> bool { true }
@@ -174,25 +222,37 @@ impl<N: Number> Number for NegativeInteger<N> {
     fn is_neg_one(&self) -> bool {self.0.is_neg_one() }
 }
 
+// Received values are valid iff `> 0`.
 #[rustfmt::skip]
 impl<N: Number> Number for NonNegativeInteger<N> {
-    type Value = N;
+    type Inner = N;
     /// Returns a new *non-negative* `Integer`.
     ///
     /// Panics if `value < 0`.
     #[inline]
-    fn new(value: Self::Value) -> Self {
+    fn new(value: Self::Inner) -> Self {
         assert![!value.is_negative()];
         Self(value)
     }
     /// Returns some new `NonNegativeInteger` or `None` if `value < 0`.
     #[inline]
-    fn new_checked(value: Self::Value) -> Option<Self> {
+    fn new_checked(value: Self::Inner) -> Option<Self> {
         if value.is_negative() { None } else { Some(Self(value)) }
     }
 
     #[inline]
-    fn clone_value(&self) -> Self::Value { self.0.clone() }
+    fn get_inner(&self) -> Self::Inner { self.0.clone() }
+
+    #[inline]
+    fn set_inner(&mut self, value: Self::Inner) {
+        assert![!value.is_negative()];
+        self.0 = value;
+    }
+    #[inline]
+    fn try_set_inner(&mut self, value: Self::Inner) -> Result<()> {
+        if value.is_negative() { Err(IntegerError::ZeroOrLess.into()) }
+        else { self.0 = value; Ok(()) }
+    }
 
     #[inline]
     fn can_negative() -> bool { false }
@@ -217,25 +277,37 @@ impl<N: Number> Number for NonNegativeInteger<N> {
     fn is_neg_one(&self) -> bool { false }
 }
 
+// Received values are valid iff `>= 0`.
 #[rustfmt::skip]
 impl<N: Number> Number for PositiveInteger<N> {
-    type Value = N;
+    type Inner = N;
     /// Returns a new *positive* `Integer`.
     ///
     /// Panics if `value <= 0`.
     #[inline]
-    fn new(value: Self::Value) -> Self {
+    fn new(value: Self::Inner) -> Self {
         assert![value.is_positive()];
         Self(value)
     }
     /// Returns some new `PositiveInteger` or `None` if `value <= 0`.
     #[inline]
-    fn new_checked(value: Self::Value) -> Option<Self> {
+    fn new_checked(value: Self::Inner) -> Option<Self> {
         if value.is_positive() { Some(Self(value)) } else { None }
     }
 
     #[inline]
-    fn clone_value(&self) -> Self::Value { self.0.clone() }
+    fn get_inner(&self) -> Self::Inner { self.0.clone() }
+
+    #[inline]
+    fn set_inner(&mut self, value: Self::Inner) {
+        assert![value.is_positive()];
+        self.0 = value;
+    }
+    #[inline]
+    fn try_set_inner(&mut self, value: Self::Inner) -> Result<()> {
+        if value.is_positive() { self.0 = value; Ok(()) }
+        else { Err(IntegerError::LessThanZero.into()) }
+    }
 
     #[inline]
     fn can_negative() -> bool { false }
