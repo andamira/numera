@@ -1,7 +1,6 @@
 // numera::integer::impl_ops::neg
 //
 //! implements the [`Neg`] operation for integer types.
-//!
 //
 
 use crate::traits::{NegSigned, Number, Signed};
