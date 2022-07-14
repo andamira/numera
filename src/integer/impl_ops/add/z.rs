@@ -4,9 +4,9 @@
 //!
 //! Completed:
 //! - Integer<N: Signed> + *integer*<N> = Integer<N>
+//! - Integer<N: Signed> + *integer*<M> = Integer<N> (where *prim* M < N)
 //! - Integer<N: Signed> + N = Integer<N>
-//! - Integer<N: Signed> + M = Integer<N> (where M < N)
-//! - [ ] TODO Integer<N: Signed> + *integer*<M> = Integer<N> (where primitive M < N)
+//! - Integer<N: Signed> + M = Integer<N> (where *prim* M < N)
 //
 
 use crate::{
@@ -45,21 +45,11 @@ mod test_impl_add_z_integer {
     use crate::{integer::a::*, traits::Number};
     #[test]
     fn impl_add_z_rhs() {
-        assert_eq![Z::new(3), Z::new(2) + N0z::new(1)];
-        assert_eq![Z::new(3), Z::new(2) + Pz::new(1)];
-        assert_eq![Z::new(3), Z::new(2) + Nnz::new(1)];
-        assert_eq![Z::new(1), Z::new(2) + Npz::new(-1)];
-        assert_eq![Z::new(1), Z::new(2) + Nz::new(-1)];
-    }
-
-    #[test]
-    #[cfg(feature = "ibig")]
-    fn impl_add_same_prim_ibig() {
-        use ibig::IBig;
-        assert_eq![
-            Z::new(IBig::from(5)) + N0z::new(IBig::from(3)),
-            Z::new(IBig::from(8))
-        ];
+        assert_eq![Z::new(7), Z::new(4) + N0z::new(3)];
+        assert_eq![Z::new(7), Z::new(4) + Pz::new(3)];
+        assert_eq![Z::new(7), Z::new(4) + Nnz::new(3)];
+        assert_eq![Z::new(1), Z::new(4) + Npz::new(-3)];
+        assert_eq![Z::new(1), Z::new(4) + Nz::new(-3)];
     }
 }
 
@@ -135,11 +125,11 @@ mod test_impl_add_z_smaller_integer {
     use crate::{integer::a::*, traits::Number};
     #[test]
     fn impl_add_z_rhs() {
-        assert_eq![Z::new(3_i64), Z::new(3_i64) + N0z::new(1_16)];
-        assert_eq![Z::new(1), Z::new(2) + Npz::new(-1_i8)];
+        assert_eq![Z::new(7_i64), Z::new(4_i64) + N0z::new(3_i16)];
+        assert_eq![Z::new(1), Z::new(4) + Npz::new(-3_i8)];
 
         #[cfg(target_pointer_width = "64")]
-        assert_eq![Z::new(3_isize), Z::new(2_isize) Z::new(1_i64)];
+        assert_eq![Z::new(7_isize), Z::new(4_isize) + Z::new(3_i64)];
     }
 }
 
@@ -169,8 +159,8 @@ mod test_add_same_prim {
     use crate::{integer::a::*, traits::Number};
     #[test]
     fn impl_add_same_prim() {
-        assert_eq![Z::new(3_i8), Z::new(2_i8) + 1];
-        assert_eq![Z::new(3), Z::new(2) + 1]; // i32
+        assert_eq![Z::new(7_i8), Z::new(4_i8) + 3];
+        assert_eq![Z::new(7), Z::new(4) + 3]; // i32
     }
 }
 
@@ -197,7 +187,7 @@ macro_rules! impl_add_smaller_prim {
 }
 
 #[rustfmt::skip]
-impl_add_smaller_prim![ all: Integer, "",
+impl_add_smaller_prim![all: Integer, "",
     (i16, i8),
     (i32, i16), (i32, i8),
     (i64, i32), (i64, i16), (i64, i8),
@@ -205,35 +195,35 @@ impl_add_smaller_prim![ all: Integer, "",
 
 #[rustfmt::skip]
 #[cfg(target_pointer_width = "128")]
-impl_add_smaller_prim![ all: Integer,
+impl_add_smaller_prim![all: Integer,
     "\n\nAssumes `target_pointer_width = \"128\"`",
     (isize, i8), (isize, i16), (isize, i32), (isize, i64), (isize, i128),
     (i128, isize) ];
 
 #[rustfmt::skip]
 #[cfg(target_pointer_width = "64")]
-impl_add_smaller_prim![ all: Integer,
+impl_add_smaller_prim![all: Integer,
     "\n\nAssumes `target_pointer_width = \"64\"`",
     (isize, i8), (isize, i16), (isize, i32), (isize, i64),
     (i64, isize), (i128, isize) ];
 
 #[rustfmt::skip]
 #[cfg(target_pointer_width = "32")]
-impl_add_smaller_prim![ all: Integer,
+impl_add_smaller_prim![all: Integer,
     "\n\nAssumes `target_pointer_width = \"32\"`",
     (isize, i8), (isize, i16), (isize, i32),
     (i32, isize), (i64, isize), (i128, isize) ];
 
 #[rustfmt::skip]
 #[cfg(target_pointer_width = "16")]
-impl_add_smaller_prim![ all: Integer,
+impl_add_smaller_prim![all: Integer,
     "\n\nAssumes `target_pointer_width = \"16\"`",
     (isize, i8), (isize, i16),
     (i16, isize), (i32, isize), (i64, isize), (i128, isize) ];
 
 #[rustfmt::skip]
 #[cfg(target_pointer_width = "8")]
-impl_add_smaller_prim![ all: Integer,
+impl_add_smaller_prim![all: Integer,
     "\n\nAssumes `target_pointer_width = \"8\"`",
     (isize, i8),
     (i8, isize), (i16, isize), (i32, isize), (i64, isize), (i128, isize) ];
@@ -244,11 +234,11 @@ mod test_add_smaller_prim {
 
     #[test]
     fn impl_add_smaller_prim() {
-        assert_eq![Z::new(3_i16), Z::new(2_i16) + 1_i8];
-        assert_eq![Z::new(3), Z::new(2) + 1_i8]; // Z<i32> + i8
+        assert_eq![Z::new(7_i16), Z::new(4_i16) + 3_i8];
+        assert_eq![Z::new(7), Z::new(4) + 3_i8]; // Z<i32> + i8
 
         #[cfg(target_pointer_width = "64")]
-        assert_eq![Z::new(3_isize), Z::new(2_isize) + 1_i64];
+        assert_eq![Z::new(7_isize), Z::new(4_isize) + 3_i64];
     }
 }
 
@@ -280,7 +270,7 @@ mod add_ibig {
         };
         ($t:ident, $tn:ident, $n:ty) => {
             paste::paste! {
-               #[doc = "`Z<IBig> + " $n " = Z<IBig>`" ]
+               #[doc = "`Z<" $tn "> + " $n " = Z<" $tn ">`" ]
                 impl Add<$n> for $t<$tn> {
                     type Output = $t<$tn>;
                     fn add(self, other: $n) -> Self::Output {
@@ -292,21 +282,27 @@ mod add_ibig {
     }
 
     #[rustfmt::skip]
-    impl_add_ibig_prim![ all: Integer, IBig,
+    impl_add_ibig_prim![all: Integer, IBig,
         i8, u8, i16, u16, i32, u32, i64, u64, i128, isize, usize ];
 
     #[cfg(test)]
-    mod tests {
+    mod test_ibig {
         use super::IBig;
         use crate::{integer::a::*, traits::Number};
 
         #[test]
         fn ibig() {
+            // Z<IBig> + *integer*<IBig> = Z<IBig>
+            assert_eq![
+                Z::new(IBig::from(7)),
+                Z::new(IBig::from(4)) + N0z::new(IBig::from(3))
+            ];
+
             // Z<IBig> + IBig = Z<IBig>
-            assert_eq![Z::new(IBig::from(5)) + IBig::from(3), Z::new(IBig::from(8))];
+            assert_eq![Z::new(IBig::from(7)), Z::new(IBig::from(4)) + IBig::from(3)];
 
             // Z<IBig> + *primitive* = Z<IBig>
-            assert_eq![Z::new(IBig::from(5_i64)) + 3_u8, Z::new(IBig::from(8_i16))];
+            assert_eq![Z::new(IBig::from(7_i16)), Z::new(IBig::from(4_i64)) + 3_u8];
         }
     }
 }

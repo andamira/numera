@@ -10,9 +10,9 @@
 
 mod add;
 mod div;
-mod mul; // TODO
-mod neg; // REVIEW
-mod rem; // TODO
-mod sub; // TODO
+mod mul;
+mod neg;
+mod rem;
+mod sub;
 
 // mod try;
