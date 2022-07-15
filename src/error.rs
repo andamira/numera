@@ -19,12 +19,10 @@ pub enum Error {
     Rational(RationalError),
     /// An error involving real numbers.
     Real(RealError),
-    /// Other kind of error.
-    Other(String),
 }
 
 /// Errors related to [`integer`][crate::integer]s.
-// WIP
+#[non_exhaustive]
 #[derive(Debug)]
 pub enum IntegerError {
     /// Invalid value `0`.
@@ -41,26 +39,22 @@ pub enum IntegerError {
 
     /// Invalid value `> 0`.
     MoreThanZero,
-
-    /// An error related to integer primitives.
-    Int(core::num::IntErrorKind),
-
-    Other(String),
+    // /// An error related to integer primitives.
+    // Int(core::num::IntErrorKind),
 }
-// TODO: return a number error
-impl IntegerError {}
 
 /// Errors related to [`rational`][crate::rational]s.
+#[non_exhaustive]
 #[derive(Debug)]
 pub enum RationalError {
-    // TODO
-    Other(String),
+    Other,
 }
 
 /// Errors related to [`real`][crate::real]s.
+#[non_exhaustive]
 #[derive(Debug)]
 pub enum RealError {
-    Other(String),
+    Other,
 }
 
 /// allows converting into `Error` from other error types.
@@ -101,7 +95,7 @@ mod std_impls {
                 Integer(z) => Debug::fmt(z, f),
                 Rational(q) => Debug::fmt(q, f),
                 Real(r) => Debug::fmt(r, f),
-                Other(s) => write!(f, "Error::Other: {s}"),
+                // Other(s) => write!(f, "Error::Other: {s}"),
             }
         }
     }
@@ -116,8 +110,8 @@ mod std_impls {
                 ZeroOrLess => write!(f, "IntegerError::ZeroOrMore"),
                 LessThanZero => write!(f, "IntegerError::ZeroOrMore"),
                 MoreThanZero => write!(f, "IntegerError::ZeroOrMore"),
-                Int(i) => i.fmt(f),
-                Other(s) => write!(f, "IntegerError::Other: {s}"),
+                // Int(i) => i.fmt(f),
+                // Other(s) => write!(f, "IntegerError::Other: {s}"),
             }
         }
     }
@@ -125,22 +119,24 @@ mod std_impls {
     impl StdError for RationalError {}
     impl fmt::Display for RationalError {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            use RationalError::*;
-            match self {
-                // => write!(f, "RationalError::"),
-                Other(s) => write!(f, "RationalError::Other: {s}"),
-            }
+            write!(f, "RealError")
+            // use RationalError::*;
+            // match self {
+            //     // => write!(f, "RationalError::"),
+            //     Other(s) => write!(f, "RationalError::Other: {s}"),
+            // }
         }
     }
 
     impl StdError for RealError {}
     impl fmt::Display for RealError {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            use RealError::*;
-            match self {
-                // => write!(f, "RealError::"),
-                Other(s) => write!(f, "RealError::Other: {s}"),
-            }
+            write!(f, "RealError")
+            // use RealError::*;
+            // match self {
+            //     // => write!(f, "RealError::"),
+            //     Other(s) => write!(f, "RealError::Other: {s}"),
+            // }
         }
     }
 }

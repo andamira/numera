@@ -1,7 +1,7 @@
 [package]
 name = "numera"
 description = "numbers"
-version = "0.0.5"
+version = "0.0.6"
 edition = "2021"
 rust-version = "1.62"
 authors = ["José Luis Cruz <joseluis@andamira.net>"]
@@ -33,7 +33,7 @@ static_assertions = "1.1.0"
 [features]
 default = [ "std" ]
 std = [ "half?/std", "ibig?/std" ]
-all = [ "std", "twofloat", "half", "ibig" ]
+all = [ "twofloat", "half", "ibig" ]
 
 [package.metadata.docs.rs]
 rustdoc-args = [ "--html-in-header", "./res/header.html" ]

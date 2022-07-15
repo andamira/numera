@@ -6,6 +6,9 @@
 
 Numeric types and operations, numeric systems, numerals, number theory…
 
-# Status
+## Status
 
-- This is an experimental work in progress. The API can and will keep changing.
+This is an experimental work in progress. The API can and will keep changing.
+
+Currently only the Integer & NonZeroInteger ops are implemented.
+

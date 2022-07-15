@@ -9,7 +9,8 @@
 pub mod error;
 pub mod integer;
 pub mod rational;
+pub mod real;
 pub mod traits;
 
 #[doc(inline)]
-pub use {error::Result, integer::Integer, rational::Rational, traits::Number};
+pub use {error::Result, integer::Integer, rational::Rational, real::Real, traits::Number};

@@ -29,7 +29,7 @@ macro_rules! impl_sub_z_integer {
         impl<N: Number + Signed + Sub<Output = N>> Sub<$rhs<N>> for Integer<N> {
             type Output = Integer<N>;
             fn sub(self, other: $rhs<N>) -> Self::Output {
-                Integer::new(self.0.sub(other.0))
+                Self::Output::new(self.0.sub(other.0))
             }
         }
     };
@@ -170,14 +170,14 @@ mod test_sub_same_prim {
 /// implements `Sub` for an integer and a `< sized` primitive of the same sign,
 /// and also from a integer and a `<= sized` pointer.
 macro_rules! impl_sub_smaller_prim {
-    (all: $t:ident, $doc:literal, $( ($n1:ty, $n2:ty ) ),+) => {
-        $( impl_sub_smaller_prim![$t, $doc, ( $n1, $n2 )]; )+
+    (all: $doc:literal, $( ($n1:ty, $n2:ty ) ),+) => {
+        $( impl_sub_smaller_prim![$doc, ( $n1, $n2 )]; )+
     };
-    ($t:ident, $doc:literal, ($n1:ty, $n2:ty) ) => {
+    ($doc:literal, ($n1:ty, $n2:ty) ) => {
         paste::paste! {
             #[doc = "`Z<" $n1 "> - " $n2 " = Z<" $n1 ">`" $doc ]
-            impl Sub<$n2> for $t<$n1> {
-                type Output = $t<$n1>;
+            impl Sub<$n2> for Integer<$n1> {
+                type Output = Integer<$n1>;
                 fn sub(self, other: $n2) -> Self::Output {
                     Self::Output::new(self.0.sub(other as $n1))
                 }
@@ -187,7 +187,7 @@ macro_rules! impl_sub_smaller_prim {
 }
 
 #[rustfmt::skip]
-impl_sub_smaller_prim![all: Integer, "",
+impl_sub_smaller_prim![all: "",
     (i16, i8),
     (i32, i16), (i32, i8),
     (i64, i32), (i64, i16), (i64, i8),
@@ -195,35 +195,35 @@ impl_sub_smaller_prim![all: Integer, "",
 
 #[rustfmt::skip]
 #[cfg(target_pointer_width = "128")]
-impl_sub_smaller_prim![all: Integer,
+impl_sub_smaller_prim![all:
     "\n\nAssumes `target_pointer_width = \"128\"`",
     (isize, i8), (isize, i16), (isize, i32), (isize, i64), (isize, i128),
     (i128, isize) ];
 
 #[rustfmt::skip]
 #[cfg(target_pointer_width = "64")]
-impl_sub_smaller_prim![all: Integer,
+impl_sub_smaller_prim![all:
     "\n\nAssumes `target_pointer_width = \"64\"`",
     (isize, i8), (isize, i16), (isize, i32), (isize, i64),
     (i64, isize), (i128, isize) ];
 
 #[rustfmt::skip]
 #[cfg(target_pointer_width = "32")]
-impl_sub_smaller_prim![all: Integer,
+impl_sub_smaller_prim![all:
     "\n\nAssumes `target_pointer_width = \"32\"`",
     (isize, i8), (isize, i16), (isize, i32),
     (i32, isize), (i64, isize), (i128, isize) ];
 
 #[rustfmt::skip]
 #[cfg(target_pointer_width = "16")]
-impl_sub_smaller_prim![all: Integer,
+impl_sub_smaller_prim![all:
     "\n\nAssumes `target_pointer_width = \"16\"`",
     (isize, i8), (isize, i16),
     (i16, isize), (i32, isize), (i64, isize), (i128, isize) ];
 
 #[rustfmt::skip]
 #[cfg(target_pointer_width = "8")]
-impl_sub_smaller_prim![all: Integer,
+impl_sub_smaller_prim![all:
     "\n\nAssumes `target_pointer_width = \"8\"`",
     (isize, i8),
     (i8, isize), (i16, isize), (i32, isize), (i64, isize), (i128, isize) ];

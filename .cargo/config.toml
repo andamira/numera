@@ -35,9 +35,5 @@ rre = "run --release --example"
 rrqb = "run --release --quiet --bin"
 rrqe = "run --release --quiet --example"
 
-# TEST
-t = "test -- --nocapture"
-t1 = "test -- --test-threads 1 --nocapture"
-
 [build]
 rustdocflags = [ "--html-in-header", "./res/header.html"]
