@@ -1,14 +1,14 @@
-// numera::integer::impl_ops::sub::n0z
+// numera::integer::impl_ops::sub::pz
 //
-//! Implements the `Sub` operation on `NonZeroInteger`.
+//! Implements the `Sub` operation on `PositiveInteger`.
 //!
 //! Completed:
-//! - NonZeroInteger<N: Signed> - *integer*<N> = NonZeroInteger<N>
-//! - NonZeroInteger<N: Signed> - *integer*<M> = NonZeroInteger<N> (where M < N)
-//! - NonZeroInteger<N: Signed> - N = NonZeroInteger<N>
-//! - NonZeroInteger<N: Signed> - M = NonZeroInteger<N> (where M < N)
+//! - PositiveInteger<N> - *integer*<N> = PositiveInteger<N>
+//! - PositiveInteger<N> - *integer*<M> = PositiveInteger<N> (where M < N)
+//! - PositiveInteger<N> - N = PositiveInteger<N>
+//! - PositiveInteger<N> - M = PositiveInteger<N> (where M < N)
 //!
-//! All panic if the result == 0.
+//! All panic if the result <= 0.
 //
 
 use crate::{
@@ -20,16 +20,27 @@ use crate::{
 };
 use core::ops::Sub;
 
-// NonZeroInteger<N: Signed> - *integer*<N> = NonZeroInteger<N>
+// PositiveInteger<N> - *integer*<N> = PositiveInteger<N>
 // -----------------------------------------------------------------------------
 
-macro_rules! impl_sub_n0z_integer {
+macro_rules! impl_sub_pz_integer {
     (all: $($rhs:ident),+) => {
-        $( impl_sub_n0z_integer![$rhs]; )+
+        $( impl_sub_pz_integer![$rhs]; )+
     };
     ($rhs:ident) => {
-        impl<N: Number + Signed + Sub<Output = N>> Sub<$rhs<N>> for NonZeroInteger<N> {
-            type Output = NonZeroInteger<N>;
+        impl<N: Number + Sub<Output = N>> Sub<$rhs<N>> for PositiveInteger<N> {
+            type Output = PositiveInteger<N>;
+            fn sub(self, other: $rhs<N>) -> Self::Output {
+                Self::Output::new(self.0.sub(other.0))
+            }
+        }
+    };
+    (all_signed: $($rhs:ident),+) => {
+        $( impl_sub_pz_integer![signed: $rhs]; )+
+    };
+    (signed: $rhs:ident) => {
+        impl<N: Number + Signed + Sub<Output = N>> Sub<$rhs<N>> for PositiveInteger<N> {
+            type Output = PositiveInteger<N>;
             fn sub(self, other: $rhs<N>) -> Self::Output {
                 Self::Output::new(self.0.sub(other.0))
             }
@@ -38,41 +49,42 @@ macro_rules! impl_sub_n0z_integer {
 }
 
 #[rustfmt::skip]
-impl_sub_n0z_integer![all:
-    Integer, NegativeInteger, PositiveInteger,
-    NonNegativeInteger, NonPositiveInteger, NonZeroInteger];
+impl_sub_pz_integer![all:
+    NegativeInteger, PositiveInteger, NonNegativeInteger, NonPositiveInteger];
+
+impl_sub_pz_integer![all_signed: Integer, NonZeroInteger];
 
 #[cfg(test)]
-mod test_impl_sub_n0z_integer {
+mod test_impl_sub_pz_integer {
     use crate::{integer::a::*, traits::Number};
 
     #[test]
-    fn impl_sub_n0z_rhs() {
-        assert_eq![N0z::new(1), N0z::new(4) - Z::new(3)];
-        assert_eq![N0z::new(1), N0z::new(4) - Pz::new(3)];
-        assert_eq![N0z::new(1), N0z::new(4) - Nnz::new(3)];
-        assert_eq![N0z::new(7), N0z::new(4) - Npz::new(-3)];
-        assert_eq![N0z::new(7), N0z::new(4) - Nz::new(-3)];
+    fn impl_sub_pz_rhs() {
+        assert_eq![Pz::new(1), Pz::new(4) - Z::new(3)];
+        assert_eq![Pz::new(1), Pz::new(4) - Pz::new(3)];
+        assert_eq![Pz::new(1), Pz::new(4) - Nnz::new(3)];
+        assert_eq![Pz::new(7), Pz::new(4) - Npz::new(-3)];
+        assert_eq![Pz::new(7), Pz::new(4) - Nz::new(-3)];
     }
 }
 
-// NonZeroInteger<N: Signed> - *integer*<M> = NonZeroInteger<N> (where M < N)
+// PositiveInteger<N> - *integer*<M> = PositiveInteger<N> (where M < N)
 // -----------------------------------------------------------------------------
 
-macro_rules! impl_sub_n0z_smaller_integer {
+macro_rules! impl_sub_pz_smaller_integer {
     (for_all_integers: $doc:literal, $( ($n1:ty, $n2:ty ) ),+) => {
-        $( impl_sub_n0z_smaller_integer![Integer, $doc, ($n1, $n2)]; )+
-        $( impl_sub_n0z_smaller_integer![NonZeroInteger, $doc, ($n1, $n2)]; )+
-        $( impl_sub_n0z_smaller_integer![NegativeInteger, $doc, ($n1, $n2)]; )+
-        $( impl_sub_n0z_smaller_integer![PositiveInteger, $doc, ($n1, $n2)]; )+
-        $( impl_sub_n0z_smaller_integer![NonNegativeInteger, $doc, ($n1, $n2)]; )+
-        $( impl_sub_n0z_smaller_integer![NonPositiveInteger, $doc, ($n1, $n2)]; )+
+        $( impl_sub_pz_smaller_integer![Integer, $doc, ($n1, $n2)]; )+
+        $( impl_sub_pz_smaller_integer![NonZeroInteger, $doc, ($n1, $n2)]; )+
+        $( impl_sub_pz_smaller_integer![NegativeInteger, $doc, ($n1, $n2)]; )+
+        $( impl_sub_pz_smaller_integer![PositiveInteger, $doc, ($n1, $n2)]; )+
+        $( impl_sub_pz_smaller_integer![NonNegativeInteger, $doc, ($n1, $n2)]; )+
+        $( impl_sub_pz_smaller_integer![NonPositiveInteger, $doc, ($n1, $n2)]; )+
     };
     ($rhs:ident, $doc:literal, ($n1:ty, $n2:ty) ) => {
         paste::paste! {
-            #[doc = "`N0z<" $n1 "> - " $rhs "<" $n2 "> = N0z<" $n1 ">`" $doc ]
-            impl Sub<$rhs<$n2>> for NonZeroInteger<$n1> {
-                type Output = NonZeroInteger<$n1>;
+            #[doc = "`Pz<" $n1 "> - " $rhs "<" $n2 "> = Pz<" $n1 ">`" $doc ]
+            impl Sub<$rhs<$n2>> for PositiveInteger<$n1> {
+                type Output = PositiveInteger<$n1>;
                 fn sub(self, other: $rhs<$n2>) -> Self::Output {
                     Self::Output::new(self.0.sub(other.0 as $n1))
                 }
@@ -82,7 +94,7 @@ macro_rules! impl_sub_n0z_smaller_integer {
 }
 
 #[rustfmt::skip]
-impl_sub_n0z_smaller_integer![for_all_integers: "",
+impl_sub_pz_smaller_integer![for_all_integers: "",
     (i16, i8),
     (i32, i16), (i32, i8),
     (i64, i32), (i64, i16), (i64, i8),
@@ -90,53 +102,59 @@ impl_sub_n0z_smaller_integer![for_all_integers: "",
 
 #[rustfmt::skip]
 #[cfg(target_pointer_width = "128")]
-impl_sub_n0z_smaller_integer![for_all_integers:
+impl_sub_pz_smaller_integer![for_all_integers:
     "\n\nAssumes `target_pointer_width = \"128\"`",
     (isize, i8), (isize, i16), (isize, i32), (isize, i64), (isize, i128),
     (i128, isize) ];
 
 #[rustfmt::skip]
 #[cfg(target_pointer_width = "64")]
-impl_sub_n0z_smaller_integer![for_all_integers:
+impl_sub_pz_smaller_integer![for_all_integers:
     "\n\nAssumes `target_pointer_width = \"64\"`",
     (isize, i8), (isize, i16), (isize, i32), (isize, i64),
     (i64, isize), (i128, isize) ];
 
 #[rustfmt::skip]
 #[cfg(target_pointer_width = "32")]
-impl_sub_n0z_smaller_integer![for_all_integers:
+impl_sub_pz_smaller_integer![for_all_integers:
     "\n\nAssumes `target_pointer_width = \"32\"`",
     (isize, i8), (isize, i16), (isize, i32),
     (i32, isize), (i64, isize), (i128, isize) ];
 
 #[rustfmt::skip]
 #[cfg(target_pointer_width = "16")]
-impl_sub_n0z_smaller_integer![for_all_integers:
+impl_sub_pz_smaller_integer![for_all_integers:
     "\n\nAssumes `target_pointer_width = \"16\"`",
     (isize, i8), (isize, i16),
     (i16, isize), (i32, isize), (i64, isize), (i128, isize) ];
 
 #[rustfmt::skip]
 #[cfg(target_pointer_width = "8")]
-impl_sub_n0z_smaller_integer![for_all_integers:
+impl_sub_pz_smaller_integer![for_all_integers:
     "\n\nAssumes `target_pointer_width = \"8\"`",
     (isize, i8),
     (i8, isize), (i16, isize), (i32, isize), (i64, isize), (i128, isize) ];
 
 #[cfg(test)]
-mod test_impl_sub_n0z_smaller_integer {
+mod test_impl_sub_pz_smaller_integer {
     use crate::{integer::a::*, traits::Number};
     #[test]
-    fn impl_sub_n0z_rhs() {
-        assert_eq![N0z::new(1_i64), N0z::new(4_i64) - Z::new(3_i16)];
-        assert_eq![N0z::new(7), N0z::new(4) - Npz::new(-3_i8)];
+    fn impl_sub_pz_rhs() {
+        #[cfg(feature = "std")]
+        use std::panic::catch_unwind;
+
+        assert_eq![Pz::new(1_i64), Pz::new(4_i64) - Z::new(3_i16)];
+        assert_eq![Pz::new(7), Pz::new(4) - Npz::new(-3_i8)];
 
         #[cfg(target_pointer_width = "64")]
-        assert_eq![N0z::new(1_isize), N0z::new(4_isize) - N0z::new(3_i64)];
+        assert_eq![Pz::new(1_isize), Pz::new(4_isize) - Pz::new(3_i64)];
+
+        #[cfg(feature = "std")]
+        assert![catch_unwind(|| { Pz::new(3) - N0z::new(4) }).is_err()];
     }
 }
 
-// NonZeroInteger<N: Signed> - N = Integer<N>
+// PositiveInteger<N> - N = Integer<N>
 // -----------------------------------------------------------------------------
 
 macro_rules! impl_sub_same_prim {
@@ -145,9 +163,9 @@ macro_rules! impl_sub_same_prim {
     };
     ($n:ty) => {
         paste::paste! {
-           #[doc = "`N0z<" $n "> - " $n " = N0z<" $n ">`" ]
-            impl Sub<$n> for NonZeroInteger<$n> {
-                type Output = NonZeroInteger<$n>;
+           #[doc = "`Pz<" $n "> - " $n " = Pz<" $n ">`" ]
+            impl Sub<$n> for PositiveInteger<$n> {
+                type Output = PositiveInteger<$n>;
                 fn sub(self, other: $n) -> Self::Output {
                     Self::Output::new(self.0.sub(other))
                 }
@@ -162,12 +180,12 @@ mod test_sub_same_prim {
     use crate::{integer::a::*, traits::Number};
     #[test]
     fn impl_sub_same_prim() {
-        assert_eq![N0z::new(1_i8), N0z::new(4_i8) - 3];
-        assert_eq![N0z::new(1), N0z::new(4) - 3]; // i32
+        assert_eq![Pz::new(1_i8), Pz::new(4_i8) - 3];
+        assert_eq![Pz::new(1), Pz::new(4) - 3]; // i32
     }
 }
 
-// NonZeroInteger<N: Signed> - M (where M < N) = NonZeroInteger<N>
+// PositiveInteger<N> - M (where M < N) = PositiveInteger<N>
 // -----------------------------------------------------------------------------
 
 /// implements `Sub` for an integer and a `< sized` primitive of the same sign,
@@ -178,9 +196,9 @@ macro_rules! impl_sub_smaller_prim {
     };
     ($doc:literal, ($n1:ty, $n2:ty) ) => {
         paste::paste! {
-            #[doc = "`N0z<" $n1 "> - " $n2 " = N0z<" $n1 ">`" $doc ]
-            impl Sub<$n2> for NonZeroInteger<$n1> {
-                type Output = NonZeroInteger<$n1>;
+            #[doc = "`Pz<" $n1 "> - " $n2 " = Pz<" $n1 ">`" $doc ]
+            impl Sub<$n2> for PositiveInteger<$n1> {
+                type Output = PositiveInteger<$n1>;
                 fn sub(self, other: $n2) -> Self::Output {
                     Self::Output::new(self.0.sub(other as $n1))
                 }
@@ -237,11 +255,11 @@ mod test_sub_smaller_prim {
 
     #[test]
     fn impl_sub_smaller_prim() {
-        assert_eq![N0z::new(1_i16), N0z::new(4_i16) - 3_i8];
-        assert_eq![N0z::new(1), N0z::new(4) - 3_i8]; // N0z<i32> - i8
+        assert_eq![Pz::new(1_i16), Pz::new(4_i16) - 3_i8];
+        assert_eq![Pz::new(1), Pz::new(4) - 3_i8]; // Pz<i32> - i8
 
         #[cfg(target_pointer_width = "64")]
-        assert_eq![N0z::new(1_isize), N0z::new(4_isize) - 3_i64];
+        assert_eq![Pz::new(1_isize), Pz::new(4_isize) - 3_i64];
     }
 }
 
@@ -254,11 +272,11 @@ mod sub_ibig {
     use super::*;
     use ibig::IBig;
 
-    // NonZeroInteger<IBig> - IBig
+    // PositiveInteger<IBig> - IBig
 
-    /// `N0z<IBig> - IBig = N0z<IBig>`
-    impl Sub<IBig> for NonZeroInteger<IBig> {
-        type Output = NonZeroInteger<IBig>;
+    /// `Pz<IBig> - IBig = Pz<IBig>`
+    impl Sub<IBig> for PositiveInteger<IBig> {
+        type Output = PositiveInteger<IBig>;
         fn sub(self, other: IBig) -> Self::Output {
             Self::Output::new(self.0.sub(other))
         }
@@ -273,9 +291,9 @@ mod sub_ibig {
         };
         ($tn:ident, $n:ty) => {
             paste::paste! {
-               #[doc = "`N0z<" $tn "> - " $n " = N0z<" $tn ">`" ]
-                impl Sub<$n> for NonZeroInteger<$tn> {
-                    type Output = NonZeroInteger<$tn>;
+               #[doc = "`Pz<" $tn "> - " $n " = Pz<" $tn ">`" ]
+                impl Sub<$n> for PositiveInteger<$tn> {
+                    type Output = PositiveInteger<$tn>;
                     fn sub(self, other: $n) -> Self::Output {
                         Self::Output::new(self.0.sub(other))
                     }
@@ -295,22 +313,22 @@ mod sub_ibig {
 
         #[test]
         fn ibig() {
-            // N0z<IBig> - *integer*<IBig> = N0z<IBig>
+            // Pz<IBig> - *integer*<IBig> = Pz<IBig>
             assert_eq![
-                N0z::new(IBig::from(1)),
-                N0z::new(IBig::from(4)) - Z::new(IBig::from(3))
+                Pz::new(IBig::from(1)),
+                Pz::new(IBig::from(4)) - Z::new(IBig::from(3))
             ];
 
-            // N0z<IBig> - IBig = N0z<IBig>
+            // Pz<IBig> - IBig = Pz<IBig>
             assert_eq![
-                N0z::new(IBig::from(1)),
-                N0z::new(IBig::from(4)) - IBig::from(3)
+                Pz::new(IBig::from(1)),
+                Pz::new(IBig::from(4)) - IBig::from(3)
             ];
 
-            // N0z<IBig> - *primitive* = N0z<IBig>
+            // Pz<IBig> - *primitive* = Pz<IBig>
             assert_eq![
-                N0z::new(IBig::from(1_i16)),
-                N0z::new(IBig::from(4_i64)) - 3_u8
+                Pz::new(IBig::from(1_i16)),
+                Pz::new(IBig::from(4_i64)) - 3_u8
             ];
         }
     }

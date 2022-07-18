@@ -7,7 +7,8 @@
 mod n0z; // NonZeroInteger
 mod z; // Integer
 
+// mod pz; // PositiveInteger WIP
+
 // mod nnz; // NonNegativeInteger
 // mod npz; // NonPositiveInteger
 // mod nz; // NegativeInteger
-// mod pz; // PositiveInteger

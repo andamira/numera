@@ -56,8 +56,8 @@ pub mod ops {
 pub mod number {
     pub use super::define_number::Number;
 
-    // traits not defined in crate::traits
-    pub use crate::rational::Fraction;
+    // // traits not defined in crate::traits
+    // pub use crate::rational::Fraction;
 }
 
 /// Positive and/or negative.

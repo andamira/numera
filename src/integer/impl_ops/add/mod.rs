@@ -5,9 +5,9 @@
 //
 
 mod n0z; // NonZeroInteger
+mod pz; // PositiveInteger
 mod z; // Integer
 
+// mod nz; // NegativeInteger
 // mod nnz; // NonNegativeInteger
 // mod npz; // NonPositiveInteger
-// mod nz; // NegativeInteger
-// mod pz; // PositiveInteger

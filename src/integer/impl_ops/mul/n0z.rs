@@ -4,9 +4,9 @@
 //!
 //! Completed:
 //! - NonZeroInteger<N: Signed> × *integer*<N> = NonZeroInteger<N>
-//! - NonZeroInteger<N: Signed> × *integer*<M> = NonZeroInteger<N> (where *prim* M < N)
+//! - NonZeroInteger<N: Signed> × *integer*<M> = NonZeroInteger<N> (where M < N)
 //! - NonZeroInteger<N: Signed> × N = NonZeroInteger<N>
-//! - NonZeroInteger<N: Signed> × M = NonZeroInteger<N> (where *prim* M < N)
+//! - NonZeroInteger<N: Signed> × M = NonZeroInteger<N> (where M < N)
 //!
 //! All panic if the result == 0.
 //
@@ -31,7 +31,7 @@ macro_rules! impl_mul_n0z_integer {
         impl<N: Number + Signed + Mul<Output = N>> Mul<$rhs<N>> for NonZeroInteger<N> {
             type Output = NonZeroInteger<N>;
             fn mul(self, other: $rhs<N>) -> Self::Output {
-                NonZeroInteger::new(self.0.mul(other.0)) // panics if == 0
+                Self::Output::new(self.0.mul(other.0))
             }
         }
     };
@@ -56,7 +56,7 @@ mod test_impl_mul_n0z_integer {
     }
 }
 
-// NonZeroInteger<N: Signed> × *integer*<M> = NonZeroInteger<N> (where primitive M < N)
+// NonZeroInteger<N: Signed> × *integer*<M> = NonZeroInteger<N> (where M < N)
 // -----------------------------------------------------------------------------
 
 macro_rules! impl_mul_n0z_smaller_integer {
@@ -167,7 +167,7 @@ mod test_mul_same_prim {
     }
 }
 
-// NonZeroInteger<N: Signed> × M (where primitive M < N) = NonZeroInteger<N>
+// NonZeroInteger<N: Signed> × M (where M < N) = NonZeroInteger<N>
 // -----------------------------------------------------------------------------
 
 /// implements `Mul` for an integer and a `< sized` primitive of the same sign,
@@ -259,8 +259,8 @@ mod mul_ibig {
     /// `N0z<IBig> × IBig = N0z<IBig>`
     impl Mul<IBig> for NonZeroInteger<IBig> {
         type Output = NonZeroInteger<IBig>;
-        fn mul(self, other: IBig) -> NonZeroInteger<IBig> {
-            NonZeroInteger::new(self.0.mul(other))
+        fn mul(self, other: IBig) -> Self::Output {
+            Self::Output::new(self.0.mul(other))
         }
     }
 
@@ -286,7 +286,7 @@ mod mul_ibig {
 
     #[rustfmt::skip]
     impl_mul_ibig_prim![all: IBig,
-        i8, u8, i16, u16, i32, u32, i64, u64, i128, isize, usize ];
+        i8, u8, i16, u16, i32, u32, i64, u64, i128, u128, isize, usize ];
 
     #[cfg(test)]
     mod test_ibig {

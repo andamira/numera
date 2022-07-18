@@ -42,16 +42,22 @@ use crate::traits::{Number, Signed};
 /// [`Npz`][a::Npz], [`N0z`][a::N0z], [`Pz`][a::Pz]).
 pub mod a {
     use super::*;
+
     /// Acronym for [`Integer`].
     pub type Z<N> = Integer<N>;
+
     /// Acronym for [`NegativeInteger`].
     pub type Nz<N> = NegativeInteger<N>;
+
     /// Acronym for [`NonNegativeInteger`]
     pub type Nnz<N> = NonNegativeInteger<N>;
+
     /// Acronym for [`NonPositiveInteger`]
     pub type Npz<N> = NonPositiveInteger<N>;
+
     /// Acronym for [`NonZeroInteger`].
     pub type N0z<N> = NonZeroInteger<N>;
+
     /// Acronym for [`PositiveInteger`].
     pub type Pz<N> = PositiveInteger<N>;
 }

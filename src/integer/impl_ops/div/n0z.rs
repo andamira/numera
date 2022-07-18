@@ -4,9 +4,9 @@
 //!
 //! Completed:
 //! - NonZeroInteger<N: Signed> / *integer*<N> = NonZeroInteger<N>
-//! - NonZeroInteger<N: Signed> / *integer*<M> = NonZeroInteger<N> (where *prim* M < N)
+//! - NonZeroInteger<N: Signed> / *integer*<M> = NonZeroInteger<N> (where M < N)
 //! - NonZeroInteger<N: Signed> / N = NonZeroInteger<N>
-//! - NonZeroInteger<N: Signed> / M = NonZeroInteger<N> (where *prim* M < N)
+//! - NonZeroInteger<N: Signed> / M = NonZeroInteger<N> (where M < N)
 //
 
 use crate::{
@@ -53,7 +53,7 @@ mod test_impl_div_z_integer {
     }
 }
 
-// NonZeroInteger<N: Signed> / *integer*<M> = NonZeroInteger<N> (where primitive M < N)
+// NonZeroInteger<N: Signed> / *integer*<M> = NonZeroInteger<N> (where M < N)
 // -----------------------------------------------------------------------------
 
 macro_rules! impl_div_z_smaller_integer {
@@ -164,7 +164,7 @@ mod test_div_same_prim {
     }
 }
 
-// NonZeroInteger<N: Signed> / M (where primitive M < N) = NonZeroInteger<N>
+// NonZeroInteger<N: Signed> / M (where M < N) = NonZeroInteger<N>
 // -----------------------------------------------------------------------------
 
 /// implements `Div` for an integer and a `< sized` primitive of the same sign,
@@ -256,12 +256,12 @@ mod div_ibig {
     /// `N0z<IBig> / IBig = N0z<IBig>`
     impl Div<IBig> for NonZeroInteger<IBig> {
         type Output = NonZeroInteger<IBig>;
-        fn div(self, other: IBig) -> NonZeroInteger<IBig> {
+        fn div(self, other: IBig) -> Self::Output {
             Self::Output::new(self.0.div(other))
         }
     }
 
-    // Self::Output<IBig> / *any integer primitive*
+    // Self::Output / *any integer primitive*
 
     /// implements `Div` for an IBig integer and a primitive.
     macro_rules! impl_div_ibig_prim {
@@ -283,7 +283,7 @@ mod div_ibig {
 
     #[rustfmt::skip]
     impl_div_ibig_prim![all: NonZeroInteger, IBig,
-        i8, u8, i16, u16, i32, u32, i64, u64, i128, isize, usize ];
+        i8, u8, i16, u16, i32, u32, i64, u64, i128, u128, isize, usize ];
 
     #[cfg(test)]
     mod tests {

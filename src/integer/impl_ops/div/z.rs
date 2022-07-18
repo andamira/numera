@@ -4,9 +4,9 @@
 //!
 //! Completed:
 //! - Integer<N: Signed> / *integer*<N> = Integer<N>
-//! - Integer<N: Signed> / *integer*<M> = Integer<N> (where *prim* M < N)
+//! - Integer<N: Signed> / *integer*<M> = Integer<N> (where M < N)
 //! - Integer<N: Signed> / N = Integer<N>
-//! - Integer<N: Signed> / M = Integer<N> (where *prim* M < N)
+//! - Integer<N: Signed> / M = Integer<N> (where M < N)
 //
 
 use crate::{
@@ -53,7 +53,7 @@ mod test_impl_div_z_integer {
     }
 }
 
-// Integer<N: Signed> / *integer*<M> = Integer<N> (where primitive M < N)
+// Integer<N: Signed> / *integer*<M> = Integer<N> (where M < N)
 // -----------------------------------------------------------------------------
 
 macro_rules! impl_div_z_smaller_integer {
@@ -164,7 +164,7 @@ mod test_div_same_prim {
     }
 }
 
-// Integer<N: Signed> / M (where primitive M < N) = Integer<N>
+// Integer<N: Signed> / M (where M < N) = Integer<N>
 // -----------------------------------------------------------------------------
 
 /// implements `Div` for an integer and a `< sized` primitive of the same sign,
@@ -256,8 +256,8 @@ mod div_ibig {
     /// `Z<IBig> / IBig = Z<IBig>`
     impl Div<IBig> for Integer<IBig> {
         type Output = Integer<IBig>;
-        fn div(self, other: IBig) -> Integer<IBig> {
-            Integer::new(self.0.div(other))
+        fn div(self, other: IBig) -> Self::Output {
+            Self::Output::new(self.0.div(other))
         }
     }
 
@@ -283,7 +283,7 @@ mod div_ibig {
 
     #[rustfmt::skip]
     impl_div_ibig_prim![all: Integer, IBig,
-        i8, u8, i16, u16, i32, u32, i64, u64, i128, isize, usize ];
+        i8, u8, i16, u16, i32, u32, i64, u64, i128, u128, isize, usize ];
 
     #[cfg(test)]
     mod tests {

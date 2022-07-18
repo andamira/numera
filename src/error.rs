@@ -47,7 +47,22 @@ pub enum IntegerError {
 #[non_exhaustive]
 #[derive(Debug)]
 pub enum RationalError {
-    Other,
+    /// Invalid value `0`.
+    ZeroDenominator,
+
+    // /// Invalid value `>= 0`.
+    // ZeroOrMore,
+    //
+    // /// Invalid value `<= 0`.
+    // ZeroOrLess,
+    //
+    // /// Invalid value `< 0`.
+    // LessThanZero,
+    //
+    // /// Invalid value `> 0`.
+    // MoreThanZero,
+    // /// An error related to integer primitives.
+    // Int(core::num::IntErrorKind),
 }
 
 /// Errors related to [`real`][crate::real]s.
@@ -107,9 +122,9 @@ mod std_impls {
             match self {
                 Zero => write!(f, "IntegerError::Zero"),
                 ZeroOrMore => write!(f, "IntegerError::ZeroOrMore"),
-                ZeroOrLess => write!(f, "IntegerError::ZeroOrMore"),
-                LessThanZero => write!(f, "IntegerError::ZeroOrMore"),
-                MoreThanZero => write!(f, "IntegerError::ZeroOrMore"),
+                ZeroOrLess => write!(f, "IntegerError::ZeroOrLess"),
+                LessThanZero => write!(f, "IntegerError::LessThanZero"),
+                MoreThanZero => write!(f, "IntegerError::MoreThanZero"),
                 // Int(i) => i.fmt(f),
                 // Other(s) => write!(f, "IntegerError::Other: {s}"),
             }
@@ -119,12 +134,10 @@ mod std_impls {
     impl StdError for RationalError {}
     impl fmt::Display for RationalError {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            write!(f, "RealError")
-            // use RationalError::*;
-            // match self {
-            //     // => write!(f, "RationalError::"),
-            //     Other(s) => write!(f, "RationalError::Other: {s}"),
-            // }
+            use RationalError::*;
+            match self {
+                ZeroDenominator => write!(f, "RationalError::ZeroDenominator"),
+            }
         }
     }
 

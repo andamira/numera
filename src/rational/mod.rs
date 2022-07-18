@@ -8,43 +8,59 @@
 //! [0m]: https://mathworld.wolfram.com/RationalNumber.html
 //
 
-mod fraction;
-pub use fraction::Fraction;
-
-use crate::integer::{Integer, NonNegativeInteger, NonZeroInteger, PositiveInteger};
+use crate::integer::{Integer, NonZeroInteger};
 use crate::traits::{Number, Signed};
 
-/// Acronyms for rational types ([`Q`][a::Q], [`Pq`][a::Pq]).
+mod impl_number;
+
+/// Acronyms for rational types ([`Q`][a::Q]).
+// /// Acronyms for rational types ([`Q`][a::Q], [`Pq`][a::Pq]).
 pub mod a {
     use super::*;
     /// Acronym for [`Rational`].
     pub type Q<N, D> = Rational<N, D>;
-    /// Acronym for [`PositiveRational`].
-    pub type Pq<N, D> = PositiveRational<N, D>;
+
+    // /// Acronym for [`PositiveRational`].
+    // pub type Pq<N, D> = PositiveRational<N, D>;
 }
 
-/// A rational number.
-///
-#[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
+/// A rational number, from the set $\Bbb{Q}$.
+#[derive(Clone, Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub struct Rational<N, D>
 where
     N: Number + Signed,
     D: Number + Signed,
 {
     /// The numerator.
-    pub num: Integer<N>,
+    pub num: Integer<N>, // <=> 0
+
     /// The denominator.
-    pub den: NonZeroInteger<D>,
+    pub den: NonZeroInteger<D>, // != 0
+    // pub den: PositiveInteger<D>, // > 0 TODO
 }
 
-/// A variation of a [`Rational`] where the component must always be positive.
-pub struct PositiveRational<N, D>
-where
-    N: Number,
-    D: Number,
-{
-    /// The numerator.
-    pub num: NonNegativeInteger<N>,
-    /// The denominator.
-    pub den: PositiveInteger<D>,
-}
+// /// A variation of a [`Rational`] where the component must always be positive.
+// #[derive(Clone, Debug, Eq, Ord, PartialEq, PartialOrd)]
+// pub struct PositiveRational<N, D>
+// where
+//     N: Number,
+//     D: Number,
+// {
+//     /// The numerator.
+//     pub num: NonNegativeInteger<N>, // >= 0
+//     /// The denominator.
+//     pub den: PositiveInteger<D>, // > 0
+// }
+
+// /// A variation of a [`Rational`] where the component must always be negative.
+// #[derive(Clone, Debug, Eq, Ord, PartialEq, PartialOrd)]
+// pub struct NegativeRational<N, D>
+// where
+//     N: Number,
+//     D: Number,
+// {
+//     /// The numerator.
+//     pub num: NonPositiveInteger<N>, // <= 0
+//     /// The denominator.
+//     pub den: NegativeInteger<D>, // < 0
+// }

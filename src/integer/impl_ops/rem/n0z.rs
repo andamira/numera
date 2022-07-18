@@ -4,9 +4,9 @@
 //!
 //! Completed:
 //! - NonZeroInteger<N: Signed> % *integer*<N> = NonZeroInteger<N>
-//! - NonZeroInteger<N: Signed> % *integer*<M> = NonZeroInteger<N> (where *prim* M < N)
+//! - NonZeroInteger<N: Signed> % *integer*<M> = NonZeroInteger<N> (where M < N)
 //! - NonZeroInteger<N: Signed> % N = NonZeroInteger<N>
-//! - NonZeroInteger<N: Signed> % M = NonZeroInteger<N> (where *prim* M < N)
+//! - NonZeroInteger<N: Signed> % M = NonZeroInteger<N> (where M < N)
 //
 
 use crate::{
@@ -63,7 +63,7 @@ mod test_impl_rem_z_integer {
     }
 }
 
-// NonZeroInteger<N: Signed> % *integer*<M> = NonZeroInteger<N> (where primitive M < N)
+// NonZeroInteger<N: Signed> % *integer*<M> = NonZeroInteger<N> (where M < N)
 // -----------------------------------------------------------------------------
 
 macro_rules! impl_rem_z_smaller_integer {
@@ -174,7 +174,7 @@ mod test_rem_same_prim {
     }
 }
 
-// NonZeroInteger<N: Signed> % M (where primitive M < N) = NonZeroInteger<N>
+// NonZeroInteger<N: Signed> % M (where M < N) = NonZeroInteger<N>
 // -----------------------------------------------------------------------------
 
 /// implements `Rem` for an integer and a `< sized` primitive of the same sign,
@@ -265,7 +265,7 @@ mod rem_ibig {
     /// `N0z<IBig> % IBig = N0z<IBig>`
     impl Rem<IBig> for NonZeroInteger<IBig> {
         type Output = NonZeroInteger<IBig>;
-        fn rem(self, other: IBig) -> NonZeroInteger<IBig> {
+        fn rem(self, other: IBig) -> Self::Output {
             Self::Output::new(self.0.rem(other))
         }
     }
@@ -291,7 +291,7 @@ mod rem_ibig {
     }
     #[rustfmt::skip]
     impl_rem_ibig_prim![all: NonZeroInteger, IBig,
-        i8, u8, i16, u16, i32, u32, i64, u64, i128, isize, usize ];
+        i8, u8, i16, u16, i32, u32, i64, u64, i128, u128, isize, usize ];
 
     #[cfg(test)]
     mod test_ibig {

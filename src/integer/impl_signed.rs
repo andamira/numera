@@ -36,7 +36,7 @@ impl<N: Number> NegSigned for NonPositiveInteger<N> {
         Self(value)
     }
 }
-impl<N: Number> NegSigned for NegativeInteger<N> {
+impl<N: Number + Unsigned> NegSigned for NegativeInteger<N> {
     type Inner = N;
     fn new_neg(value: Self::Inner) -> Self {
         Self(value)
