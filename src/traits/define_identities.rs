@@ -71,10 +71,10 @@ pub trait NegOne: Sized {
 
 /// implements *both* const & non-const One & Zero traits.
 macro_rules! impl_const_onezero {
-    (all: $($t:ty, $zero:expr, $one:expr),+) => {
-        $( impl_const_onezero![$t, $zero, $one]; )+
+    (all_int: $($t:ty, $zero:expr, $one:expr),+) => {
+        $( impl_const_onezero![int: $t, $zero, $one]; )+
     };
-    ($t:ty, $zero:expr, $one:expr) => {
+    (int: $t:ty, $zero:expr, $one:expr) => {
         impl ConstOne for $t {
             const ONE: Self = $one;
         }
@@ -88,6 +88,43 @@ macro_rules! impl_const_onezero {
         impl Zero for $t {
             fn new_zero() -> Self { $zero }
             fn is_zero(&self) -> bool { *self == $zero }
+        }
+    };
+    (all_float: $($t:ty, $zero:expr, $one:expr),+) => {
+        $( impl_const_onezero![float: $t, $zero, $one]; )+
+    };
+    (float: $t:ty, $zero:expr, $one:expr) => {
+        impl ConstOne for $t {
+            const ONE: Self = $one;
+        }
+        impl ConstZero for $t {
+            const ZERO: Self = $zero;
+        }
+        impl One for $t {
+            fn new_one() -> Self { $one }
+            fn is_one(&self) -> bool {
+                #[cfg(feature = "std")]
+                return (*self - 1.0).abs() <= <$t>::EPSILON;
+                #[cfg(not(feature = "std"))]
+                if self.is_sign_positive() {
+                    *self -1. <= <$t>::EPSILON
+                } else {
+                    *self -1. >= <$t>::EPSILON
+                }
+            }
+        }
+        impl Zero for $t {
+            fn new_zero() -> Self { $zero }
+            fn is_zero(&self) -> bool {
+                #[cfg(feature = "std")]
+                return (*self).abs() <= <$t>::EPSILON;
+                #[cfg(not(feature = "std"))]
+                if self.is_sign_positive() {
+                    *self <= <$t>::EPSILON
+                } else {
+                    *self >= <$t>::EPSILON
+                }
+            }
         }
     };
 }
@@ -112,16 +149,37 @@ macro_rules! impl_nonconst_onezero {
 
 /// implements both `ConstNegOne` & `NegOne` traits.
 macro_rules! impl_const_neg1 {
-    (all: $($t:ty, $neg1:expr),+) => {
-        $( impl_const_neg1![$t, $neg1]; )+
+    (all_int: $($t:ty, $neg1:expr),+) => {
+        $( impl_const_neg1![int: $t, $neg1]; )+
     };
-    ($t:ty, $neg1:expr) => {
+    (int: $t:ty, $neg1:expr) => {
         impl ConstNegOne for $t {
             const NEG_ONE: Self = $neg1;
         }
         impl NegOne for $t {
             fn new_neg_one() -> Self { $neg1 }
             fn is_neg_one(&self) -> bool { *self == $neg1 }
+        }
+    };
+    (all_float: $($t:ty, $neg1:expr),+) => {
+        $( impl_const_neg1![float: $t, $neg1]; )+
+    };
+    (float: $t:ty, $neg1:expr) => {
+        impl ConstNegOne for $t {
+            const NEG_ONE: Self = $neg1;
+        }
+        impl NegOne for $t {
+            fn new_neg_one() -> Self { $neg1 }
+            fn is_neg_one(&self) -> bool {
+                #[cfg(feature = "std")]
+                return (*self + 1.0).abs() <= <$t>::EPSILON;
+                #[cfg(not(feature = "std"))]
+                if self.is_sign_positive() {
+                    *self +1. <= <$t>::EPSILON
+                } else {
+                    *self +1. >= <$t>::EPSILON
+                }
+            }
         }
     };
 }
@@ -141,15 +199,14 @@ macro_rules! impl_nonconst_neg1 {
 }
 
 #[rustfmt::skip]
-impl_const_onezero![all:
-    f32, 0.0, 1.0, f64, 0.0, 1.0,
+impl_const_onezero![all_int:
     i8, 0, 1, u8, 0, 1, i16, 0, 1, u16, 0, 1, i32, 0, 1, u32, 0, 1,
     i64, 0, 1, u64, 0, 1, i128, 0, 1, u128, 0, 1, isize, 0, 1, usize, 0, 1
 ];
+impl_const_onezero![all_float: f32, 0.0, 1.0, f64, 0.0, 1.0];
 #[rustfmt::skip]
-impl_const_neg1![all:
-    f32, -1.0, f64, -1.0, i8, -1, i16, -1, i32, -1, i64, -1, i128, -1, isize, -1
-];
+impl_const_neg1![all_int: i8, -1, i16, -1, i32, -1, i64, -1, i128, -1, isize, -1];
+impl_const_neg1![all_float: f32, -1.0, f64, -1.0];
 
 #[rustfmt::skip]
 #[cfg(feature = "twofloat")]

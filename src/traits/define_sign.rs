@@ -18,7 +18,7 @@ pub trait Unsigned {}
 
 /// Can *not* represent positive numbers.
 pub trait NegSigned {
-    /// The number's [`Inner`][crate::Number::Inner] value representation.
+    /// The number's inner value representation.
     type Inner;
     /// Returns a new number that contains the negation of the `value`.
     ///
@@ -62,7 +62,7 @@ impl_sign![all_float: f32, f64];
 
 impl_sign![all_unsigned: u8, u16, u32, u64, u128, usize];
 
-/// Implements `Sign` for TwoFloat
+/// Implements `Sign` for `TwoFloat`
 #[rustfmt::skip]
 #[cfg(feature = "twofloat")]
 mod impl_twofloat {
@@ -74,7 +74,7 @@ mod impl_twofloat {
     }
 }
 
-/// Implements `Sign` for bf16 & f16.
+/// Implements `Sign` for `bf16` & `f16`.
 #[cfg(feature = "half")]
 mod impl_half {
     use super::Signed;
@@ -96,7 +96,7 @@ mod impl_half {
     impl_sign![bf16, f16];
 }
 
-/// Implements `Sign` for IBig & UBig.
+/// Implements `Sign` for `IBig` & `UBig`.
 #[rustfmt::skip]
 #[cfg(feature = "ibig")]
 mod impl_ibig {

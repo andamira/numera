@@ -36,10 +36,10 @@ pub trait UpperBounded {
 
 // auto impls
 
-/// Auto implements ConstBounded.
+/// Auto implements `ConstBounded`.
 impl<T: ConstLowerBounded + ConstUpperBounded> ConstBounded for T {}
 
-/// Auto implements Bounded.
+/// Auto implements `Bounded`.
 impl<T: LowerBounded + UpperBounded> Bounded for T {}
 
 // Can't do this. It's necessary to implement these manually to avoid conflicts:

@@ -2,7 +2,9 @@
 //
 //! Real numbers
 //!
-//
+//! A generalization of [`integer`][crate::integer], `rational`
+//! and `irrational` numbers.
+//!
 
 use crate::traits::{Number, Signed};
 

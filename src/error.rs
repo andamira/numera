@@ -21,7 +21,7 @@ pub enum Error {
     Real(RealError),
 }
 
-/// Errors related to [`integer`][crate::integer]s.
+// /// Errors related to [`integer`][crate::integer]s.
 #[non_exhaustive]
 #[derive(Debug)]
 pub enum IntegerError {
@@ -43,13 +43,12 @@ pub enum IntegerError {
     // Int(core::num::IntErrorKind),
 }
 
-/// Errors related to [`rational`][crate::rational]s.
+// /// Errors related to [`rational`][crate::rational]s.
 #[non_exhaustive]
 #[derive(Debug)]
 pub enum RationalError {
     /// Invalid value `0`.
     ZeroDenominator,
-
     // /// Invalid value `>= 0`.
     // ZeroOrMore,
     //

@@ -20,6 +20,7 @@ keywords = ["math", "mathematics", "number", "numeral", "numeric"]
 publish = false
 
 [dependencies]
+az = "1.2.0"
 paste = "1.0.7"
 
 # optional external types

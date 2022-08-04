@@ -43,8 +43,10 @@ pub trait Number: PartialOrd + Clone {
     /// Panics if the `value` is not in a valid state for this number type.
     fn set_inner(&mut self, value: Self::Inner);
 
-    /// Tries to set the inner `value` representation, returning an error
-    /// if the `value`
+    /// Tries to set the inner `value` representation
+    ///
+    /// # Errors
+    /// Errors if the `value` is not in a valid state for this number type.
     fn try_set_inner(&mut self, value: Self::Inner) -> Result<()>;
 
     // sign queries
@@ -105,7 +107,7 @@ mod macros {
                 #[inline]
                 fn set_inner(&mut self, value: Self::Inner) { *self = value; }
                 #[inline]
-                fn try_set_inner(&mut self, value: Self::Inner) -> crate::Result<()> {
+                fn try_set_inner(&mut self, value: Self::Inner) -> $crate::error::Result<()> {
                     *self = value;
                     Ok(())
                 }
@@ -126,11 +128,26 @@ mod macros {
                 #[inline]
                 fn can_neg_one() -> bool { true }
                 #[inline]
-                fn is_zero(&self) -> bool { *self == $zero }
+                fn is_zero(&self) -> bool {
+                    #[cfg(feature = "std")]
+                    return (*self).abs() <= <$t>::EPSILON;
+                    #[cfg(not(feature = "std"))]
+                    if self.is_sign_positive() { *self <= <$t>::EPSILON } else { *self >= <$t>::EPSILON }
+                }
                 #[inline]
-                fn is_one(&self) -> bool { *self == $one }
+                fn is_one(&self) -> bool {
+                    #[cfg(feature = "std")]
+                    return (*self - 1.0).abs() <= <$t>::EPSILON;
+                    #[cfg(not(feature = "std"))]
+                    if self.is_sign_positive() { *self - 1. <= <$t>::EPSILON } else { *self -1. >= <$t>::EPSILON }
+                }
                 #[inline]
-                fn is_neg_one(&self) -> bool { *self == $neg1 }
+                fn is_neg_one(&self) -> bool {
+                    #[cfg(feature = "std")]
+                    return (*self + 1.0).abs() <= <$t>::EPSILON;
+                    #[cfg(not(feature = "std"))]
+                    if self.is_sign_positive() { *self +1. <= <$t>::EPSILON } else { *self +1. >= <$t>::EPSILON }
+                }
             }
         };
         (all_signed: $($t:ty, $zero:expr, $one:expr, $neg1:expr),+) => {
@@ -150,7 +167,7 @@ mod macros {
                 #[inline]
                 fn set_inner(&mut self, value: Self::Inner) { *self = value; }
                 #[inline]
-                fn try_set_inner(&mut self, value: Self::Inner) -> crate::Result<()> {
+                fn try_set_inner(&mut self, value: Self::Inner) -> Result<()> {
                     *self = value;
                     Ok(())
                 }
@@ -195,7 +212,7 @@ mod macros {
                 #[inline]
                 fn set_inner(&mut self, value: Self::Inner) { *self = value; }
                 #[inline]
-                fn try_set_inner(&mut self, value: Self::Inner) -> crate::Result<()> {
+                fn try_set_inner(&mut self, value: Self::Inner) -> Result<()> {
                     *self = value;
                     Ok(())
                 }
@@ -254,6 +271,8 @@ impl_number![all_unsigned:
 #[rustfmt::skip]
 #[cfg(feature = "ibig")]
 mod impl_ibig {
+    use super::Result;
+
     use ibig::{IBig, UBig};
     impl crate::traits::Number for UBig {
         type Inner = UBig;
@@ -268,7 +287,7 @@ mod impl_ibig {
         #[inline]
         fn set_inner(&mut self, value: Self::Inner) { *self = value; }
         #[inline]
-        fn try_set_inner(&mut self, value: Self::Inner) -> crate::Result<()> {
+        fn try_set_inner(&mut self, value: Self::Inner) -> Result<()> {
             *self = value;
             Ok(())
         }
@@ -308,7 +327,7 @@ mod impl_ibig {
         #[inline]
         fn set_inner(&mut self, value: Self::Inner) { *self = value; }
         #[inline]
-        fn try_set_inner(&mut self, value: Self::Inner) -> crate::Result<()> {
+        fn try_set_inner(&mut self, value: Self::Inner) -> Result<()> {
             *self = value;
             Ok(())
         }
@@ -340,17 +359,101 @@ mod impl_ibig {
 #[rustfmt::skip]
 #[cfg(feature = "half")]
 mod impl_half {
-    use super::impl_number;
+    use crate::error::Result;
     use half::{bf16, f16};
-    impl_number![all_float:
-        bf16, bf16::from_f32_const(0.0), bf16::from_f32_const(1.0), bf16::from_f32_const(-1.0),
-        f16, f16::from_f32_const(0.0), f16::from_f32_const(1.0), f16::from_f32_const(-1.0)
-    ];
+    macro_rules! impl_number_half {
+        () => {
+            impl_number_half![bf16];
+            impl_number_half![f16];
+        };
+        ($half:ty) => {
+            impl crate::traits::Number for $half {
+                type Inner = $half;
+                #[inline]
+                fn new(value: Self::Inner) -> Self { value }
+                #[inline]
+                fn new_checked(value: Self::Inner) -> Option<Self> { Some(value) }
+
+                #[inline]
+                fn get_inner(&self) -> Self::Inner { *self }
+
+                #[inline]
+                fn set_inner(&mut self, value: Self::Inner) { *self = value; }
+                #[inline]
+                fn try_set_inner(&mut self, value: Self::Inner) -> Result<()> {
+                    *self = value;
+                    Ok(())
+                }
+
+                #[inline]
+                fn can_negative() -> bool { true }
+                #[inline]
+                fn is_negative(&self) -> bool { self.is_sign_negative() }
+                #[inline]
+                fn can_positive() -> bool { true }
+                #[inline]
+                fn is_positive(&self) -> bool { self.is_sign_positive() }
+
+                #[inline]
+                fn can_zero() -> bool { true }
+                #[inline]
+                fn can_one() -> bool { true }
+                #[inline]
+                fn can_neg_one() -> bool { true }
+                #[inline]
+                fn is_zero(&self) -> bool {
+                    #[cfg(feature = "std")]
+                    return <$half>::from_f32(self.to_f32().abs()) <= <$half>::EPSILON;
+
+                    #[cfg(not(feature = "std"))]
+                    {
+                        if self.is_sign_positive() {
+                            self <= &<$half>::EPSILON
+                        } else {
+                            self >= &<$half>::EPSILON
+                        }
+                    }
+                }
+                #[inline]
+                fn is_one(&self) -> bool {
+                    #[cfg(feature = "std")]
+                    return <$half>::from_f32((self.to_f32() - 1.).abs()) <= <$half>::EPSILON;
+
+                    #[cfg(not(feature = "std"))]
+                    {
+                        let h = self - <$half>::ONE;
+                        if h.is_sign_positive() {
+                            h <= <$half>::EPSILON
+                        } else {
+                            h >= <$half>::EPSILON
+                        }
+                    }
+                }
+                #[inline]
+                fn is_neg_one(&self) -> bool {
+                    #[cfg(feature = "std")]
+                    return <$half>::from_f32((self.to_f32() + 1.).abs()) <= <$half>::EPSILON;
+
+                    #[cfg(not(feature = "std"))]
+                    {
+                        let h = self + <$half>::ONE;
+                        if h.is_sign_positive() {
+                            h <= <$half>::EPSILON
+                        } else {
+                            h >= <$half>::EPSILON
+                        }
+                    }
+                }
+            }
+        }
+    }
+    impl_number_half!();
 }
 
 #[rustfmt::skip]
 #[cfg(feature = "twofloat")]
 mod impl_twofloat {
+    use super::Result;
     use twofloat::TwoFloat;
     impl crate::traits::Number for TwoFloat {
         type Inner = TwoFloat;
@@ -365,7 +468,7 @@ mod impl_twofloat {
         #[inline]
         fn set_inner(&mut self, value: Self::Inner) { *self = value; }
         #[inline]
-        fn try_set_inner(&mut self, value: Self::Inner) -> crate::Result<()> {
+        fn try_set_inner(&mut self, value: Self::Inner) -> Result<()> {
             *self = value;
             Ok(())
         }
