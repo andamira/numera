@@ -2,7 +2,7 @@
 //
 //! Numbers allows us to express and compare magnitudes and quantities.
 //!
-//!
+//
 
 #![warn(clippy::all)]
 #![warn(clippy::pedantic)]
@@ -17,16 +17,10 @@
     clippy::enum_glob_use,
     clippy::must_use_candidate
 )]
-#![forbid(unsafe_code)]
 #![cfg_attr(not(feature = "std"), no_std)]
 
-pub(crate) mod macros;
-
 pub mod error;
-pub mod integer;
-pub mod rational;
-pub mod real;
-pub mod traits;
+pub mod number;
 
-// #[doc(inline)]
-// pub use {error::Result, integer::Integer, rational::Rational, real::Real, traits::Number};
+#[doc(inline)]
+pub use number::{integer::Integer, traits::Number};

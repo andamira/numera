@@ -1,9 +1,9 @@
 [package]
 name = "numera"
 description = "numbers"
-version = "0.0.6"
+version = "0.1.0"
 edition = "2021"
-rust-version = "1.62"
+rust-version = "1.65"
 authors = ["José Luis Cruz <joseluis@andamira.net>"]
 repository = "https://github.com/andamira/numera"
 documentation = "https://docs.rs/numera"
@@ -11,7 +11,7 @@ license = "MIT/Apache-2.0"
 include = [
 	"/src/**/*.rs",
 	"/Cargo.toml",
-	"/res/*",
+	"/res/*.html",
 	"/LICENSE-*.md",
 	"/README.md",
 ]
@@ -20,13 +20,12 @@ keywords = ["math", "mathematics", "number", "numeral", "numeric"]
 publish = false
 
 [dependencies]
-az = "1.2.0"
-paste = "1.0.7"
+paste = "1.0.9"
 
-# optional external types
-twofloat = { version = "0.5.0", optional = true, default-features = false }
-half = { version = "2.0.0", optional = true, default-features = false  }
-ibig = { version = "0.3.5", optional = true, default-features = false }
+# optional external numeric types
+twofloat = { version = "0.6.0", optional = true, default-features = false }
+half = { version = "2.1.0", optional = true, default-features = false  }
+ibig = { version = "0.3.6", optional = true, default-features = false }
 
 [dev-dependencies]
 static_assertions = "1.1.0"
@@ -37,7 +36,7 @@ std = [ "half?/std", "ibig?/std" ]
 all = [ "twofloat", "half", "ibig" ]
 
 [package.metadata.docs.rs]
-rustdoc-args = [ "--html-in-header", "./res/header.html" ]
+rustdoc-args = [ "--html-in-header", "./res/rustdoc-header.html" ]
 
 [badges]
 maintenance = { status = "actively-developed" }
