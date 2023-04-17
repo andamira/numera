@@ -1,5 +1,6 @@
 //
-//! The absence of a number.
+//! Implementing `Number` for the unit type [`()`] in order to be able
+//! to represent the absence of a number, where a number is expected.
 //
 
 use crate::{
@@ -7,46 +8,30 @@ use crate::{
     number::traits::{Bound, Count, Ident, Number, Sign},
 };
 
-/// A zero-sized type that represents the absence of a number.
-///
-/// It is used together with [`AnyNumbers`][super::AnyNumbers] in
-/// [`Numbers`][super::Numbers] for convenience.
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, PartialOrd, Ord)]
-pub struct NoNumber;
-
 #[rustfmt::skip]
-impl Number for NoNumber {
-    type Inner = NoNumber;
+impl Number for () {
+    type Inner = ();
 
-    fn new(value: NoNumber) -> Result<Self> { Ok(value) }
-    unsafe fn new_unchecked(value: NoNumber) -> Self { value }
-    fn into_inner(self) -> Self::Inner { NoNumber {} }
-    fn ref_inner(&self) -> &Self::Inner { &NoNumber {} }
+    fn new(value: ()) -> Result<Self> { Ok(value) }
+    unsafe fn new_unchecked(value: ()) -> Self { value }
+    fn into_inner(self) -> Self::Inner { }
+    fn ref_inner(&self) -> &Self::Inner { &() }
 }
 #[rustfmt::skip]
-impl Bound for NoNumber {
+impl Bound for () {
     fn is_lower_bounded(&self) -> bool { true }
     fn is_upper_bounded(&self) -> bool { true }
-    fn lower_bound(&self) -> Option<Self> where Self: Sized { Some(NoNumber) }
-    fn upper_bound(&self) -> Option<Self> where Self: Sized { Some(NoNumber) }
+    fn lower_bound(&self) -> Option<Self> where Self: Sized { Some(()) }
+    fn upper_bound(&self) -> Option<Self> where Self: Sized { Some(()) }
 }
-// RATIONALE:
-// If we would regard NoNumber equivalent to the empty set, we would implement
-// Countable, returning itself. That's it, counted in terms of itself, which...
-// is not a number.
-// Otherwise we could say NoNumber is neither countable nor uncountable. This
-// is I think the simplest solution.
+
 #[rustfmt::skip]
-impl Count for NoNumber {
+impl Count for () {
     fn is_countable(&self) -> bool { false }
 }
-// impl Uncountable for NoNumber {}
-// impl Countable for NoNumber {
-//     fn next(&self) -> Result<Self> { Ok(NoNumber) }
-//     fn previous(&self) -> Result<Self> { Ok(NoNumber) }
-// }
+
 #[rustfmt::skip]
-impl Ident for NoNumber {
+impl Ident for () {
     fn can_zero(&self) -> bool { false }
     fn can_one(&self) -> bool { false }
     fn can_neg_one(&self) -> bool { false }
@@ -56,7 +41,7 @@ impl Ident for NoNumber {
 }
 
 #[rustfmt::skip]
-impl Sign for NoNumber {
+impl Sign for () {
     fn can_positive(&self) -> bool { false }
     fn can_negative(&self) -> bool { false }
     fn is_positive(&self) -> bool { false }

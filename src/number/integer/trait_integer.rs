@@ -7,7 +7,7 @@
 // - define the `Integer` trait
 // - impl for integer primitives
 
-use crate::number::traits::Number;
+use crate::number::traits::{ConstZero, Number};
 
 use core::num::{
     NonZeroI128, NonZeroI16, NonZeroI32, NonZeroI64, NonZeroI8, NonZeroIsize, NonZeroU128,
@@ -27,13 +27,17 @@ pub trait Integer: Number {
     #[rustfmt::skip]
     fn is_divisor_of(&self, other: &Self) -> bool { other.is_multiple_of(self) }
 
-    // /// Calculates the Greatest Common Divisor of `self` and `other`.
-    // #[must_use]
-    // fn gcd(&self, other: &Self) -> Result<Self>;
+    /// Calculates the Greatest Common Divisor of `self` and `other`.
+    #[must_use]
+    fn gcd(&self, other: &Self) -> Self
+    where
+        Self: Sized;
 
-    // /// Calculates the Lowest Common Multiple of `self` and `other`.
-    // #[must_use]
-    // fn lcm(&self, other: &Self) -> Result<Self>;
+    /// Calculates the Lowest Common Multiple of `self` and `other`.
+    #[must_use]
+    fn lcm(&self, other: &Self) -> Self
+    where
+        Self: Sized;
 
     // /// Calculates the Greatest Common Divisor of `self` and `other`.
     // fn gcd_lcm(&self, other: &Self) -> Result<(Self, Self)> where Self: Sized;
@@ -47,30 +51,58 @@ macro_rules! impl_integer {
     (many $($t:ident),+) => { $( impl_integer![$t]; )+ };
     ($t:ident) => {
         impl Integer for $t {
-            #[inline]
+            #[inline(always)]
             fn is_even(&self) -> bool {
                 *self & 1 == 0
             }
-            #[inline]
+            #[inline(always)]
             fn is_multiple_of(&self, other: &Self) -> bool {
                 *self % *other == 0
             }
-
+            #[inline]
+            fn gcd(&self, other: &Self) -> Self {
+                let (mut a, mut b) = (*self, *other);
+                while b != Self::ZERO {
+                    let temp = b;
+                    b = a % b;
+                    a = temp;
+                }
+                a
+            }
+            #[inline]
+            fn lcm(&self, other: &Self) -> Self {
+                *self * *other / self.gcd(other)
+            }
         }
     };
 
     (many_nonzero $($t:ident),+) => { $( impl_integer![nonzero $t]; )+ };
     (nonzero $t:ident) => {
         impl Integer for $t {
-            #[inline]
+            #[inline(always)]
             fn is_even(&self) -> bool {
                 self.get() & 1 == 0
             }
-            #[inline]
+            #[inline(always)]
             fn is_multiple_of(&self, other: &Self) -> bool {
                 self.get() % other.get() == 0
             }
-
+            #[inline]
+            fn gcd(&self, other: &Self) -> Self {
+                let (mut a, mut b) = (self.get(), other.get());
+                while b != 0 {
+                    let temp = b;
+                    b = a % b;
+                    a = temp;
+                }
+                $t::new(a).unwrap()
+            }
+            #[inline]
+            fn lcm(&self, other: &Self) -> Self {
+                $t::new(
+                    self.get() * other.get() / self.get().gcd(&other.get())
+                ).unwrap()
+            }
         }
     };
 }

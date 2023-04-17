@@ -64,7 +64,7 @@ macro_rules! define_integers {
         /// since they are mutually exclusive, and don't apply to all cases.
         ///
         /// [`Countable`][traits::Countable], on the other side, is implemented
-        /// because it doues apply to all integers.
+        /// because it does apply to all integers.
         #[derive(Clone, Debug, PartialEq, Eq)]
         #[non_exhaustive]
         pub enum Integers {

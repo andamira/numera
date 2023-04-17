@@ -1,17 +1,25 @@
-// numera::number::integer::impl_from
+// numera::number::integer::macros
 //
 //!
 //
+// TOC
+// - impl_from_integer
+// - impl_from_primitive
 
 /// Implements From<`$from$from_size`> for `$for$for_size`.
 ///
 /// # Args
 /// - `$p`:
-macro_rules! impl_from {
+///
+/// # Examples
+/// ```e.g.
+/// impl_from_integer![many_int for: Integer + i + 32, from: Integer + 8, 16];
+/// ```
+macro_rules! impl_from_integer {
     // having an inner integer primitive
     (many_int for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $( $from_size:expr ),+) => {
         $(
-            impl_from![int for: $for + $p + $for_size, from: $from + $from_size];
+            impl_from_integer![int for: $for + $p + $for_size, from: $from + $from_size];
         )+
     };
     (int
@@ -30,7 +38,7 @@ macro_rules! impl_from {
     (many_nonzero
      for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $( $from_size:expr ),+) => {
         $(
-            impl_from![nonzero for: $for + $p + $for_size, from: $from + $from_size];
+            impl_from_integer![nonzero for: $for + $p + $for_size, from: $from + $from_size];
         )+
     };
     (nonzero
@@ -48,7 +56,7 @@ macro_rules! impl_from {
     (many_int_neg
      for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $( $from_size:expr ),+) => {
         $(
-            impl_from![int_neg for: $for + $p + $for_size, from: $from + $from_size];
+            impl_from_integer![int_neg for: $for + $p + $for_size, from: $from + $from_size];
         )+
     };
     (int_neg
@@ -66,7 +74,7 @@ macro_rules! impl_from {
     (many_nonzero_neg
      for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $( $from_size:expr ),+) => {
         $(
-            impl_from![nonzero_neg
+            impl_from_integer![nonzero_neg
             for: $for + $p + $for_size, from: $from + $from_size];
         )+
     };
@@ -81,4 +89,39 @@ macro_rules! impl_from {
         }
     };
 }
-pub(crate) use impl_from;
+pub(crate) use impl_from_integer;
+
+/// Implements From<`$from_p $from_size`> for `$for$for_size`.
+///
+/// # Args
+/// - $for:
+///
+/// # Examples
+/// ```e.g.
+/// impl_from_primitive![many for: Integer + 16, from: u + 8];
+/// impl_from_primitive![many for: Integer + 16, from: i + 8, 16];
+/// ```
+macro_rules! impl_from_primitive {
+    (many
+     for: $for:ident + $for_size:expr,
+     from: $from_p:ident + $( $from_size:expr ),+
+    ) => {
+        $(
+            impl_from_primitive![for: $for + $for_size, from: $from_p + $from_size];
+        )+
+    };
+
+    (
+     for: $for:ident + $for_size:expr,
+     from: $from_p:ident + $from_size:expr
+    ) => {
+        paste::paste! {
+            impl From<[< $from_p $from_size >]> for [< $for $for_size >] {
+                fn from(from: [< $from_p $from_size >]) -> Self {
+                    Self::new(from.into()).unwrap()
+                }
+            }
+        }
+    };
+}
+pub(crate) use impl_from_primitive;

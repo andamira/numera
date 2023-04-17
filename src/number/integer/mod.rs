@@ -1,6 +1,6 @@
 // numera::integer
 //
-//! Integer number types.
+//! All integer number types.
 //!
 //! An *integer* ([w][0w]/[m][0m]) is a number that can be written
 //! without a fractional component.
@@ -12,8 +12,7 @@
 //! [0m]: https://mathworld.wolfram.com/Integer.html
 //
 
-mod impl_from;
-pub(crate) use impl_from::impl_from;
+pub(crate) mod macros;
 
 mod trait_integer;
 pub use trait_integer::Integer;

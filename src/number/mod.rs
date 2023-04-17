@@ -10,17 +10,13 @@
 //
 
 mod any;
-pub use any::{AnyNumbers, Numbers};
-
 mod no;
-pub use no::NoNumber;
-
-pub mod traits;
-#[doc(inline)]
-pub use traits::Number;
 
 pub mod integer;
+pub mod traits;
 
-// pub mod complex;
-// pub mod rational;
-// pub mod real;
+pub use any::{AnyNumbers, Numbers};
+#[doc(inline)]
+pub use integer::{Integer, Integers, Integer128, Integer16, Integer32, Integer64, Integer8};
+#[doc(inline)]
+pub use traits::{Bound, Count, Ident, Number, Sign};

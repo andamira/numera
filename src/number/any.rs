@@ -5,25 +5,25 @@
 
 use super::{
     integer::Integers, // rational::Rationals, real::Reals, complex::Complexes,
-    no::NoNumber as WithoutAny,
     traits::{self, Number},
 };
 use crate::error::Result;
 
 /// The family of all possible *non-custom* kinds of numbers.
 ///
-/// This is an alias of [`AnyNumbers`] which allows to refer to variants other
-/// than `Any` more concisely, without having to specify its type.
+/// This is an alias of [`AnyNumbers`] which allows to concisely use variants
+/// other than `Any`, without having to specify a type.
 ///
 /// # Example
 /// ```
-/// use numera::number::{AnyNumbers, NoNumber, Numbers, integer::{Integers, Integer32}};
+/// use numera::number::{AnyNumbers, Numbers, integer::{Integers, Integer32}};
 ///
-/// let a = Numbers::Integer(Integers::Integer32(Integer32::default()));
-/// let b = AnyNumbers::<NoNumber>::Integer(Integers::Integer32(Integer32::default()));
-/// assert_eq![a, b];
+/// assert_eq![
+///     Numbers::Integer(Integers::Integer32(Integer32::default())),
+///     AnyNumbers::<()>::Integer(Integers::Integer32(Integer32::default()))
+/// ];
 /// ```
-pub type Numbers = AnyNumbers<WithoutAny>;
+pub type Numbers = AnyNumbers<()>;
 
 /// Defines the family of `Numbers` and implements `Number` on it.
 macro_rules! define_numbers {
@@ -63,7 +63,8 @@ macro_rules! define_numbers {
         /// example [`Zero`][traits::Zero] or [`NonZero`][traits::NonZero],
         /// since they are mutually exclusive, and don't apply to all cases.
         ///
-        /// See also: [`Numbers`].
+        /// The [`Numbers`] alias is more convenient to use unless you need to
+        /// refer to custom numbers via the [`Any`][AnyNumbers::Any] variant.
         #[derive(Clone, Debug, PartialEq)]
         #[non_exhaustive]
         #[allow(clippy::derive_partial_eq_without_eq)]
