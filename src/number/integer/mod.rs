@@ -20,7 +20,8 @@ pub use trait_integer::Integer;
 mod any;
 pub use any::Integers;
 
-// mod prime;
+pub mod prime;
+pub use prime::{Prime16, Prime32, Prime8, PRIMES_U16, PRIMES_U8};
 
 mod z;
 #[cfg(feature = "ibig")]
