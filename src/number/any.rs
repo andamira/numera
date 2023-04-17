@@ -7,7 +7,7 @@ use super::{
     integer::Integers, // rational::Rationals, real::Reals, complex::Complexes,
     traits::{self, Number},
 };
-use crate::error::Result;
+use crate::error::NumeraResult as Result;
 
 /// The family of all possible *non-custom* kinds of numbers.
 ///
@@ -159,7 +159,7 @@ macro_rules! define_numbers {
 
         $(
         impl<N: Number> TryFrom<AnyNumbers<N>> for $t {
-            type Error = crate::error::Error;
+            type Error = crate::error::NumeraError;
             fn try_from(n: AnyNumbers<N>) -> core::result::Result<$t, Self::Error> {
                 match n {
                     AnyNumbers::$v(n) => Ok(n),

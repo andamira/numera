@@ -10,7 +10,7 @@
 //   - Integer[8|16|32|64|128]
 
 use crate::{
-    error::{IntegerError, Result},
+    error::{IntegerError, NumeraResult as Result},
     number::traits::{
         Bound, ConstLowerBounded, ConstNegOne, ConstOne, ConstUpperBounded, ConstZero, Count,
         Countable, Ident, LowerBounded, NegOne, Number, One, Sign, Signed, UpperBounded, Zero,

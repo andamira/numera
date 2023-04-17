@@ -4,7 +4,10 @@
 //
 
 use crate::number::{
-    integer::{macros::{impl_from_integer, impl_from_primitive}, z::*},
+    integer::{
+        macros::{impl_from_integer, impl_from_primitive},
+        z::*,
+    },
     traits::Number,
 };
 

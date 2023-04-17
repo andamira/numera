@@ -6,12 +6,12 @@
 use core::result;
 
 /// The *numera* common result type.
-pub type Result<N> = result::Result<N, Error>;
+pub type NumeraResult<N> = result::Result<N, NumeraError>;
 
 /// The *numera* common error type.
 #[non_exhaustive]
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub enum Error {
+pub enum NumeraError {
     /// An error involving integer numbers.
     Integer(IntegerError),
     /// An error involving rational numbers.
@@ -67,57 +67,16 @@ pub enum RealError {
     Other,
 }
 
-/// allows converting into `Error` from other error types.
 mod core_impls {
-    use super::{Error, IntegerError, RationalError, RealError};
-    use core::num::IntErrorKind;
-
-    impl From<IntegerError> for Error {
-        fn from(err: IntegerError) -> Self {
-            Error::Integer(err)
-        }
-    }
-    impl From<RationalError> for Error {
-        fn from(err: RationalError) -> Self {
-            Error::Rational(err)
-        }
-    }
-    impl From<RealError> for Error {
-        fn from(err: RealError) -> Self {
-            Error::Real(err)
-        }
-    }
-
-    impl From<IntErrorKind> for Error {
-        fn from(err: IntErrorKind) -> Self {
-            use Error::Integer;
-            use IntErrorKind::*;
-            match err {
-                PosOverflow => Integer(IntegerError::Overflow),
-                NegOverflow => Integer(IntegerError::Underflow),
-                Zero => Integer(IntegerError::Zero),
-                //
-                Empty => Error::Other("IntErrorKind::Empty"),
-                InvalidDigit => Error::Other("IntErrorKind::InvalidDigit"),
-                _ => Error::Other("IntErrorKind::_"),
-            }
-        }
-    }
-}
-
-/// impl `Display`, `Error` & `PartialEq`.
-#[cfg(feature = "std")]
-mod std_impls {
-    use super::{Error, IntegerError, RationalError, RealError};
-    use std::{
-        error::Error as StdError,
+    use super::{IntegerError, NumeraError, RationalError, RealError};
+    use core::{
         fmt::{self, Debug},
+        num::IntErrorKind,
     };
 
-    impl StdError for Error {}
-    impl fmt::Display for Error {
+    impl fmt::Display for NumeraError {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            use Error::*;
+            use NumeraError::*;
             match self {
                 Integer(z) => Debug::fmt(z, f),
                 Rational(q) => Debug::fmt(q, f),
@@ -127,8 +86,6 @@ mod std_impls {
             }
         }
     }
-
-    impl StdError for IntegerError {}
     impl fmt::Display for IntegerError {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             use IntegerError::*;
@@ -143,8 +100,6 @@ mod std_impls {
             }
         }
     }
-
-    impl StdError for RationalError {}
     impl fmt::Display for RationalError {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             use RationalError::*;
@@ -153,38 +108,76 @@ mod std_impls {
             }
         }
     }
-
-    impl StdError for RealError {}
     impl fmt::Display for RealError {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "RealError")
         }
     }
 
-    impl PartialEq<IntegerError> for Error {
+    impl PartialEq<IntegerError> for NumeraError {
         fn eq(&self, other: &IntegerError) -> bool {
             match self {
-                Error::Integer(err) => err == other,
+                NumeraError::Integer(err) => err == other,
                 _ => false,
             }
         }
     }
-
-    impl PartialEq<RationalError> for Error {
+    impl PartialEq<RationalError> for NumeraError {
         fn eq(&self, other: &RationalError) -> bool {
             match self {
-                Error::Rational(err) => err == other,
+                NumeraError::Rational(err) => err == other,
+                _ => false,
+            }
+        }
+    }
+    impl PartialEq<RealError> for NumeraError {
+        fn eq(&self, other: &RealError) -> bool {
+            match self {
+                NumeraError::Real(err) => err == other,
                 _ => false,
             }
         }
     }
 
-    impl PartialEq<RealError> for Error {
-        fn eq(&self, other: &RealError) -> bool {
-            match self {
-                Error::Real(err) => err == other,
-                _ => false,
+    impl From<IntegerError> for NumeraError {
+        fn from(err: IntegerError) -> Self {
+            NumeraError::Integer(err)
+        }
+    }
+    impl From<RationalError> for NumeraError {
+        fn from(err: RationalError) -> Self {
+            NumeraError::Rational(err)
+        }
+    }
+    impl From<RealError> for NumeraError {
+        fn from(err: RealError) -> Self {
+            NumeraError::Real(err)
+        }
+    }
+
+    impl From<IntErrorKind> for NumeraError {
+        fn from(err: IntErrorKind) -> Self {
+            use {IntErrorKind::*, NumeraError::Integer};
+            match err {
+                PosOverflow => Integer(IntegerError::Overflow),
+                NegOverflow => Integer(IntegerError::Underflow),
+                Zero => Integer(IntegerError::Zero),
+                //
+                Empty => NumeraError::Other("IntErrorKind::Empty"),
+                InvalidDigit => NumeraError::Other("IntErrorKind::InvalidDigit"),
+                _ => NumeraError::Other("IntErrorKind::_"),
             }
         }
     }
+}
+
+#[cfg(feature = "std")]
+mod std_impls {
+    use super::{IntegerError, NumeraError, RationalError, RealError};
+    use std::error::Error as StdError;
+
+    impl StdError for NumeraError {}
+    impl StdError for IntegerError {}
+    impl StdError for RationalError {}
+    impl StdError for RealError {}
 }

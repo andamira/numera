@@ -6,7 +6,7 @@
 // - doesn't implement Integers. brings too much complexity for very little gain
 
 use super::{Integer128, Integer16, Integer32, Integer64, Integer8};
-use crate::{error::Result, number::traits};
+use crate::{error::NumeraResult as Result, number::traits};
 
 #[cfg(feature = "ibig")]
 use super::IntegerBig;
@@ -206,7 +206,7 @@ macro_rules! define_integers {
 
         $(
         impl TryFrom<Integers> for $t {
-            type Error = crate::error::Error;
+            type Error = crate::error::NumeraError;
             fn try_from(z: Integers) -> core::result::Result<$t, Self::Error> {
                 match z {
                     Integers::$t(z) => Ok(z),
@@ -218,7 +218,7 @@ macro_rules! define_integers {
 
         $( #[cfg(feature = $dep_name)]
         impl TryFrom<Integers> for $td {
-            type Error = crate::error::Error;
+            type Error = crate::error::NumeraError;
             fn try_from(z: Integers) -> core::result::Result<$td, Self::Error> {
                 match z {
                     Integers::$td(z) => Ok(z),

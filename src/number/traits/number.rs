@@ -20,7 +20,7 @@ use core::num::{
 };
 
 use crate::{
-    error::Result,
+    error::NumeraResult as Result,
     number::traits::{Bound, Count, Ident, Sign},
 };
 

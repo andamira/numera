@@ -24,7 +24,7 @@ use core::num::{
     NonZeroU16, NonZeroU32, NonZeroU64, NonZeroU8, NonZeroUsize,
 };
 
-use crate::error::{Error, IntegerError, Result};
+use crate::error::{IntegerError, NumeraError as Error, NumeraResult as Result};
 
 /// The countability properties of a number.
 ///

@@ -17,6 +17,6 @@ pub mod traits;
 
 pub use any::{AnyNumbers, Numbers};
 #[doc(inline)]
-pub use integer::{Integer, Integers, Integer128, Integer16, Integer32, Integer64, Integer8};
+pub use integer::{Integer, Integer128, Integer16, Integer32, Integer64, Integer8, Integers};
 #[doc(inline)]
 pub use traits::{Bound, Count, Ident, Number, Sign};
