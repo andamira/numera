@@ -14,13 +14,18 @@ pub type NumeraResult<N> = result::Result<N, NumeraError>;
 pub enum NumeraError {
     /// An error involving integer numbers.
     Integer(IntegerError),
+
     /// An error involving rational numbers.
     Rational(RationalError),
+
     /// An error involving real numbers.
     Real(RealError),
 
     /// Couldn't convert between two kinds of numbers.
     Conversion,
+
+    /// Not implemented.
+    NotImplemented,
 
     /// A miscellaneous error message.
     Other(&'static str),
@@ -50,6 +55,9 @@ pub enum IntegerError {
 
     /// The value is too small to store in the current representation.
     Underflow,
+
+    /// The integer is not a prime.
+    NotPrime,
 }
 
 /// Errors related to [`rational`][crate::number::rational]s.
@@ -82,6 +90,7 @@ mod core_impls {
                 Rational(q) => Debug::fmt(q, f),
                 Real(r) => Debug::fmt(r, f),
                 Conversion => write!(f, "Couldn't convert the number."),
+                NotImplemented => write!(f, "Not implemented."),
                 Other(s) => write!(f, "{s}"),
             }
         }
@@ -90,13 +99,14 @@ mod core_impls {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             use IntegerError::*;
             match self {
-                Zero => write!(f, "IntegerError::Zero"),
-                ZeroOrMore => write!(f, "IntegerError::ZeroOrMore"),
-                ZeroOrLess => write!(f, "IntegerError::ZeroOrLess"),
-                LessThanZero => write!(f, "IntegerError::LessThanZero"),
-                MoreThanZero => write!(f, "IntegerError::MoreThanZero"),
-                Overflow => write!(f, "IntegerError::Overflow"),
-                Underflow => write!(f, "IntegerError::Underflow"),
+                Zero => write!(f, "Zero"),
+                ZeroOrMore => write!(f, "ZeroOrMore"),
+                ZeroOrLess => write!(f, "ZeroOrLess"),
+                LessThanZero => write!(f, "LessThanZero"),
+                MoreThanZero => write!(f, "MoreThanZero"),
+                Overflow => write!(f, "Overflow"),
+                Underflow => write!(f, "Underflow"),
+                NotPrime => write!(f, "NotPrime"),
             }
         }
     }
@@ -104,7 +114,7 @@ mod core_impls {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             use RationalError::*;
             match self {
-                ZeroDenominator => write!(f, "RationalError::ZeroDenominator"),
+                ZeroDenominator => write!(f, "ZeroDenominator"),
             }
         }
     }
