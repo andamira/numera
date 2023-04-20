@@ -2,9 +2,8 @@
 
 # CHECK
 cl = "clippy"
-clq = "clippy --quiet"
 #
-cla = "clippy --features=all"
+cla = "clippy --features=deps_all"
 cln = "clippy --no-default-features"
 
 # CLEAN PACKAGE
@@ -17,37 +16,33 @@ do = "doc --no-deps --open"
 dd = "doc"
 ddo = "doc --open"
 #
-da = "doc --no-deps --features=all"
-doa = "doc --no-deps --open --features=all"
+da = "doc --no-deps --features=deps_all"
+doa = "doc --no-deps --open --features=deps_all"
 #
 dn = "doc --no-deps --no-default-features"
 don = "doc --no-deps --open --no-default-features"
+# +nightly; document everything
+nd = "doc --no-deps --features=nightly,deps_all"
+ndo = "doc --no-deps --open --features=nightly,deps_all"
+ndd = "doc --features=nightly,deps_all"
+nddo = "doc --open --features=nightly,deps_all"
+
 
 # BUILD
 b = "build"
 bb = "build --bin"
 be = "build --example"
-bq = "build --quiet"
 br = "build --release"
-bqb = "build --quiet --bin"
-bqe = "build --quiet --example"
 brb = "build --release --bin"
 bre = "build --release --example"
-brqb = "build --release --quiet --bin"
-brqe = "build --release --quiet --example"
 
 # RUN
 r = "run"
 rb = "run --bin"
 re = "run --example"
-rq = "run --quiet"
 rr = "run --release"
-rqb = "run --quiet --bin"
-rqe = "run --quiet --example"
 rrb = "run --release --bin"
 rre = "run --release --example"
-rrqb = "run --release --quiet --bin"
-rrqe = "run --release --quiet --example"
 
 # TEST
 t = "test"
@@ -55,10 +50,10 @@ td = "test --doc"
 t_ = "test -- --nocapture"
 t_1 = "test -- --test-threads 1 --nocapture"
 #
-ta = "test --features=all"
-tda = "test --features=all --doc"
-ta_ = "test --features=all -- --nocapture"
-ta_1 = "test --features=all -- --test-threads 1 --nocapture"
+ta = "test --features=deps_all"
+tda = "test --features=deps_all --doc"
+ta_ = "test --features=deps_all -- --nocapture"
+ta_1 = "test --features=deps_all -- --test-threads 1 --nocapture"
 #
 tn = "test --no-default-features"
 tdn = "test --no-default-features --doc"

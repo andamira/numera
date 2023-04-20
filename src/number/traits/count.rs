@@ -24,7 +24,7 @@ use core::num::{
     NonZeroU16, NonZeroU32, NonZeroU64, NonZeroU8, NonZeroUsize,
 };
 
-use crate::error::{IntegerError, NumeraError as Error, NumeraResult as Result};
+use crate::error::{IntegerError, NumeraError as Error, NumeraResult};
 
 /// The countability properties of a number.
 ///
@@ -49,14 +49,14 @@ pub trait Countable: Count {
     /// # Errors
     /// Errors if the operation results in overflow or an invalid value.
     #[rustfmt::skip]
-    fn next(&self) -> Result<Self> where Self: Sized;
+    fn next(&self) -> NumeraResult<Self> where Self: Sized;
 
     /// Returns the previous countable value.
     ///
     /// # Errors
     /// Errors if the operation results in underflow or an invalid value.
     #[rustfmt::skip]
-    fn previous(&self) -> Result<Self> where Self: Sized;
+    fn previous(&self) -> NumeraResult<Self> where Self: Sized;
 }
 
 /// An *uncountable* number.
@@ -73,10 +73,10 @@ macro_rules! impl_countable {
             fn is_countable(&self) -> bool { true }
         }
         impl Countable for $t {
-            fn next(&self) -> Result<Self> {
+            fn next(&self) -> NumeraResult<Self> {
                 self.checked_add(1).ok_or(IntegerError::Overflow.into())
             }
-            fn previous(&self) -> Result<Self> {
+            fn previous(&self) -> NumeraResult<Self> {
                 self.checked_sub(1).ok_or(IntegerError::Underflow.into())
             }
         }
@@ -89,7 +89,7 @@ macro_rules! impl_countable {
             fn is_countable(&self) -> bool { true }
         }
         impl Countable for $t {
-            fn next(&self) -> Result<Self> {
+            fn next(&self) -> NumeraResult<Self> {
                 let mut value = self.get().checked_add(1)
                     .ok_or::<Error>(IntegerError::Overflow.into())?;
                 if value == 0 {
@@ -99,7 +99,7 @@ macro_rules! impl_countable {
                 // SAFETY: we just checked the value
                 Ok(unsafe { <$t>::new_unchecked(value) })
             }
-            fn previous(&self) -> Result<Self> {
+            fn previous(&self) -> NumeraResult<Self> {
                 let mut value = self.get().checked_sub(1)
                     .ok_or::<Error>(IntegerError::Underflow.into())?;
                 if value == 0 {
@@ -149,22 +149,22 @@ mod impl_ibig {
     use core::ops::{Add, Sub};
     use super::{Count, Countable};
     use ibig::{IBig, UBig};
-    use crate::error::{IntegerError, Result};
+    use crate::error::{IntegerError, NumeraResult};
 
     impl Count for IBig {
         fn is_countable(&self) -> bool { true }
     }
     impl Countable for IBig {
-        fn next(&self) -> Result<Self> { Ok(self.add(1)) }
-        fn previous(&self) -> Result<Self> { Ok(self.sub(1)) }
+        fn next(&self) -> NumeraResult<Self> { Ok(self.add(1)) }
+        fn previous(&self) -> NumeraResult<Self> { Ok(self.sub(1)) }
     }
 
     impl Count for UBig {
         fn is_countable(&self) -> bool { true }
     }
     impl Countable for UBig {
-        fn next(&self) -> Result<Self> { Ok(self.add(1)) }
-        fn previous(&self) -> Result<Self> {
+        fn next(&self) -> NumeraResult<Self> { Ok(self.add(1)) }
+        fn previous(&self) -> NumeraResult<Self> {
             if self.bit_len() > 0 { Ok(self.sub(1)) } 
             else { Err(IntegerError::LessThanZero.into()) }
         }

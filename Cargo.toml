@@ -21,8 +21,12 @@ publish = false
 
 [features]
 default = ["std"]
+#
 std = ["half?/std", "ibig?/std"]
-all = ["twofloat", "half", "ibig"]
+#
+deps_all = ["twofloat", "half", "ibig"]
+#
+nightly = [] # used only for docs
 
 
 [dependencies]
@@ -43,6 +47,7 @@ opt-level = 3
 
 
 [package.metadata.docs.rs]
+features = ["nightly", "deps_all"]
 rustdoc-args = [ "--html-in-header", "./res/rustdoc-header.html" ]
 
 [badges]

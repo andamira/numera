@@ -37,7 +37,7 @@ impl Prime8 {
     ///
     /// # Example
     /// ```
-    /// use numera::number::{Number, integer::Prime8};
+    /// use numera::all::{Number, Prime8};
     ///
     /// # fn main() -> numera::error::NumeraResult<()> {
     /// assert_eq![1, Prime8::new(2)?.nth()];
@@ -59,7 +59,7 @@ impl Prime16 {
     ///
     /// # Example
     /// ```
-    /// use numera::number::{Number, integer::Prime16};
+    /// use numera::all::{Number, Prime16};
     ///
     /// # fn main() -> numera::error::NumeraResult<()> {
     /// assert_eq![1, Prime16::new(2)?.nth()];
@@ -97,7 +97,7 @@ impl Prime32 {
     ///
     /// # Example
     /// ```
-    /// use numera::number::{Number, integer::Prime32};
+    /// use numera::all::{Number, Prime32};
     ///
     /// # fn main() -> numera::error::NumeraResult<()> {
     /// assert_eq![1, Prime32::new(2)?.nth()];

@@ -13,7 +13,7 @@
 //   - Number
 
 use crate::{
-    error::Result,
+    error::NumeraResult,
     number::traits::{
         Bound, Count, Countable, Ident, NegOne, NonLowerBounded, NonUpperBounded, Number, One,
         Sign, Signed, Zero,
@@ -73,10 +73,10 @@ impl Count for IntegerBig {
 }
 
 impl Countable for IntegerBig {
-    fn next(&self) -> Result<Self> {
+    fn next(&self) -> NumeraResult<Self> {
         self.0.next().map(Self)
     }
-    fn previous(&self) -> Result<Self> {
+    fn previous(&self) -> NumeraResult<Self> {
         self.0.previous().map(Self)
     }
 }
@@ -125,7 +125,7 @@ impl NegOne for IntegerBig {
 impl Number for IntegerBig {
     type Inner = IBig;
 
-    fn new(value: Self::Inner) -> Result<Self> {
+    fn new(value: Self::Inner) -> NumeraResult<Self> {
         Ok(Self(value))
     }
     unsafe fn new_unchecked(value: Self::Inner) -> Self {

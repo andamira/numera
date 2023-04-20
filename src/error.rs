@@ -182,6 +182,7 @@ mod core_impls {
 }
 
 #[cfg(feature = "std")]
+#[cfg_attr(feature = "nightly", doc(cfg(feature = "std")))]
 mod std_impls {
     use super::{IntegerError, NumeraError, RationalError, RealError};
     use std::error::Error as StdError;

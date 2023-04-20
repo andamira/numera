@@ -280,7 +280,7 @@ mod tests {
     }
 
     #[test]
-    #[cfg(feature = "all")]
+    #[cfg(feature = "deps_all")]
     fn size_all_features() {
         assert_eq![32, size_of::<super::Integers>()];
         // assert_eq![24, size_of::<super::Integers>()]; // MAYBE:Box bigint

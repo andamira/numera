@@ -18,6 +18,7 @@
     clippy::must_use_candidate
 )]
 #![cfg_attr(not(feature = "std"), no_std)]
+#![cfg_attr(feature = "nightly", feature(doc_cfg))]
 
 pub mod error;
 pub mod number;

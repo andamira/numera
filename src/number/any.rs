@@ -16,7 +16,7 @@ use crate::error::NumeraResult as Result;
 ///
 /// # Example
 /// ```
-/// use numera::number::{AnyNumbers, Numbers, integer::{Integers, Integer32}};
+/// use numera::all::{AnyNumbers, Integers, Integer32, Numbers};
 ///
 /// assert_eq![
 ///     Numbers::Integer(Integers::Integer32(Integer32::default())),
