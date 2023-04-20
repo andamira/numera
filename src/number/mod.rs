@@ -15,8 +15,15 @@ mod no;
 pub mod integer;
 pub mod traits;
 
-pub use any::{AnyNumbers, Numbers};
-#[doc(inline)]
-pub use integer::{Integer, Integer128, Integer16, Integer32, Integer64, Integer8, Integers};
-#[doc(inline)]
-pub use traits::{Bound, Count, Ident, Number, Sign};
+pub use all::{
+    Bound, Count, Ident, Integer, Integer128, Integer16, Integer32, Integer64, Integer8, Integers,
+    Number, Sign,
+};
+pub(crate) mod all {
+    #[doc(inline)]
+    pub use super::{
+        any::{AnyNumbers, Numbers},
+        integer::all::*,
+        traits::*,
+    };
+}

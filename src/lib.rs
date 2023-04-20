@@ -24,3 +24,9 @@ pub mod number;
 
 #[doc(inline)]
 pub use number::{integer::Integer, traits::Number};
+
+/// Everything is directly available in here.
+pub mod all {
+    #[doc(inline)]
+    pub use super::{error::*, number::all::*};
+}

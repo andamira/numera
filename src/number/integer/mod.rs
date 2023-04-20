@@ -14,19 +14,10 @@
 
 pub(crate) mod macros;
 
-mod trait_integer;
-pub use trait_integer::Integer;
-
 mod any;
-pub use any::Integers;
-
 pub mod prime;
-pub use prime::{Prime16, Prime32, Prime8, PRIMES_U16, PRIMES_U8};
-
+mod trait_integer;
 mod z;
-#[cfg(feature = "ibig")]
-pub use z::define_big::IntegerBig;
-pub use z::{Integer128, Integer16, Integer32, Integer64, Integer8};
 
 // mod n0z;
 // pub use n0z::NonZeroInteger8;
@@ -35,3 +26,17 @@ pub use z::{Integer128, Integer16, Integer32, Integer64, Integer8};
 // mod nz;
 // mod npz;
 // mod pz;
+
+pub use all::*;
+pub(crate) mod all {
+    #[doc(inline)]
+    pub use super::{
+        any::Integers,
+        prime::{Prime16, Prime32, Prime8, PRIMES_U16, PRIMES_U8},
+        trait_integer::Integer,
+        z::{Integer128, Integer16, Integer32, Integer64, Integer8},
+    };
+
+    #[cfg(feature = "ibig")]
+    pub use super::z::define_big::IntegerBig;
+}
