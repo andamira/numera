@@ -31,9 +31,9 @@ ibig = { version = "0.3.6", optional = true, default-features = false }
 static_assertions = "1.1.0"
 
 [features]
-default = [ "std" ]
-std = [ "half?/std", "ibig?/std" ]
-all = [ "twofloat", "half", "ibig" ]
+default = ["std"]
+std = ["half?/std", "ibig?/std"]
+all = ["twofloat", "half", "ibig"]
 
 [package.metadata.docs.rs]
 rustdoc-args = [ "--html-in-header", "./res/rustdoc-header.html" ]

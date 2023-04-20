@@ -3,12 +3,14 @@
 //!
 //
 
-use super::{Prime8, Prime16, Prime32, PRIMES_U8, PRIMES_U16};
+use super::{Prime16, Prime32, Prime8, PRIMES_U16, PRIMES_U8};
 
 /// Common functionality for all primes.
 pub trait Prime {
     /// Returns the `nth` prime, or `None` if out of bounds.
-    fn get_nth(nth: usize) -> Option<Self> where Self: Sized;
+    fn get_nth(nth: usize) -> Option<Self>
+    where
+        Self: Sized;
 
     /// Returns `true` if the prime is a Bell prime.
     ///
@@ -58,7 +60,7 @@ impl Prime for Prime32 {
             54..=6541 => Some(Prime32(PRIMES_U16[nth - 54].into())),
             6542..=203_280_219 => {
                 todo![]
-            },
+            }
             _ => None,
         }
     }
