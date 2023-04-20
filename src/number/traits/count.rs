@@ -32,6 +32,7 @@ use crate::error::{IntegerError, NumeraError as Error, NumeraResult};
 /// - [`Countable`].
 /// - [`Uncountable`].
 ///
+/// These two traits are mutually exclusive with each other.
 pub trait Count {
     /// Returns `true` if the number is countable.
     fn is_countable(&self) -> bool;
@@ -42,7 +43,9 @@ pub trait Count {
     }
 }
 
-/// A *countable* number.
+/// A number that is *countable*.
+///
+/// This trait is mutually exclusive with [`Uncountable`].
 pub trait Countable: Count {
     /// Returns the next countable value.
     ///
@@ -59,7 +62,9 @@ pub trait Countable: Count {
     fn previous(&self) -> NumeraResult<Self> where Self: Sized;
 }
 
-/// An *uncountable* number.
+/// A number that is *uncountable*.
+///
+/// This trait is mutually exclusive with [`Countable`].
 pub trait Uncountable: Count {}
 
 /* macros */

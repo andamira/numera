@@ -37,6 +37,7 @@ use core::num::{
 /// it must implement instead the [`Unsigned`] trait. Otherwise if it can only
 /// represent negative numbers it must implement the [`NegSigned`] trait.
 ///
+/// These three traits are mutually exclusive with each other.
 pub trait Sign {
     /// Returns `true` if the type can represent positive numbers.
     fn can_positive(&self) -> bool;
@@ -51,13 +52,19 @@ pub trait Sign {
     fn is_negative(&self) -> bool;
 }
 
-/// Can represent both positive and negative numbers.
+/// A number that can represent both positive and negative numbers.
+///
+/// This trait is mutually exclusive with [`Unsigned`] and [`NegSigned`].
 pub trait Signed: Sign {}
 
-/// Can *not* represent negative numbers.
+/// A number that can *not* represent negative numbers.
+///
+/// This trait is mutually exclusive with [`Signed`] and [`NegSigned`].
 pub trait Unsigned: Sign {}
 
-/// Can *not* represent positive numbers.
+/// A number that can *not* represent positive numbers.
+///
+/// This trait is mutually exclusive with [`Unsigned`] and [`Signed`].
 pub trait NegSigned: Sign {
     /// The number's inner value representation.
     type Inner;

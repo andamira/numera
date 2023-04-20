@@ -57,43 +57,61 @@ pub trait Bound: PartialEq {
         Self: Sized;
 }
 
-/// Both lower and upper bounds. Automatic trait
+/// A number that is both lower and upper bounded. Auto-trait
+///
+/// This trait is mutually exclusive with [`NonBounded`].
 pub trait Bounded: LowerBounded + UpperBounded {}
 
-/// A lower bound.
+/// A number that is lower bounded.
+///
+/// This trait is mutually exclusive with [`NonLowerBounded`].
 pub trait LowerBounded: Bound {
     /// The smallest value that can be represented with this type.
     fn new_min() -> Self;
 }
 
-/// An upper bound.
+/// A number that is upper bounded.
+///
+/// This trait is mutually exclusive with [`NonUpperBounded`].
 pub trait UpperBounded: Bound {
     /// The largest value that can be represented with this type.
     fn new_max() -> Self;
 }
 
-/// Both *const* lower and upper bounds. Automatic trait.
+/// A number that is both *const* lower and upper bounded. Auto-trait.
+///
+/// This trait is mutually exclusive with both [`NonLowerBounded`] and [`NonUpperBounded`].
 pub trait ConstBounded: ConstLowerBounded + ConstUpperBounded {}
 
-/// A *const* lower bound.
+/// A number that is *const* lower bounded.
+///
+/// This trait is mutually exclusive with [`NonLowerBounded`].
 pub trait ConstLowerBounded: Bound {
     /// The smallest value that can be represented with this type.
     const MIN: Self;
 }
 
-/// A *const* upper bound.
+/// A number that is *const* upper bounded.
+///
+/// This trait is mutually exclusive with [`NonUpperBounded`].
 pub trait ConstUpperBounded: Bound {
     /// The smallest value that can be represented with this type.
     const MAX: Self;
 }
 
-/// Is *not* lower bounded.
+/// A number that is *not* lower bounded.
+///
+/// This trait is mutually exclusive with [`LowerBounded`].
 pub trait NonLowerBounded: Bound {}
 
-/// Is *not* upper bounded.
+/// A number that is *not* upper bounded.
+///
+/// This trait is mutually exclusive with [`UpperBounded`].
 pub trait NonUpperBounded: Bound {}
 
-/// Is *not* either lower or upper bounded.
+/// A number that is both *not* lower nor upper bounded. Auto-trait.
+///
+/// This trait is mutually exclusive with both [`LowerBounded`] and [`UpperBounded`].
 pub trait NonBounded: NonLowerBounded + NonUpperBounded {}
 
 /* macros */

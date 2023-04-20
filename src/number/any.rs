@@ -13,16 +13,6 @@ use crate::error::NumeraResult as Result;
 ///
 /// This is an alias of [`AnyNumbers`] which allows to concisely use variants
 /// other than `Any`, without having to specify a type.
-///
-/// # Example
-/// ```
-/// use numera::all::{AnyNumbers, Integers, Integer32, Numbers};
-///
-/// assert_eq![
-///     Numbers::Integer(Integers::Integer32(Integer32::default())),
-///     AnyNumbers::<()>::Integer(Integers::Integer32(Integer32::default()))
-/// ];
-/// ```
 pub type Numbers = AnyNumbers<()>;
 
 /// Defines the family of `Numbers` and implements `Number` on it.

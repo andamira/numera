@@ -83,67 +83,97 @@ pub trait Ident {
 
 // 0
 
-/// The number can represent `0`, the additive identity.
+/// A number that can represent `0`, the additive identity.
+///
+/// See also: [`ConstZero`].
+///
+/// This trait is mutually exclusive with [`NonZero`].
 pub trait Zero: Ident {
-    /// Returns a new additive identity `0`.
+    /// Returns a new additive identity, `0`.
     fn new_zero() -> Self;
 
-    /// Sets this to `0`.
+    /// Sets this number to `0`.
     #[rustfmt::skip]
     fn set_zero(&mut self) where Self: Sized { *self = Self::new_zero(); }
 }
 
-/// The number can *not* represent `0`, the additive identity.
+/// A number that can *not* represent `0`, the additive identity.
+///
+/// This trait is mutually exclusive with [`Zero`] and [`ConstZero`].
 pub trait NonZero: Ident {}
 
-/// The number supports a *const* value of `0`, the additive identity.
+/// A number that supports a *const* value of `0`, the additive identity.
+///
+/// See also: [`Zero`].
+///
+/// This trait is mutually exclusive with [`NonZero`].
 pub trait ConstZero: Ident {
-    /// The additive identity `0`.
+    /// The additive identity, `0`.
     const ZERO: Self;
 }
 
 // 1
 
-/// The number can represent `1`, the multiplicative identity.
+/// A number that can represent `1`, the multiplicative identity.
+///
+/// See also: [`ConstOne`].
+///
+/// This trait is mutually exclusive with [`NonOne`].
 pub trait One: Ident {
-    /// Returns a new multiplicative identity `1`.
+    /// Returns a new multiplicative identity, `1`.
     fn new_one() -> Self;
 
-    /// Sets this to `1`.
+    /// Sets this number to `1`.
     #[rustfmt::skip]
     fn set_one(&mut self) where Self: Sized { *self = Self::new_one(); }
 }
 
-/// The number can *not* represent `1`, the multiplicative identity.
+/// A number that can *not* represent `1`, the multiplicative identity.
+///
+/// This trait is mutually exclusive with [`One`] and [`ConstOne`].
 pub trait NonOne: Ident {}
 
-/// The number supports a *const* value of `1`, the multiplicative identity.
+/// A number that supports a *const* value of `1`, the multiplicative identity.
+///
+/// See also: [`One`].
+///
+/// This trait is mutually exclusive with [`NonOne`].
 pub trait ConstOne: Ident {
-    /// The multiplicative identity `1`.
+    /// The multiplicative identity, `1`.
     const ONE: Self;
 }
 
 // -1
 
-/// The number can represent `-1`,
-/// the additive inverse of the multiplicative identity `-1`.
+/// A number that can represent `-1`,
+/// the additive inverse of the multiplicative identity.
+///
+/// See also: [`ConstNegOne`].
+///
+/// This trait is mutually exclusive with [`NonNegOne`].
 pub trait NegOne: Ident {
-    /// Returns a new additive inverse of the multiplicative identity `-1`.
+    /// Returns a new additive inverse of the multiplicative identity, `-1`.
     fn new_neg_one() -> Self;
 
-    /// Sets this to `-1`.
+    /// Sets this number to `-1`.
     #[rustfmt::skip]
     fn set_neg_one(&mut self) where Self: Sized { *self = Self::new_neg_one(); }
 }
 
-/// The number can *not* represent `-1`,
+/// A number that can *not* represent `-1`,
 /// the additive inverse of the multiplicative identity.
+///
+/// This trait is mutually exclusive with [`NegOne`] and [`ConstNegOne`].
 pub trait NonNegOne: Ident {}
 
-/// The number supports a *const* value of `-1`,
+/// A number that supports a *const* value of `-1`,
 /// the additive inverse of the multiplicative identity.
+///
+/// See also: [`NegOne`].
+///
+/// This trait is mutually exclusive with [`NonNegOne`].
 pub trait ConstNegOne: Ident {
-    /// The additive inverse of the multiplicative identity `-1`.
+    /// The additive inverse of the multiplicative identity, `-1`.
     const NEG_ONE: Self;
 }
 
