@@ -3,6 +3,8 @@
 //! Prime numbers.
 //
 
+use primal_sieve::Sieve;
+
 mod arrays;
 mod fns;
 mod impl_traits;
@@ -29,3 +31,101 @@ pub struct Prime16(u16);
 // pub struct Prime32(PositiveInteger32);
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Prime32(u32);
+
+impl Prime8 {
+    /// Returns the number of primes upto and including the current one.
+    ///
+    /// # Example
+    /// ```
+    /// use numera::number::{Number, integer::Prime8};
+    ///
+    /// # fn main() -> numera::error::NumeraResult<()> {
+    /// assert_eq![1, Prime8::new(2)?.nth()];
+    /// assert_eq![54, Prime8::new(251)?.nth()];
+    /// # Ok(()) }
+    /// ```
+    pub fn nth(&self) -> usize {
+        for (i, &p) in PRIMES_U8.iter().enumerate() {
+            if p == self.0 {
+                return i + 1;
+            }
+        }
+        return 54;
+    }
+}
+
+impl Prime16 {
+    /// Returns the number of primes upto and including the current one.
+    ///
+    /// # Example
+    /// ```
+    /// use numera::number::{Number, integer::Prime16};
+    ///
+    /// # fn main() -> numera::error::NumeraResult<()> {
+    /// assert_eq![1, Prime16::new(2)?.nth()];
+    /// assert_eq![54, Prime16::new(251)?.nth()];
+    /// assert_eq![55, Prime16::new(257)?.nth()];
+    /// assert_eq![6_542, Prime16::new(65_521)?.nth()];
+    /// # Ok(()) }
+    /// ```
+    pub fn nth(&self) -> usize {
+        // A) CHECK BENCH
+        // for (i, &p) in PRIMES_U8.iter().enumerate() {
+        //     if p == core::cmp::min(u8::MAX as u16, self.0) as u8 {
+        //         return i + 1
+        //     }
+        // }
+        // B)
+        if self.0 < u16::from(u8::MAX) {
+            for (i, &p) in PRIMES_U8.iter().enumerate() {
+                if u16::from(p) == self.0 {
+                    return i + 1;
+                }
+            }
+        } else {
+            for (i, &p) in PRIMES_U16.iter().enumerate() {
+                if p == self.0 {
+                    return i + 55;
+                }
+            }
+        }
+        return 6_542;
+    }
+}
+impl Prime32 {
+    /// Returns the number of primes upto and including the current one.
+    ///
+    /// # Example
+    /// ```
+    /// use numera::number::{Number, integer::Prime32};
+    ///
+    /// # fn main() -> numera::error::NumeraResult<()> {
+    /// assert_eq![1, Prime32::new(2)?.nth()];
+    /// assert_eq![54, Prime32::new(251)?.nth()];
+    /// assert_eq![55, Prime32::new(257)?.nth()];
+    /// assert_eq![6_542, Prime32::new(65_521)?.nth()];
+    /// assert_eq![6_543, Prime32::new(65_537)?.nth()];
+    /// assert_eq![40_000_000, Prime32::new(776_531_401)?.nth()];
+    /// # Ok(()) }
+    /// ```
+    pub fn nth(&self) -> usize {
+        if self.0 < u32::from(u8::MAX) {
+            for (i, &p) in PRIMES_U8.iter().enumerate() {
+                if u32::from(p) == self.0 {
+                    return i + 1;
+                }
+            }
+        } else if self.0 < u32::from(u16::MAX) {
+            for (i, &p) in PRIMES_U16.iter().enumerate() {
+                if u32::from(p) == self.0 {
+                    return i + 55;
+                }
+            }
+        } else {
+            // this can be slow for high 32-bit numbers:
+            let sieve = Sieve::new(self.0 as usize);
+            return sieve.prime_pi(self.0 as usize);
+        }
+        return 203_280_221;
+    }
+}

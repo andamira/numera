@@ -19,8 +19,15 @@ categories = ["mathematics", "data-structures"]
 keywords = ["math", "mathematics", "number", "numeral", "numeric"]
 publish = false
 
+[features]
+default = ["std"]
+std = ["half?/std", "ibig?/std"]
+all = ["twofloat", "half", "ibig"]
+
+
 [dependencies]
 paste = "1.0.12"
+primal-sieve = "0.3.6"
 
 # optional external numeric types
 twofloat = { version = "0.6.1", optional = true, default-features = false }
@@ -30,10 +37,10 @@ ibig = { version = "0.3.6", optional = true, default-features = false }
 [dev-dependencies]
 static_assertions = "1.1.0"
 
-[features]
-default = ["std"]
-std = ["half?/std", "ibig?/std"]
-all = ["twofloat", "half", "ibig"]
+
+[profile.dev]
+opt-level = 3
+
 
 [package.metadata.docs.rs]
 rustdoc-args = [ "--html-in-header", "./res/rustdoc-header.html" ]

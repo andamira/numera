@@ -2,15 +2,17 @@
 //
 //!
 //
+// TODO: impl Countable for Prime8, Prime16, Prime32
 
-use super::{is_prime_brute, Prime16, Prime32, Prime8};
+use super::{is_prime_brute, Prime16, Prime32, Prime8, Sieve, PRIMES_U16, PRIMES_U8};
 use crate::{
-    error::{NumeraError as Error, NumeraResult as Result},
+    error::{IntegerError, NumeraResult as Result},
     number::traits::{
-        Bound, ConstLowerBounded, ConstUpperBounded, Count, Ident, LowerBounded, NonNegOne, NonOne,
-        NonZero, Number, Sign, Unsigned, UpperBounded,
+        Bound, ConstLowerBounded, ConstUpperBounded, Count, Countable, Ident, LowerBounded,
+        NonNegOne, NonOne, NonZero, Number, Sign, Unsigned, UpperBounded,
     },
 };
+use core::cmp::min;
 
 /* Prime8 */
 
@@ -50,10 +52,43 @@ impl Count for Prime8 {
         true
     }
 }
-// impl Countable for Prime8 { // ←TODO
-//     fn next(&self) -> bool { todo![] }
-//     fn previous(&self) -> bool { todo![] }
-// }
+
+impl Countable for Prime8 {
+    /// # Examples
+    /// ```
+    /// use numera::number::{Number, integer::Prime8, traits::Countable};
+    /// # use numera::error::NumeraResult;
+    /// # fn main() -> NumeraResult<()> {
+    /// assert_eq![Prime8::new(2)?.next()?, Prime8::new(3)?];
+    /// assert_eq![Prime8::new(241)?.next()?, Prime8::new(251)?];
+    /// assert![Prime8::new(251)?.next().is_err()];
+    /// # Ok(()) }
+    /// ```
+    fn next(&self) -> Result<Self> {
+        let nth = self.nth();
+        match nth {
+            54 => Err(IntegerError::Overflow.into()),
+            _ => Ok(Prime8(PRIMES_U8[nth])),
+        }
+    }
+    /// # Examples
+    /// ```
+    /// use numera::number::{Number, integer::Prime8, traits::Countable};
+    /// # use numera::error::NumeraResult;
+    /// # fn main() -> NumeraResult<()> {
+    /// assert_eq![Prime8::new(3)?.previous()?, Prime8::new(2)?, ];
+    /// assert_eq![Prime8::new(251)?.previous()?, Prime8::new(241)?];
+    /// assert![Prime8::new(2)?.previous().is_err()];
+    /// # Ok(()) }
+    /// ```
+    fn previous(&self) -> Result<Self> {
+        let nth = self.nth();
+        match nth {
+            1 => Err(IntegerError::Underflow.into()),
+            _ => Ok(Prime8(PRIMES_U8[nth - 2])),
+        }
+    }
+}
 
 impl Ident for Prime8 {
     fn can_zero(&self) -> bool {
@@ -101,7 +136,7 @@ impl Number for Prime8 {
         if is_prime_brute(value.into()) {
             Ok(Prime8(value))
         } else {
-            Err(Error::Other("Not a prime."))
+            Err(IntegerError::NotPrime.into())
         }
     }
     unsafe fn new_unchecked(value: Self::Inner) -> Self {
@@ -153,6 +188,68 @@ impl Count for Prime16 {
         true
     }
 }
+impl Countable for Prime16 {
+    /// # Examples
+    /// ```
+    /// use numera::number::{Number, integer::Prime16, traits::Countable};
+    /// # use numera::error::NumeraResult;
+    /// # fn main() -> NumeraResult<()> {
+    /// assert_eq![Prime16::new(5)?.next()?, Prime16::new(7)?];
+    /// assert_eq![Prime16::new(251)?.next()?, Prime16::new(257)?];
+    /// assert_eq![Prime16::new(257)?.next()?, Prime16::new(263)?];
+    /// assert_eq![Prime16::new(65_519)?.next()?, Prime16::new(65_521)?];
+    /// assert![Prime16::new(65_521)?.next().is_err()];
+    /// # Ok(()) }
+    /// ```
+    fn next(&self) -> Result<Self> {
+        let nth = self.nth();
+        match nth {
+            // can't be 0
+            1..=53 => Ok(Prime16(u16::from(PRIMES_U8[nth]))),
+            54..=6_541 => Ok(Prime16(PRIMES_U16[nth - 54])),
+            // otherwise it can only be 6_542
+            _ => Err(IntegerError::Overflow.into()),
+        }
+
+        // ALTERNATIVE:
+        // if self.0 == 65_521 { Err(IntegerError::Overflow.into()) } else {
+        //     let sieve = Sieve::new(min(self.0.saturating_add(1000), u16::MAX) as usize);
+        //     let nth = sieve.prime_pi(self.0 as usize);
+        //     let next_prime = sieve.nth_prime(nth + 1);
+        //     Ok(Prime16(next_prime.try_into().unwrap()))
+        // }
+    }
+
+    /// # Examples
+    /// ```
+    /// use numera::number::{Number, integer::Prime16, traits::Countable};
+    /// # use numera::error::NumeraResult;
+    /// # fn main() -> NumeraResult<()> {
+    /// assert_eq![Prime16::new(7)?.previous()?, Prime16::new(5)?];
+    /// assert_eq![Prime16::new(251)?.previous()?, Prime16::new(241)?];
+    /// assert_eq![Prime16::new(257)?.previous()?, Prime16::new(251)?];
+    /// assert_eq![Prime16::new(65_521)?.previous()?, Prime16::new(65_519)?];
+    /// assert![Prime16::new(2)?.previous().is_err()];
+    /// # Ok(()) }
+    /// ```
+    fn previous(&self) -> Result<Self> {
+        let nth = self.nth();
+        match nth {
+            2..=55 => Ok(Prime16(u16::from(PRIMES_U8[nth - 2]))),
+            56..=6_542 => Ok(Prime16(PRIMES_U16[nth - 54 - 2])),
+            // otherwise it can only be 1
+            _ => Err(IntegerError::Underflow.into()),
+        }
+
+        // ALTERNATIVE:
+        // if self.0 == 2 { Err(IntegerError::Underflow.into()) } else {
+        //     let sieve = Sieve::new(min(self.0.saturating_add(1000), u16::MAX) as usize);
+        //     let nth = sieve.prime_pi(self.0 as usize);
+        //     let prev_prime = sieve.nth_prime(nth - 1);
+        //     Ok(Prime16(prev_prime.try_into().unwrap()))
+        // }
+    }
+}
 
 impl Ident for Prime16 {
     fn can_zero(&self) -> bool {
@@ -200,7 +297,7 @@ impl Number for Prime16 {
         if is_prime_brute(value.into()) {
             Ok(Prime16(value))
         } else {
-            Err(Error::Other("Not a prime."))
+            Err(IntegerError::NotPrime.into())
         }
     }
     unsafe fn new_unchecked(value: Self::Inner) -> Self {
@@ -227,7 +324,7 @@ impl Bound for Prime32 {
         Some(Prime32(2))
     }
     fn upper_bound(&self) -> Option<Self> {
-        Some(Prime32(4_294_967_279))
+        Some(Prime32(4_294_967_291))
     }
 }
 impl LowerBounded for Prime32 {
@@ -250,6 +347,52 @@ impl ConstUpperBounded for Prime32 {
 impl Count for Prime32 {
     fn is_countable(&self) -> bool {
         true
+    }
+}
+impl Countable for Prime32 {
+    /// # Examples
+    /// ```
+    /// use numera::number::{Number, integer::Prime32, traits::Countable};
+    /// # use numera::error::NumeraResult;
+    /// # fn main() -> NumeraResult<()> {
+    /// assert_eq![Prime32::new(5)?.next()?, Prime32::new(7)?];
+    /// assert_eq![Prime32::new(251)?.next()?, Prime32::new(257)?];
+    /// assert_eq![Prime32::new(65_521)?.next()?, Prime32::new(65_537)?];
+    /// assert_eq![Prime32::new(50_000_017)?.next()?, Prime32::new(50_000_021)?];
+    /// // assert![Prime32::new(4_294_967_291)?.next().is_err()]; // SLOW
+    /// # Ok(()) }
+    /// ```
+    fn next(&self) -> Result<Self> {
+        if self.0 == 4_294_967_291 {
+            Err(IntegerError::Overflow.into())
+        } else {
+            let sieve = Sieve::new(min(self.0.saturating_add(1000), u32::MAX) as usize);
+            let nth = sieve.prime_pi(self.0 as usize);
+            let next_prime = sieve.nth_prime(nth + 1);
+            Ok(Prime32(next_prime.try_into().unwrap()))
+        }
+    }
+    /// # Examples
+    /// ```
+    /// use numera::number::{Number, integer::Prime32, traits::Countable};
+    /// # use numera::error::NumeraResult;
+    /// # fn main() -> NumeraResult<()> {
+    /// assert_eq![Prime32::new(7)?.previous()?, Prime32::new(5)?];
+    /// assert_eq![Prime32::new(257)?.previous()?, Prime32::new(251)?];
+    /// assert_eq![Prime32::new(65_537)?.previous()?, Prime32::new(65_521)?];
+    /// assert_eq![Prime32::new(50_000_021)?.previous()?, Prime32::new(50_000_017)?];
+    /// // assert![Prime32::new(4_294_967_291)?.previous().is_err()]; // SLOW
+    /// # Ok(()) }
+    /// ```
+    fn previous(&self) -> Result<Self> {
+        if self.0 == 2 {
+            Err(IntegerError::Underflow.into())
+        } else {
+            let sieve = Sieve::new(min(self.0.saturating_add(1000), u32::MAX) as usize);
+            let nth = sieve.prime_pi(self.0 as usize);
+            let prev_prime = sieve.nth_prime(nth - 1);
+            Ok(Prime32(prev_prime.try_into().unwrap()))
+        }
     }
 }
 
@@ -299,7 +442,7 @@ impl Number for Prime32 {
         if is_prime_brute(value) {
             Ok(Prime32(value))
         } else {
-            Err(Error::Other("Not a prime."))
+            Err(IntegerError::NotPrime.into())
         }
     }
     unsafe fn new_unchecked(value: Self::Inner) -> Self {
