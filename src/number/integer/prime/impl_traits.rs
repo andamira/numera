@@ -2,7 +2,6 @@
 //
 //!
 //
-// TODO: impl Countable for Prime8, Prime16, Prime32
 
 use super::{is_prime_brute, Prime16, Prime32, Prime8, Sieve, PRIMES_U16, PRIMES_U8};
 use crate::{
