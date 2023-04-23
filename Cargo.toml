@@ -7,7 +7,7 @@ rust-version = "1.65"
 authors = ["José Luis Cruz <joseluis@andamira.net>"]
 repository = "https://github.com/andamira/numera"
 documentation = "https://docs.rs/numera"
-license = "MIT/Apache-2.0"
+license = "MIT OR Apache-2.0"
 include = [
 	"/src/**/*.rs",
 	"/Cargo.toml",
@@ -17,7 +17,7 @@ include = [
 ]
 categories = ["mathematics", "data-structures"]
 keywords = ["math", "mathematics", "number", "numeral", "numeric"]
-publish = false
+publish = true
 
 [features]
 default = ["std"]
@@ -52,4 +52,4 @@ features = ["nightly", "deps_all"]
 rustdoc-args = [ "--html-in-header", "./res/rustdoc-header.html" ]
 
 [badges]
-maintenance = { status = "actively-developed" }
+maintenance = { status = "experimental" }
