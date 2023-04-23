@@ -5,6 +5,8 @@
 
 use super::{Integer128, Integer16, Integer32, Integer64, Integer8};
 use crate::number::{integer::Integer, traits::Number};
+use az::CheckedAs;
+use primal_sieve::Sieve;
 
 macro_rules! impl_integer {
     (many: $($t:ident),+) => {
@@ -19,6 +21,11 @@ macro_rules! impl_integer {
             #[inline(always)]
             fn is_multiple_of(&self, other: &Self) -> bool {
                 self.0.is_multiple_of(&other.0)
+            }
+            #[inline]
+            fn is_prime(&self) -> Option<bool> {
+                let u = self.0.checked_as::<usize>()?;
+                Some(Sieve::new(u).is_prime(u))
             }
             #[inline]
             fn gcd(&self, other: &Self) -> Self {

@@ -30,6 +30,7 @@ nightly = [] # used only for docs
 
 
 [dependencies]
+az = "1.2.1"
 paste = "1.0.12"
 primal-sieve = "0.3.6"
 

@@ -8,11 +8,12 @@
 // - impl for integer primitives
 
 use crate::number::traits::{ConstZero, Number};
-
+use az::CheckedAs;
 use core::num::{
     NonZeroI128, NonZeroI16, NonZeroI32, NonZeroI64, NonZeroI8, NonZeroIsize, NonZeroU128,
     NonZeroU16, NonZeroU32, NonZeroU64, NonZeroU8, NonZeroUsize,
 };
+use primal_sieve::Sieve;
 
 /// Common functions for all integers.
 pub trait Integer: Number {
@@ -26,6 +27,12 @@ pub trait Integer: Number {
     fn is_multiple_of(&self, other: &Self) -> bool;
     #[rustfmt::skip]
     fn is_divisor_of(&self, other: &Self) -> bool { other.is_multiple_of(self) }
+
+    /// Returns `Some(true)` if the number is prime, `Some(false)` if not prime,
+    /// or `None` if it can not be determined.
+    ///
+    /// Returns `None` if the number can't be represented as a [`usize`].
+    fn is_prime(&self) -> Option<bool>;
 
     /// Calculates the Greatest Common Divisor of `self` and `other`.
     #[must_use]
@@ -59,6 +66,13 @@ macro_rules! impl_integer {
             fn is_multiple_of(&self, other: &Self) -> bool {
                 *self % *other == 0
             }
+
+            #[inline]
+            fn is_prime(&self) -> Option<bool> {
+                let u = (*self).checked_as::<usize>()?;
+                Some(Sieve::new(u).is_prime(u))
+            }
+
             #[inline]
             fn gcd(&self, other: &Self) -> Self {
                 let (mut a, mut b) = (*self, *other);
@@ -86,6 +100,11 @@ macro_rules! impl_integer {
             #[inline(always)]
             fn is_multiple_of(&self, other: &Self) -> bool {
                 self.get() % other.get() == 0
+            }
+            #[inline]
+            fn is_prime(&self) -> Option<bool> {
+                let u = self.get().checked_as::<usize>()?;
+                Some(Sieve::new(u).is_prime(u))
             }
             #[inline]
             fn gcd(&self, other: &Self) -> Self {
