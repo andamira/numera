@@ -3,6 +3,7 @@
 //! Prime numbers.
 //
 
+#[cfg(feature = "std")]
 use primal_sieve::Sieve;
 
 use crate::all::{NumeraError, NumeraResult};
@@ -20,9 +21,13 @@ pub(crate) mod all {
     pub use super::{
         any::Primes,
         consts::{PRIMES_BELL, PRIMES_U16, PRIMES_U8},
-        fns::{is_prime_brute, is_prime_sieve, nth_prime_brute, nth_prime_sieve},
+        fns::{is_prime_brute, nth_prime_brute},
         trait_prime::Prime,
     };
+
+    #[doc(inline)]
+    #[cfg(feature = "std")]
+    pub use super::fns::{is_prime_sieve, nth_prime_sieve};
 }
 
 /// An 8-bit prime number that can represent the first 54 prime numbers.
@@ -106,6 +111,9 @@ impl Prime16 {
 impl Prime32 {
     /// Returns the number of primes upto and including the current one.
     ///
+    /// Note that this operation can be slow for big 32-bit numbers,
+    /// specially in no-std context.
+    ///
     /// # Example
     /// ```
     /// use numera::all::{Number, Prime32};
@@ -119,6 +127,8 @@ impl Prime32 {
     /// assert_eq![40_000_000, Prime32::new(776_531_401)?.nth()];
     /// # Ok(()) }
     /// ```
+    #[cfg(feature = "std")]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "std")))]
     pub fn nth(&self) -> usize {
         if self.0 < u32::from(u8::MAX) {
             for (i, &p) in PRIMES_U8.iter().enumerate() {
@@ -134,8 +144,16 @@ impl Prime32 {
             }
         } else {
             // this can be slow for high 32-bit numbers:
-            let sieve = Sieve::new(self.0 as usize);
-            return sieve.prime_pi(self.0 as usize);
+            #[cfg(feature = "std")]
+            {
+                let sieve = Sieve::new(self.0 as usize);
+                return sieve.prime_pi(self.0 as usize);
+            }
+            // this can be VERY slow for high 32-bit numbers:
+            #[cfg(not(feature = "std"))]
+            {
+                todo![] // TODO
+            }
         }
         return 203_280_221;
     }

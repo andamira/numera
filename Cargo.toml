@@ -22,7 +22,7 @@ publish = true
 [features]
 default = ["std"]
 #
-std = ["half?/std", "ibig?/std"]
+std = ["primal-sieve", "half?/std", "ibig?/std"]
 #
 deps_all = ["twofloat", "half", "ibig"]
 #
@@ -32,7 +32,8 @@ nightly = [] # used only for docs
 [dependencies]
 az = "1.2.1"
 paste = "1.0.12"
-primal-sieve = "0.3.6"
+
+primal-sieve = { version = "0.3.6", optional = true }
 
 # optional external numeric types
 twofloat = { version = "0.6.1", optional = true, default-features = false }

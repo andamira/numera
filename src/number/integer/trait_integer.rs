@@ -13,7 +13,11 @@ use core::num::{
     NonZeroI128, NonZeroI16, NonZeroI32, NonZeroI64, NonZeroI8, NonZeroIsize, NonZeroU128,
     NonZeroU16, NonZeroU32, NonZeroU64, NonZeroU8, NonZeroUsize,
 };
-use primal_sieve::Sieve;
+
+#[cfg(not(feature = "std"))]
+use crate::all::is_prime_brute;
+#[cfg(feature = "std")]
+use crate::all::is_prime_sieve;
 
 /// Common functions for all integers.
 pub trait Integer: Number {
@@ -31,7 +35,8 @@ pub trait Integer: Number {
     /// Returns `Some(true)` if the number is prime, `Some(false)` if not prime,
     /// or `None` if it can not be determined.
     ///
-    /// Returns `None` if the number can't be represented as a [`usize`].
+    /// Returns `None` if the number can't be represented as a [`usize`],
+    /// or as a [`u32`] in `no-std`.
     fn is_prime(&self) -> Option<bool>;
 
     /// Calculates the Greatest Common Divisor of `self` and `other`.
@@ -69,8 +74,10 @@ macro_rules! impl_integer {
 
             #[inline]
             fn is_prime(&self) -> Option<bool> {
-                let u = (*self).checked_as::<usize>()?;
-                Some(Sieve::new(u).is_prime(u))
+                #[cfg(feature = "std")]
+                return Some(is_prime_sieve((*self).checked_as::<usize>()?));
+                #[cfg(not(feature = "std"))]
+                return Some(is_prime_brute((*self).checked_as::<u32>()?));
             }
 
             #[inline]
@@ -103,8 +110,10 @@ macro_rules! impl_integer {
             }
             #[inline]
             fn is_prime(&self) -> Option<bool> {
-                let u = self.get().checked_as::<usize>()?;
-                Some(Sieve::new(u).is_prime(u))
+                #[cfg(feature = "std")]
+                return Some(is_prime_sieve(self.get().checked_as::<usize>()?));
+                #[cfg(not(feature = "std"))]
+                return Some(is_prime_brute(self.get().checked_as::<u32>()?));
             }
             #[inline]
             fn gcd(&self, other: &Self) -> Self {

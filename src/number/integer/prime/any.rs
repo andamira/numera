@@ -104,7 +104,11 @@ impl Countable for Primes {
             // Prime8(p) => Prime8(p.),
             Prime8(p) => p.next().map(|p| p.into()),
             Prime16(p) => p.next().map(|p| p.into()),
+            #[cfg(feature = "std")]
             Prime32(p) => p.next().map(|p| p.into()),
+            // IMPROVE for no-std
+            #[cfg(not(feature = "std"))]
+            _ => Err(crate::all::NumeraError::NotImplemented),
         }
     }
     fn previous(&self) -> NumeraResult<Self> {
@@ -113,7 +117,11 @@ impl Countable for Primes {
             // Prime8(p) => Prime8(p.),
             Prime8(p) => p.previous().map(|p| p.into()),
             Prime16(p) => p.previous().map(|p| p.into()),
+            #[cfg(feature = "std")]
             Prime32(p) => p.previous().map(|p| p.into()),
+            // IMPROVE for no-std
+            #[cfg(not(feature = "std"))]
+            _ => Err(crate::all::NumeraError::NotImplemented),
         }
     }
 }

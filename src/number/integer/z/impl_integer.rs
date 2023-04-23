@@ -6,7 +6,11 @@
 use super::{Integer128, Integer16, Integer32, Integer64, Integer8};
 use crate::number::{integer::Integer, traits::Number};
 use az::CheckedAs;
-use primal_sieve::Sieve;
+
+#[cfg(not(feature = "std"))]
+use crate::all::is_prime_brute;
+#[cfg(feature = "std")]
+use crate::all::is_prime_sieve;
 
 macro_rules! impl_integer {
     (many: $($t:ident),+) => {
@@ -24,8 +28,10 @@ macro_rules! impl_integer {
             }
             #[inline]
             fn is_prime(&self) -> Option<bool> {
-                let u = self.0.checked_as::<usize>()?;
-                Some(Sieve::new(u).is_prime(u))
+                #[cfg(feature = "std")]
+                return Some(is_prime_sieve(self.0.checked_as::<usize>()?));
+                #[cfg(not(feature = "std"))]
+                return Some(is_prime_brute(self.0.checked_as::<u32>()?));
             }
             #[inline]
             fn gcd(&self, other: &Self) -> Self {

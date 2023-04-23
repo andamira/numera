@@ -3,8 +3,8 @@
 //! Alternative implementations for finding primes.
 //
 
-use core::num::NonZeroUsize;
-use primal_sieve::Sieve;
+#[cfg(feature = "std")]
+use {core::num::NonZeroUsize, primal_sieve::Sieve};
 
 /// Checks whether a `number` is prime, by brute force.
 pub fn is_prime_brute(number: u32) -> bool {
@@ -36,12 +36,16 @@ pub fn nth_prime_brute(nth: u32) -> u32 {
 
 /// Checks wheter a `number` is prime, using an optimized [`Sieve`].
 #[inline]
+#[cfg(feature = "std")]
+#[cfg_attr(feature = "nightly", doc(cfg(feature = "std")))]
 pub fn is_prime_sieve(number: usize) -> bool {
     Sieve::new(number).is_prime(number)
 }
 
 /// Finds the `nth` prime number, using an optimize [`Sieve`]
 #[inline]
+#[cfg(feature = "std")]
+#[cfg_attr(feature = "nightly", doc(cfg(feature = "std")))]
 pub fn nth_prime_sieve(nth: NonZeroUsize) -> usize {
     Sieve::new(nth.get()).nth_prime(nth.get())
 }

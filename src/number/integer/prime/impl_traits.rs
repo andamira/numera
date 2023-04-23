@@ -4,9 +4,7 @@
 //
 // NOTE: chosen the is_prime_brute for Prime8 & Prime16 because it's faster.
 
-use super::{
-    is_prime_brute, is_prime_sieve, Prime16, Prime32, Prime8, Sieve, PRIMES_U16, PRIMES_U8,
-};
+use super::{is_prime_brute, Prime16, Prime32, Prime8, PRIMES_U16, PRIMES_U8};
 use crate::{
     error::{IntegerError, NumeraResult as Result},
     number::traits::{
@@ -14,8 +12,9 @@ use crate::{
         NonNegOne, NonOne, NonZero, Number, Sign, Unsigned, UpperBounded,
     },
 };
-use az::CheckedAs;
-use core::cmp::min;
+
+#[cfg(feature = "std")]
+use {super::Sieve, crate::all::is_prime_sieve, az::CheckedAs, core::cmp::min};
 
 /* Prime8 */
 
@@ -57,6 +56,8 @@ impl Count for Prime8 {
 }
 
 impl Countable for Prime8 {
+    /// Returns the next prime.
+    ///
     /// # Examples
     /// ```
     /// use numera::number::{Number, integer::Prime8, traits::Countable};
@@ -74,6 +75,8 @@ impl Countable for Prime8 {
             _ => Ok(Prime8(PRIMES_U8[nth])),
         }
     }
+    /// Returns the previous prime.
+    ///
     /// # Examples
     /// ```
     /// use numera::number::{Number, integer::Prime8, traits::Countable};
@@ -192,6 +195,8 @@ impl Count for Prime16 {
     }
 }
 impl Countable for Prime16 {
+    /// Returns the next prime.
+    ///
     /// # Examples
     /// ```
     /// use numera::number::{Number, integer::Prime16, traits::Countable};
@@ -223,6 +228,8 @@ impl Countable for Prime16 {
         // }
     }
 
+    /// Returns the previous prime.
+    ///
     /// # Examples
     /// ```
     /// use numera::number::{Number, integer::Prime16, traits::Countable};
@@ -352,7 +359,14 @@ impl Count for Prime32 {
         true
     }
 }
+// IMPROVE for no-std
+#[cfg(feature = "std")]
+#[cfg_attr(feature = "nightly", doc(cfg(feature = "std")))]
 impl Countable for Prime32 {
+    /// Returns the next prime.
+    ///
+    /// Note that this operation can be slow for high values.
+    ///
     /// # Examples
     /// ```
     /// use numera::number::{Number, integer::Prime32, traits::Countable};
@@ -375,6 +389,10 @@ impl Countable for Prime32 {
             Ok(Prime32(next_prime.try_into().unwrap()))
         }
     }
+    /// Returns the previous prime.
+    ///
+    /// Note that this operation can be slow for high values.
+    ///
     /// # Examples
     /// ```
     /// use numera::number::{Number, integer::Prime32, traits::Countable};
@@ -441,6 +459,15 @@ impl Unsigned for Prime32 {}
 
 impl Number for Prime32 {
     type Inner = u32;
+    #[cfg(not(feature = "std"))]
+    fn new(value: Self::Inner) -> Result<Self> {
+        if is_prime_brute(value) {
+            Ok(Prime32(value))
+        } else {
+            Err(IntegerError::NotPrime.into())
+        }
+    }
+    #[cfg(feature = "std")]
     fn new(value: Self::Inner) -> Result<Self> {
         if is_prime_sieve(value.checked_as::<usize>().ok_or(IntegerError::Overflow)?) {
             Ok(Prime32(value))
