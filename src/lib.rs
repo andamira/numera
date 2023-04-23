@@ -7,15 +7,12 @@
 #![warn(clippy::all)]
 #![warn(clippy::pedantic)]
 #![allow(
-    clippy::float_arithmetic,
-    clippy::implicit_return,
-    clippy::needless_return,
-    clippy::blanket_clippy_restriction_lints,
-    clippy::pattern_type_mismatch,
-    clippy::module_name_repetitions,
-    clippy::wildcard_imports,
     clippy::enum_glob_use,
-    clippy::must_use_candidate
+    clippy::module_name_repetitions,
+    clippy::must_use_candidate,
+    clippy::needless_return,
+    clippy::redundant_closure_for_method_calls,
+    clippy::wildcard_imports
 )]
 #![cfg_attr(not(feature = "std"), no_std)]
 #![cfg_attr(feature = "nightly", feature(doc_cfg))]
