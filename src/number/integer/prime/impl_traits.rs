@@ -2,8 +2,11 @@
 //
 //!
 //
+// NOTE: chosen the is_prime_brute for Prime8 & Prime16 because it's faster.
 
-use super::{is_prime_brute, Prime16, Prime32, Prime8, Sieve, PRIMES_U16, PRIMES_U8};
+use super::{
+    is_prime_brute, is_prime_sieve, Prime16, Prime32, Prime8, Sieve, PRIMES_U16, PRIMES_U8,
+};
 use crate::{
     error::{IntegerError, NumeraResult as Result},
     number::traits::{
@@ -11,6 +14,7 @@ use crate::{
         NonNegOne, NonOne, NonZero, Number, Sign, Unsigned, UpperBounded,
     },
 };
+use az::CheckedAs;
 use core::cmp::min;
 
 /* Prime8 */
@@ -438,7 +442,7 @@ impl Unsigned for Prime32 {}
 impl Number for Prime32 {
     type Inner = u32;
     fn new(value: Self::Inner) -> Result<Self> {
-        if is_prime_brute(value) {
+        if is_prime_sieve(value.checked_as::<usize>().ok_or(IntegerError::Overflow)?) {
             Ok(Prime32(value))
         } else {
             Err(IntegerError::NotPrime.into())

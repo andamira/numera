@@ -32,7 +32,7 @@ pub(crate) mod all {
     #[doc(inline)]
     pub use super::{
         any::Integers,
-        prime::{Prime16, Prime32, Prime8, Primes, PRIMES_U16, PRIMES_U8},
+        prime::*,
         trait_integer::Integer,
         z::{Integer128, Integer16, Integer32, Integer64, Integer8},
     };

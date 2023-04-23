@@ -14,10 +14,16 @@ mod impl_from;
 mod impl_traits;
 mod trait_prime;
 
-pub use any::Primes;
-pub use consts::{PRIMES_BELL, PRIMES_U16, PRIMES_U8};
-pub use fns::{is_prime_brute, nth_prime_brute};
-pub use trait_prime::Prime;
+pub use all::*;
+pub(crate) mod all {
+    #[doc(inline)]
+    pub use super::{
+        any::Primes,
+        consts::{PRIMES_BELL, PRIMES_U16, PRIMES_U8},
+        fns::{is_prime_brute, is_prime_sieve, nth_prime_brute, nth_prime_sieve},
+        trait_prime::Prime,
+    };
+}
 
 /// An 8-bit prime number that can represent the first 54 prime numbers.
 ///

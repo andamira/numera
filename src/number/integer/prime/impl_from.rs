@@ -4,6 +4,8 @@
 //
 
 use super::{NumeraError, NumeraResult, Prime16, Prime32, Prime8, Primes};
+use crate::all::{IntegerError, Number};
+use az::CheckedAs;
 
 /* conversions between primes */
 
@@ -72,75 +74,58 @@ impl TryFrom<Primes> for Prime8 {
 
 /* conversions to primitives */
 
-impl From<Prime8> for u8 {
-    fn from(p: Prime8) -> u8 {
-        p.0
-    }
+// Conversions that can't fail.
+macro_rules! from_prime_to_primitive {
+    ($Prime:ident, $($primitive:ty),+) => {
+        $( from_prime_to_primitive![@ $Prime, $primitive]; )*
+    };
+    (@ $Prime:ident, $primitive:ty) => {
+        impl From<$Prime> for $primitive {
+            fn from(p: $Prime) -> $primitive {
+                p.0.into()
+            }
+        }
+    };
 }
-impl From<Prime8> for u16 {
-    fn from(p: Prime8) -> u16 {
-        p.0.into()
-    }
-}
-impl From<Prime8> for u32 {
-    fn from(p: Prime8) -> u32 {
-        p.0.into()
-    }
-}
-impl From<Prime8> for u64 {
-    fn from(p: Prime8) -> u64 {
-        p.0.into()
-    }
-}
-impl From<Prime8> for u128 {
-    fn from(p: Prime8) -> u128 {
-        p.0.into()
-    }
-}
-impl From<Prime8> for usize {
-    fn from(p: Prime8) -> usize {
-        p.0.into()
-    }
-}
+from_prime_to_primitive![Prime8, u8, u16, u32, u64, u128, usize, i16, i32, i64, i128, isize];
+from_prime_to_primitive![Prime16, u16, u32, u64, u128, usize, i32, i64, i128];
+from_prime_to_primitive![Prime32, u32, u64, u128, i64, i128];
 
-impl From<Prime16> for u16 {
-    fn from(p: Prime16) -> u16 {
-        p.0
-    }
+// Conversions that can fail.
+macro_rules! try_from_prime_to_primitive {
+    ($Prime:ident, $($primitive:ty),+) => {
+        $( try_from_prime_to_primitive![@ $Prime, $primitive]; )*
+    };
+    (@ $Prime:ident, $primitive:ty) => {
+        impl TryFrom<$Prime> for $primitive {
+            type Error = NumeraError;
+            fn try_from(p: $Prime) -> NumeraResult<$primitive> {
+                Ok(<$primitive>::try_from(p.0)?)
+            }
+        }
+    };
 }
-impl From<Prime16> for u32 {
-    fn from(p: Prime16) -> u32 {
-        p.0.into()
-    }
-}
-impl From<Prime16> for u64 {
-    fn from(p: Prime16) -> u64 {
-        p.0.into()
-    }
-}
-impl From<Prime16> for u128 {
-    fn from(p: Prime16) -> u128 {
-        p.0.into()
-    }
-}
-impl From<Prime16> for usize {
-    fn from(p: Prime16) -> usize {
-        p.0.into()
-    }
-}
+try_from_prime_to_primitive![Prime8, i8];
+try_from_prime_to_primitive![Prime16, u8, i8, i16, isize];
+try_from_prime_to_primitive![Prime32, u8, u16, usize, i8, i16, i32, isize];
 
-impl From<Prime32> for u32 {
-    fn from(p: Prime32) -> u32 {
-        p.0
-    }
+/* conversions from primitives */
+
+// tries to convert a primitive into a prime.
+macro_rules! try_from_primitive_to_prime {
+    ($Prime:ident, $PrimeInner:ty; $($primitive:ty),+) => {
+        $( try_from_primitive_to_prime![@ $Prime, $PrimeInner; $primitive]; )*
+    };
+    (@ $Prime:ident, $PrimeInner:ty; $primitive:ty) => {
+        impl TryFrom<$primitive> for $Prime {
+            type Error = NumeraError;
+            fn try_from(p: $primitive) -> NumeraResult<$Prime> {
+                let arg = p.checked_as::<$PrimeInner>().ok_or(IntegerError::Overflow)?;
+                $Prime::new(arg)
+            }
+        }
+    };
 }
-impl From<Prime32> for u64 {
-    fn from(p: Prime32) -> u64 {
-        p.0.into()
-    }
-}
-impl From<Prime32> for u128 {
-    fn from(p: Prime32) -> u128 {
-        p.0.into()
-    }
-}
+try_from_primitive_to_prime![Prime8, u8; u16, u32, u64, u128, usize, i8, i16, i32, i64, i128, isize];
+try_from_primitive_to_prime![Prime16, u16; u16, u32, u64, u128, usize, i8, i16, i32, i64, i128, isize];
+try_from_primitive_to_prime![Prime32, u32; u16, u32, u64, u128, usize, i8, i16, i32, i64, i128, isize];

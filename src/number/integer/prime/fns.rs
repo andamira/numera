@@ -1,9 +1,12 @@
 // numera::number::integer::prime::fns
 //
-//!
+//! Alternative implementations for finding primes.
 //
 
-/// Checks if a `number` is prime, by brute force.
+use core::num::NonZeroUsize;
+use primal_sieve::Sieve;
+
+/// Checks whether a `number` is prime, by brute force.
 pub fn is_prime_brute(number: u32) -> bool {
     if number <= 1 {
         return false;
@@ -29,4 +32,16 @@ pub fn nth_prime_brute(nth: u32) -> u32 {
         }
         i += 1;
     }
+}
+
+/// Checks wheter a `number` is prime, using an optimized [`Sieve`].
+#[inline]
+pub fn is_prime_sieve(number: usize) -> bool {
+    Sieve::new(number).is_prime(number)
+}
+
+/// Finds the `nth` prime number, using an optimize [`Sieve`]
+#[inline]
+pub fn nth_prime_sieve(nth: NonZeroUsize) -> usize {
+    Sieve::new(nth.get()).nth_prime(nth.get())
 }
