@@ -6,7 +6,7 @@
 use super::{Prime16, Prime32, Prime8};
 use crate::all::{
     Bound, ConstLowerBounded, ConstUpperBounded, Count, Countable, Ident, LowerBounded, NonNegOne,
-    NonOne, NonZero, Number, NumeraError, NumeraResult, Sign, Unsigned, UpperBounded,
+    NonOne, NonZero, Number, NumeraResult, Sign, Unsigned, UpperBounded,
 };
 
 /// The family of primes.
@@ -158,33 +158,3 @@ impl Sign for Primes {
     }
 }
 impl Unsigned for Primes {}
-
-/* conversions */
-
-impl From<Prime8> for Primes {
-    fn from(p: Prime8) -> Primes {
-        Primes::Prime8(p)
-    }
-}
-impl From<Prime16> for Primes {
-    fn from(p: Prime16) -> Primes {
-        Primes::Prime16(p)
-    }
-}
-impl From<Prime32> for Primes {
-    fn from(p: Prime32) -> Primes {
-        Primes::Prime32(p)
-    }
-}
-
-impl TryFrom<Primes> for Prime8 {
-    type Error = NumeraError;
-    fn try_from(value: Primes) -> NumeraResult<Prime8> {
-        use Primes::*;
-        match value {
-            Prime8(p) => Ok(p),
-            Prime16(p) => Ok(p.try_into()?),
-            Prime32(p) => Ok(p.try_into()?),
-        }
-    }
-}
