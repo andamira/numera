@@ -95,7 +95,7 @@ pub trait ConstLowerBounded: Bound {
 ///
 /// This trait is mutually exclusive with [`NonUpperBounded`].
 pub trait ConstUpperBounded: Bound {
-    /// The smallest value that can be represented with this type.
+    /// The largest value that can be represented with this type.
     const MAX: Self;
 }
 

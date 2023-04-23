@@ -79,7 +79,7 @@ mod core_impls {
     use super::{IntegerError, NumeraError, RationalError, RealError};
     use core::{
         fmt::{self, Debug},
-        num::IntErrorKind,
+        num::{IntErrorKind, TryFromIntError},
     };
 
     impl fmt::Display for NumeraError {
@@ -154,6 +154,7 @@ mod core_impls {
             NumeraError::Integer(err)
         }
     }
+
     impl From<RationalError> for NumeraError {
         fn from(err: RationalError) -> Self {
             NumeraError::Rational(err)
@@ -177,6 +178,11 @@ mod core_impls {
                 InvalidDigit => NumeraError::Other("IntErrorKind::InvalidDigit"),
                 _ => NumeraError::Other("IntErrorKind::_"),
             }
+        }
+    }
+    impl From<TryFromIntError> for NumeraError {
+        fn from(_err: TryFromIntError) -> Self {
+            IntegerError::Overflow.into()
         }
     }
 }

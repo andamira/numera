@@ -5,12 +5,16 @@
 
 use primal_sieve::Sieve;
 
-mod arrays;
+use crate::all::{NumeraError, NumeraResult};
+
+mod any;
+mod consts;
 mod fns;
 mod impl_traits;
 mod trait_prime;
 
-pub use arrays::{PRIMES_BELL, PRIMES_U16, PRIMES_U8};
+pub use any::Primes;
+pub use consts::{PRIMES_BELL, PRIMES_U16, PRIMES_U8};
 pub use fns::{is_prime_brute, nth_prime_brute};
 pub use trait_prime::Prime;
 
@@ -147,6 +151,27 @@ impl From<Prime16> for Prime32 {
         Prime32(p.0.into())
     }
 }
+
+impl TryFrom<Prime16> for Prime8 {
+    type Error = NumeraError;
+    fn try_from(value: Prime16) -> NumeraResult<Prime8> {
+        Ok(Prime8(u8::try_from(value.0)?))
+    }
+}
+impl TryFrom<Prime32> for Prime8 {
+    type Error = NumeraError;
+    fn try_from(value: Prime32) -> NumeraResult<Prime8> {
+        Ok(Prime8(u8::try_from(value.0)?))
+    }
+}
+impl TryFrom<Prime32> for Prime16 {
+    type Error = NumeraError;
+    fn try_from(value: Prime32) -> NumeraResult<Prime16> {
+        Ok(Prime16(u16::try_from(value.0)?))
+    }
+}
+
+/* primitive conversions */
 
 impl From<Prime8> for u8 {
     fn from(p: Prime8) -> u8 {
