@@ -17,7 +17,8 @@
 /// ```
 macro_rules! impl_from_integer {
     // having an inner integer primitive
-    (many_int for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $( $from_size:expr ),+) => {
+    (many_int
+     for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $( $from_size:expr ),+) => {
         $(
             impl_from_integer![int for: $for + $p + $for_size, from: $from + $from_size];
         )+
@@ -46,7 +47,8 @@ macro_rules! impl_from_integer {
         paste::paste! {
             impl From<[< $from $from_size >]> for [< $for $for_size >] {
                 fn from(from: [< $from $from_size >]) -> Self {
-                    Self::new(from.0.get().into())
+                    // SAFETY: coming from a type that respects the invariant of not having 0
+                    unsafe { Self::new_unchecked(from.0.get().into()) }
                 }
             }
         }

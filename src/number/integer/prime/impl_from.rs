@@ -126,6 +126,9 @@ macro_rules! try_from_primitive_to_prime {
         }
     };
 }
-try_from_primitive_to_prime![Prime8, u8; u16, u32, u64, u128, usize, i8, i16, i32, i64, i128, isize];
-try_from_primitive_to_prime![Prime16, u16; u16, u32, u64, u128, usize, i8, i16, i32, i64, i128, isize];
-try_from_primitive_to_prime![Prime32, u32; u16, u32, u64, u128, usize, i8, i16, i32, i64, i128, isize];
+try_from_primitive_to_prime![Prime8,
+    u8; u16, u32, u64, u128, usize, i8, i16, i32, i64, i128, isize];
+try_from_primitive_to_prime![Prime16,
+    u16; u16, u32, u64, u128, usize, i8, i16, i32, i64, i128, isize];
+try_from_primitive_to_prime![Prime32,
+    u32; u16, u32, u64, u128, usize, i8, i16, i32, i64, i128, isize];

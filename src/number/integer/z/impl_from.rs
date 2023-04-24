@@ -1,4 +1,4 @@
-// numera::integer::z::impl_from
+// numera::number::integer::z::impl_from
 //
 //!
 //
@@ -6,6 +6,7 @@
 use crate::number::{
     integer::{
         macros::{impl_from_integer, impl_from_primitive},
+        n0z::*,
         z::*,
     },
     traits::Number,
@@ -28,13 +29,13 @@ impl_from_integer![many_int for: Integer + i + 32, from: Integer + 8, 16];
 impl_from_integer![many_int for: Integer + i + 64, from: Integer + 8, 16, 32];
 impl_from_integer![many_int for: Integer + i + 128, from: Integer + 8, 16, 32, 64];
 
+impl_from_integer![many_nonzero for: Integer + i + 8, from: NonZeroInteger + 8];
+impl_from_integer![many_nonzero for: Integer + i + 16, from: NonZeroInteger + 8, 16];
+impl_from_integer![many_nonzero for: Integer + i + 32, from: NonZeroInteger + 8, 16, 32];
+impl_from_integer![many_nonzero for: Integer + i + 128, from: NonZeroInteger + 8, 16, 32, 64, 128];
+
 // TODO
 
-// impl_from![int_nonzero for: Integer + i + 8, from: NonZeroInteger + 8];
-// impl_from![int_nonzero for: Integer + i + 16, from: NonZeroInteger + 8, 16];
-// impl_from![int_nonzero for: Integer + i + 32, from: NonZeroInteger + 8, 16, 32];
-// impl_from![int_nonzero for: Integer + i + 128, from: NonZeroInteger + 8, 16, 32, 64, 128];
-//
 // impl_from![int for: Integer + i + 16, from: NonNegativeInteger + 8];
 // impl_from![int for: Integer + i + 32, from: NonNegativeInteger + 8, 16];
 // impl_from![int for: Integer + i + 64, from: NonNegativeInteger + 8, 16, 32];

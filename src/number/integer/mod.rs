@@ -19,8 +19,7 @@ pub mod prime;
 mod trait_integer;
 mod z;
 
-// mod n0z;
-// pub use n0z::NonZeroInteger8;
+mod n0z;
 
 // mod nnz;
 // mod nz;
@@ -35,6 +34,7 @@ pub(crate) mod all {
         prime::*,
         trait_integer::Integer,
         z::{Integer128, Integer16, Integer32, Integer64, Integer8},
+        n0z::{NonZeroInteger128, NonZeroInteger16, NonZeroInteger32, NonZeroInteger64, NonZeroInteger8},
     };
 
     #[cfg(feature = "ibig")]

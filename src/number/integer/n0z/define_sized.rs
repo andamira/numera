@@ -1,4 +1,4 @@
-// numera::number::integer::z::define_sized
+// numera::number::integer::n0z::define_sized
 //
 //!
 //
@@ -7,15 +7,16 @@
 // - macro
 //   - define_integer_sized
 // - definitions
-//   - Integer[8|16|32|64|128]
+//   - NonZeroInteger[8|16|32|64|128]
 
 use crate::{
     error::{IntegerError, NumeraResult as Result},
     number::traits::{
-        Bound, ConstLowerBounded, ConstNegOne, ConstOne, ConstUpperBounded, ConstZero, Count,
-        Countable, Ident, LowerBounded, NegOne, Number, One, Sign, Signed, UpperBounded, Zero,
+        Bound, ConstLowerBounded, ConstNegOne, ConstOne, ConstUpperBounded, Count, Countable,
+        Ident, LowerBounded, NegOne, NonZero, Number, One, Sign, Signed, UpperBounded,
     },
 };
+use core::num::{NonZeroI128, NonZeroI16, NonZeroI32, NonZeroI64, NonZeroI8};
 
 /* macro */
 
@@ -63,7 +64,7 @@ macro_rules! define_integer_sized {
                 $doc_sign "$[`" $p$bsize "::" $doc_lower "`] $\\dots$ [`" $p$bsize
                 "::" $doc_upper "`] $\\rbrack$."]
 
-            #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, PartialOrd, Ord)]
+            #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
             pub struct [<$name$bsize>](pub(crate) [< $p$bsize >]);
 
             /* sign */
@@ -71,8 +72,8 @@ macro_rules! define_integer_sized {
             impl Sign for [<$name$bsize>] {
                 fn can_negative(&self) -> bool { true }
                 fn can_positive(&self) -> bool { true }
-                fn is_negative(&self) -> bool { self.0.is_negative() }
-                fn is_positive(&self) -> bool { self.0.is_positive() }
+                fn is_negative(&self) -> bool { self.0.get().is_negative() }
+                fn is_positive(&self) -> bool { self.0.get().is_positive() }
             }
             impl Signed for [<$name$bsize>] {}
 
@@ -82,10 +83,14 @@ macro_rules! define_integer_sized {
                 fn is_lower_bounded(&self) -> bool { true }
                 fn is_upper_bounded(&self) -> bool { true }
                 fn lower_bound(&self) -> Option<Self> where Self: Sized {
-                    Some(Self([<$p$bsize>]::MIN))
+                    // IMPROVE WAIT for https://github.com/rust-lang/rust/pull/106633 1.70
+                    // Some(Self([<$p$bsize>]::MIN))
+                    Some(Self(unsafe {[<$p$bsize>]::new_unchecked([<i$bsize>]::MIN) }))
                 }
                 fn upper_bound(&self) -> Option<Self> where Self: Sized {
-                    Some(Self([<$p$bsize>]::MAX))
+                    // IMPROVE WAIT for https://github.com/rust-lang/rust/pull/106633 1.70
+                    // Some(Self([<$p$bsize>]::MAX))
+                    Some(Self(unsafe {[<$p$bsize>]::new_unchecked([<i$bsize>]::MAX) }))
                 }
             }
             impl LowerBounded for [<$name$bsize>] {
@@ -95,10 +100,14 @@ macro_rules! define_integer_sized {
                 fn new_max() -> Self { <Self as ConstUpperBounded>::MAX }
             }
             impl ConstLowerBounded for [<$name$bsize>] {
-                const MIN: Self = Self([<$p$bsize>]::MIN);
+                // IMPROVE WAIT for https://github.com/rust-lang/rust/pull/106633 1.70
+                // const MIN: Self = Self([<$p$bsize>]::MIN);
+                const MIN: Self = Self(unsafe {[<$p$bsize>]::new_unchecked([<i$bsize>]::MIN) });
             }
             impl ConstUpperBounded for [<$name$bsize>] {
-                const MAX: Self = Self([<$p$bsize>]::MAX);
+                // IMPROVE WAIT for https://github.com/rust-lang/rust/pull/106633 1.70
+                // const MAX: Self = Self([<$p$bsize>]::MAX);
+                const MAX: Self = Self(unsafe {[<$p$bsize>]::new_unchecked([<i$bsize>]::MAX) });
             }
 
             /* count */
@@ -108,31 +117,62 @@ macro_rules! define_integer_sized {
             }
 
             impl Countable for [<$name$bsize>] {
+                /// Returns the next countable value, skipping 0.
+                ///
+                /// # Errors
+                /// Errors if the operation results in overflow.
                 fn next(&self) -> Result<Self> {
-                    Ok(Self(self.0.checked_add(1).ok_or(IntegerError::Overflow)?))
+                    let mut next = self.0.get().checked_add(1).ok_or(IntegerError::Overflow)?;
+                    if next == 0 {
+                        next = 1;
+                    }
+                    Ok(Self(unsafe { [<$p$bsize>]::new_unchecked(next) }))
                 }
+                /// Returns the previous countable value, skipping 0.
+                ///
+                /// # Errors
+                /// Errors if the operation results in underflow.
                 fn previous(&self) -> Result<Self> {
-                    Ok(Self(self.0.checked_sub(1).ok_or(IntegerError::Underflow)?))
+                    let mut prev = self.0.get().checked_sub(1).ok_or(IntegerError::Underflow)?;
+                    if prev == 0 {
+                        prev = -1;
+                    }
+                    Ok(Self(unsafe { [<$p$bsize>]::new_unchecked(prev) }))
                 }
             }
 
             /* ident */
 
             impl Ident for [<$name$bsize>] {
-                fn can_zero(&self) -> bool { true }
+                fn can_zero(&self) -> bool { false }
                 fn can_one(&self) -> bool { true }
                 fn can_neg_one(&self) -> bool { true }
 
-                fn is_zero(&self) -> bool { self.0 == 0 }
-                fn is_one(&self) -> bool { self.0 == 1 }
-                fn is_neg_one(&self) -> bool { self.0 == -1 }
+                fn is_zero(&self) -> bool { false }
+                fn is_one(&self) -> bool { self.0.get() == 1 }
+                fn is_neg_one(&self) -> bool { self.0.get() == -1 }
             }
-            impl ConstZero for [<$name$bsize>] { const ZERO: Self = Self(0); }
-            impl Zero for [<$name$bsize>] { fn new_zero() -> Self { Self(0) } }
-            impl ConstOne for [<$name$bsize>] { const ONE: Self = Self(1); }
-            impl One for [<$name$bsize>] { fn new_one() -> Self { Self(1) } }
-            impl ConstNegOne for [<$name$bsize>] { const NEG_ONE: Self = Self(-1); }
-            impl NegOne for [<$name$bsize>] { fn new_neg_one() -> Self { Self(-1) } }
+            impl NonZero for [<$name$bsize>] {}
+            impl ConstOne for [<$name$bsize>] {
+                // SAFETY: constant value
+                const ONE: Self = Self(unsafe { [<$p$bsize>]::new_unchecked(1) });
+            }
+            impl One for [<$name$bsize>] {
+                fn new_one() -> Self {
+                    // SAFETY: constant value
+                    Self(unsafe { [<$p$bsize>]::new_unchecked(1) })
+                }
+            }
+            impl ConstNegOne for [<$name$bsize>] {
+                // SAFETY: constant value
+                const NEG_ONE: Self = Self(unsafe { [<$p$bsize>]::new_unchecked(-1) });
+            }
+            impl NegOne for [<$name$bsize>] {
+                fn new_neg_one() -> Self {
+                    // SAFETY: constant value
+                    Self(unsafe { [<$p$bsize>]::new_unchecked(-1) })
+                }
+            }
 
             /* number */
 
@@ -152,8 +192,8 @@ pub(crate) use define_integer_sized;
 
 /* definitions */
 
-define_integer_sized![multi Integer, i,
-    "integer number", ", from the set $\\Z$.",
+define_integer_sized![multi NonZeroInteger, NonZeroI,
+    "integer number", ", from the set $\\Z \\setminus 0$.",
     // "",
     "", MIN, MAX,
     ("An", 8), ("A", 16), ("A", 32), ("A", 64), ("A", 128)

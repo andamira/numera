@@ -1,4 +1,4 @@
-// numera::integer::z
+// numera::number::integer::z
 //
 //! $\Z$
 //
