@@ -85,8 +85,6 @@ macro_rules! define_integers {
             type Inner = Self;
             fn new(value: Integers) -> Result<Self> { Ok(value) }
             unsafe fn new_unchecked(value: Integers) -> Self { value }
-            fn into_inner(self) -> Self::Inner { self }
-            fn ref_inner(&self) -> &Self::Inner { &self }
         }
 
         /// This implementation defers to the actual integer variant.

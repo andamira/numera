@@ -46,14 +46,6 @@ pub trait Number: Bound + Count + Ident + Sign {
     /// # Safety
     /// The invariants inherent to the specific number type must be maintained.
     unsafe fn new_unchecked(value: Self::Inner) -> Self;
-
-    /* inner */
-
-    /// Returns the inner value representation.
-    fn into_inner(self) -> Self::Inner;
-
-    /// Returns a shared reference to the inner value representation.
-    fn ref_inner(&self) -> &Self::Inner;
 }
 
 /* macros */
@@ -71,10 +63,6 @@ macro_rules! impl_number {
             fn new(value: $t) -> Result<Self> { Ok(value) }
             #[inline]
             unsafe fn new_unchecked(value: Self::Inner) -> Self { value }
-            #[inline]
-            fn into_inner(self) -> Self::Inner { self }
-            #[inline]
-            fn ref_inner(&self) -> &Self::Inner { &self }
         }
     };
 }

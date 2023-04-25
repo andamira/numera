@@ -148,12 +148,6 @@ impl Number for Prime8 {
     unsafe fn new_unchecked(value: Self::Inner) -> Self {
         Self(value)
     }
-    fn into_inner(self) -> Self::Inner {
-        self.0
-    }
-    fn ref_inner(&self) -> &Self::Inner {
-        &self.0
-    }
 }
 
 /* Prime16 */
@@ -313,12 +307,6 @@ impl Number for Prime16 {
     unsafe fn new_unchecked(value: Self::Inner) -> Self {
         Self(value)
     }
-    fn into_inner(self) -> Self::Inner {
-        self.0
-    }
-    fn ref_inner(&self) -> &Self::Inner {
-        &self.0
-    }
 }
 
 /* Prime32 */
@@ -477,11 +465,5 @@ impl Number for Prime32 {
     }
     unsafe fn new_unchecked(value: Self::Inner) -> Self {
         Self(value)
-    }
-    fn into_inner(self) -> Self::Inner {
-        self.0
-    }
-    fn ref_inner(&self) -> &Self::Inner {
-        &self.0
     }
 }

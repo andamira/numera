@@ -30,12 +30,6 @@ impl Number for Primes {
     unsafe fn new_unchecked(value: Primes) -> Self {
         value
     }
-    fn into_inner(self) -> Self::Inner {
-        self
-    }
-    fn ref_inner(&self) -> &Self::Inner {
-        self
-    }
 }
 
 /// This implementation defers to the actual integer variant.

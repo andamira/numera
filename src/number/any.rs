@@ -74,8 +74,6 @@ macro_rules! define_numbers {
             // unsafe fn new_unchecked(value: Numbers<N>) -> Self { value }
             fn new(value: AnyNumbers<N>) -> Result<Self> { Ok(value) }
             unsafe fn new_unchecked(value: AnyNumbers<N>) -> Self { value }
-            fn into_inner(self) -> Self::Inner { self }
-            fn ref_inner(&self) -> &Self::Inner { &self } // MAYBE DELETE
         }
 
         /// This implementation defers to the actual number variant.

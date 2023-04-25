@@ -131,12 +131,4 @@ impl Number for IntegerBig {
     unsafe fn new_unchecked(value: Self::Inner) -> Self {
         Self(value)
     }
-
-    fn into_inner(self) -> Self::Inner {
-        self.0
-    }
-
-    fn ref_inner(&self) -> &Self::Inner {
-        &self.0
-    }
 }

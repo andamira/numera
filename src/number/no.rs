@@ -14,8 +14,6 @@ impl Number for () {
 
     fn new(value: ()) -> Result<Self> { Ok(value) }
     unsafe fn new_unchecked(value: ()) -> Self { value }
-    fn into_inner(self) -> Self::Inner { }
-    fn ref_inner(&self) -> &Self::Inner { &() }
 }
 #[rustfmt::skip]
 impl Bound for () {
