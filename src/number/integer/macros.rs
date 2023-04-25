@@ -12,7 +12,7 @@
 /// - `$p`:
 ///
 /// # Examples
-/// ```e.g.
+/// ```ignore
 /// impl_from_integer![many_int for: Integer + i + 32, from: Integer + 8, 16];
 /// ```
 macro_rules! impl_from_integer {
@@ -96,10 +96,13 @@ pub(crate) use impl_from_integer;
 /// Implements From<`$from_p $from_size`> for `$for$for_size`.
 ///
 /// # Args
-/// - $for:
+/// - `$for`:       the base name of the target. e.g. `NonZeroInteger`.
+/// - `$for_size`:  the bit size of the target. e.g. `16`.
+/// - `$from_p`:    the base name of the origin. e.g. `u`.
+/// - `$from_size`: a list of bit sizes of the origin. e.g. `8, 16`.
 ///
 /// # Examples
-/// ```e.g.
+/// ```ignore
 /// impl_from_primitive![many for: Integer + 16, from: u + 8];
 /// impl_from_primitive![many for: Integer + 16, from: i + 8, 16];
 /// ```

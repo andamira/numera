@@ -5,7 +5,7 @@
 // TOC
 //
 // - macro
-//   - define_integer_sized
+//   - define_nonzero_integer_sized
 // - definitions
 //   - NonZeroInteger[8|16|32|64|128]
 
@@ -39,14 +39,14 @@ use core::num::{NonZeroI128, NonZeroI16, NonZeroI32, NonZeroI64, NonZeroI8};
 ///
 /// - `$doc_det`: the determinant before the bit size. e.g. "An" (8-bit) or "A" 16-bit.
 /// - `$bsize`: the size in bits of the primitive used.
-macro_rules! define_integer_sized {
+macro_rules! define_nonzero_integer_sized {
     // defines multiple integer types, with an inner primitive.
     (multi $name:ident, $p:ident,
      $doc_num:literal, $doc_type:literal, // $doc_new:literal,
      $sign:literal, $lower:expr, $upper:expr,
      $(($det:literal,$bsize:expr)),+) => {
         $(
-            define_integer_sized![single $name, $p,
+            define_nonzero_integer_sized![single $name, $p,
                $doc_num, $doc_type, // $doc_new,
                $sign, $lower, $upper,
                ($det,$bsize)];
@@ -59,10 +59,10 @@ macro_rules! define_integer_sized {
      ($doc_det:literal,$bsize:expr)) => {
 
         paste::paste! {
-            #[doc = $doc_det " "$bsize "-bit " $doc_num " " $doc_type]
-            #[doc = "\n\nThe range of valid numeric values is $\\lbrack"
-                $doc_sign "$[`" $p$bsize "::" $doc_lower "`] $\\dots$ [`" $p$bsize
-                "::" $doc_upper "`] $\\rbrack$."]
+            #[doc = $doc_det " "$bsize "-bit " $doc_num $doc_type]
+            #[doc = "\n\nThe range of valid numeric values is $\\lbrack" $doc_sign
+            "$[`" i$bsize "::" $doc_lower "`] $\\dots$ -1, 1 $\\dots$ [`" i$bsize
+            "::" $doc_upper "`]$\\rbrack$."]
 
             #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
             pub struct [<$name$bsize>](pub(crate) [< $p$bsize >]);
@@ -188,11 +188,11 @@ macro_rules! define_integer_sized {
         }
     };
 }
-pub(crate) use define_integer_sized;
+pub(crate) use define_nonzero_integer_sized;
 
 /* definitions */
 
-define_integer_sized![multi NonZeroInteger, NonZeroI,
+define_nonzero_integer_sized![multi NonZeroInteger, NonZeroI,
     "integer number", ", from the set $\\Z \\setminus 0$.",
     // "",
     "", MIN, MAX,

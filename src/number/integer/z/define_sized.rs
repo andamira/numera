@@ -58,10 +58,10 @@ macro_rules! define_integer_sized {
      ($doc_det:literal,$bsize:expr)) => {
 
         paste::paste! {
-            #[doc = $doc_det " "$bsize "-bit " $doc_num " " $doc_type]
+            #[doc = $doc_det " "$bsize "-bit " $doc_num $doc_type]
             #[doc = "\n\nThe range of valid numeric values is $\\lbrack"
-                $doc_sign "$[`" $p$bsize "::" $doc_lower "`] $\\dots$ [`" $p$bsize
-                "::" $doc_upper "`] $\\rbrack$."]
+            $doc_sign "$[`" $p$bsize "::" $doc_lower "`] $\\dots$ [`"
+            $p$bsize "::" $doc_upper "`]$\\rbrack$."]
 
             #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, PartialOrd, Ord)]
             pub struct [<$name$bsize>](pub(crate) [< $p$bsize >]);
