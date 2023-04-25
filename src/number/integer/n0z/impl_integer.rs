@@ -8,7 +8,6 @@ use super::{
 };
 use crate::number::{integer::Integer, traits::Number};
 use az::CheckedAs;
-use core::num::{NonZeroI128, NonZeroI16, NonZeroI32, NonZeroI64, NonZeroI8};
 
 #[cfg(not(feature = "std"))]
 use crate::all::is_prime_brute;
@@ -47,17 +46,15 @@ macro_rules! impl_nonzero_integer {
                     a = temp;
                 }
                 // SAFETY: it can't be 0
-                unsafe { $t::new_unchecked($inner::new_unchecked(a)) }
+                unsafe { $t::new_unchecked(a) }
             }
             #[inline]
             fn lcm(&self, other: &Self) -> Self {
                 // SAFETY: it can't be 0
                 unsafe {
                     $t::new_unchecked(
-                        $inner::new_unchecked(
-                            self.0.get() * other.0.get() /
-                            self.0.get().gcd(&other.0.get())
-                        )
+                        self.0.get() * other.0.get() /
+                        self.0.get().gcd(&other.0.get())
                     )
                 }
 
@@ -90,10 +87,10 @@ mod tests {
 
     #[test]
     fn lcm_gcd() {
-        let z10: Integer32 = 10.into();
-        let z15: Integer32 = 15.into();
+        let n0z10 = NonZeroInteger32::new(10).unwrap();
+        let n0z15 = NonZeroInteger32::new(15).unwrap();
 
-        assert_eq![Integer32::new(30).unwrap(), z10.lcm(&z15)];
-        assert_eq![Integer32::new(5).unwrap(), z10.gcd(&z15)];
+        assert_eq![NonZeroInteger32::new(30).unwrap(), n0z10.lcm(&n0z15)];
+        assert_eq![NonZeroInteger32::new(5).unwrap(), n0z10.gcd(&n0z15)];
     }
 }

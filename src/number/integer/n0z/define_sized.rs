@@ -177,10 +177,14 @@ macro_rules! define_nonzero_integer_sized {
             /* number */
 
             impl Number for [<$name$bsize>] {
-                type Inner = [<$p$bsize>];
+                type Inner = [<i$bsize>];
 
-                fn new(value: Self::Inner) -> Result<Self> { Ok(Self(value)) }
-                unsafe fn new_unchecked(value: Self::Inner) -> Self { Self(value) }
+                fn new(value: Self::Inner) -> Result<Self> {
+                    Ok(Self([<$p$bsize>]::new(value).ok_or(IntegerError::Zero)?))
+                }
+                unsafe fn new_unchecked(value: Self::Inner) -> Self {
+                    Self([<$p$bsize>]::new_unchecked(value))
+                }
             }
         }
     };
