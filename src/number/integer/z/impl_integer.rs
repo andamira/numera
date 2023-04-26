@@ -58,7 +58,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn lcm_gcd() {
+    fn z_lcm_gcd() {
         let z10: Integer32 = 10.into();
         let z15: Integer32 = 15.into();
 

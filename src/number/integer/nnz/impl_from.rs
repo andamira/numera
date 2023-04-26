@@ -7,9 +7,11 @@ use crate::number::{
     integer::{
         macros::{impl_from_integer, impl_from_primitive},
         nnz::*,
+        pz::*,
     },
     traits::Number,
 };
+use core::num::{NonZeroU128, NonZeroU16, NonZeroU32, NonZeroU64, NonZeroU8};
 
 /* from smaller or equal unsigned primitive */
 impl_from_primitive![many for: NonNegativeInteger + 8, from: u + 8];
@@ -17,6 +19,18 @@ impl_from_primitive![many for: NonNegativeInteger + 16, from: u + 8, 16];
 impl_from_primitive![many for: NonNegativeInteger + 32, from: u + 8, 16, 32];
 impl_from_primitive![many for: NonNegativeInteger + 64, from: u + 8, 16, 32, 64];
 impl_from_primitive![many for: NonNegativeInteger + 128, from: u + 8, 16, 32, 64, 128];
+
+/* from smaller or equal nonzero primitive */
+impl_from_primitive![many_nonzero
+    for: NonNegativeInteger + 8, from: NonZeroU + 8];
+impl_from_primitive![many_nonzero
+    for: NonNegativeInteger + 16, from: NonZeroU + 8, 16];
+impl_from_primitive![many_nonzero
+    for: NonNegativeInteger + 32, from: NonZeroU + 8, 16, 32];
+impl_from_primitive![many_nonzero
+    for: NonNegativeInteger + 64, from: NonZeroU + 8, 16, 32, 64];
+impl_from_primitive![many_nonzero
+    for: NonNegativeInteger + 128, from: NonZeroU + 8, 16, 32, 64, 128];
 
 /* from smaller sized NonNegativeInteger */
 impl_from_integer![many_int
@@ -28,12 +42,17 @@ impl_from_integer![many_int
 impl_from_integer![many_int
     for: NonNegativeInteger + u + 128, from: NonNegativeInteger + 8, 16, 32, 64];
 
-// TODO
-
-// impl_from![int_nonzero for: NonNegativeInteger + u + 16, from: PositiveInteger + 8];
-// impl_from![int_nonzero for: NonNegativeInteger + u + 32, from: PositiveInteger + 8, 16];
-// impl_from![int_nonzero for: NonNegativeInteger + u + 64, from: PositiveInteger + 8, 16, 32];
-// impl_from![int_nonzero for: NonNegativeInteger + u + 128, from: PositiveInteger + 8, 16, 32, 64];
+/* from smaller or equal sized NonNegativeInteger */
+impl_from_integer![many_nonzero
+    for: NonNegativeInteger + u + 8, from: PositiveInteger + 8];
+impl_from_integer![many_nonzero
+    for: NonNegativeInteger + u + 16, from: PositiveInteger + 8, 16];
+impl_from_integer![many_nonzero
+    for: NonNegativeInteger + u + 32, from: PositiveInteger + 8, 16, 32];
+impl_from_integer![many_nonzero
+    for: NonNegativeInteger + u + 64, from: PositiveInteger + 8, 16, 32, 64];
+impl_from_integer![many_nonzero
+    for: NonNegativeInteger + u + 128, from: PositiveInteger + 8, 16, 32, 64, 128];
 
 #[cfg(test)]
 mod tests {

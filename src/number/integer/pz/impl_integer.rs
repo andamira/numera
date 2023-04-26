@@ -1,4 +1,4 @@
-// numera::number::integer::n0z::impl_integer
+// numera::number::integer::pz::impl_integer
 //
 //!
 //
@@ -67,16 +67,16 @@ macro_rules! impl_nonzero_integer {
 }
 
 impl_nonzero_integer![
-    many: NonZeroInteger8,
-    NonZeroI8,
-    NonZeroInteger16,
-    NonZeroI16,
-    NonZeroInteger32,
-    NonZeroI32,
-    NonZeroInteger64,
-    NonZeroI64,
-    NonZeroInteger128,
-    NonZeroI128
+    many: PositiveInteger8,
+    NonZeroU8,
+    PositiveInteger16,
+    NonZeroU16,
+    PositiveInteger32,
+    NonZeroU32,
+    PositiveInteger64,
+    NonZeroU64,
+    PositiveInteger128,
+    NonZeroU128
 ];
 
 #[cfg(test)]
@@ -84,11 +84,11 @@ mod tests {
     use super::*;
 
     #[test]
-    fn n0z_lcm_gcd() {
-        let n0z10 = NonZeroInteger32::new(10).unwrap();
-        let n0z15 = NonZeroInteger32::new(15).unwrap();
+    fn pz_lcm_gcd() {
+        let pz10 = PositiveInteger32::new(10).unwrap();
+        let pz15 = PositiveInteger32::new(15).unwrap();
 
-        assert_eq![NonZeroInteger32::new(30).unwrap(), n0z10.lcm(&n0z15)];
-        assert_eq![NonZeroInteger32::new(5).unwrap(), n0z10.gcd(&n0z15)];
+        assert_eq![PositiveInteger32::new(30).unwrap(), pz10.lcm(&pz15)];
+        assert_eq![PositiveInteger32::new(5).unwrap(), pz10.gcd(&pz15)];
     }
 }

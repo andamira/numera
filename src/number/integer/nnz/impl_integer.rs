@@ -64,11 +64,11 @@ mod tests {
     use super::*;
 
     #[test]
-    fn lcm_gcd() {
-        let z10: NonNegativeInteger32 = 10_u32.into();
-        let z15: NonNegativeInteger32 = 15_u32.into();
+    fn nnz_lcm_gcd() {
+        let nnz10: NonNegativeInteger32 = 10_u32.into();
+        let nnz15: NonNegativeInteger32 = 15_u32.into();
 
-        assert_eq![NonNegativeInteger32::new(30).unwrap(), z10.lcm(&z15)];
-        assert_eq![NonNegativeInteger32::new(5).unwrap(), z10.gcd(&z15)];
+        assert_eq![NonNegativeInteger32::new(30).unwrap(), nnz10.lcm(&nnz15)];
+        assert_eq![NonNegativeInteger32::new(5).unwrap(), nnz10.gcd(&nnz15)];
     }
 }

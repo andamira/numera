@@ -8,6 +8,7 @@ use crate::number::{
         macros::{impl_from_integer, impl_from_primitive},
         n0z::*,
         nnz::*,
+        pz::*,
         z::*,
     },
     traits::Number,
@@ -42,13 +43,12 @@ impl_from_integer![many_int for: Integer + i + 32, from: NonNegativeInteger + 8,
 impl_from_integer![many_int for: Integer + i + 64, from: NonNegativeInteger + 8, 16, 32];
 impl_from_integer![many_int for: Integer + i + 128, from: NonNegativeInteger + 8, 16, 32, 64];
 
-// TODO
+/* from smaller sized PositiveInteger */
+impl_from_integer![many_nonzero for: Integer + i + 16, from: PositiveInteger + 8];
+impl_from_integer![many_nonzero for: Integer + i + 32, from: PositiveInteger + 8, 16];
+impl_from_integer![many_nonzero for: Integer + i + 64, from: PositiveInteger + 8, 16, 32];
+impl_from_integer![many_nonzero for: Integer + i + 128, from: PositiveInteger + 8, 16, 32, 64];
 
-// impl_from![int_nonzero for: Integer + i + 16, from: PositiveInteger + 8];
-// impl_from![int_nonzero for: Integer + i + 32, from: PositiveInteger + 8, 16];
-// impl_from![int_nonzero for: Integer + i + 64, from: PositiveInteger + 8, 16, 32];
-// impl_from![int_nonzero for: Integer + i + 128, from: PositiveInteger + 8, 16, 32, 64];
-//
 // impl_from![many_neg for: Integer + i + 16, from: NonPositiveInteger + 8];
 // impl_from![many_neg for: Integer + i + 32, from: NonPositiveInteger + 8, 16];
 // impl_from![many_neg for: Integer + i + 64, from: NonPositiveInteger + 8, 16, 32];

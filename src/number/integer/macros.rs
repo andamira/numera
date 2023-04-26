@@ -32,6 +32,7 @@ macro_rules! impl_from_integer {
         paste::paste! {
             impl From<[< $from $from_size >]> for [< $for $for_size >] {
                 fn from(from: [< $from $from_size >]) -> Self {
+                    // TODO: safe/unsafe
                     // SAFETY
                     unsafe { Self::new_unchecked(from.0.into()) }
                 }
@@ -51,6 +52,7 @@ macro_rules! impl_from_integer {
         paste::paste! {
             impl From<[< $from $from_size >]> for [< $for $for_size >] {
                 fn from(from: [< $from $from_size >]) -> Self {
+                    // TODO: safe/unsafe
                     // SAFETY: coming from a type that respects the invariant of not having 0
                     unsafe { Self::new_unchecked(from.0.get().into()) }
                 }
@@ -111,6 +113,7 @@ pub(crate) use impl_from_integer;
 /// impl_from_primitive![many for: Integer + 16, from: i + 8, 16];
 /// ```
 macro_rules! impl_from_primitive {
+    // having the same inner integer primitive
     (many
      for: $for:ident + $for_size:expr,
      from: $from_p:ident + $( $from_size:expr ),+
@@ -127,7 +130,32 @@ macro_rules! impl_from_primitive {
         paste::paste! {
             impl From<[< $from_p $from_size >]> for [< $for $for_size >] {
                 fn from(from: [< $from_p $from_size >]) -> Self {
+                    // TODO: safe/unsafe
                     Self::new(from.into()).unwrap()
+                }
+            }
+        }
+    };
+
+    (many_nonzero
+     for: $for:ident + $for_size:expr,
+     from: $from_p:ident + $( $from_size:expr ),+
+    ) => {
+        $(
+            impl_from_primitive![nonzero for: $for + $for_size, from: $from_p + $from_size];
+        )+
+    };
+
+    // having to convert from nonzero to core primitive
+    (nonzero
+     for: $for:ident + $for_size:expr,
+     from: $from_p:ident + $from_size:expr
+    ) => {
+        paste::paste! {
+            impl From<[< $from_p $from_size >]> for [< $for $for_size >] {
+                fn from(from: [< $from_p $from_size >]) -> Self {
+                    // TODO: safe/unsafe
+                    Self::new(from.get().into()).unwrap()
                 }
             }
         }
