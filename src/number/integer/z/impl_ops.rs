@@ -67,3 +67,31 @@ macro_rules! impl_integer_ops {
     };
 }
 impl_integer_ops![Integer8, Integer16, Integer32, Integer64, Integer128];
+
+#[cfg(test)]
+mod tests {
+    use crate::all::*;
+
+    #[test]
+    fn z_ops() -> NumeraResult<()> {
+        let _5 = Integer8::new(5)?;
+        let _7 = Integer8::new(7)?;
+        assert_eq![_7 + _5, Integer8::new(12)?];
+        assert_eq![_7 - _5, Integer8::new(2)?];
+        assert_eq![_5 - _7, Integer8::new(-2)?];
+        assert_eq![_7 * _5, Integer8::new(35)?];
+        assert_eq![_7 / _5, Integer8::new(1)?];
+        assert_eq![_5 / _7, Integer8::new(0)?];
+        assert_eq![-_7, Integer8::new(-7)?];
+
+        #[cfg(feature = "std")]
+        {
+            use std::panic::catch_unwind;
+            // overflow
+            assert![catch_unwind(|| _7 * _7 * _7).is_err()];
+            // underflow
+            assert![catch_unwind(|| Integer8::MIN - _5).is_err()];
+        }
+        Ok(())
+    }
+}

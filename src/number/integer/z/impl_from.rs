@@ -55,3 +55,31 @@ impl_from_integer![many_nonzero for: Integer + i + 128, from: NonZeroInteger + 8
 // impl_from![int_nonzero_neg for: Integer + i + 32, from: NegativeInteger + 8, 16];
 // impl_from![int_nonzero_neg for: Integer + i + 64, from: NegativeInteger + 8, 16, 32];
 // impl_from![int_nonzero_neg for: Integer + i + 128, from: NegativeInteger + 8, 16, 32, 64];
+
+#[cfg(test)]
+mod tests {
+    use crate::all::*;
+
+    #[test]
+    fn z_from() -> NumeraResult<()> {
+        let _5 = Integer8::new(5)?;
+        // 3 ways:
+        assert_eq![<i8 as Into<Integer8>>::into(5), _5];
+        assert_eq![Into::<Integer8>::into(5), _5];
+        assert_eq![_5, 5.into()];
+
+        /* from primitive */
+        assert_eq![Integer16::new(100)?, 100_u8.into()];
+        assert_eq![Integer16::new(100)?, 100_i16.into()];
+
+        /* from smaller Integer */
+        assert_eq![Integer16::new(100)?, Integer8::new(100)?.into()];
+        assert_eq![Integer32::new(100)?, Integer8::new(100)?.into()];
+        assert_eq![Integer32::new(100)?, Integer16::new(100)?.into()];
+        // ...
+        assert_eq![Integer128::new(100)?, Integer8::new(100)?.into()];
+        assert_eq![Integer128::new(100)?, Integer64::new(100)?.into()];
+
+        Ok(())
+    }
+}
