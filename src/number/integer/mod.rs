@@ -17,11 +17,11 @@ pub(crate) mod macros;
 mod any;
 pub mod prime;
 mod trait_integer;
-mod z;
 
 mod n0z;
+mod nnz;
+mod z;
 
-// mod nnz;
 // mod nz;
 // mod npz;
 // mod pz;
@@ -31,10 +31,17 @@ pub(crate) mod all {
     #[doc(inline)]
     pub use super::{
         any::Integers,
+        n0z::{
+            NonZeroInteger128, NonZeroInteger16, NonZeroInteger32, NonZeroInteger64,
+            NonZeroInteger8,
+        },
+        nnz::{
+            NonNegativeInteger128, NonNegativeInteger16, NonNegativeInteger32,
+            NonNegativeInteger64, NonNegativeInteger8,
+        },
         prime::*,
         trait_integer::Integer,
         z::{Integer128, Integer16, Integer32, Integer64, Integer8},
-        n0z::{NonZeroInteger128, NonZeroInteger16, NonZeroInteger32, NonZeroInteger64, NonZeroInteger8},
     };
 
     #[cfg(feature = "ibig")]

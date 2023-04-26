@@ -7,6 +7,7 @@ use crate::number::{
     integer::{
         macros::{impl_from_integer, impl_from_primitive},
         n0z::*,
+        nnz::*,
         z::*,
     },
     traits::Number,
@@ -29,32 +30,34 @@ impl_from_integer![many_int for: Integer + i + 32, from: Integer + 8, 16];
 impl_from_integer![many_int for: Integer + i + 64, from: Integer + 8, 16, 32];
 impl_from_integer![many_int for: Integer + i + 128, from: Integer + 8, 16, 32, 64];
 
+/* from smaller or equal sized NonZeroInteger */
 impl_from_integer![many_nonzero for: Integer + i + 8, from: NonZeroInteger + 8];
 impl_from_integer![many_nonzero for: Integer + i + 16, from: NonZeroInteger + 8, 16];
 impl_from_integer![many_nonzero for: Integer + i + 32, from: NonZeroInteger + 8, 16, 32];
 impl_from_integer![many_nonzero for: Integer + i + 128, from: NonZeroInteger + 8, 16, 32, 64, 128];
 
+/* from smaller sized NonNegativeInteger */
+impl_from_integer![many_int for: Integer + i + 16, from: NonNegativeInteger + 8];
+impl_from_integer![many_int for: Integer + i + 32, from: NonNegativeInteger + 8, 16];
+impl_from_integer![many_int for: Integer + i + 64, from: NonNegativeInteger + 8, 16, 32];
+impl_from_integer![many_int for: Integer + i + 128, from: NonNegativeInteger + 8, 16, 32, 64];
+
 // TODO
 
-// impl_from![int for: Integer + i + 16, from: NonNegativeInteger + 8];
-// impl_from![int for: Integer + i + 32, from: NonNegativeInteger + 8, 16];
-// impl_from![int for: Integer + i + 64, from: NonNegativeInteger + 8, 16, 32];
-// impl_from![int for: Integer + i + 128, from: NonNegativeInteger + 8, 16, 32, 64];
-//
 // impl_from![int_nonzero for: Integer + i + 16, from: PositiveInteger + 8];
 // impl_from![int_nonzero for: Integer + i + 32, from: PositiveInteger + 8, 16];
 // impl_from![int_nonzero for: Integer + i + 64, from: PositiveInteger + 8, 16, 32];
 // impl_from![int_nonzero for: Integer + i + 128, from: PositiveInteger + 8, 16, 32, 64];
 //
-// impl_from![int_neg for: Integer + i + 16, from: NonPositiveInteger + 8];
-// impl_from![int_neg for: Integer + i + 32, from: NonPositiveInteger + 8, 16];
-// impl_from![int_neg for: Integer + i + 64, from: NonPositiveInteger + 8, 16, 32];
-// impl_from![int_neg for: Integer + i + 128, from: NonPositiveInteger + 8, 16, 32, 64];
+// impl_from![many_neg for: Integer + i + 16, from: NonPositiveInteger + 8];
+// impl_from![many_neg for: Integer + i + 32, from: NonPositiveInteger + 8, 16];
+// impl_from![many_neg for: Integer + i + 64, from: NonPositiveInteger + 8, 16, 32];
+// impl_from![many_neg for: Integer + i + 128, from: NonPositiveInteger + 8, 16, 32, 64];
 //
-// impl_from![int_nonzero_neg for: Integer + i + 16, from: NegativeInteger + 8];
-// impl_from![int_nonzero_neg for: Integer + i + 32, from: NegativeInteger + 8, 16];
-// impl_from![int_nonzero_neg for: Integer + i + 64, from: NegativeInteger + 8, 16, 32];
-// impl_from![int_nonzero_neg for: Integer + i + 128, from: NegativeInteger + 8, 16, 32, 64];
+// impl_from![many_nonzero_neg for: Integer + i + 16, from: NegativeInteger + 8];
+// impl_from![many_nonzero_neg for: Integer + i + 32, from: NegativeInteger + 8, 16];
+// impl_from![many_nonzero_neg for: Integer + i + 64, from: NegativeInteger + 8, 16, 32];
+// impl_from![many_nonzero_neg for: Integer + i + 128, from: NegativeInteger + 8, 16, 32, 64];
 
 #[cfg(test)]
 mod tests {
@@ -79,6 +82,18 @@ mod tests {
         // ...
         assert_eq![Integer128::new(100)?, Integer8::new(100)?.into()];
         assert_eq![Integer128::new(100)?, Integer64::new(100)?.into()];
+
+        /* from smaller or equal non-zero Integer */
+        assert_eq![Integer16::new(100)?, NonZeroInteger8::new(100)?.into()];
+        assert_eq![Integer16::new(100)?, NonZeroInteger16::new(100)?.into()];
+        assert_eq![Integer128::new(100)?, NonZeroInteger128::new(100)?.into()];
+
+        /* from smaller non-negative Integer */
+        assert_eq![Integer16::new(100)?, NonNegativeInteger8::new(100)?.into()];
+        assert_eq![
+            Integer128::new(100)?,
+            NonNegativeInteger64::new(100)?.into()
+        ];
 
         Ok(())
     }

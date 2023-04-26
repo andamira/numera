@@ -1,4 +1,4 @@
-// numera::number::integer::z::impl_integer
+// numera::number::integer::nnz::impl_integer
 //
 //!
 //
@@ -51,7 +51,13 @@ macro_rules! impl_integer {
     };
 }
 
-impl_integer![many: Integer8, Integer16, Integer32, Integer64, Integer128];
+impl_integer![
+    many: NonNegativeInteger8,
+    NonNegativeInteger16,
+    NonNegativeInteger32,
+    NonNegativeInteger64,
+    NonNegativeInteger128
+];
 
 #[cfg(test)]
 mod tests {
@@ -59,10 +65,10 @@ mod tests {
 
     #[test]
     fn lcm_gcd() {
-        let z10: Integer32 = 10.into();
-        let z15: Integer32 = 15.into();
+        let z10: NonNegativeInteger32 = 10_u32.into();
+        let z15: NonNegativeInteger32 = 15_u32.into();
 
-        assert_eq![Integer32::new(30).unwrap(), z10.lcm(&z15)];
-        assert_eq![Integer32::new(5).unwrap(), z10.gcd(&z15)];
+        assert_eq![NonNegativeInteger32::new(30).unwrap(), z10.lcm(&z15)];
+        assert_eq![NonNegativeInteger32::new(5).unwrap(), z10.gcd(&z15)];
     }
 }

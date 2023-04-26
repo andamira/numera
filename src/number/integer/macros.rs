@@ -3,8 +3,12 @@
 //!
 //
 // TOC
-// - impl_from_integer
-// - impl_from_primitive
+//
+// -conversions:
+//   - impl_from_integer!
+//   - impl_from_primitive!
+
+/* conversions */
 
 /// Implements From<`$from$from_size`> for `$for$for_size`.
 ///
