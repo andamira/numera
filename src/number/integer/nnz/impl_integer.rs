@@ -34,18 +34,18 @@ macro_rules! impl_integer {
                 return Some(is_prime_brute(self.0.checked_as::<u32>()?));
             }
             #[inline]
-            fn gcd(&self, other: &Self) -> Self {
+            fn gcd(&self, other: &Self) -> Option<Self> {
                 let (mut a, mut b) = (self.0, other.0);
                 while b != 0 {
                     let temp = b;
                     b = a % b;
                     a = temp;
                 }
-                $t::new(a).unwrap()
+                Some($t::new(a).unwrap())
             }
             #[inline]
-            fn lcm(&self, other: &Self) -> Self {
-                $t::new(self.0 * other.0 / self.0.gcd(&other.0)).unwrap()
+            fn lcm(&self, other: &Self) -> Option<Self> {
+                Some($t::new(self.0 * other.0 / self.0.gcd(&other.0).unwrap()).unwrap())
             }
         }
     };
@@ -68,7 +68,7 @@ mod tests {
         let nnz10: NonNegativeInteger32 = 10_u32.into();
         let nnz15: NonNegativeInteger32 = 15_u32.into();
 
-        assert_eq![NonNegativeInteger32::new(30).unwrap(), nnz10.lcm(&nnz15)];
-        assert_eq![NonNegativeInteger32::new(5).unwrap(), nnz10.gcd(&nnz15)];
+        assert_eq![NonNegativeInteger32::new(30).unwrap(), nnz10.lcm(&nnz15).unwrap()];
+        assert_eq![NonNegativeInteger32::new(5).unwrap(), nnz10.gcd(&nnz15).unwrap()];
     }
 }

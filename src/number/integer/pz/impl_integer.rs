@@ -36,7 +36,7 @@ macro_rules! impl_nonzero_integer {
                 return Some(is_prime_brute(self.0.get().checked_as::<u32>()?));
             }
             #[inline]
-            fn gcd(&self, other: &Self) -> Self {
+            fn gcd(&self, other: &Self) -> Option<Self> {
                 let (mut a, mut b) = (self.0.get(), other.0.get());
                 while b != 0 {
                     let temp = b;
@@ -44,17 +44,19 @@ macro_rules! impl_nonzero_integer {
                     a = temp;
                 }
                 // SAFETY: it can't be 0
-                unsafe { $t::new_unchecked(a) }
+                Some(unsafe { $t::new_unchecked(a) })
             }
             #[inline]
-            fn lcm(&self, other: &Self) -> Self {
-                // SAFETY: it can't be 0
-                unsafe {
-                    $t::new_unchecked(
-                        self.0.get() * other.0.get() /
-                        self.0.get().gcd(&other.0.get())
-                    )
-                }
+            fn lcm(&self, other: &Self) -> Option<Self> {
+                Some(
+                    // SAFETY: it can't be 0
+                    unsafe {
+                        $t::new_unchecked(
+                            self.0.get() * other.0.get() /
+                            self.0.get().gcd(&other.0.get()).unwrap()
+                        )
+                    }
+                )
 
                 // TODO safe
                 // $t::new(
@@ -88,7 +90,7 @@ mod tests {
         let pz10 = PositiveInteger32::new(10).unwrap();
         let pz15 = PositiveInteger32::new(15).unwrap();
 
-        assert_eq![PositiveInteger32::new(30).unwrap(), pz10.lcm(&pz15)];
-        assert_eq![PositiveInteger32::new(5).unwrap(), pz10.gcd(&pz15)];
+        assert_eq![PositiveInteger32::new(30).unwrap(), pz10.lcm(&pz15).unwrap()];
+        assert_eq![PositiveInteger32::new(5).unwrap(), pz10.gcd(&pz15).unwrap()];
     }
 }

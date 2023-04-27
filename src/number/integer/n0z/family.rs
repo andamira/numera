@@ -26,9 +26,11 @@ define_integers_family![build_variants:
 /* impl additional traits for the family */
 
 /* sign */
+
 impl Signed for NonZeroIntegers {}
 
 /* ident */
+
 impl NonZero for NonZeroIntegers {}
 impl NegOne for NonZeroIntegers {
     /// Returns a [`NonZeroInteger8::new_neg_one()`][NonZeroInteger8#method.new_neg_one].
@@ -52,6 +54,7 @@ impl ConstOne for NonZeroIntegers {
 }
 
 /* bound */
+
 impl LowerBounded for NonZeroIntegers {
     /// Returns a [`NonZeroInteger8::new_min()`][NonZeroInteger8#method.new_min].
     fn new_min() -> Self {

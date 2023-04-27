@@ -40,14 +40,22 @@ pub trait Integer: Number {
     fn is_prime(&self) -> Option<bool>;
 
     /// Calculates the Greatest Common Divisor of `self` and `other`.
+    ///
+    /// Returns `None` if the operation can't return a number of the same kind,
+    /// e.g. for `Negative` numbers.
+    // THINK IMPROVE
     #[must_use]
-    fn gcd(&self, other: &Self) -> Self
+    fn gcd(&self, other: &Self) -> Option<Self>
     where
         Self: Sized;
 
     /// Calculates the Lowest Common Multiple of `self` and `other`.
+    ///
+    /// Returns `None` if the operation can't return a number of the same kind,
+    /// e.g. for `Negative` numbers.
+    // THINK IMPROVE
     #[must_use]
-    fn lcm(&self, other: &Self) -> Self
+    fn lcm(&self, other: &Self) -> Option<Self>
     where
         Self: Sized;
 
@@ -81,18 +89,18 @@ macro_rules! impl_integer {
             }
 
             #[inline]
-            fn gcd(&self, other: &Self) -> Self {
+            fn gcd(&self, other: &Self) -> Option<Self> {
                 let (mut a, mut b) = (*self, *other);
                 while b != Self::ZERO {
                     let temp = b;
                     b = a % b;
                     a = temp;
                 }
-                a
+                Some(a)
             }
             #[inline]
-            fn lcm(&self, other: &Self) -> Self {
-                *self * *other / self.gcd(other)
+            fn lcm(&self, other: &Self) -> Option<Self> {
+                Some(*self * *other / self.gcd(other).unwrap())
             }
         }
     };
@@ -116,20 +124,20 @@ macro_rules! impl_integer {
                 return Some(is_prime_brute(self.get().checked_as::<u32>()?));
             }
             #[inline]
-            fn gcd(&self, other: &Self) -> Self {
+            fn gcd(&self, other: &Self) -> Option<Self> {
                 let (mut a, mut b) = (self.get(), other.get());
                 while b != 0 {
                     let temp = b;
                     b = a % b;
                     a = temp;
                 }
-                $t::new(a).unwrap()
+                Some($t::new(a).unwrap())
             }
             #[inline]
-            fn lcm(&self, other: &Self) -> Self {
-                $t::new(
-                    self.get() * other.get() / self.get().gcd(&other.get())
-                ).unwrap()
+            fn lcm(&self, other: &Self) -> Option<Self> {
+                Some($t::new(
+                    self.get() * other.get() / self.get().gcd(&other.get()).unwrap()
+                ).unwrap())
             }
         }
     };

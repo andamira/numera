@@ -29,9 +29,11 @@ define_integers_family![build_variants:
 /* impl additional traits for the family */
 
 /* sign */
+
 impl Signed for Integers {}
 
 /* ident */
+
 impl Zero for Integers {
     /// Returns a [`Integer8::new_zero()`][Integer8#method.new_zero].
     fn new_zero() -> Self {
@@ -64,6 +66,7 @@ impl ConstNegOne for Integers {
 }
 
 /* bound */
+
 impl LowerBounded for Integers {
     /// Returns a [`Integer8::new_min()`][Integer8#method.new_min].
     fn new_min() -> Self {

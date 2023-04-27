@@ -23,9 +23,11 @@ define_integers_family![build_variants:
 /* impl additional traits for the family */
 
 /* sign */
+
 impl Unsigned for PositiveIntegers {}
 
 /* ident */
+
 impl NonNegOne for PositiveIntegers {}
 impl NonZero for PositiveIntegers {}
 impl One for PositiveIntegers {
@@ -40,6 +42,7 @@ impl ConstOne for PositiveIntegers {
 }
 
 /* bound */
+
 impl LowerBounded for PositiveIntegers {
     /// Returns a [`PositiveInteger8::new_min()`][PositiveInteger8#method.new_min].
     fn new_min() -> Self {
