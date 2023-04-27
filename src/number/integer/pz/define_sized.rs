@@ -61,7 +61,7 @@ macro_rules! define_nonzero_integer_sized {
         paste::paste! {
             #[doc = $doc_det " "$bsize "-bit " $doc_num $doc_type]
             #[doc = "\n\nThe range of valid numeric values is $\\lbrack" $doc_sign
-            "$[`" i$bsize "::" $doc_lower "`] $\\dots$ -1, 1 $\\dots$ [`" i$bsize
+            "1 \\dots$ [`" u$bsize
             "::" $doc_upper "`]$\\rbrack$."]
 
             #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
@@ -172,6 +172,7 @@ macro_rules! define_nonzero_integer_sized {
                     Ok(Self([<$p$bsize>]::new(value).ok_or(IntegerError::Zero)?))
                 }
                 unsafe fn new_unchecked(value: Self::Inner) -> Self {
+                    debug_assert![value != 0];
                     Self([<$p$bsize>]::new_unchecked(value))
                 }
             }

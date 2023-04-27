@@ -68,7 +68,13 @@ mod tests {
         let nnz10: NonNegativeInteger32 = 10_u32.into();
         let nnz15: NonNegativeInteger32 = 15_u32.into();
 
-        assert_eq![NonNegativeInteger32::new(30).unwrap(), nnz10.lcm(&nnz15).unwrap()];
-        assert_eq![NonNegativeInteger32::new(5).unwrap(), nnz10.gcd(&nnz15).unwrap()];
+        assert_eq![
+            NonNegativeInteger32::new(30).unwrap(),
+            nnz10.lcm(&nnz15).unwrap()
+        ];
+        assert_eq![
+            NonNegativeInteger32::new(5).unwrap(),
+            nnz10.gcd(&nnz15).unwrap()
+        ];
     }
 }

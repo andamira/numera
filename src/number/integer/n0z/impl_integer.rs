@@ -90,7 +90,13 @@ mod tests {
         let n0z10 = NonZeroInteger32::new(10).unwrap();
         let n0z15 = NonZeroInteger32::new(15).unwrap();
 
-        assert_eq![NonZeroInteger32::new(30).unwrap(), n0z10.lcm(&n0z15).unwrap()];
-        assert_eq![NonZeroInteger32::new(5).unwrap(), n0z10.gcd(&n0z15).unwrap()];
+        assert_eq![
+            NonZeroInteger32::new(30).unwrap(),
+            n0z10.lcm(&n0z15).unwrap()
+        ];
+        assert_eq![
+            NonZeroInteger32::new(5).unwrap(),
+            n0z10.gcd(&n0z15).unwrap()
+        ];
     }
 }

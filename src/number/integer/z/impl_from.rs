@@ -8,11 +8,13 @@ use crate::number::{
         macros::{impl_from_integer, impl_from_primitive},
         n0z::*,
         nnz::*,
+        npz::*,
         pz::*,
         z::*,
     },
     traits::Number,
 };
+use core::ops::Neg;
 
 /* from smaller unsigned primitive, and from smaller or equal signed primitive */
 impl_from_primitive![many for: Integer + 8, from: i + 8];
@@ -49,11 +51,13 @@ impl_from_integer![many_nonzero for: Integer + i + 32, from: PositiveInteger + 8
 impl_from_integer![many_nonzero for: Integer + i + 64, from: PositiveInteger + 8, 16, 32];
 impl_from_integer![many_nonzero for: Integer + i + 128, from: PositiveInteger + 8, 16, 32, 64];
 
-// impl_from![many_neg for: Integer + i + 16, from: NonPositiveInteger + 8];
-// impl_from![many_neg for: Integer + i + 32, from: NonPositiveInteger + 8, 16];
-// impl_from![many_neg for: Integer + i + 64, from: NonPositiveInteger + 8, 16, 32];
-// impl_from![many_neg for: Integer + i + 128, from: NonPositiveInteger + 8, 16, 32, 64];
-//
+/* from smaller sized NonPositiveInteger */
+impl_from_integer![many_int_neg for: Integer + i + 16, from: NonPositiveInteger + 8];
+impl_from_integer![many_int_neg for: Integer + i + 32, from: NonPositiveInteger + 8, 16];
+impl_from_integer![many_int_neg for: Integer + i + 64, from: NonPositiveInteger + 8, 16, 32];
+impl_from_integer![many_int_neg for: Integer + i + 128, from: NonPositiveInteger + 8, 16, 32, 64];
+
+// TODO
 // impl_from![many_nonzero_neg for: Integer + i + 16, from: NegativeInteger + 8];
 // impl_from![many_nonzero_neg for: Integer + i + 32, from: NegativeInteger + 8, 16];
 // impl_from![many_nonzero_neg for: Integer + i + 64, from: NegativeInteger + 8, 16, 32];
@@ -93,6 +97,16 @@ mod tests {
         assert_eq![
             Integer128::new(100)?,
             NonNegativeInteger64::new(100)?.into()
+        ];
+
+        /* from smaller non-positive Integer */
+        assert_eq![
+            Integer16::new(-100)?,
+            NonPositiveInteger8::new_neg(100).into()
+        ];
+        assert_eq![
+            Integer128::new(-100)?,
+            NonPositiveInteger64::new_neg(100).into()
         ];
 
         Ok(())

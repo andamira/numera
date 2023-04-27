@@ -90,7 +90,10 @@ mod tests {
         let pz10 = PositiveInteger32::new(10).unwrap();
         let pz15 = PositiveInteger32::new(15).unwrap();
 
-        assert_eq![PositiveInteger32::new(30).unwrap(), pz10.lcm(&pz15).unwrap()];
+        assert_eq![
+            PositiveInteger32::new(30).unwrap(),
+            pz10.lcm(&pz15).unwrap()
+        ];
         assert_eq![PositiveInteger32::new(5).unwrap(), pz10.gcd(&pz15).unwrap()];
     }
 }
