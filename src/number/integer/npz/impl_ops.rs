@@ -66,11 +66,11 @@ mod tests {
     #[test]
     fn npz_ops() -> NumeraResult<()> {
         assert![NonPositiveInteger8::new(5).is_err()];
-        let _n5 = NonPositiveInteger8::new_neg(5);
-        let _n7 = NonPositiveInteger8::new_neg(7);
+        let _n5 = NonPositiveInteger8::new_neg(5)?;
+        let _n7 = NonPositiveInteger8::new_neg(7)?;
 
-        assert_eq![_n7 + _n5, NonPositiveInteger8::new_neg(12)];
-        assert_eq![_n7 - _n5, NonPositiveInteger8::new_neg(2)];
+        assert_eq![_n7 + _n5, NonPositiveInteger8::new_neg(12)?];
+        assert_eq![_n7 - _n5, NonPositiveInteger8::new_neg(2)?];
         assert_eq![_n7 - _n7, NonPositiveInteger8::new(0)?];
 
         #[cfg(feature = "std")]
@@ -86,12 +86,12 @@ mod tests {
     #[should_panic]
     fn npz_ops_panic_underflow() {
         let _min = NonPositiveInteger8::MIN;
-        let _ = _min + NonPositiveInteger8::new_neg(5);
+        let _ = _min + NonPositiveInteger8::new_neg(8).expect("new_neg(8)");
     }
     #[test]
     #[should_panic]
     fn npz_ops_panic_overflow() {
         let _max = NonPositiveInteger8::MAX;
-        let _ = _max - NonPositiveInteger8::new_neg(5);
+        let _ = _max - NonPositiveInteger8::new_neg(9).expect("new_neg(9)");
     }
 }

@@ -9,6 +9,7 @@ use crate::number::{
         n0z::*,
         nnz::*,
         npz::*,
+        nz::*,
         pz::*,
         z::*,
     },
@@ -57,11 +58,11 @@ impl_from_integer![many_int_neg for: Integer + i + 32, from: NonPositiveInteger 
 impl_from_integer![many_int_neg for: Integer + i + 64, from: NonPositiveInteger + 8, 16, 32];
 impl_from_integer![many_int_neg for: Integer + i + 128, from: NonPositiveInteger + 8, 16, 32, 64];
 
-// TODO
-// impl_from![many_nonzero_neg for: Integer + i + 16, from: NegativeInteger + 8];
-// impl_from![many_nonzero_neg for: Integer + i + 32, from: NegativeInteger + 8, 16];
-// impl_from![many_nonzero_neg for: Integer + i + 64, from: NegativeInteger + 8, 16, 32];
-// impl_from![many_nonzero_neg for: Integer + i + 128, from: NegativeInteger + 8, 16, 32, 64];
+/* from smaller sized NegativeInteger */
+impl_from_integer![many_nonzero_neg for: Integer + i + 16, from: NegativeInteger + 8];
+impl_from_integer![many_nonzero_neg for: Integer + i + 32, from: NegativeInteger + 8, 16];
+impl_from_integer![many_nonzero_neg for: Integer + i + 64, from: NegativeInteger + 8, 16, 32];
+impl_from_integer![many_nonzero_neg for: Integer + i + 128, from: NegativeInteger + 8, 16, 32, 64];
 
 #[cfg(test)]
 mod tests {
@@ -102,11 +103,11 @@ mod tests {
         /* from smaller non-positive Integer */
         assert_eq![
             Integer16::new(-100)?,
-            NonPositiveInteger8::new_neg(100).into()
+            NonPositiveInteger8::new_neg(100)?.into()
         ];
         assert_eq![
             Integer128::new(-100)?,
-            NonPositiveInteger64::new_neg(100).into()
+            NonPositiveInteger64::new_neg(100)?.into()
         ];
 
         Ok(())

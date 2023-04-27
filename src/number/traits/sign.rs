@@ -18,6 +18,7 @@
 //
 // - impls
 
+use crate::error::NumeraResult;
 use core::num::{
     NonZeroI128, NonZeroI16, NonZeroI32, NonZeroI64, NonZeroI8, NonZeroIsize, NonZeroU128,
     NonZeroU16, NonZeroU32, NonZeroU64, NonZeroU8, NonZeroUsize,
@@ -72,7 +73,13 @@ pub trait NegSigned: Sign {
     /// Returns a new number that contains the negation of the `value`.
     ///
     /// This allows using an unsigned type value to store only negative numbers.
-    fn new_neg(value: Self::Inner) -> Self;
+    ///
+    /// # Errors
+    /// If the provided `value` doesn't maintain the expected invariances for
+    /// the concrete type.
+    fn new_neg(value: Self::Inner) -> NumeraResult<Self>
+    where
+        Self: Sized;
 }
 
 /* macros */

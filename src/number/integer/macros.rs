@@ -93,7 +93,7 @@ macro_rules! impl_from_integer {
             impl From<[< $from $from_size >]> for [< $for $for_size >] {
                 fn from(from: [< $from $from_size >]) -> Self {
                     // TODO: safe/unsafe
-                    Self::new( Into::<[< $p $for_size >]>::into(from.0.get()).neg())
+                    Self::new( Into::<[< $p $for_size >]>::into(from.0.get()).neg()).unwrap()
                 }
             }
         }

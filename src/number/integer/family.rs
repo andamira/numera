@@ -9,7 +9,8 @@
 // - tests
 
 use crate::number::integer::{
-    Integers, NonNegativeIntegers, NonZeroIntegers, PositiveIntegers, Primes,
+    Integers, NegativeIntegers, NonNegativeIntegers, NonPositiveIntegers, NonZeroIntegers,
+    PositiveIntegers, Primes,
 };
 
 /// Defines a subfamily of integers and implements `Number` on it.
@@ -462,8 +463,8 @@ define_any_integers_family![
         NonZeroIntegers, NonZero,
         PositiveIntegers, Positive,
         NonNegativeIntegers, NonNegative,
-        // NegativeIntegers, Negative,
-        // NonPositiveIntegers, NonPositive,
+        NegativeIntegers, Negative,
+        NonPositiveIntegers, NonPositive,
         Primes, Primes
 ];
 

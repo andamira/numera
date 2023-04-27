@@ -77,8 +77,9 @@ macro_rules! define_nonpositive_integer_sized {
             }
             impl NegSigned for [<$name$bsize>] {
                 type Inner = [<$p$bsize>];
-                fn new_neg(value: Self::Inner) -> Self {
-                    Self(value)
+                #[inline(always)]
+                fn new_neg(value: Self::Inner) -> NumeraResult<Self> {
+                    Ok(Self(value))
                 }
             }
 

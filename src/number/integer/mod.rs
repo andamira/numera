@@ -21,10 +21,9 @@ mod trait_integer;
 mod n0z;
 mod nnz;
 mod npz;
+mod nz;
 mod pz;
 mod z;
-
-// mod nz;
 
 pub use all::*;
 pub(crate) mod all {
@@ -42,6 +41,10 @@ pub(crate) mod all {
         npz::{
             NonPositiveInteger128, NonPositiveInteger16, NonPositiveInteger32,
             NonPositiveInteger64, NonPositiveInteger8, NonPositiveIntegers,
+        },
+        nz::{
+            NegativeInteger128, NegativeInteger16, NegativeInteger32, NegativeInteger64,
+            NegativeInteger8, NegativeIntegers,
         },
         prime::*,
         pz::{
