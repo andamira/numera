@@ -22,173 +22,173 @@ use crate::number::integer::{
 macro_rules! define_integers_family {
     // applies a method to each variant (0 args)
     (match_variants_0:
-        $family_name:ident,
+        $fname:ident,
         $self:ident,
         $method:ident,
-        no_std: $($t:ident),+ ;
-        depending: $($td:ident, $dep_name:literal)+
+        no_std: $($vtype:ident),+ ;
+        depending: $($vtype_dep:ident, $dep_name:literal)+
     ) => {
         match $self {
-            $( $family_name::$t(z) => z.$method(), )+
+            $( $fname::$vtype(z) => z.$method(), )+
             $( #[cfg(feature = $dep_name)]
-                $family_name::$td(z) => z.$method(), )*
+                $fname::$vtype_dep(z) => z.$method(), )*
         }
     };
 
     // applies a rewrap method to each variant
     (match_variants_0_rewrap:
-        $family_name:ident,
+        $fname:ident,
         $self:ident,
         $method:ident,
-        no_std: $($t:ident),+ ;
-        depending: $($td:ident, $dep_name:literal)+
+        no_std: $($vtype:ident),+ ;
+        depending: $($vtype_dep:ident, $dep_name:literal)+
     ) => {
         match $self {
-            $( $family_name::$t(z) => z.$method().map(|z| $family_name::$t(z)), )+
+            $( $fname::$vtype(z) => z.$method().map(|z| $fname::$vtype(z)), )+
             $( #[cfg(feature = $dep_name)]
-                $family_name::$td(z) => z.$method().map(|z| $family_name::$td(z)), )*
+                $fname::$vtype_dep(z) => z.$method().map(|z| $fname::$vtype_dep(z)), )*
         }
     };
 
     //
     (build_variants:
-        $family_name:ident,
+        $fname:ident,
         $doc:literal,
-        no_std: $($t:ident),+ ;
-        depending: $($td:ident, $dep_name:literal)+
+        no_std: $($vtype:ident),+ ;
+        depending: $($vtype_dep:ident, $dep_name:literal)+
     ) => {
         #[doc = $doc]
         #[derive(Clone, Debug, PartialEq, Eq)]
         #[non_exhaustive]
-        pub enum $family_name {
-            $( $t($t),)+
+        pub enum $fname {
+            $( $vtype($vtype),)+
 
             $( // feature-gated variants
                 #[cfg(feature = $dep_name)]
-                $td($td),
+                $vtype_dep($vtype_dep),
                 // MAYBE multiple features:
                 // #[cfg(all(feature = $dep1_name, feature = $dep2_name))]
                 // MAYBE Box:
-                // $td(Box<$td>), // reduces size from 32 to 24 Bytes
+                // $vtype_dep(Box<$vtype_dep>), // reduces size from 32 to 24 Bytes
             )*
         }
 
         /// This implementation is no-op.
-        impl crate::all::Number for $family_name {
+        impl crate::all::Number for $fname {
             type Inner = Self;
-            fn new(value: $family_name) -> crate::all::NumeraResult<Self> { Ok(value) }
-            unsafe fn new_unchecked(value: $family_name) -> Self { value }
+            fn new(value: $fname) -> crate::all::NumeraResult<Self> { Ok(value) }
+            unsafe fn new_unchecked(value: $fname) -> Self { value }
         }
 
         /// This implementation defers to the actual integer variant.
-        impl crate::all::Bound for $family_name {
+        impl crate::all::Bound for $fname {
             fn is_lower_bounded(&self) -> bool {
                 define_integers_family! { match_variants_0:
-                    $family_name, self, is_lower_bounded,
-                    no_std: $($t),+ ; depending: $($td, $dep_name)+
+                    $fname, self, is_lower_bounded,
+                    no_std: $($vtype),+ ; depending: $($vtype_dep, $dep_name)+
                 }
             }
             fn is_upper_bounded(&self) -> bool {
                 define_integers_family! { match_variants_0:
-                    $family_name, self, is_lower_bounded,
-                    no_std: $($t),+ ; depending: $($td, $dep_name)+
+                    $fname, self, is_lower_bounded,
+                    no_std: $($vtype),+ ; depending: $($vtype_dep, $dep_name)+
                 }
             }
             fn lower_bound(&self) -> Option<Self> {
                 define_integers_family! { match_variants_0_rewrap:
-                    $family_name, self, lower_bound,
-                    no_std: $($t),+ ; depending: $($td, $dep_name)+
+                    $fname, self, lower_bound,
+                    no_std: $($vtype),+ ; depending: $($vtype_dep, $dep_name)+
                 }
             }
             fn upper_bound(&self) -> Option<Self> {
                 define_integers_family! { match_variants_0_rewrap:
-                    $family_name, self, upper_bound,
-                    no_std: $($t),+ ; depending: $($td, $dep_name)+
+                    $fname, self, upper_bound,
+                    no_std: $($vtype),+ ; depending: $($vtype_dep, $dep_name)+
                 }
             }
         }
-        impl crate::all::Count for $family_name {
+        impl crate::all::Count for $fname {
             /// All integers are countable.
             fn is_countable(&self) -> bool { true }
         }
         /// This implementation defers to the actual integer variant.
-        impl crate::all::Countable for $family_name {
+        impl crate::all::Countable for $fname {
             fn next(&self) -> crate::all::NumeraResult<Self> {
                 define_integers_family! { match_variants_0_rewrap:
-                    $family_name, self, next,
-                    no_std: $($t),+ ; depending: $($td, $dep_name)+
+                    $fname, self, next,
+                    no_std: $($vtype),+ ; depending: $($vtype_dep, $dep_name)+
                 }
             }
             fn previous(&self) -> crate::all::NumeraResult<Self> {
                 define_integers_family! { match_variants_0_rewrap:
-                    $family_name, self, previous,
-                    no_std: $($t),+ ; depending: $($td, $dep_name)+
+                    $fname, self, previous,
+                    no_std: $($vtype),+ ; depending: $($vtype_dep, $dep_name)+
                 }
             }
         }
         /// This implementation defers to the actual integer variant.
-        impl crate::all::Sign for $family_name {
+        impl crate::all::Sign for $fname {
             fn can_positive(&self) -> bool {
                 define_integers_family! { match_variants_0:
-                    $family_name, self, can_positive,
-                    no_std: $($t),+ ; depending: $($td, $dep_name)+
+                    $fname, self, can_positive,
+                    no_std: $($vtype),+ ; depending: $($vtype_dep, $dep_name)+
                 }
             }
             fn can_negative(&self) -> bool {
                 define_integers_family! { match_variants_0:
-                    $family_name, self, can_negative,
-                    no_std: $($t),+ ; depending: $($td, $dep_name)+
+                    $fname, self, can_negative,
+                    no_std: $($vtype),+ ; depending: $($vtype_dep, $dep_name)+
                 }
             }
             fn is_positive(&self) -> bool {
                 define_integers_family! { match_variants_0:
-                    $family_name, self, is_positive,
-                    no_std: $($t),+ ; depending: $($td, $dep_name)+
+                    $fname, self, is_positive,
+                    no_std: $($vtype),+ ; depending: $($vtype_dep, $dep_name)+
                 }
             }
             fn is_negative(&self) -> bool {
                 define_integers_family! { match_variants_0:
-                    $family_name, self, is_negative,
-                    no_std: $($t),+ ; depending: $($td, $dep_name)+
+                    $fname, self, is_negative,
+                    no_std: $($vtype),+ ; depending: $($vtype_dep, $dep_name)+
                 }
             }
         }
         /// This implementation defers to the actual integer variant.
-        impl crate::all::Ident for $family_name {
+        impl crate::all::Ident for $fname {
             fn can_zero(&self) -> bool {
                 define_integers_family! { match_variants_0:
-                    $family_name, self, can_zero,
-                    no_std: $($t),+ ; depending: $($td, $dep_name)+
+                    $fname, self, can_zero,
+                    no_std: $($vtype),+ ; depending: $($vtype_dep, $dep_name)+
                 }
             }
             fn can_one(&self) -> bool {
                 define_integers_family! { match_variants_0:
-                    $family_name, self, can_one,
-                    no_std: $($t),+ ; depending: $($td, $dep_name)+
+                    $fname, self, can_one,
+                    no_std: $($vtype),+ ; depending: $($vtype_dep, $dep_name)+
                 }
             }
             fn can_neg_one(&self) -> bool {
                 define_integers_family! { match_variants_0:
-                    $family_name, self, can_neg_one,
-                    no_std: $($t),+ ; depending: $($td, $dep_name)+
+                    $fname, self, can_neg_one,
+                    no_std: $($vtype),+ ; depending: $($vtype_dep, $dep_name)+
                 }
             }
             fn is_zero(&self) -> bool {
                 define_integers_family! { match_variants_0:
-                    $family_name, self, is_zero,
-                    no_std: $($t),+ ; depending: $($td, $dep_name)+
+                    $fname, self, is_zero,
+                    no_std: $($vtype),+ ; depending: $($vtype_dep, $dep_name)+
                 }
             }
             fn is_one(&self) -> bool {
                 define_integers_family! { match_variants_0:
-                    $family_name, self, is_one,
-                    no_std: $($t),+ ; depending: $($td, $dep_name)+
+                    $fname, self, is_one,
+                    no_std: $($vtype),+ ; depending: $($vtype_dep, $dep_name)+
                 }
             }
             fn is_neg_one(&self) -> bool {
                 define_integers_family! { match_variants_0:
-                    $family_name, self, is_neg_one,
-                    no_std: $($t),+ ; depending: $($td, $dep_name)+
+                    $fname, self, is_neg_one,
+                    no_std: $($vtype),+ ; depending: $($vtype_dep, $dep_name)+
                 }
             }
         }
@@ -196,27 +196,27 @@ macro_rules! define_integers_family {
         /* impl From & TryFrom */
 
         $(
-        impl From<$t> for $family_name {
-            fn from(z: $t) -> $family_name {
-                $family_name::$t(z)
+        impl From<$vtype> for $fname {
+            fn from(z: $vtype) -> $fname {
+                $fname::$vtype(z)
             }
         }
         )+
         $(
         #[cfg(feature = $dep_name)]
-        impl From<$td> for $family_name {
-            fn from(z: $td) -> $family_name {
-                $family_name::$td(z)
+        impl From<$vtype_dep> for $fname {
+            fn from(z: $vtype_dep) -> $fname {
+                $fname::$vtype_dep(z)
             }
         }
         )*
 
         $(
-        impl TryFrom<$family_name> for $t {
+        impl TryFrom<$fname> for $vtype {
             type Error = crate::error::NumeraError;
-            fn try_from(z: $family_name) -> core::result::Result<$t, Self::Error> {
+            fn try_from(z: $fname) -> core::result::Result<$vtype, Self::Error> {
                 match z {
-                    $family_name::$t(z) => Ok(z),
+                    $fname::$vtype(z) => Ok(z),
                     _ => Err(Self::Error::Conversion)
                 }
             }
@@ -224,11 +224,11 @@ macro_rules! define_integers_family {
         )+
 
         $( #[cfg(feature = $dep_name)]
-        impl TryFrom<$family_name> for $td {
+        impl TryFrom<$fname> for $vtype_dep {
             type Error = crate::error::NumeraError;
-            fn try_from(z: $family_name) -> core::result::Result<$td, Self::Error> {
+            fn try_from(z: $fname) -> core::result::Result<$vtype_dep, Self::Error> {
                 match z {
-                    $family_name::$td(z) => Ok(z),
+                    $fname::$vtype_dep(z) => Ok(z),
                     _ => Err(Self::Error::Conversion)
                 }
             }
@@ -242,163 +242,168 @@ pub(crate) use define_integers_family;
 macro_rules! define_any_integers_family {
     // applies a method to each variant (0 args)
     (match_variants_0:
-        $family_name:ident,
+        $fname:ident,
         $self:ident,
         $method:ident,
-        no_std: $($t:ident),+
-        // ; depending: $($td:ident, $dep_name:literal)+
+        no_std: $($vname:ident),+
+        // ; depending: $($vname_dep:ident, $dep_name:literal)+
     ) => {
         match $self {
-            $( $family_name::$t(z) => z.$method(), )+
+            $( $fname::$vname(z) => z.$method(), )+
             // $( #[cfg(feature = $dep_name)]
-            //     $family_name::$td(z) => z.$method(), )*
+            //     $fname::$vname_dep(z) => z.$method(), )*
         }
     };
 
     // applies a rewrap method to each variant
     (match_variants_0_rewrap:
-        $family_name:ident,
+        $fname:ident,
         $self:ident,
         $method:ident,
-        no_std: $($t:ident),+
-        // ; depending: $($td:ident, $dep_name:literal)+
+        no_std: $($vname:ident),+
+        // ; depending: $($vname_dep:ident, $dep_name:literal)+
     ) => {
         match $self {
-            $( $family_name::$t(z) => z.$method().map(|z| $family_name::$t(z)), )+
+            $( $fname::$vname(z) => z.$method().map(|z| $fname::$vname(z)), )+
             // $( #[cfg(feature = $dep_name)]
-            //     $family_name::$td(z) => z.$method().map(|z| $family_name::$td(z)), )*
+            //     $fname::$vname_dep(z) => z.$method().map(|z| $fname::$vname_dep(z)), )*
         }
     };
 
+    // # Args
+    // - `$fname`: enum name
+    // - `$doc`:         doc_comment
+    // - `$vtype`: variant inner type
+    // - `$vname`: variant name
     (build_variants:
-        $family_name:ident,
+        $fname:ident,
         $doc:literal,
-        no_std: $($t:ident),+
-        // ; depending: $($td:ident, $dep_name:literal)+
+        no_std: $($vtype:ident, $vname:ident),+
+        // ; depending: $($vtype_dep:ident, $dep_name:literal)+
     ) => {
         #[doc = $doc]
         #[derive(Clone, Debug, PartialEq, Eq)]
         #[non_exhaustive]
-        pub enum $family_name {
-            $( $t($t),)+
+        pub enum $fname {
+            $( $vname($vtype),)+
         }
 
         /// This implementation is no-op.
-        impl crate::all::Number for $family_name {
+        impl crate::all::Number for $fname {
             type Inner = Self;
-            fn new(value: $family_name) -> crate::all::NumeraResult<Self> { Ok(value) }
-            unsafe fn new_unchecked(value: $family_name) -> Self { value }
+            fn new(value: $fname) -> crate::all::NumeraResult<Self> { Ok(value) }
+            unsafe fn new_unchecked(value: $fname) -> Self { value }
         }
 
         /// This implementation defers to the actual integer variant.
-        impl crate::all::Bound for $family_name {
+        impl crate::all::Bound for $fname {
             fn is_lower_bounded(&self) -> bool {
                 define_any_integers_family! { match_variants_0:
-                    $family_name, self, is_lower_bounded,
-                    no_std: $($t),+ // ; depending: $($td, $dep_name)+
+                    $fname, self, is_lower_bounded,
+                    no_std: $($vname),+ // ; depending: $($vtype_dep, $dep_name)+
                 }
             }
             fn is_upper_bounded(&self) -> bool {
                 define_any_integers_family! { match_variants_0:
-                    $family_name, self, is_lower_bounded,
-                    no_std: $($t),+ // ; depending: $($td, $dep_name)+
+                    $fname, self, is_lower_bounded,
+                    no_std: $($vname),+ // ; depending: $($vtype_dep, $dep_name)+
                 }
             }
             fn lower_bound(&self) -> Option<Self> {
                 define_any_integers_family! { match_variants_0_rewrap:
-                    $family_name, self, lower_bound,
-                    no_std: $($t),+ // ; depending: $($td, $dep_name)+
+                    $fname, self, lower_bound,
+                    no_std: $($vname),+ // ; depending: $($vtype_dep, $dep_name)+
                 }
             }
             fn upper_bound(&self) -> Option<Self> {
                 define_any_integers_family! { match_variants_0_rewrap:
-                    $family_name, self, upper_bound,
-                    no_std: $($t),+ // ; depending: $($td, $dep_name)+
+                    $fname, self, upper_bound,
+                    no_std: $($vname),+ // ; depending: $($vtype_dep, $dep_name)+
                 }
             }
         }
-        impl crate::all::Count for $family_name {
+        impl crate::all::Count for $fname {
             /// All integers are countable.
             fn is_countable(&self) -> bool { true }
         }
         /// This implementation defers to the actual integer variant.
-        impl crate::all::Countable for $family_name {
+        impl crate::all::Countable for $fname {
             fn next(&self) -> crate::all::NumeraResult<Self> {
                 define_any_integers_family! { match_variants_0_rewrap:
-                    $family_name, self, next,
-                    no_std: $($t),+ // ; depending: $($td, $dep_name)+
+                    $fname, self, next,
+                    no_std: $($vname),+ // ; depending: $($vtype_dep, $dep_name)+
                 }
             }
             fn previous(&self) -> crate::all::NumeraResult<Self> {
                 define_any_integers_family! { match_variants_0_rewrap:
-                    $family_name, self, previous,
-                    no_std: $($t),+ // ; depending: $($td, $dep_name)+
+                    $fname, self, previous,
+                    no_std: $($vname),+ // ; depending: $($vtype_dep, $dep_name)+
                 }
             }
         }
         /// This implementation defers to the actual integer variant.
-        impl crate::all::Sign for $family_name {
+        impl crate::all::Sign for $fname {
             fn can_positive(&self) -> bool {
                 define_any_integers_family! { match_variants_0:
-                    $family_name, self, can_positive,
-                    no_std: $($t),+ // ; depending: $($td, $dep_name)+
+                    $fname, self, can_positive,
+                    no_std: $($vname),+ // ; depending: $($vtype_dep, $dep_name)+
                 }
             }
             fn can_negative(&self) -> bool {
                 define_any_integers_family! { match_variants_0:
-                    $family_name, self, can_negative,
-                    no_std: $($t),+ // ; depending: $($td, $dep_name)+
+                    $fname, self, can_negative,
+                    no_std: $($vname),+ // ; depending: $($vtype_dep, $dep_name)+
                 }
             }
             fn is_positive(&self) -> bool {
                 define_any_integers_family! { match_variants_0:
-                    $family_name, self, is_positive,
-                    no_std: $($t),+ // ; depending: $($td, $dep_name)+
+                    $fname, self, is_positive,
+                    no_std: $($vname),+ // ; depending: $($vtype_dep, $dep_name)+
                 }
             }
             fn is_negative(&self) -> bool {
                 define_any_integers_family! { match_variants_0:
-                    $family_name, self, is_negative,
-                    no_std: $($t),+ // ; depending: $($td, $dep_name)+
+                    $fname, self, is_negative,
+                    no_std: $($vname),+ // ; depending: $($vtype_dep, $dep_name)+
                 }
             }
         }
         /// This implementation defers to the actual integer variant.
-        impl crate::all::Ident for $family_name {
+        impl crate::all::Ident for $fname {
             fn can_zero(&self) -> bool {
                 define_any_integers_family! { match_variants_0:
-                    $family_name, self, can_zero,
-                    no_std: $($t),+ // ; depending: $($td, $dep_name)+
+                    $fname, self, can_zero,
+                    no_std: $($vname),+ // ; depending: $($vtype_dep, $dep_name)+
                 }
             }
             fn can_one(&self) -> bool {
                 define_any_integers_family! { match_variants_0:
-                    $family_name, self, can_one,
-                    no_std: $($t),+ // ; depending: $($td, $dep_name)+
+                    $fname, self, can_one,
+                    no_std: $($vname),+ // ; depending: $($vtype_dep, $dep_name)+
                 }
             }
             fn can_neg_one(&self) -> bool {
                 define_any_integers_family! { match_variants_0:
-                    $family_name, self, can_neg_one,
-                    no_std: $($t),+ // ; depending: $($td, $dep_name)+
+                    $fname, self, can_neg_one,
+                    no_std: $($vname),+ // ; depending: $($vtype_dep, $dep_name)+
                 }
             }
             fn is_zero(&self) -> bool {
                 define_any_integers_family! { match_variants_0:
-                    $family_name, self, is_zero,
-                    no_std: $($t),+ // ; depending: $($td, $dep_name)+
+                    $fname, self, is_zero,
+                    no_std: $($vname),+ // ; depending: $($vtype_dep, $dep_name)+
                 }
             }
             fn is_one(&self) -> bool {
                 define_any_integers_family! { match_variants_0:
-                    $family_name, self, is_one,
-                    no_std: $($t),+ // ; depending: $($td, $dep_name)+
+                    $fname, self, is_one,
+                    no_std: $($vname),+ // ; depending: $($vtype_dep, $dep_name)+
                 }
             }
             fn is_neg_one(&self) -> bool {
                 define_any_integers_family! { match_variants_0:
-                    $family_name, self, is_neg_one,
-                    no_std: $($t),+ // ; depending: $($td, $dep_name)+
+                    $fname, self, is_neg_one,
+                    no_std: $($vname),+ // ; depending: $($vtype_dep, $dep_name)+
                 }
             }
         }
@@ -406,27 +411,27 @@ macro_rules! define_any_integers_family {
         /* impl From & TryFrom */
 
         $(
-        impl From<$t> for $family_name {
-            fn from(z: $t) -> $family_name {
-                $family_name::$t(z)
+        impl From<$vtype> for $fname {
+            fn from(z: $vtype) -> $fname {
+                $fname::$vname(z)
             }
         }
         )+
         // $(
         // #[cfg(feature = $dep_name)]
-        // impl From<$td> for $family_name {
-        //     fn from(z: $td) -> $family_name {
-        //         $family_name::$td(z)
+        // impl From<$vtype_dep> for $fname {
+        //     fn from(z: $vtype_dep) -> $fname {
+        //         $fname::$vname_dep(z)
         //     }
         // }
         // )*
 
         $(
-        impl TryFrom<$family_name> for $t {
+        impl TryFrom<$fname> for $vtype {
             type Error = crate::error::NumeraError;
-            fn try_from(z: $family_name) -> core::result::Result<$t, Self::Error> {
+            fn try_from(z: $fname) -> core::result::Result<$vtype, Self::Error> {
                 match z {
-                    $family_name::$t(z) => Ok(z),
+                    $fname::$vname(z) => Ok(z),
                     _ => Err(Self::Error::Conversion)
                 }
             }
@@ -434,11 +439,11 @@ macro_rules! define_any_integers_family {
         )+
 
         // $( #[cfg(feature = $dep_name)]
-        // impl TryFrom<$family_name> for $td {
+        // impl TryFrom<$fname> for $vtype_dep {
         //     type Error = crate::error::NumeraError;
-        //     fn try_from(z: $family_name) -> core::result::Result<$td, Self::Error> {
+        //     fn try_from(z: $fname) -> core::result::Result<$vtype_dep, Self::Error> {
         //         match z {
-        //             $family_name::$td(z) => Ok(z),
+        //             $fname::$vname_dep(z) => Ok(z),
         //             _ => Err(Self::Error::Conversion)
         //         }
         //     }
@@ -447,15 +452,19 @@ macro_rules! define_any_integers_family {
     };
 }
 
+#[rustfmt::skip]
 define_any_integers_family![
-    build_variants: AnyIntegers,
-    "The family of any kind of integers.",
-    no_std: Integers,
-    NonZeroIntegers,
-    PositiveIntegers,
-    NonNegativeIntegers,
-    // NegativeIntegers, NonPositiveIntegers,
-    Primes
+    build_variants:
+        AnyIntegers,
+        "The family of any kind of integers.",
+    no_std:
+        Integers, Integers,
+        NonZeroIntegers, NonZero,
+        PositiveIntegers, Positive,
+        NonNegativeIntegers, NonNegative,
+        // NegativeIntegers, Negative,
+        // NonPositiveIntegers, NonPositive,
+        Primes, Primes
 ];
 
 #[cfg(test)]
