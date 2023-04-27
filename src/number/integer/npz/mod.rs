@@ -19,3 +19,10 @@ pub use define_sized::{
     NonPositiveInteger8,
 };
 pub use family::NonPositiveIntegers;
+
+/// Abbreviations for non-positive integers.
+pub mod abbr {
+    use super::{super::macros::define_abbreviations, *};
+
+    define_abbreviations![many Npz, NonPositiveInteger, 8, 16, 32, 64, 128];
+}

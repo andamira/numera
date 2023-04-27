@@ -24,3 +24,10 @@ pub use define_sized::{
     PositiveInteger128, PositiveInteger16, PositiveInteger32, PositiveInteger64, PositiveInteger8,
 };
 pub use family::PositiveIntegers;
+
+/// Abbreviations for positive integers.
+pub mod abbr {
+    use super::{super::macros::define_abbreviations, *};
+
+    define_abbreviations![many Pz, PositiveInteger, 8, 16, 32, 64, 128];
+}

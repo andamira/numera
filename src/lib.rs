@@ -33,4 +33,10 @@ pub use number::{integer::Integer, traits::Number};
 pub mod all {
     #[doc(inline)]
     pub use super::{error::*, number::all::*};
+
+    /// Abbreviations
+    pub mod abbr {
+        #[doc(inline)]
+        pub use crate::number::integer::abbr::*;
+    }
 }

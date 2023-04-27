@@ -25,6 +25,14 @@ pub mod nz;
 pub mod pz;
 pub mod z;
 
+/// Abbreviations for all integers.
+pub mod abbr {
+    #[doc(inline)]
+    pub use super::{
+        n0z::abbr::*, nnz::abbr::*, npz::abbr::*, nz::abbr::*, pz::abbr::*, z::abbr::*,
+    };
+}
+
 pub use all::*;
 pub(crate) mod all {
     #[doc(inline)]
