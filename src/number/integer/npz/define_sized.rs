@@ -70,9 +70,13 @@ macro_rules! define_nonpositive_integer_sized {
             /* sign */
 
             impl Sign for [<$name$bsize>] {
+                #[inline(always)]
                 fn can_negative(&self) -> bool { true }
+                #[inline(always)]
                 fn can_positive(&self) -> bool { false }
+                #[inline(always)]
                 fn is_negative(&self) -> bool { self.0.is_negative() }
+                #[inline(always)]
                 fn is_positive(&self) -> bool { false }
             }
             impl NegSigned for [<$name$bsize>] {
@@ -86,19 +90,25 @@ macro_rules! define_nonpositive_integer_sized {
             /* bound */
 
             impl Bound for [<$name$bsize>] {
+                #[inline(always)]
                 fn is_lower_bounded(&self) -> bool { true }
+                #[inline(always)]
                 fn is_upper_bounded(&self) -> bool { true }
+                #[inline(always)]
                 fn lower_bound(&self) -> Option<Self> where Self: Sized {
                     Some(Self([<$p$bsize>]::MAX))
                 }
+                #[inline(always)]
                 fn upper_bound(&self) -> Option<Self> where Self: Sized {
                     Some(Self(0))
                 }
             }
             impl LowerBounded for [<$name$bsize>] {
+                #[inline(always)]
                 fn new_min() -> Self { <Self as ConstLowerBounded>::MIN }
             }
             impl UpperBounded for [<$name$bsize>] {
+                #[inline(always)]
                 fn new_max() -> Self { <Self as ConstUpperBounded>::MAX } // 0
             }
             impl ConstLowerBounded for [<$name$bsize>] {
@@ -111,13 +121,16 @@ macro_rules! define_nonpositive_integer_sized {
             /* count */
 
             impl Count for [<$name$bsize>] {
+                #[inline(always)]
                 fn is_countable(&self) -> bool { true }
             }
 
             impl Countable for [<$name$bsize>] {
+                #[inline]
                 fn next(&self) -> NumeraResult<Self> {
                     Ok(Self(self.0.checked_sub(1).ok_or(IntegerError::Overflow)?))
                 }
+                #[inline]
                 fn previous(&self) -> NumeraResult<Self> {
                     Ok(Self(self.0.checked_add(1).ok_or(IntegerError::Underflow)?))
                 }
@@ -126,18 +139,30 @@ macro_rules! define_nonpositive_integer_sized {
             /* ident */
 
             impl Ident for [<$name$bsize>] {
+                #[inline(always)]
                 fn can_zero(&self) -> bool { true }
+                #[inline(always)]
                 fn can_one(&self) -> bool { false }
+                #[inline(always)]
                 fn can_neg_one(&self) -> bool { true }
 
+                #[inline(always)]
                 fn is_zero(&self) -> bool { self.0 == 0 }
+                #[inline(always)]
                 fn is_one(&self) -> bool { false }
+                #[inline(always)]
                 fn is_neg_one(&self) -> bool { self.0 == 1 }
             }
             impl ConstZero for [<$name$bsize>] { const ZERO: Self = Self(0); }
-            impl Zero for [<$name$bsize>] { fn new_zero() -> Self { Self(0) } }
+            impl Zero for [<$name$bsize>] {
+                #[inline(always)]
+                fn new_zero() -> Self { Self(0) }
+            }
             impl ConstNegOne for [<$name$bsize>] { const NEG_ONE: Self = Self(1); }
-            impl NegOne for [<$name$bsize>] { fn new_neg_one() -> Self { Self(1) } }
+            impl NegOne for [<$name$bsize>] {
+                #[inline(always)]
+                fn new_neg_one() -> Self { Self(1) }
+            }
             impl NonOne for [<$name$bsize>] {}
 
             /* number */
@@ -148,6 +173,7 @@ macro_rules! define_nonpositive_integer_sized {
                 /// For `value`s other than 0, please use the
                 /// [`new_neg`][NegSigned#method.new_neg] method from the
                 /// [`NegSigned`] trait.
+                #[inline]
                 fn new(value: Self::Inner) -> NumeraResult<Self> {
                     if value == 0 {
                         Ok(Self(value))
@@ -159,6 +185,7 @@ macro_rules! define_nonpositive_integer_sized {
                     // Ok(Self(value))
                 }
                 /// Please note that the `value` provided will interpreted as negative.
+                #[inline]
                 unsafe fn new_unchecked(value: Self::Inner) -> Self { Self(value) }
             }
         }

@@ -70,13 +70,18 @@ macro_rules! define_negative_integer_sized {
             /* sign */
 
             impl Sign for [<$name$bsize>] {
+                #[inline(always)]
                 fn can_negative(&self) -> bool { true }
+                #[inline(always)]
                 fn can_positive(&self) -> bool { false }
+                #[inline(always)]
                 fn is_negative(&self) -> bool { true }
+                #[inline(always)]
                 fn is_positive(&self) -> bool { false }
             }
             impl NegSigned for [<$name$bsize>] {
                 type Inner = [<u$bsize>];
+                #[inline(always)]
                 fn new_neg(value: Self::Inner) -> NumeraResult<Self> {
                     Ok(Self([<$p$bsize>]::new(value).ok_or(IntegerError::Zero)?))
                 }
@@ -101,9 +106,11 @@ macro_rules! define_negative_integer_sized {
                 }
             }
             impl LowerBounded for [<$name$bsize>] {
+                #[inline(always)]
                 fn new_min() -> Self { <Self as ConstLowerBounded>::MIN }
             }
             impl UpperBounded for [<$name$bsize>] {
+                #[inline(always)]
                 fn new_max() -> Self { <Self as ConstUpperBounded>::MAX }
             }
             impl ConstLowerBounded for [<$name$bsize>] {
@@ -124,6 +131,7 @@ macro_rules! define_negative_integer_sized {
             /* count */
 
             impl Count for [<$name$bsize>] {
+                #[inline(always)]
                 fn is_countable(&self) -> bool { true }
             }
 
@@ -132,6 +140,7 @@ macro_rules! define_negative_integer_sized {
                 ///
                 /// # Errors
                 /// Errors if the operation results in overflow.
+                #[inline]
                 fn next(&self) -> NumeraResult<Self> {
                     let next = self.0.get().checked_add(1).ok_or(IntegerError::Overflow)?;
                     // SAFETY: we've checked the value
@@ -141,6 +150,7 @@ macro_rules! define_negative_integer_sized {
                 ///
                 /// # Errors
                 /// Errors if the operation results in underflow.
+                #[inline]
                 fn previous(&self) -> NumeraResult<Self> {
                     let prev = self.0.get().checked_sub(1).ok_or(IntegerError::Underflow)?;
                     Ok(Self([<$p$bsize>]::new(prev).ok_or(IntegerError::Zero)?))

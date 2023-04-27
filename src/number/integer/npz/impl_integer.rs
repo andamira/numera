@@ -24,17 +24,17 @@ macro_rules! impl_integer {
             /// Returns always `None`, assumming negative numbers can't be prime.
             // https://www.themathdoctors.org/prime-numbers-what-about-negatives/
             // https://math.stackexchange.com/questions/2355731/can-negative-integers-be-prime
-            #[inline]
+            #[inline(always)]
             fn is_prime(&self) -> Option<bool> {
                 None
             }
             /// Returns always `None`, since the result should be a positive number.
-            #[inline]
+            #[inline(always)]
             fn gcd(&self, _other: &Self) -> Option<Self> {
                 None
             }
             /// Returns always `None`, since the result should be a positive number.
-            #[inline]
+            #[inline(always)]
             fn lcm(&self, _other: &Self) -> Option<Self> {
                 None
             }
