@@ -101,8 +101,13 @@ macro_rules! impl_countable {
                     value = value.checked_add(1)
                         .ok_or::<NumeraError>(IntegerError::Overflow.into())?;
                 }
+
+                #[cfg(feature = "safe")]
+                return Ok(<$t>::new(value).unwrap());
+
+                #[cfg(not(feature = "safe"))]
                 // SAFETY: we just checked the value
-                Ok(unsafe { <$t>::new_unchecked(value) })
+                return Ok(unsafe { <$t>::new_unchecked(value) });
             }
             fn previous(&self) -> NumeraResult<Self> {
                 let mut value = self.get().checked_sub(1)
@@ -111,8 +116,13 @@ macro_rules! impl_countable {
                     value = value.checked_sub(1)
                         .ok_or::<NumeraError>(IntegerError::Underflow.into())?;
                 }
+
+                #[cfg(feature = "safe")]
+                return Ok(<$t>::new(value).unwrap());
+
+                #[cfg(not(feature = "safe"))]
                 // SAFETY: we just checked the value
-                Ok(unsafe { <$t>::new_unchecked(value) })
+                return Ok(unsafe { <$t>::new_unchecked(value) });
             }
         }
     };

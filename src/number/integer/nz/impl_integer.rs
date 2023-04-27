@@ -14,11 +14,11 @@ macro_rules! impl_nonzero_integer {
     };
     ($t:ident, $inner:ident) => {
         impl Integer for $t {
-            #[inline(always)]
+            #[inline]
             fn is_even(&self) -> bool {
                 self.0.get().is_even()
             }
-            #[inline(always)]
+            #[inline]
             fn is_multiple_of(&self, other: &Self) -> bool {
                 self.0.get().is_multiple_of(&other.0.get())
             }
@@ -27,17 +27,17 @@ macro_rules! impl_nonzero_integer {
             /// Returns always `None`, assumming negative numbers can't be prime.
             // https://www.themathdoctors.org/prime-numbers-what-about-negatives/
             // https://math.stackexchange.com/questions/2355731/can-negative-integers-be-prime
-            #[inline(always)]
+            #[inline]
             fn is_prime(&self) -> Option<bool> {
                 None
             }
             /// Returns always `None`, since the result should be a positive number.
-            #[inline(always)]
+            #[inline]
             fn gcd(&self, _other: &Self) -> Option<Self> {
                 None
             }
             /// Returns always `None`, since the result should be a positive number.
-            #[inline(always)]
+            #[inline]
             fn lcm(&self, _other: &Self) -> Option<Self> {
                 None
             }

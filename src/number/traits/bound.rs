@@ -141,6 +141,7 @@ macro_rules! impl_bounded_nonzero {
     (many_both: $($t:ty, $lb:expr, $ub:expr),+) => {
         $( impl_bounded_nonzero![both: $t, $lb, $ub]; )+
     };
+
     (both: $t:ty, $lb:expr, $ub:expr) => {
         impl Bound for $t {
             fn is_lower_bounded(&self) -> bool { true }
@@ -148,11 +149,45 @@ macro_rules! impl_bounded_nonzero {
             fn lower_bound(&self) -> Option<Self> { Some(<$t as ConstLowerBounded>::MIN) }
             fn upper_bound(&self) -> Option<Self> { Some(<$t as ConstUpperBounded>::MAX) }
         }
-        // SAFETY: we use a known valid constant
-        impl ConstLowerBounded for $t { const MIN: Self = unsafe { <$t>::new_unchecked($lb) }; }
-        impl LowerBounded for $t { fn new_min() -> Self { unsafe { <$t>::new_unchecked($lb) } } }
-        impl ConstUpperBounded for $t { const MAX: Self = unsafe { <$t>::new_unchecked($ub) }; }
-        impl UpperBounded for $t { fn new_max() -> Self { unsafe { <$t>::new_unchecked($ub) } } }
+        impl ConstLowerBounded for $t {
+            #[cfg(feature = "safe")]
+            const MIN: Self = if let Some(n) = <$t>::new($lb)
+                { n } else { unreachable!() };
+
+            // SAFETY: constant value
+            #[cfg(not(feature = "safe"))]
+            const MIN: Self = unsafe { <$t>::new_unchecked($lb) };
+        }
+
+        impl ConstUpperBounded for $t {
+            #[cfg(feature = "safe")]
+            const MAX: Self = if let Some(n) = <$t>::new($ub)
+                { n } else { unreachable!() };
+
+            // SAFETY: constant value
+            #[cfg(not(feature = "safe"))]
+            const MAX: Self = unsafe { <$t>::new_unchecked($ub) };
+        }
+        impl LowerBounded for $t {
+            fn new_min() -> Self {
+                #[cfg(feature = "safe")]
+                return <$t>::new($lb).unwrap();
+
+                // SAFETY: constant value
+                #[cfg(not(feature = "safe"))]
+                return unsafe { <$t>::new_unchecked($lb) };
+            }
+        }
+        impl UpperBounded for $t {
+            fn new_max() -> Self {
+                #[cfg(feature = "safe")]
+                return <$t>::new($ub).unwrap();
+
+                // SAFETY: constant value
+                #[cfg(not(feature = "safe"))]
+                return unsafe { <$t>::new_unchecked($ub) };
+            }
+        }
     };
 }
 

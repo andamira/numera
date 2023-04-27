@@ -72,7 +72,12 @@ macro_rules! define_numbers {
             type Inner = Self;
             // fn new(value: Numbers<N>) -> Result<Self> { Ok(value) }
             // unsafe fn new_unchecked(value: Numbers<N>) -> Self { value }
+            #[inline]
             fn new(value: AnyNumbers<N>) -> Result<Self> { Ok(value) }
+
+            #[inline]
+            #[cfg(not(feature = "safe"))]
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "non-safe")))]
             unsafe fn new_unchecked(value: AnyNumbers<N>) -> Self { value }
         }
 
@@ -141,6 +146,7 @@ macro_rules! define_numbers {
 
         $(
         impl<N: Number> From<$t> for AnyNumbers<N> {
+            #[inline]
             fn from(n: $t) -> AnyNumbers<N> { AnyNumbers::$v(n) }
         }
         )+

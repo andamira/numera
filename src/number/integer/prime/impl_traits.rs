@@ -18,26 +18,25 @@ use {super::Sieve, crate::all::is_prime_sieve, az::CheckedAs, core::cmp::min};
 
 /* Prime8 */
 
+#[rustfmt::skip]
 impl Bound for Prime8 {
-    fn is_lower_bounded(&self) -> bool {
-        true
-    }
-    fn is_upper_bounded(&self) -> bool {
-        true
-    }
-    fn lower_bound(&self) -> Option<Self> {
-        Some(Prime8(2))
-    }
-    fn upper_bound(&self) -> Option<Self> {
-        Some(Prime8(251))
-    }
+    #[inline]
+    fn is_lower_bounded(&self) -> bool { true }
+    #[inline]
+    fn is_upper_bounded(&self) -> bool { true }
+    #[inline]
+    fn lower_bound(&self) -> Option<Self> { Some(Prime8(2)) }
+    #[inline]
+    fn upper_bound(&self) -> Option<Self> { Some(Prime8(251)) }
 }
 impl LowerBounded for Prime8 {
+    #[inline]
     fn new_min() -> Self {
         Prime8(2)
     }
 }
 impl UpperBounded for Prime8 {
+    #[inline]
     fn new_max() -> Self {
         Prime8(251)
     }
@@ -50,6 +49,7 @@ impl ConstUpperBounded for Prime8 {
 }
 
 impl Count for Prime8 {
+    #[inline]
     fn is_countable(&self) -> bool {
         true
     }
@@ -68,6 +68,7 @@ impl Countable for Prime8 {
     /// assert![Prime8::new(251)?.next().is_err()];
     /// # Ok(()) }
     /// ```
+    #[inline]
     fn next(&self) -> NumeraResult<Self> {
         let nth = self.nth();
         match nth {
@@ -87,6 +88,7 @@ impl Countable for Prime8 {
     /// assert![Prime8::new(2)?.previous().is_err()];
     /// # Ok(()) }
     /// ```
+    #[inline]
     fn previous(&self) -> NumeraResult<Self> {
         let nth = self.nth();
         match nth {
@@ -96,48 +98,42 @@ impl Countable for Prime8 {
     }
 }
 
+#[rustfmt::skip]
 impl Ident for Prime8 {
-    fn can_zero(&self) -> bool {
-        false
-    }
-    fn can_one(&self) -> bool {
-        false
-    }
-    fn can_neg_one(&self) -> bool {
-        false
-    }
-    fn is_zero(&self) -> bool {
-        false
-    }
-    fn is_one(&self) -> bool {
-        false
-    }
-    fn is_neg_one(&self) -> bool {
-        false
-    }
+    #[inline]
+    fn can_zero(&self) -> bool { false }
+    #[inline]
+    fn can_one(&self) -> bool { false }
+    #[inline]
+    fn can_neg_one(&self) -> bool { false }
+    #[inline]
+    fn is_zero(&self) -> bool { false }
+    #[inline]
+    fn is_one(&self) -> bool { false }
+    #[inline]
+    fn is_neg_one(&self) -> bool { false }
 }
 impl NonZero for Prime8 {}
 impl NonOne for Prime8 {}
 impl NonNegOne for Prime8 {}
 
+#[rustfmt::skip]
 impl Sign for Prime8 {
-    fn can_positive(&self) -> bool {
-        true
-    }
-    fn can_negative(&self) -> bool {
-        false
-    }
-    fn is_positive(&self) -> bool {
-        true
-    }
-    fn is_negative(&self) -> bool {
-        false
-    }
+    #[inline]
+    fn can_positive(&self) -> bool { true }
+    #[inline]
+    fn can_negative(&self) -> bool { false }
+    #[inline]
+    fn is_positive(&self) -> bool { true }
+    #[inline]
+    fn is_negative(&self) -> bool { false }
 }
 impl Unsigned for Prime8 {}
 
 impl Number for Prime8 {
     type Inner = u8;
+
+    #[inline]
     fn new(value: Self::Inner) -> NumeraResult<Self> {
         if is_prime_brute(value.into()) {
             Ok(Prime8(value))
@@ -145,6 +141,10 @@ impl Number for Prime8 {
             Err(IntegerError::NotPrime.into())
         }
     }
+
+    #[inline]
+    #[cfg(not(feature = "safe"))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "non-safe")))]
     unsafe fn new_unchecked(value: Self::Inner) -> Self {
         Self(value)
     }
@@ -152,26 +152,25 @@ impl Number for Prime8 {
 
 /* Prime16 */
 
+#[rustfmt::skip]
 impl Bound for Prime16 {
-    fn is_lower_bounded(&self) -> bool {
-        true
-    }
-    fn is_upper_bounded(&self) -> bool {
-        true
-    }
-    fn lower_bound(&self) -> Option<Self> {
-        Some(Prime16(2))
-    }
-    fn upper_bound(&self) -> Option<Self> {
-        Some(Prime16(65_521))
-    }
+    #[inline]
+    fn is_lower_bounded(&self) -> bool { true }
+    #[inline]
+    fn is_upper_bounded(&self) -> bool { true }
+    #[inline]
+    fn lower_bound(&self) -> Option<Self> { Some(Prime16(2)) }
+    #[inline]
+    fn upper_bound(&self) -> Option<Self> { Some(Prime16(65_521)) }
 }
 impl LowerBounded for Prime16 {
+    #[inline]
     fn new_min() -> Self {
         Prime16(2)
     }
 }
 impl UpperBounded for Prime16 {
+    #[inline]
     fn new_max() -> Self {
         Prime16(65_512)
     }
@@ -184,6 +183,7 @@ impl ConstUpperBounded for Prime16 {
 }
 
 impl Count for Prime16 {
+    #[inline]
     fn is_countable(&self) -> bool {
         true
     }
@@ -203,6 +203,7 @@ impl Countable for Prime16 {
     /// assert![Prime16::new(65_521)?.next().is_err()];
     /// # Ok(()) }
     /// ```
+    #[inline]
     fn next(&self) -> NumeraResult<Self> {
         let nth = self.nth();
         match nth {
@@ -236,6 +237,7 @@ impl Countable for Prime16 {
     /// assert![Prime16::new(2)?.previous().is_err()];
     /// # Ok(()) }
     /// ```
+    #[inline]
     fn previous(&self) -> NumeraResult<Self> {
         let nth = self.nth();
         match nth {
@@ -255,48 +257,42 @@ impl Countable for Prime16 {
     }
 }
 
+#[rustfmt::skip]
 impl Ident for Prime16 {
-    fn can_zero(&self) -> bool {
-        false
-    }
-    fn can_one(&self) -> bool {
-        false
-    }
-    fn can_neg_one(&self) -> bool {
-        false
-    }
-    fn is_zero(&self) -> bool {
-        false
-    }
-    fn is_one(&self) -> bool {
-        false
-    }
-    fn is_neg_one(&self) -> bool {
-        false
-    }
+    #[inline]
+    fn can_zero(&self) -> bool { false }
+    #[inline]
+    fn can_one(&self) -> bool { false }
+    #[inline]
+    fn can_neg_one(&self) -> bool { false }
+    #[inline]
+    fn is_zero(&self) -> bool { false }
+    #[inline]
+    fn is_one(&self) -> bool { false }
+    #[inline]
+    fn is_neg_one(&self) -> bool { false }
 }
 impl NonZero for Prime16 {}
 impl NonOne for Prime16 {}
 impl NonNegOne for Prime16 {}
 
+#[rustfmt::skip]
 impl Sign for Prime16 {
-    fn can_positive(&self) -> bool {
-        true
-    }
-    fn can_negative(&self) -> bool {
-        false
-    }
-    fn is_positive(&self) -> bool {
-        true
-    }
-    fn is_negative(&self) -> bool {
-        false
-    }
+    #[inline]
+    fn can_positive(&self) -> bool { true }
+    #[inline]
+    fn can_negative(&self) -> bool { false }
+    #[inline]
+    fn is_positive(&self) -> bool { true }
+    #[inline]
+    fn is_negative(&self) -> bool { false }
 }
 impl Unsigned for Prime16 {}
 
 impl Number for Prime16 {
     type Inner = u16;
+
+    #[inline]
     fn new(value: Self::Inner) -> NumeraResult<Self> {
         if is_prime_brute(value.into()) {
             Ok(Prime16(value))
@@ -304,6 +300,10 @@ impl Number for Prime16 {
             Err(IntegerError::NotPrime.into())
         }
     }
+
+    #[inline]
+    #[cfg(not(feature = "safe"))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "non-safe")))]
     unsafe fn new_unchecked(value: Self::Inner) -> Self {
         Self(value)
     }
@@ -311,26 +311,25 @@ impl Number for Prime16 {
 
 /* Prime32 */
 
+#[rustfmt::skip]
 impl Bound for Prime32 {
-    fn is_lower_bounded(&self) -> bool {
-        true
-    }
-    fn is_upper_bounded(&self) -> bool {
-        true
-    }
-    fn lower_bound(&self) -> Option<Self> {
-        Some(Prime32(2))
-    }
-    fn upper_bound(&self) -> Option<Self> {
-        Some(Prime32(4_294_967_291))
-    }
+    #[inline]
+    fn is_lower_bounded(&self) -> bool { true }
+    #[inline]
+    fn is_upper_bounded(&self) -> bool { true }
+    #[inline]
+    fn lower_bound(&self) -> Option<Self> { Some(Prime32(2)) }
+    #[inline]
+    fn upper_bound(&self) -> Option<Self> { Some(Prime32(4_294_967_291)) }
 }
 impl LowerBounded for Prime32 {
+    #[inline]
     fn new_min() -> Self {
         Prime32(2)
     }
 }
 impl UpperBounded for Prime32 {
+    #[inline]
     fn new_max() -> Self {
         Prime32(4_294_967_291)
     }
@@ -343,6 +342,7 @@ impl ConstUpperBounded for Prime32 {
 }
 
 impl Count for Prime32 {
+    #[inline]
     fn is_countable(&self) -> bool {
         true
     }
@@ -376,6 +376,7 @@ impl Countable for Prime32 {
     /// // assert![Prime32::new(4_294_967_291)?.next().is_err()]; // SLOW
     /// # Ok(()) }
     /// ```
+    #[inline]
     fn next(&self) -> NumeraResult<Self> {
         if self.0 == 4_294_967_291 {
             Err(IntegerError::Overflow.into())
@@ -402,6 +403,7 @@ impl Countable for Prime32 {
     /// // assert![Prime32::new(4_294_967_291)?.previous().is_err()]; // SLOW
     /// # Ok(()) }
     /// ```
+    #[inline]
     fn previous(&self) -> NumeraResult<Self> {
         if self.0 == 2 {
             Err(IntegerError::Underflow.into())
@@ -414,48 +416,41 @@ impl Countable for Prime32 {
     }
 }
 
+#[rustfmt::skip]
 impl Ident for Prime32 {
-    fn can_zero(&self) -> bool {
-        false
-    }
-    fn can_one(&self) -> bool {
-        false
-    }
-    fn can_neg_one(&self) -> bool {
-        false
-    }
-    fn is_zero(&self) -> bool {
-        false
-    }
-    fn is_one(&self) -> bool {
-        false
-    }
-    fn is_neg_one(&self) -> bool {
-        false
-    }
+    #[inline]
+    fn can_zero(&self) -> bool { false }
+    #[inline]
+    fn can_one(&self) -> bool { false }
+    #[inline]
+    fn can_neg_one(&self) -> bool { false }
+    #[inline]
+    fn is_zero(&self) -> bool { false }
+    #[inline]
+    fn is_one(&self) -> bool { false }
+    #[inline]
+    fn is_neg_one(&self) -> bool { false }
 }
 impl NonZero for Prime32 {}
 impl NonOne for Prime32 {}
 impl NonNegOne for Prime32 {}
 
+#[rustfmt::skip]
 impl Sign for Prime32 {
-    fn can_positive(&self) -> bool {
-        true
-    }
-    fn can_negative(&self) -> bool {
-        false
-    }
-    fn is_positive(&self) -> bool {
-        true
-    }
-    fn is_negative(&self) -> bool {
-        false
-    }
+    #[inline]
+    fn can_positive(&self) -> bool { true }
+    #[inline]
+    fn can_negative(&self) -> bool { false }
+    #[inline]
+    fn is_positive(&self) -> bool { true }
+    #[inline]
+    fn is_negative(&self) -> bool { false }
 }
 impl Unsigned for Prime32 {}
 
 impl Number for Prime32 {
     type Inner = u32;
+    #[inline]
     #[cfg(not(feature = "std"))]
     fn new(value: Self::Inner) -> NumeraResult<Self> {
         if is_prime_brute(value) {
@@ -464,6 +459,7 @@ impl Number for Prime32 {
             Err(IntegerError::NotPrime.into())
         }
     }
+    #[inline]
     #[cfg(feature = "std")]
     fn new(value: Self::Inner) -> NumeraResult<Self> {
         if is_prime_sieve(value.checked_as::<usize>().ok_or(IntegerError::Overflow)?) {
@@ -472,6 +468,10 @@ impl Number for Prime32 {
             Err(IntegerError::NotPrime.into())
         }
     }
+
+    #[inline]
+    #[cfg(not(feature = "safe"))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "non-safe")))]
     unsafe fn new_unchecked(value: Self::Inner) -> Self {
         Self(value)
     }

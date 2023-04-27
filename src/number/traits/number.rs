@@ -45,6 +45,8 @@ pub trait Number: Bound + Count + Ident + Sign {
     ///
     /// # Safety
     /// The invariants inherent to the specific number type must be maintained.
+    #[cfg(not(feature = "safe"))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "non-safe")))]
     unsafe fn new_unchecked(value: Self::Inner) -> Self;
 }
 
@@ -61,7 +63,9 @@ macro_rules! impl_number {
 
             #[inline]
             fn new(value: $t) -> Result<Self> { Ok(value) }
+
             #[inline]
+            #[cfg(not(feature = "safe"))]
             unsafe fn new_unchecked(value: Self::Inner) -> Self { value }
         }
     };

@@ -77,7 +77,13 @@ macro_rules! define_integers_family {
         /// This implementation is no-op.
         impl crate::all::Number for $fname {
             type Inner = Self;
+
+            #[inline]
             fn new(value: $fname) -> crate::all::NumeraResult<Self> { Ok(value) }
+
+            #[inline]
+            #[cfg(not(feature = "safe"))]
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "non-safe")))]
             unsafe fn new_unchecked(value: $fname) -> Self { value }
         }
 
@@ -110,6 +116,7 @@ macro_rules! define_integers_family {
         }
         impl crate::all::Count for $fname {
             /// All integers are countable.
+            #[inline]
             fn is_countable(&self) -> bool { true }
         }
         /// This implementation defers to the actual integer variant.
@@ -198,6 +205,7 @@ macro_rules! define_integers_family {
 
         $(
         impl From<$vtype> for $fname {
+            #[inline]
             fn from(z: $vtype) -> $fname {
                 $fname::$vtype(z)
             }
@@ -206,6 +214,7 @@ macro_rules! define_integers_family {
         $(
         #[cfg(feature = $dep_name)]
         impl From<$vtype_dep> for $fname {
+            #[inline]
             fn from(z: $vtype_dep) -> $fname {
                 $fname::$vtype_dep(z)
             }
@@ -292,7 +301,13 @@ macro_rules! define_any_integers_family {
         /// This implementation is no-op.
         impl crate::all::Number for $fname {
             type Inner = Self;
+
+            #[inline]
             fn new(value: $fname) -> crate::all::NumeraResult<Self> { Ok(value) }
+
+            #[inline]
+            #[cfg(not(feature = "safe"))]
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "non-safe")))]
             unsafe fn new_unchecked(value: $fname) -> Self { value }
         }
 
@@ -325,6 +340,7 @@ macro_rules! define_any_integers_family {
         }
         impl crate::all::Count for $fname {
             /// All integers are countable.
+            #[inline]
             fn is_countable(&self) -> bool { true }
         }
         /// This implementation defers to the actual integer variant.
@@ -413,6 +429,7 @@ macro_rules! define_any_integers_family {
 
         $(
         impl From<$vtype> for $fname {
+            #[inline]
             fn from(z: $vtype) -> $fname {
                 $fname::$vname(z)
             }

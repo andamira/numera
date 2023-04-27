@@ -20,11 +20,11 @@ macro_rules! impl_nonzero_integer {
     };
     ($t:ident, $inner:ident) => {
         impl Integer for $t {
-            #[inline(always)]
+            #[inline]
             fn is_even(&self) -> bool {
                 self.0.get().is_even()
             }
-            #[inline(always)]
+            #[inline]
             fn is_multiple_of(&self, other: &Self) -> bool {
                 self.0.get().is_multiple_of(&other.0.get())
             }
@@ -43,12 +43,25 @@ macro_rules! impl_nonzero_integer {
                     b = a % b;
                     a = temp;
                 }
+                #[cfg(feature = "safe")]
+                return Some($t::new(a).unwrap());
+
+                #[cfg(not(feature = "safe"))]
                 // SAFETY: it can't be 0
-                Some(unsafe { $t::new_unchecked(a) })
+                return Some(unsafe { $t::new_unchecked(a) });
             }
             #[inline]
             fn lcm(&self, other: &Self) -> Option<Self> {
-                Some(
+                #[cfg(feature = "safe")]
+                return Some(
+                    $t::new(
+                        self.0.get() * other.0.get() /
+                        self.0.get().gcd(&other.0.get()).unwrap()
+                    ).unwrap()
+                );
+
+                #[cfg(not(feature = "safe"))]
+                return Some(
                     // SAFETY: it can't be 0
                     unsafe {
                         $t::new_unchecked(
@@ -56,13 +69,7 @@ macro_rules! impl_nonzero_integer {
                             self.0.get().gcd(&other.0.get()).unwrap()
                         )
                     }
-                )
-
-                // TODO safe
-                // $t::new(
-                //     $inner::new(self.0.get() * other.0.get() /
-                //     self.0.get().gcd(&other.0.get())).unwrap()
-                // ).unwrap()
+                );
             }
         }
     };

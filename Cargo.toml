@@ -20,14 +20,16 @@ keywords = ["math", "mathematics", "number", "numeral", "numeric"]
 publish = true
 
 [features]
-default = ["std"]
+default = ["std", "safe"]
 #
 std = ["primal-sieve", "half?/std", "ibig?/std"]
 #
-deps_all = ["twofloat", "half", "ibig"]
+safe = []
+non-safe = []
 #
 nightly = [] # used only for docs
 
+deps_all = ["twofloat", "half", "ibig"]
 
 [dependencies]
 az = "1.2.1"

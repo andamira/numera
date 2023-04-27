@@ -94,6 +94,7 @@ pub trait Zero: Ident {
 
     /// Sets this number to `0`.
     #[rustfmt::skip]
+    #[inline]
     fn set_zero(&mut self) where Self: Sized { *self = Self::new_zero(); }
 }
 
@@ -125,6 +126,7 @@ pub trait One: Ident {
 
     /// Sets this number to `1`.
     #[rustfmt::skip]
+    #[inline]
     fn set_one(&mut self) where Self: Sized { *self = Self::new_one(); }
 }
 
@@ -196,10 +198,14 @@ macro_rules! impl_ident {
     };
     (float: $t:ty, $zero:expr, $one:expr, $neg_one:expr) => {
         impl Ident for $t {
+            #[inline]
             fn can_zero(&self) -> bool { true }
+            #[inline]
             fn can_one(&self) -> bool { true }
+            #[inline]
             fn can_neg_one(&self) -> bool { true }
 
+            #[inline]
             fn is_zero(&self) -> bool {
                 #[cfg(feature = "std")]
                 return (*self).abs() <= <$t>::EPSILON;
@@ -211,6 +217,7 @@ macro_rules! impl_ident {
                 }
             }
 
+            #[inline]
             fn is_one(&self) -> bool {
                 #[cfg(feature = "std")]
                 return (*self - 1.0).abs() <= <$t>::EPSILON;
@@ -223,9 +230,11 @@ macro_rules! impl_ident {
                 }
             }
 
+            #[inline]
             fn is_neg_one(&self) -> bool {
                 #[cfg(feature = "std")]
                 return (*self + 1.0).abs() <= <$t>::EPSILON;
+
                 #[cfg(not(feature = "std"))]
                 if self.is_sign_positive() {
                     *self +1. <= <$t>::EPSILON
@@ -251,20 +260,35 @@ macro_rules! impl_ident {
     };
     (signed_int: $t:ty, $zero:expr, $one:expr, $neg_one:expr) => {
         impl Ident for $t {
+            #[inline]
             fn can_zero(&self) -> bool { true }
+            #[inline]
             fn can_one(&self) -> bool { true }
+            #[inline]
             fn can_neg_one(&self) -> bool { true }
 
+            #[inline]
             fn is_zero(&self) -> bool { *self == $zero }
+            #[inline]
             fn is_one(&self) -> bool { *self == $one }
+            #[inline]
             fn is_neg_one(&self) -> bool { *self == $neg_one }
         }
         impl ConstZero for $t { const ZERO: Self = $zero; }
         impl ConstOne for $t { const ONE: Self = $one; }
         impl ConstNegOne for $t { const NEG_ONE: Self = $neg_one; }
-        impl Zero for $t { fn new_zero() -> Self { $zero } }
-        impl One for $t { fn new_one() -> Self { $one } }
-        impl NegOne for $t { fn new_neg_one() -> Self { $neg_one } }
+        impl Zero for $t {
+            #[inline]
+            fn new_zero() -> Self { $zero }
+        }
+        impl One for $t {
+            #[inline]
+            fn new_one() -> Self { $one }
+        }
+        impl NegOne for $t {
+            #[inline]
+            fn new_neg_one() -> Self { $neg_one }
+        }
     };
 
     // impl [Const][Zero|One|NonNegOne] for unsigned integer primitives.
@@ -273,20 +297,32 @@ macro_rules! impl_ident {
     };
     (unsigned_int: $t:ty, $zero:expr, $one:expr) => {
         impl Ident for $t {
+            #[inline]
             fn can_zero(&self) -> bool { true }
+            #[inline]
             fn can_one(&self) -> bool { true }
+            #[inline]
             fn can_neg_one(&self) -> bool { false }
 
+            #[inline]
             fn is_zero(&self) -> bool { *self == $zero }
+            #[inline]
             fn is_one(&self) -> bool { *self == $one }
+            #[inline]
             fn is_neg_one(&self) -> bool { false }
         }
 
         impl ConstZero for $t { const ZERO: Self = $zero; }
-        impl Zero for $t { fn new_zero() -> Self { $zero } }
+        impl Zero for $t {
+            #[inline]
+            fn new_zero() -> Self { $zero }
+        }
 
         impl ConstOne for $t { const ONE: Self = $one; }
-        impl One for $t { fn new_one() -> Self { $one } }
+        impl One for $t {
+            #[inline]
+            fn new_one() -> Self { $one }
+        }
 
         impl NonNegOne for $t {}
     };
@@ -309,20 +345,40 @@ macro_rules! impl_ident {
         impl NonZero for $t {}
 
         impl ConstOne for $t {
-            // SAFETY: we use a known valid constant
+            #[cfg(feature = "safe")]
+            const ONE: Self = if let Some(n) = <$t>::new($one)
+                { n } else { unreachable!() };
+
+            #[cfg(not(feature = "safe"))]
+            // SAFETY: constant value
             const ONE: Self = unsafe { <$t>::new_unchecked($one) };
         }
         impl One for $t {
-            // SAFETY: we use a known valid constant
+            #[cfg(feature = "safe")]
+            fn new_one() -> Self { <$t>::new($one).unwrap() }
+
+            #[cfg(not(feature = "safe"))]
+            // SAFETY: constant value
             fn new_one() -> Self { unsafe { <$t>::new_unchecked($one) } }
         }
 
         impl ConstNegOne for $t {
-            // SAFETY: we use a known valid constant
+            #[cfg(feature = "safe")]
+            const NEG_ONE: Self = if let Some(n) = <$t>::new($neg_one)
+                { n } else { unreachable!() };
+
+            #[cfg(not(feature = "safe"))]
+            // SAFETY: constant value
             const NEG_ONE: Self = unsafe { <$t>::new_unchecked($neg_one) };
         }
         impl NegOne for $t {
-            // SAFETY: we use a known valid constant
+            #[inline]
+            #[cfg(feature = "safe")]
+            fn new_neg_one() -> Self { <$t>::new($neg_one).unwrap() }
+
+            #[inline]
+            #[cfg(not(feature = "safe"))]
+            // SAFETY: constant value
             fn new_neg_one() -> Self { unsafe { <$t>::new_unchecked($neg_one) } }
         }
     };
@@ -333,23 +389,40 @@ macro_rules! impl_ident {
     };
     (unsigned_nonzero: $t:ty, $one:expr) => {
         impl Ident for $t {
+            #[inline]
             fn can_zero(&self) -> bool { false }
+            #[inline]
             fn can_one(&self) -> bool { true }
+            #[inline]
             fn can_neg_one(&self) -> bool { false }
 
+            #[inline]
             fn is_zero(&self) -> bool { false }
+            #[inline]
             fn is_one(&self) -> bool { self.get() == $one }
+            #[inline]
             fn is_neg_one(&self) -> bool { false }
         }
 
         impl NonZero for $t {}
 
         impl ConstOne for $t {
-            // SAFETY: we use a known valid constant
+            #[cfg(feature = "safe")]
+            const ONE: Self = if let Some(n) = <$t>::new($one)
+                { n } else { unreachable!() };
+
+            #[cfg(not(feature = "safe"))]
+            // SAFETY: constant value
             const ONE: Self = unsafe { <$t>::new_unchecked($one) };
         }
         impl One for $t {
-            // SAFETY: we use a known valid constant
+            #[inline]
+            #[cfg(feature = "safe")]
+            fn new_one() -> Self { <$t>::new($one).unwrap() }
+
+            #[inline]
+            #[cfg(not(feature = "safe"))]
+            // SAFETY: constant value
             fn new_one() -> Self { unsafe { <$t>::new_unchecked($one) } }
         }
 
@@ -362,20 +435,35 @@ macro_rules! impl_ident {
     };
     (signed_nonconst: $t:ty, $zero:expr, $one:expr, $neg_one:expr) => {
         impl Ident for $t {
+            #[inline]
             fn can_zero(&self) -> bool { true }
+            #[inline]
             fn can_one(&self) -> bool { true }
+            #[inline]
             fn can_neg_one(&self) -> bool { true }
 
+            #[inline]
             fn is_zero(&self) -> bool { *self == $zero }
+            #[inline]
             fn is_one(&self) -> bool { *self == $one }
+            #[inline]
             fn is_neg_one(&self) -> bool { *self == $neg_one }
         }
 
-        impl Zero for $t { fn new_zero() -> Self { $zero } }
+        impl Zero for $t {
+            #[inline]
+            fn new_zero() -> Self { $zero }
+        }
 
-        impl One for $t { fn new_one() -> Self { $one } }
+        impl One for $t {
+            #[inline]
+            fn new_one() -> Self { $one }
+        }
 
-        impl NegOne for $t { fn new_neg_one() -> Self { $neg_one } }
+        impl NegOne for $t {
+            #[inline]
+            fn new_neg_one() -> Self { $neg_one }
+        }
     };
 
     // impl non-const [NonZero|One].
@@ -384,12 +472,18 @@ macro_rules! impl_ident {
     };
     (unsigned_nonconst: $t:ty, $zero:expr, $one:expr) => {
         impl Ident for $t {
+            #[inline]
             fn can_zero(&self) -> bool { true }
+            #[inline]
             fn can_one(&self) -> bool { true }
+            #[inline]
             fn can_neg_one(&self) -> bool { false }
 
+            #[inline]
             fn is_zero(&self) -> bool { *self == $zero }
+            #[inline]
             fn is_one(&self) -> bool { *self == $one }
+            #[inline]
             fn is_neg_one(&self) -> bool { false }
         }
 

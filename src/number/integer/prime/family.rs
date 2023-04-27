@@ -24,9 +24,14 @@ pub enum Primes {
 /// This implementation is no-op.
 impl Number for Primes {
     type Inner = Self;
+
+    #[inline]
     fn new(value: Primes) -> NumeraResult<Self> {
         Ok(value)
     }
+    #[inline]
+    #[cfg(not(feature = "safe"))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "non-safe")))]
     unsafe fn new_unchecked(value: Primes) -> Self {
         value
     }
@@ -69,6 +74,7 @@ impl Bound for Primes {
 }
 
 impl LowerBounded for Primes {
+    #[inline]
     fn new_min() -> Primes {
         Primes::Prime8(Prime8::new_min())
     }
@@ -77,6 +83,7 @@ impl ConstLowerBounded for Primes {
     const MIN: Self = Primes::Prime8(Prime8::MIN);
 }
 impl UpperBounded for Primes {
+    #[inline]
     fn new_max() -> Primes {
         Primes::Prime32(Prime32::new_max())
     }
@@ -86,6 +93,7 @@ impl ConstUpperBounded for Primes {
 }
 
 impl Count for Primes {
+    #[inline]
     fn is_countable(&self) -> bool {
         true
     }
@@ -120,43 +128,35 @@ impl Countable for Primes {
     }
 }
 
+#[rustfmt::skip]
 impl Ident for Primes {
-    fn can_zero(&self) -> bool {
-        false
-    }
-    fn can_one(&self) -> bool {
-        false
-    }
-    fn can_neg_one(&self) -> bool {
-        false
-    }
-    fn is_zero(&self) -> bool {
-        false
-    }
-    fn is_one(&self) -> bool {
-        false
-    }
-    fn is_neg_one(&self) -> bool {
-        false
-    }
+    #[inline]
+    fn can_zero(&self) -> bool { false }
+    #[inline]
+    fn can_one(&self) -> bool { false }
+    #[inline]
+    fn can_neg_one(&self) -> bool { false }
+    #[inline]
+    fn is_zero(&self) -> bool { false }
+    #[inline]
+    fn is_one(&self) -> bool { false }
+    #[inline]
+    fn is_neg_one(&self) -> bool { false }
 }
 
 impl NonZero for Primes {}
 impl NonOne for Primes {}
 impl NonNegOne for Primes {}
 
+#[rustfmt::skip]
 impl Sign for Primes {
-    fn can_positive(&self) -> bool {
-        true
-    }
-    fn can_negative(&self) -> bool {
-        false
-    }
-    fn is_positive(&self) -> bool {
-        true
-    }
-    fn is_negative(&self) -> bool {
-        false
-    }
+    #[inline]
+    fn can_positive(&self) -> bool { true }
+    #[inline]
+    fn can_negative(&self) -> bool { false }
+    #[inline]
+    fn is_positive(&self) -> bool { true }
+    #[inline]
+    fn is_negative(&self) -> bool { false }
 }
 impl Unsigned for Primes {}

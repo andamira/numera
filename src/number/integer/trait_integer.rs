@@ -71,11 +71,11 @@ macro_rules! impl_integer {
     (many $($t:ident),+) => { $( impl_integer![$t]; )+ };
     ($t:ident) => {
         impl Integer for $t {
-            #[inline(always)]
+            #[inline]
             fn is_even(&self) -> bool {
                 *self & 1 == 0
             }
-            #[inline(always)]
+            #[inline]
             fn is_multiple_of(&self, other: &Self) -> bool {
                 *self % *other == 0
             }
@@ -108,11 +108,11 @@ macro_rules! impl_integer {
     (many_nonzero $($t:ident),+) => { $( impl_integer![nonzero $t]; )+ };
     (nonzero $t:ident) => {
         impl Integer for $t {
-            #[inline(always)]
+            #[inline]
             fn is_even(&self) -> bool {
                 self.get() & 1 == 0
             }
-            #[inline(always)]
+            #[inline]
             fn is_multiple_of(&self, other: &Self) -> bool {
                 self.get() % other.get() == 0
             }

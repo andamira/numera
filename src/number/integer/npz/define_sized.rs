@@ -70,18 +70,18 @@ macro_rules! define_nonpositive_integer_sized {
             /* sign */
 
             impl Sign for [<$name$bsize>] {
-                #[inline(always)]
+                #[inline]
                 fn can_negative(&self) -> bool { true }
-                #[inline(always)]
+                #[inline]
                 fn can_positive(&self) -> bool { false }
-                #[inline(always)]
+                #[inline]
                 fn is_negative(&self) -> bool { self.0.is_negative() }
-                #[inline(always)]
+                #[inline]
                 fn is_positive(&self) -> bool { false }
             }
             impl NegSigned for [<$name$bsize>] {
                 type Inner = [<$p$bsize>];
-                #[inline(always)]
+                #[inline]
                 fn new_neg(value: Self::Inner) -> NumeraResult<Self> {
                     Ok(Self(value))
                 }
@@ -90,25 +90,25 @@ macro_rules! define_nonpositive_integer_sized {
             /* bound */
 
             impl Bound for [<$name$bsize>] {
-                #[inline(always)]
+                #[inline]
                 fn is_lower_bounded(&self) -> bool { true }
-                #[inline(always)]
+                #[inline]
                 fn is_upper_bounded(&self) -> bool { true }
-                #[inline(always)]
+                #[inline]
                 fn lower_bound(&self) -> Option<Self> where Self: Sized {
                     Some(Self([<$p$bsize>]::MAX))
                 }
-                #[inline(always)]
+                #[inline]
                 fn upper_bound(&self) -> Option<Self> where Self: Sized {
                     Some(Self(0))
                 }
             }
             impl LowerBounded for [<$name$bsize>] {
-                #[inline(always)]
+                #[inline]
                 fn new_min() -> Self { <Self as ConstLowerBounded>::MIN }
             }
             impl UpperBounded for [<$name$bsize>] {
-                #[inline(always)]
+                #[inline]
                 fn new_max() -> Self { <Self as ConstUpperBounded>::MAX } // 0
             }
             impl ConstLowerBounded for [<$name$bsize>] {
@@ -121,7 +121,7 @@ macro_rules! define_nonpositive_integer_sized {
             /* count */
 
             impl Count for [<$name$bsize>] {
-                #[inline(always)]
+                #[inline]
                 fn is_countable(&self) -> bool { true }
             }
 
@@ -139,28 +139,28 @@ macro_rules! define_nonpositive_integer_sized {
             /* ident */
 
             impl Ident for [<$name$bsize>] {
-                #[inline(always)]
+                #[inline]
                 fn can_zero(&self) -> bool { true }
-                #[inline(always)]
+                #[inline]
                 fn can_one(&self) -> bool { false }
-                #[inline(always)]
+                #[inline]
                 fn can_neg_one(&self) -> bool { true }
 
-                #[inline(always)]
+                #[inline]
                 fn is_zero(&self) -> bool { self.0 == 0 }
-                #[inline(always)]
+                #[inline]
                 fn is_one(&self) -> bool { false }
-                #[inline(always)]
+                #[inline]
                 fn is_neg_one(&self) -> bool { self.0 == 1 }
             }
             impl ConstZero for [<$name$bsize>] { const ZERO: Self = Self(0); }
             impl Zero for [<$name$bsize>] {
-                #[inline(always)]
+                #[inline]
                 fn new_zero() -> Self { Self(0) }
             }
             impl ConstNegOne for [<$name$bsize>] { const NEG_ONE: Self = Self(1); }
             impl NegOne for [<$name$bsize>] {
-                #[inline(always)]
+                #[inline]
                 fn new_neg_one() -> Self { Self(1) }
             }
             impl NonOne for [<$name$bsize>] {}
@@ -186,6 +186,8 @@ macro_rules! define_nonpositive_integer_sized {
                 }
                 /// Please note that the `value` provided will interpreted as negative.
                 #[inline]
+                #[cfg(not(feature = "safe"))]
+                #[cfg_attr(feature = "nightly", doc(cfg(feature = "non-safe")))]
                 unsafe fn new_unchecked(value: Self::Inner) -> Self { Self(value) }
             }
         }

@@ -18,11 +18,11 @@ macro_rules! impl_integer {
     };
     ($t:ident) => {
         impl Integer for $t {
-            #[inline(always)]
+            #[inline]
             fn is_even(&self) -> bool {
                 self.0.is_even()
             }
-            #[inline(always)]
+            #[inline]
             fn is_multiple_of(&self, other: &Self) -> bool {
                 self.0.is_multiple_of(&other.0)
             }
