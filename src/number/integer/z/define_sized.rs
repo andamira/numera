@@ -10,7 +10,7 @@
 //   - Integer[8|16|32|64|128]
 
 use crate::{
-    error::{IntegerError, NumeraResult as Result},
+    error::{IntegerError, NumeraResult},
     number::traits::{
         Bound, ConstLowerBounded, ConstNegOne, ConstOne, ConstUpperBounded, ConstZero, Count,
         Countable, Ident, LowerBounded, NegOne, Number, One, Sign, Signed, UpperBounded, Zero,
@@ -108,10 +108,10 @@ macro_rules! define_integer_sized {
             }
 
             impl Countable for [<$name$bsize>] {
-                fn next(&self) -> Result<Self> {
+                fn next(&self) -> NumeraResult<Self> {
                     Ok(Self(self.0.checked_add(1).ok_or(IntegerError::Overflow)?))
                 }
-                fn previous(&self) -> Result<Self> {
+                fn previous(&self) -> NumeraResult<Self> {
                     Ok(Self(self.0.checked_sub(1).ok_or(IntegerError::Underflow)?))
                 }
             }
@@ -139,7 +139,7 @@ macro_rules! define_integer_sized {
             impl Number for [<$name$bsize>] {
                 type Inner = [<$p$bsize>];
 
-                fn new(value: Self::Inner) -> Result<Self> { Ok(Self(value)) }
+                fn new(value: Self::Inner) -> NumeraResult<Self> { Ok(Self(value)) }
                 unsafe fn new_unchecked(value: Self::Inner) -> Self { Self(value) }
             }
         }

@@ -8,8 +8,8 @@ use primal_sieve::Sieve;
 
 use crate::all::{NumeraError, NumeraResult};
 
-mod any;
 mod consts;
+mod family;
 mod fns;
 mod impl_from;
 mod impl_traits;
@@ -19,8 +19,8 @@ pub use all::*;
 pub(crate) mod all {
     #[doc(inline)]
     pub use super::{
-        any::Primes,
         consts::{PRIMES_BELL, PRIMES_U16, PRIMES_U8},
+        family::Primes,
         fns::{is_prime_brute, nth_prime_brute},
         trait_prime::Prime,
     };

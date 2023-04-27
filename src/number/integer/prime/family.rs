@@ -1,4 +1,4 @@
-// numera::number::integer::prime::any
+// numera::number::integer::prime::family
 //
 //!
 //

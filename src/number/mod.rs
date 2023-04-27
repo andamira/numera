@@ -9,7 +9,7 @@
 //! [1m]: https://mathworld.wolfram.com/Number.html
 //
 
-mod any;
+mod family;
 mod no;
 
 pub mod integer;
@@ -23,7 +23,7 @@ pub use all::{
 pub(crate) mod all {
     #[doc(inline)]
     pub use super::{
-        any::{AnyNumbers, Numbers},
+        family::{AnyNumbers, Numbers},
         integer::all::*,
         traits::all::*,
     };

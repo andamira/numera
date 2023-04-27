@@ -6,12 +6,10 @@
 
 use super::{is_prime_brute, Prime16, Prime32, Prime8, PRIMES_U16, PRIMES_U8};
 use crate::{
-    error::{IntegerError, NumeraResult as Result},
-    number::{
-        traits::{
-            Bound, ConstLowerBounded, ConstUpperBounded, Count, Countable, Ident, LowerBounded,
-            NonNegOne, NonOne, NonZero, Number, Sign, Unsigned, UpperBounded,
-        },
+    error::{IntegerError, NumeraResult},
+    number::traits::{
+        Bound, ConstLowerBounded, ConstUpperBounded, Count, Countable, Ident, LowerBounded,
+        NonNegOne, NonOne, NonZero, Number, Sign, Unsigned, UpperBounded,
     },
 };
 
@@ -70,7 +68,7 @@ impl Countable for Prime8 {
     /// assert![Prime8::new(251)?.next().is_err()];
     /// # Ok(()) }
     /// ```
-    fn next(&self) -> Result<Self> {
+    fn next(&self) -> NumeraResult<Self> {
         let nth = self.nth();
         match nth {
             54 => Err(IntegerError::Overflow.into()),
@@ -89,7 +87,7 @@ impl Countable for Prime8 {
     /// assert![Prime8::new(2)?.previous().is_err()];
     /// # Ok(()) }
     /// ```
-    fn previous(&self) -> Result<Self> {
+    fn previous(&self) -> NumeraResult<Self> {
         let nth = self.nth();
         match nth {
             1 => Err(IntegerError::Underflow.into()),
@@ -140,7 +138,7 @@ impl Unsigned for Prime8 {}
 
 impl Number for Prime8 {
     type Inner = u8;
-    fn new(value: Self::Inner) -> Result<Self> {
+    fn new(value: Self::Inner) -> NumeraResult<Self> {
         if is_prime_brute(value.into()) {
             Ok(Prime8(value))
         } else {
@@ -205,7 +203,7 @@ impl Countable for Prime16 {
     /// assert![Prime16::new(65_521)?.next().is_err()];
     /// # Ok(()) }
     /// ```
-    fn next(&self) -> Result<Self> {
+    fn next(&self) -> NumeraResult<Self> {
         let nth = self.nth();
         match nth {
             // can't be 0
@@ -238,7 +236,7 @@ impl Countable for Prime16 {
     /// assert![Prime16::new(2)?.previous().is_err()];
     /// # Ok(()) }
     /// ```
-    fn previous(&self) -> Result<Self> {
+    fn previous(&self) -> NumeraResult<Self> {
         let nth = self.nth();
         match nth {
             2..=55 => Ok(Prime16(u16::from(PRIMES_U8[nth - 2]))),
@@ -299,7 +297,7 @@ impl Unsigned for Prime16 {}
 
 impl Number for Prime16 {
     type Inner = u16;
-    fn new(value: Self::Inner) -> Result<Self> {
+    fn new(value: Self::Inner) -> NumeraResult<Self> {
         if is_prime_brute(value.into()) {
             Ok(Prime16(value))
         } else {
@@ -355,9 +353,9 @@ impl Count for Prime32 {
 #[cfg(not(feature = "std"))]
 impl Countable for Prime32 {
     /// Not implemented for no-std.
-    fn next(&self) -> Result<Self> { Err(crate::all::NumeraError::NotImplemented) }
+    fn next(&self) -> NumeraResult<Self> { Err(crate::all::NumeraError::NotImplemented) }
     /// Not implemented for no-std.
-    fn previous(&self) -> Result<Self> { Err(crate::all::NumeraError::NotImplemented) }
+    fn previous(&self) -> NumeraResult<Self> { Err(crate::all::NumeraError::NotImplemented) }
 }
 #[cfg(feature = "std")]
 #[cfg_attr(feature = "nightly", doc(cfg(feature = "std")))]
@@ -378,7 +376,7 @@ impl Countable for Prime32 {
     /// // assert![Prime32::new(4_294_967_291)?.next().is_err()]; // SLOW
     /// # Ok(()) }
     /// ```
-    fn next(&self) -> Result<Self> {
+    fn next(&self) -> NumeraResult<Self> {
         if self.0 == 4_294_967_291 {
             Err(IntegerError::Overflow.into())
         } else {
@@ -404,7 +402,7 @@ impl Countable for Prime32 {
     /// // assert![Prime32::new(4_294_967_291)?.previous().is_err()]; // SLOW
     /// # Ok(()) }
     /// ```
-    fn previous(&self) -> Result<Self> {
+    fn previous(&self) -> NumeraResult<Self> {
         if self.0 == 2 {
             Err(IntegerError::Underflow.into())
         } else {
@@ -459,7 +457,7 @@ impl Unsigned for Prime32 {}
 impl Number for Prime32 {
     type Inner = u32;
     #[cfg(not(feature = "std"))]
-    fn new(value: Self::Inner) -> Result<Self> {
+    fn new(value: Self::Inner) -> NumeraResult<Self> {
         if is_prime_brute(value) {
             Ok(Prime32(value))
         } else {
@@ -467,7 +465,7 @@ impl Number for Prime32 {
         }
     }
     #[cfg(feature = "std")]
-    fn new(value: Self::Inner) -> Result<Self> {
+    fn new(value: Self::Inner) -> NumeraResult<Self> {
         if is_prime_sieve(value.checked_as::<usize>().ok_or(IntegerError::Overflow)?) {
             Ok(Prime32(value))
         } else {

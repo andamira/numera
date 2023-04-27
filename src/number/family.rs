@@ -4,7 +4,7 @@
 //
 
 use super::{
-    integer::AnyIntegers, // rational::Rationals, real::Reals, complex::Complexes,
+    integer::AnyIntegers, // rational::AnyRationals, real::AnyReals, complex::AnyComplex,
     traits::{self, Number},
 };
 use crate::error::NumeraResult as Result;
@@ -163,7 +163,7 @@ macro_rules! define_numbers {
 define_numbers![build_variants:
     no_std:
     Integer, AnyIntegers
-    // Real, Reals,
-    // Rational, Rationals,
-    // Complex, Complexes,
+    // Real, AnyReals,
+    // Rational, AnyRationals,
+    // Complex, AnyComplex,
 ];

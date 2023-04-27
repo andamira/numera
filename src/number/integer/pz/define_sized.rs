@@ -10,7 +10,7 @@
 //   - PositiveInteger[8|16|32|64|128]
 
 use crate::{
-    error::{IntegerError, NumeraResult as Result},
+    error::{IntegerError, NumeraResult},
     number::traits::{
         Bound, ConstLowerBounded, ConstOne, ConstUpperBounded, Count, Countable, Ident,
         LowerBounded, NonNegOne, NonZero, Number, One, Sign, Signed, UpperBounded,
@@ -125,7 +125,7 @@ macro_rules! define_nonzero_integer_sized {
                 ///
                 /// # Errors
                 /// Errors if the operation results in overflow.
-                fn next(&self) -> Result<Self> {
+                fn next(&self) -> NumeraResult<Self> {
                     let next = self.0.get().checked_add(1).ok_or(IntegerError::Overflow)?;
                     Ok(Self(unsafe { [<$p$bsize>]::new_unchecked(next) }))
                 }
@@ -133,7 +133,7 @@ macro_rules! define_nonzero_integer_sized {
                 ///
                 /// # Errors
                 /// Errors if the operation results in underflow.
-                fn previous(&self) -> Result<Self> {
+                fn previous(&self) -> NumeraResult<Self> {
                     let prev = self.0.get().checked_sub(1).ok_or(IntegerError::Underflow)?;
                     Ok(Self(unsafe { [<$p$bsize>]::new_unchecked(prev) }))
                 }
@@ -168,7 +168,7 @@ macro_rules! define_nonzero_integer_sized {
             impl Number for [<$name$bsize>] {
                 type Inner = [<u$bsize>];
 
-                fn new(value: Self::Inner) -> Result<Self> {
+                fn new(value: Self::Inner) -> NumeraResult<Self> {
                     Ok(Self([<$p$bsize>]::new(value).ok_or(IntegerError::Zero)?))
                 }
                 unsafe fn new_unchecked(value: Self::Inner) -> Self {
