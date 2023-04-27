@@ -30,6 +30,8 @@ define_integers_family![build_variants:
 /// This implementation is a no-op.
 impl NegSigned for NonPositiveIntegers {
     type Inner = Self;
+
+    #[inline]
     fn new_neg(value: Self::Inner) -> NumeraResult<Self> {
         Ok(value)
     }
@@ -40,12 +42,14 @@ impl NegSigned for NonPositiveIntegers {
 impl NonOne for NonPositiveIntegers {}
 impl Zero for NonPositiveIntegers {
     /// Returns a [`NonPositiveInteger8::new_zero()`][NonPositiveInteger8#method.new_zero].
+    #[inline]
     fn new_zero() -> Self {
         NonPositiveInteger8::new_zero().into()
     }
 }
 impl NegOne for NonPositiveIntegers {
     /// Returns a [`NonPositiveInteger8::new_neg_one()`][NonPositiveInteger8#method.new_neg_one].
+    #[inline]
     fn new_neg_one() -> Self {
         NonPositiveInteger8::new_neg_one().into()
     }
@@ -63,12 +67,14 @@ impl ConstNegOne for NonPositiveIntegers {
 
 impl LowerBounded for NonPositiveIntegers {
     /// Returns a [`NonPositiveInteger128::new_min()`][NonPositiveInteger128#method.new_min].
+    #[inline]
     fn new_min() -> Self {
         NonPositiveInteger128::new_min().into()
     }
 }
 impl UpperBounded for NonPositiveIntegers {
     /// Returns a [`NonPositiveInteger8::new_max()`][NonPositiveInteger8#method.new_max].
+    #[inline]
     fn new_max() -> Self {
         NonPositiveInteger8::new_max().into()
     }

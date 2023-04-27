@@ -1,13 +1,15 @@
 // numera::number::integer::pz
 //
-//! An only *positive* integer number ([m][0m]), from the set $\Z^+$ (`> 0`).
+//! *Positive* integer numbers ([m][0m]), from the set $\Z^+$ (`> 0`).
 //!
 //! $ \Z^+ = \lbrace 1, 2, … \rbrace $
 //!
-//! Doesn't include 0.
+//! Sometimes called *Natural numbers* ([w][1w]) or *counting numbers*,
+//! but in that case they could be confused with the
+//! [`NonNegativeIntegers`][super::nnz].
 //!
-//! Sometimes called *Natural number* ([w][1w]) or *counting number*,
-//! but in that case it can be confounded with [`NonNegativeInteger`].
+//! This type corresponds with the *unsigned* `NonZero` primitives
+//! ([`NonZeroU8`][core::num::NonZeroU8]…[`NonZeroU128`][core::num::NonZeroU128]).
 //!
 //! [0m]: https://mathworld.wolfram.com/PositiveInteger.html
 //! [1w]: https://en.wikipedia.org/wiki/Natural_number

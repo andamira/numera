@@ -32,6 +32,7 @@ impl NonNegOne for PositiveIntegers {}
 impl NonZero for PositiveIntegers {}
 impl One for PositiveIntegers {
     /// Returns a [`PositiveInteger8::new_one()`][PositiveInteger8#method.new_one].
+    #[inline]
     fn new_one() -> Self {
         PositiveInteger8::new_one().into()
     }
@@ -45,12 +46,14 @@ impl ConstOne for PositiveIntegers {
 
 impl LowerBounded for PositiveIntegers {
     /// Returns a [`PositiveInteger8::new_min()`][PositiveInteger8#method.new_min].
+    #[inline]
     fn new_min() -> Self {
         PositiveInteger8::new_min().into()
     }
 }
 impl UpperBounded for PositiveIntegers {
     /// Returns a [`PositiveInteger128::new_max()`][PositiveInteger128#method.new_max].
+    #[inline]
     fn new_max() -> Self {
         PositiveInteger128::new_max().into()
     }

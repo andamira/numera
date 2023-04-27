@@ -18,12 +18,12 @@ mod family;
 pub mod prime;
 mod trait_integer;
 
-mod n0z;
-mod nnz;
-mod npz;
-mod nz;
-mod pz;
-mod z;
+pub mod n0z;
+pub mod nnz;
+pub mod npz;
+pub mod nz;
+pub mod pz;
+pub mod z;
 
 pub use all::*;
 pub(crate) mod all {
@@ -55,6 +55,7 @@ pub(crate) mod all {
         z::{Integer128, Integer16, Integer32, Integer64, Integer8, Integers},
     };
 
+    #[doc(inline)]
     #[cfg(feature = "ibig")]
     pub use super::z::IntegerBig;
 }

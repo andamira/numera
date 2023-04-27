@@ -34,12 +34,14 @@ impl Signed for NonZeroIntegers {}
 impl NonZero for NonZeroIntegers {}
 impl NegOne for NonZeroIntegers {
     /// Returns a [`NonZeroInteger8::new_neg_one()`][NonZeroInteger8#method.new_neg_one].
+    #[inline]
     fn new_neg_one() -> Self {
         NonZeroInteger8::new_neg_one().into()
     }
 }
 impl One for NonZeroIntegers {
     /// Returns a [`NonZeroInteger8::new_one()`][NonZeroInteger8#method.new_one].
+    #[inline]
     fn new_one() -> Self {
         NonZeroInteger8::new_one().into()
     }
@@ -57,12 +59,14 @@ impl ConstOne for NonZeroIntegers {
 
 impl LowerBounded for NonZeroIntegers {
     /// Returns a [`NonZeroInteger8::new_min()`][NonZeroInteger8#method.new_min].
+    #[inline]
     fn new_min() -> Self {
         NonZeroInteger8::new_min().into()
     }
 }
 impl UpperBounded for NonZeroIntegers {
     /// Returns a [`NonZeroInteger128::new_max()`][NonZeroInteger128#method.new_max].
+    #[inline]
     fn new_max() -> Self {
         NonZeroInteger128::new_max().into()
     }

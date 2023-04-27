@@ -1,14 +1,15 @@
 // numera::number::integer::nnz
 //
-//! An only *non-negative* integer number ([m][0m]/[o][0o]), from the set $\Z^*$
+//! *Non-negative* integer numbers ([m][0m]/[o][0o]), from the set $\Z^*$
 //! (`>= 0`).
 //!
 //! $ \Z^* = \lbrace 0, 1, 2, … \rbrace $
 //!
-//! Sometimes called *Natural number* ([w][1w]) or *counting number*,
-//! but those can be confounded with [`PositiveInteger`]s.
+//! Sometimes called *Natural numbers* ([w][1w]) or *counting numbers*,
+//! but in that case they could be confused with the
+//! [`PositiveIntegers`][super::pz].
 //!
-//! This type corresponds with the unsigned primitives ([`u8`]…[`u128`]).
+//! This type corresponds with the *unsigned* primitives ([`u8`]…[`u128`]).
 //!
 //! [0m]: https://mathworld.wolfram.com/NonnegativeInteger.html
 //! [0o]: http://oeis.org/A001477

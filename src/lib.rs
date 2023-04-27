@@ -12,7 +12,7 @@
     clippy::must_use_candidate,
     clippy::needless_return,
     clippy::redundant_closure_for_method_calls,
-    clippy::wildcard_imports,
+    clippy::wildcard_imports
 )]
 #![cfg_attr(not(feature = "std"), no_std)]
 #![cfg_attr(feature = "safe", forbid(unsafe_code))]

@@ -1,6 +1,12 @@
 // numera::number::integer::n0z
 //
-//! $\Z \setminus 0 \Z = \lbrace …, -2, -1, 1, 2, … \rbrace $
+//! *Non-zero* integer numbers ([o][o0]), from the set $\Z \setminus 0$
+//! (`!= 0`).
+//!
+//! $ \Z = \lbrace …, -2, -1, 1, 2, … \rbrace $
+//!
+//! This type corresponds with the *signed* `NonZero` primitives
+//! ([`NonZeroI8`][core::num::NonZeroI8]…[`NonZeroI128`][core::num::NonZeroI128]).
 //!
 //! [o0]: https://oeis.org/wiki/Nonzero_integers
 //

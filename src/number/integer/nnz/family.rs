@@ -31,12 +31,14 @@ impl Unsigned for NonNegativeIntegers {}
 impl NonNegOne for NonNegativeIntegers {}
 impl Zero for NonNegativeIntegers {
     /// Returns a [`NonNegativeInteger8::new_zero()`][NonNegativeInteger8#method.new_zero].
+    #[inline]
     fn new_zero() -> Self {
         NonNegativeInteger8::new_zero().into()
     }
 }
 impl One for NonNegativeIntegers {
     /// Returns a [`NonNegativeInteger8::new_one()`][NonNegativeInteger8#method.new_one].
+    #[inline]
     fn new_one() -> Self {
         NonNegativeInteger8::new_one().into()
     }
@@ -54,12 +56,14 @@ impl ConstOne for NonNegativeIntegers {
 
 impl LowerBounded for NonNegativeIntegers {
     /// Returns a [`NonNegativeInteger8::new_min()`][NonNegativeInteger8#method.new_min].
+    #[inline]
     fn new_min() -> Self {
         NonNegativeInteger8::new_min().into()
     }
 }
 impl UpperBounded for NonNegativeIntegers {
     /// Returns a [`NonNegativeInteger128::new_max()`][NonNegativeInteger128#method.new_max].
+    #[inline]
     fn new_max() -> Self {
         NonNegativeInteger128::new_max().into()
     }

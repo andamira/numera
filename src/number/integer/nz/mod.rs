@@ -1,7 +1,6 @@
 // numera::number::integer::nz
 //
-
-//! An only *negative* integer number ([m][0m]/[o][0o]), from the set $\Z^-$
+//! *Negative* integer numbers ([m][0m]/[o][0o]), from the set $\Z^-$
 //! (`< 0`).
 //!
 //! $ \Z^- = \lbrace …, -2, -1 \rbrace $

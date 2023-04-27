@@ -1,7 +1,7 @@
 // numera::number::integer::npz
 //
-//! An only *non-positive* integer number ([m][0m]), from the set $\Z^- \cup {0}$
-//! (`> 0`).
+//! *Non-positive* integer numbers ([m][0m]), from the set $\Z^- \cup {0}$
+//! (`<= 0`).
 //!
 //! $ {0} \cup Z^- = \lbrace …, -2, -1, 0 \rbrace $
 //!

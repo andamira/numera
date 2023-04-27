@@ -74,6 +74,7 @@ impl Bound for Primes {
 }
 
 impl LowerBounded for Primes {
+    /// Returns a [`Prime8::new_min()`][Prime8#method.new_min].
     #[inline]
     fn new_min() -> Primes {
         Primes::Prime8(Prime8::new_min())
@@ -83,6 +84,7 @@ impl ConstLowerBounded for Primes {
     const MIN: Self = Primes::Prime8(Prime8::MIN);
 }
 impl UpperBounded for Primes {
+    /// Returns a [`Prime32::new_max()`][Prime32#method.new_max].
     #[inline]
     fn new_max() -> Primes {
         Primes::Prime32(Prime32::new_max())
