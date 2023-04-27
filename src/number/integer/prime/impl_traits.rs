@@ -7,9 +7,11 @@
 use super::{is_prime_brute, Prime16, Prime32, Prime8, PRIMES_U16, PRIMES_U8};
 use crate::{
     error::{IntegerError, NumeraResult as Result},
-    number::traits::{
-        Bound, ConstLowerBounded, ConstUpperBounded, Count, Countable, Ident, LowerBounded,
-        NonNegOne, NonOne, NonZero, Number, Sign, Unsigned, UpperBounded,
+    number::{
+        traits::{
+            Bound, ConstLowerBounded, ConstUpperBounded, Count, Countable, Ident, LowerBounded,
+            NonNegOne, NonOne, NonZero, Number, Sign, Unsigned, UpperBounded,
+        },
     },
 };
 
@@ -347,7 +349,16 @@ impl Count for Prime32 {
         true
     }
 }
-// IMPROVE for no-std
+
+// TODO:IMPROVE for no-std
+#[rustfmt::skip]
+#[cfg(not(feature = "std"))]
+impl Countable for Prime32 {
+    /// Not implemented for no-std.
+    fn next(&self) -> Result<Self> { Err(crate::all::NumeraError::NotImplemented) }
+    /// Not implemented for no-std.
+    fn previous(&self) -> Result<Self> { Err(crate::all::NumeraError::NotImplemented) }
+}
 #[cfg(feature = "std")]
 #[cfg_attr(feature = "nightly", doc(cfg(feature = "std")))]
 impl Countable for Prime32 {

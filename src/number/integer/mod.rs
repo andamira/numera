@@ -14,7 +14,7 @@
 
 pub(crate) mod macros;
 
-mod any;
+mod family;
 pub mod prime;
 mod trait_integer;
 
@@ -30,22 +30,22 @@ pub use all::*;
 pub(crate) mod all {
     #[doc(inline)]
     pub use super::{
-        any::AnyIntegers,
+        family::AnyIntegers,
         n0z::{
             NonZeroInteger128, NonZeroInteger16, NonZeroInteger32, NonZeroInteger64,
-            NonZeroInteger8,
+            NonZeroInteger8, NonZeroIntegers,
         },
         nnz::{
             NonNegativeInteger128, NonNegativeInteger16, NonNegativeInteger32,
-            NonNegativeInteger64, NonNegativeInteger8,
+            NonNegativeInteger64, NonNegativeInteger8, NonNegativeIntegers,
         },
         prime::*,
         pz::{
             PositiveInteger128, PositiveInteger16, PositiveInteger32, PositiveInteger64,
-            PositiveInteger8,
+            PositiveInteger8, PositiveIntegers,
         },
         trait_integer::Integer,
-        z::{Integer128, Integer16, Integer32, Integer64, Integer8},
+        z::{Integer128, Integer16, Integer32, Integer64, Integer8, Integers},
     };
 
     #[cfg(feature = "ibig")]

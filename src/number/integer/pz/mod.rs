@@ -13,6 +13,7 @@
 /// [1w]: https://en.wikipedia.org/wiki/Natural_number
 //
 mod define_sized;
+mod family;
 mod impl_from;
 mod impl_integer;
 mod impl_ops;
@@ -20,3 +21,4 @@ mod impl_ops;
 pub use define_sized::{
     PositiveInteger128, PositiveInteger16, PositiveInteger32, PositiveInteger64, PositiveInteger8,
 };
+pub use family::PositiveIntegers;
