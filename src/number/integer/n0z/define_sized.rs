@@ -217,7 +217,6 @@ macro_rules! define_nonzero_integer_sized {
         }
     };
 }
-pub(crate) use define_nonzero_integer_sized;
 
 /* definitions */
 

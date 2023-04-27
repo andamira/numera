@@ -175,7 +175,6 @@ macro_rules! define_integer_sized {
         }
     };
 }
-pub(crate) use define_integer_sized;
 
 /* definitions */
 

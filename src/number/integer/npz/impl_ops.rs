@@ -4,7 +4,7 @@
 //
 
 use super::*;
-use core::ops::{Add, Rem, Sub}; // Div, Mul
+use core::ops::{Add, Rem, Sub}; // Div, Mul, Neg
 
 // impl ops (which panic on overflow)
 macro_rules! impl_integer_ops {
@@ -17,14 +17,14 @@ macro_rules! impl_integer_ops {
 
     // impl all ops for a single integer type
     //
-    // $t: integer type. e.g. Integer8
+    // $t: integer type. e.g. NonPositiveInteger8
     (ops: $t:ident) => {
         impl_integer_ops![bin_ops: $t, Add, add, Sub, sub, Rem, rem];
     };
 
     // impl multiple binary ops for a single integer type
     //
-    // $t: integer type. e.g. Integer8
+    // $t: integer type. e.g. NonPositiveInteger8
     // $(
     //   $op: operation. e.g. Add
     //   $fn: operation fn. e.g. add
@@ -37,7 +37,7 @@ macro_rules! impl_integer_ops {
 
     // impl a binary op for a single integer type
     //
-    // $t: integer type. e.g. Integer8
+    // $t: integer type. e.g. NonPositiveInteger8
     // $op: operation. e.g. Add
     // $fn: operation fn. e.g. add
     (bin_op: $t:ident, $op:ident, $fn:ident) => {

@@ -72,7 +72,7 @@ mod tests {
     use crate::all::*;
 
     #[test]
-    fn n0z_ops() -> NumeraResult<()> {
+    fn pz_ops() -> NumeraResult<()> {
         let _5 = PositiveInteger8::new(5)?;
         let _7 = PositiveInteger8::new(7)?;
 

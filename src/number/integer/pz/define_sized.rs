@@ -39,14 +39,14 @@ use core::num::{NonZeroU128, NonZeroU16, NonZeroU32, NonZeroU64, NonZeroU8};
 ///
 /// - `$doc_det`: the determinant before the bit size. e.g. "An" (8-bit) or "A" 16-bit.
 /// - `$bsize`: the size in bits of the primitive used.
-macro_rules! define_nonzero_integer_sized {
+macro_rules! define_positive_integer_sized {
     // defines multiple integer types, with an inner primitive.
     (multi $name:ident, $p:ident,
      $doc_num:literal, $doc_type:literal, // $doc_new:literal,
      $sign:literal, $lower:expr, $upper:expr,
      $(($det:literal,$bsize:expr)),+) => {
         $(
-            define_nonzero_integer_sized![single $name, $p,
+            define_positive_integer_sized![single $name, $p,
                $doc_num, $doc_type, // $doc_new,
                $sign, $lower, $upper,
                ($det,$bsize)];
@@ -201,11 +201,10 @@ macro_rules! define_nonzero_integer_sized {
         }
     };
 }
-pub(crate) use define_nonzero_integer_sized;
 
 /* definitions */
 
-define_nonzero_integer_sized![multi PositiveInteger, NonZeroU,
+define_positive_integer_sized![multi PositiveInteger, NonZeroU,
     "integer number", ", from the set $\\Z^+$.",
     // "",
     "", MIN, MAX,
