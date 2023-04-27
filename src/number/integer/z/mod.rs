@@ -8,7 +8,10 @@ mod impl_from;
 mod impl_integer;
 mod impl_ops;
 
+#[cfg(feature = "ibig")]
+mod define_big;
+
 pub use define_sized::{Integer128, Integer16, Integer32, Integer64, Integer8};
 
 #[cfg(feature = "ibig")]
-pub(super) mod define_big;
+pub use define_big::IntegerBig;

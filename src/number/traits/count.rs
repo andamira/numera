@@ -24,7 +24,7 @@ use core::num::{
     NonZeroU16, NonZeroU32, NonZeroU64, NonZeroU8, NonZeroUsize,
 };
 
-use crate::error::{IntegerError, NumeraError as Error, NumeraResult};
+use crate::error::{IntegerError, NumeraError, NumeraResult};
 
 /// The countability properties of a number.
 ///
@@ -96,20 +96,20 @@ macro_rules! impl_countable {
         impl Countable for $t {
             fn next(&self) -> NumeraResult<Self> {
                 let mut value = self.get().checked_add(1)
-                    .ok_or::<Error>(IntegerError::Overflow.into())?;
+                    .ok_or::<NumeraError>(IntegerError::Overflow.into())?;
                 if value == 0 {
                     value = value.checked_add(1)
-                        .ok_or::<Error>(IntegerError::Overflow.into())?;
+                        .ok_or::<NumeraError>(IntegerError::Overflow.into())?;
                 }
                 // SAFETY: we just checked the value
                 Ok(unsafe { <$t>::new_unchecked(value) })
             }
             fn previous(&self) -> NumeraResult<Self> {
                 let mut value = self.get().checked_sub(1)
-                    .ok_or::<Error>(IntegerError::Underflow.into())?;
+                    .ok_or::<NumeraError>(IntegerError::Underflow.into())?;
                 if value == 0 {
                     value = value.checked_sub(1)
-                        .ok_or::<Error>(IntegerError::Underflow.into())?;
+                        .ok_or::<NumeraError>(IntegerError::Underflow.into())?;
                 }
                 // SAFETY: we just checked the value
                 Ok(unsafe { <$t>::new_unchecked(value) })

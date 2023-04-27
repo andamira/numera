@@ -31,9 +31,9 @@ macro_rules! define_integers {
         depending: $($td:ident, $dep_name:literal)+
     ) => {
         match $self {
-            $( Integers::$t(z) => z.$method(), )+
+            $( AnyIntegers::$t(z) => z.$method(), )+
             $( #[cfg(feature = $dep_name)]
-                Integers::$td(z) => z.$method(), )*
+                AnyIntegers::$td(z) => z.$method(), )*
         }
     };
 
@@ -45,9 +45,9 @@ macro_rules! define_integers {
         depending: $($td:ident, $dep_name:literal)+
     ) => {
         match $self {
-            $( Integers::$t(z) => z.$method().map(|z| Integers::$t(z)), )+
+            $( AnyIntegers::$t(z) => z.$method().map(|z| AnyIntegers::$t(z)), )+
             $( #[cfg(feature = $dep_name)]
-                Integers::$td(z) => z.$method().map(|z| Integers::$td(z)), )*
+                AnyIntegers::$td(z) => z.$method().map(|z| AnyIntegers::$td(z)), )*
         }
     };
 
@@ -67,7 +67,7 @@ macro_rules! define_integers {
         /// because it does apply to all integers.
         #[derive(Clone, Debug, PartialEq, Eq)]
         #[non_exhaustive]
-        pub enum Integers {
+        pub enum AnyIntegers {
             $( $t($t),)+
 
             $( // feature-gated variants
@@ -81,14 +81,14 @@ macro_rules! define_integers {
         }
 
         /// This implementation is no-op.
-        impl traits::Number for Integers {
+        impl traits::Number for AnyIntegers {
             type Inner = Self;
-            fn new(value: Integers) -> Result<Self> { Ok(value) }
-            unsafe fn new_unchecked(value: Integers) -> Self { value }
+            fn new(value: AnyIntegers) -> Result<Self> { Ok(value) }
+            unsafe fn new_unchecked(value: AnyIntegers) -> Self { value }
         }
 
         /// This implementation defers to the actual integer variant.
-        impl traits::Bound for Integers {
+        impl traits::Bound for AnyIntegers {
             fn is_lower_bounded(&self) -> bool {
                 define_integers! { match_variants_0: self, is_lower_bounded,
                     no_std: $($t),+ ; depending: $($td, $dep_name)+
@@ -110,12 +110,12 @@ macro_rules! define_integers {
                 }
             }
         }
-        impl traits::Count for Integers {
+        impl traits::Count for AnyIntegers {
             /// All integers are countable.
             fn is_countable(&self) -> bool { true }
         }
         /// This implementation defers to the actual integer variant.
-        impl traits::Countable for Integers {
+        impl traits::Countable for AnyIntegers {
             fn next(&self) -> Result<Self> {
                 define_integers! { match_variants_0_rewrap: self, next,
                     no_std: $($t),+ ; depending: $($td, $dep_name)+
@@ -128,7 +128,7 @@ macro_rules! define_integers {
             }
         }
         /// This implementation defers to the actual integer variant.
-        impl traits::Sign for Integers {
+        impl traits::Sign for AnyIntegers {
             fn can_positive(&self) -> bool {
                 define_integers! { match_variants_0: self, can_positive,
                     no_std: $($t),+ ; depending: $($td, $dep_name)+
@@ -151,7 +151,7 @@ macro_rules! define_integers {
             }
         }
         /// This implementation defers to the actual integer variant.
-        impl traits::Ident for Integers {
+        impl traits::Ident for AnyIntegers {
             fn can_zero(&self) -> bool {
                 define_integers! { match_variants_0: self, can_zero,
                     no_std: $($t),+ ; depending: $($td, $dep_name)+
@@ -187,27 +187,27 @@ macro_rules! define_integers {
         /* impl From & TryFrom */
 
         $(
-        impl From<$t> for Integers {
-            fn from(z: $t) -> Integers {
-                Integers::$t(z)
+        impl From<$t> for AnyIntegers {
+            fn from(z: $t) -> AnyIntegers {
+                AnyIntegers::$t(z)
             }
         }
         )+
         $(
         #[cfg(feature = $dep_name)]
-        impl From<$td> for Integers {
-            fn from(z: $td) -> Integers {
-                Integers::$td(z)
+        impl From<$td> for AnyIntegers {
+            fn from(z: $td) -> AnyIntegers {
+                AnyIntegers::$td(z)
             }
         }
         )*
 
         $(
-        impl TryFrom<Integers> for $t {
+        impl TryFrom<AnyIntegers> for $t {
             type Error = crate::error::NumeraError;
-            fn try_from(z: Integers) -> core::result::Result<$t, Self::Error> {
+            fn try_from(z: AnyIntegers) -> core::result::Result<$t, Self::Error> {
                 match z {
-                    Integers::$t(z) => Ok(z),
+                    AnyIntegers::$t(z) => Ok(z),
                     _ => Err(Self::Error::Conversion)
                 }
             }
@@ -215,11 +215,11 @@ macro_rules! define_integers {
         )+
 
         $( #[cfg(feature = $dep_name)]
-        impl TryFrom<Integers> for $td {
+        impl TryFrom<AnyIntegers> for $td {
             type Error = crate::error::NumeraError;
-            fn try_from(z: Integers) -> core::result::Result<$td, Self::Error> {
+            fn try_from(z: AnyIntegers) -> core::result::Result<$td, Self::Error> {
                 match z {
-                    Integers::$td(z) => Ok(z),
+                    AnyIntegers::$td(z) => Ok(z),
                     _ => Err(Self::Error::Conversion)
                 }
             }
@@ -272,13 +272,13 @@ mod tests {
     #[test]
     fn sizes() {
         // 24 because of the enum discriminant
-        assert_eq![24, size_of::<super::Integers>()];
+        assert_eq![24, size_of::<super::AnyIntegers>()];
     }
 
     #[test]
     #[cfg(feature = "deps_all")]
     fn size_all_features() {
-        assert_eq![32, size_of::<super::Integers>()];
-        // assert_eq![24, size_of::<super::Integers>()]; // MAYBE:Box bigint
+        assert_eq![32, size_of::<super::AnyIntegers>()];
+        // assert_eq![24, size_of::<super::AnyIntegers>()]; // MAYBE:Box bigint
     }
 }

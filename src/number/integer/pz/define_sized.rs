@@ -183,7 +183,7 @@ pub(crate) use define_nonzero_integer_sized;
 /* definitions */
 
 define_nonzero_integer_sized![multi PositiveInteger, NonZeroU,
-    "integer number", ", from the set $\\Z \\setminus 0$.",
+    "integer number", ", from the set $\\Z^+$.",
     // "",
     "", MIN, MAX,
     ("An", 8), ("A", 16), ("A", 32), ("A", 64), ("A", 128)

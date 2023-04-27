@@ -17,8 +17,8 @@ pub mod traits;
 
 #[doc(inline)]
 pub use all::{
-    AnyNumbers, Bound, Count, Ident, Integer, Integer128, Integer16, Integer32, Integer64,
-    Integer8, Integers, Number, Numbers, Sign,
+    AnyIntegers, AnyNumbers, Bound, Count, Ident, Integer, Integer128, Integer16, Integer32,
+    Integer64, Integer8, Number, Numbers, Sign,
 };
 pub(crate) mod all {
     #[doc(inline)]

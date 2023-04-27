@@ -30,7 +30,7 @@ pub use all::*;
 pub(crate) mod all {
     #[doc(inline)]
     pub use super::{
-        any::Integers,
+        any::AnyIntegers,
         n0z::{
             NonZeroInteger128, NonZeroInteger16, NonZeroInteger32, NonZeroInteger64,
             NonZeroInteger8,
@@ -49,5 +49,5 @@ pub(crate) mod all {
     };
 
     #[cfg(feature = "ibig")]
-    pub use super::z::define_big::IntegerBig;
+    pub use super::z::IntegerBig;
 }
