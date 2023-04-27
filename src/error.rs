@@ -60,7 +60,8 @@ pub enum IntegerError {
     NotPrime,
 }
 
-/// Errors related to [`rational`][crate::number::rational]s.
+/// Errors related to `rational`s.
+// Errors related to [`rational`][crate::number::rational]s.
 #[non_exhaustive]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum RationalError {
@@ -68,7 +69,8 @@ pub enum RationalError {
     ZeroDenominator,
 }
 
-/// Errors related to [`real`][crate::number::real]s.
+/// Errors related to `real`s.
+// Errors related to [`real`][crate::number::real]s.
 #[non_exhaustive]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum RealError {
