@@ -70,10 +70,10 @@ macro_rules! define_nonzero_integer_sized {
             /* sign */
 
             impl Sign for [<$name$bsize>] {
-                fn can_negative(&self) -> bool { true }
+                fn can_negative(&self) -> bool { false }
                 fn can_positive(&self) -> bool { true }
-                fn is_negative(&self) -> bool { self.0.get().is_negative() }
-                fn is_positive(&self) -> bool { self.0.get().is_positive() }
+                fn is_negative(&self) -> bool { false }
+                fn is_positive(&self) -> bool { true }
             }
             impl Signed for [<$name$bsize>] {}
 
