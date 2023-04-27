@@ -5,7 +5,7 @@
 // NOTES:
 // - doesn't implement Integers. brings too much complexity for very little gain
 
-use super::{Integer128, Integer16, Integer32, Integer64, Integer8};
+use super::{n0z::*, nnz::*, prime::*, pz::*, z::*};
 use crate::{error::NumeraResult as Result, number::traits};
 
 #[cfg(feature = "ibig")]
@@ -230,26 +230,24 @@ macro_rules! define_integers {
 
 define_integers![build_variants:
     no_std:
-        Integer8, Integer16, Integer32, Integer64, Integer128
+        Integer8, Integer16, Integer32, Integer64, Integer128,
 
-        // NonZeroInteger8, NonZeroInteger16, NonZeroInteger32,
-        // NonZeroInteger64, NonZeroInteger128,
+        NonZeroInteger8, NonZeroInteger16, NonZeroInteger32,
+        NonZeroInteger64, NonZeroInteger128,
 
-        // PositiveInteger8, PositiveInteger16, PositiveInteger32,
-        // PositiveInteger64, PositiveInteger128,
-        //
+        PositiveInteger8, PositiveInteger16, PositiveInteger32,
+        PositiveInteger64, PositiveInteger128,
+
+        NonNegativeInteger8, NonNegativeInteger16, NonNegativeInteger32,
+        NonNegativeInteger64, NonNegativeInteger128,
+
         // NegativeInteger8, NegativeInteger16, NegativeInteger32,
         // NegativeInteger64, NegativeInteger128,
-        //
+
         // NonPositiveInteger8, NonPositiveInteger16, NonPositiveInteger32,
         // NonPositiveInteger64, NonPositiveInteger128,
-        //
-        // NonNegativeInteger8, NonNegativeInteger16, NonNegativeInteger32,
-        // NonNegativeInteger64, NonNegativeInteger128,
 
-        // Prime8, Prime16,
-        // Prime32, // MAYBE associated feature for big data-file?
-        // Prime64, Prime128,
+        Prime8, Prime16, Prime32
     ;
 
     // feature-gated variants
