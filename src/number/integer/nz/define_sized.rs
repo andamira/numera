@@ -233,15 +233,21 @@ macro_rules! define_negative_integer_sized {
             impl Number for [<$name$bsize>] {
                 type Inner = [<u$bsize>];
 
-                /// This constructur always return an error. Please use the
-                /// [`new_neg`][NegSigned#method.new_neg] method from the
-                /// [`NegSigned`] trait.
+                /// Please note that the `value` provided will interpreted as negative.
+                ///
+                /// # Errors
+                /// If the value provided is `0`.
+                //
+                // ALTERNATIVE:
+                // This constructur always return an error. Please use the
+                // [`new_neg`][NegSigned#method.new_neg] method from the
+                // [`NegSigned`] trait.
                 #[inline]
-                fn new(_value: Self::Inner) -> NumeraResult<Self> {
-                    Err(IntegerError::ZeroOrMore.into())
+                fn new(value: Self::Inner) -> NumeraResult<Self> {
+                    Ok(Self([<$p$bsize>]::new(value).ok_or(IntegerError::Zero)?))
 
-                    // ALTERNATIVE
-                    // Ok(Self([<$p$bsize>]::new(value).ok_or(IntegerError::Zero)?))
+                    // ALTERNATIVE:
+                    // Err(IntegerError::ZeroOrMore.into())
                 }
                 /// Please note that the `value` provided will interpreted as negative.
                 #[inline]

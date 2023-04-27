@@ -170,19 +170,22 @@ macro_rules! define_nonpositive_integer_sized {
             impl Number for [<$name$bsize>] {
                 type Inner = [<$p$bsize>];
 
-                /// For `value`s other than 0, please use the
-                /// [`new_neg`][NegSigned#method.new_neg] method from the
-                /// [`NegSigned`] trait.
+                /// Please note that the `value` provided will interpreted as negative.
+                //
+                // ALTERNATIVE:
+                // For `value`s other than 0, please use the
+                // [`new_neg`][NegSigned#method.new_neg] method from the
+                // [`NegSigned`] trait.
                 #[inline]
                 fn new(value: Self::Inner) -> NumeraResult<Self> {
-                    if value == 0 {
-                        Ok(Self(value))
-                    } else {
-                        Err(IntegerError::MoreThanZero.into())
-                    }
+                    Ok(Self(value))
 
                     // ALTERNATIVE:
-                    // Ok(Self(value))
+                    // if value == 0 {
+                    //     Ok(Self(value))
+                    // } else {
+                    //     Err(IntegerError::MoreThanZero.into())
+                    // }
                 }
                 /// Please note that the `value` provided will interpreted as negative.
                 #[inline]

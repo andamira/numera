@@ -4,7 +4,7 @@
 //
 // TOC
 //
-// -conversions:
+// - conversions:
 //   - impl_from_integer!
 //   - impl_from_primitive!
 
@@ -33,7 +33,7 @@ macro_rules! impl_from_integer {
             impl From<[< $from $from_size >]> for [< $for $for_size >] {
                 fn from(from: [< $from $from_size >]) -> Self {
                     #[cfg(feature = "safe")]
-                    return Self::new(from.0.into()).unwrap();
+                    return Self(from.0.into());
 
                     #[cfg(not(feature = "safe"))]
                     // SAFETY: all values should be valid
@@ -79,7 +79,7 @@ macro_rules! impl_from_integer {
             impl From<[< $from $from_size >]> for [< $for $for_size >] {
                 fn from(from: [< $from $from_size >]) -> Self {
                     #[cfg(feature = "safe")]
-                    return Self::new(Into::<[< $p $for_size >]>::into(from.0).neg()).unwrap();
+                    return Self(Into::<[< $p $for_size >]>::into(from.0).neg());
 
                     #[cfg(not(feature = "safe"))]
                     // SAFETY: all values should be valid
