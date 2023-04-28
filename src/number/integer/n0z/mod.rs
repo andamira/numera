@@ -24,7 +24,8 @@ pub use family::NonZeroIntegers;
 
 /// Abbreviations for non-zero integers.
 pub mod abbr {
-    use super::{super::macros::define_abbreviations, *};
+    use super::*;
+    use crate::number::macros::define_abbreviations;
 
     define_abbreviations![many N0z, NonZeroInteger, 8, 16, 32, 64, 128];
 }

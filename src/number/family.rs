@@ -46,7 +46,7 @@ macro_rules! define_numbers {
     (build_variants:
         no_std: $($v:ident, $t:ident),+
     ) => {
-        /// The family of all possible kinds of numbers.
+        /// The family of any kind of numbers.
         ///
         /// # Notes
         /// Note that it wont have several specific traits implemented, like for

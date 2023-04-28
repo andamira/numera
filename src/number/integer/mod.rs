@@ -25,7 +25,7 @@ pub mod nz;
 pub mod pz;
 pub mod z;
 
-/// Abbreviations for integers.
+/// Abbreviations for all integers.
 pub mod abbr {
     #[doc(inline)]
     pub use super::{

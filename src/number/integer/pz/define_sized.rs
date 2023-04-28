@@ -16,14 +16,16 @@ use crate::{
         LowerBounded, NonNegOne, NonZero, Number, One, Sign, Signed, UpperBounded,
     },
 };
-use core::num::{NonZeroU128, NonZeroU16, NonZeroU32, NonZeroU64, NonZeroU8};
+use core::{
+    fmt,
+    num::{NonZeroU128, NonZeroU16, NonZeroU32, NonZeroU64, NonZeroU8},
+};
 
 /* macro */
 
 /// # What it does
 /// - defines an Integer of a concrete size.
 /// - implements Number: Bound + Count + Ident + Sign
-/// - implements Default → 0
 ///
 /// # Args
 /// - `$name`: the base name of the integer e.g. `Integer`.
@@ -66,6 +68,12 @@ macro_rules! define_positive_integer_sized {
 
             #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
             pub struct [<$name$bsize>](pub(crate) [< $p$bsize >]);
+
+            impl fmt::Display for [<$name$bsize>]  {
+                fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+                    write!(f, "{}", self.0)
+                }
+            }
 
             /* sign */
 

@@ -65,8 +65,24 @@ pub enum IntegerError {
 #[non_exhaustive]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum RationalError {
-    /// Invalid value `0`.
+    /// Invalid value `0` in the denominator.
     ZeroDenominator,
+
+    /// The value is too large to store in the current representation of the
+    /// numerator.
+    NumeratorOverflow,
+
+    /// The value is too small to store in the current representation of the
+    /// numerator
+    NumeratorUnderflow,
+
+    /// The value is too large to store in the current representation of the
+    /// denominator.
+    DenominatorOverflow,
+
+    /// The value is too small to store in the current representation of the
+    /// denominator
+    DenominatorUnderflow,
 }
 
 /// Errors related to `real`s.
@@ -117,6 +133,10 @@ mod core_impls {
             use RationalError::*;
             match self {
                 ZeroDenominator => write!(f, "ZeroDenominator"),
+                NumeratorOverflow => write!(f, "NumeratorOverflow"),
+                NumeratorUnderflow => write!(f, "NumeratorUnderflow"),
+                DenominatorOverflow => write!(f, "DenominatorOverflow"),
+                DenominatorUnderflow => write!(f, "DenominatorUnderflow"),
             }
         }
     }

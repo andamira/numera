@@ -17,6 +17,7 @@ use crate::{
         Ident, LowerBounded, NegOne, NegSigned, NonOne, Number, Sign, UpperBounded, Zero,
     },
 };
+use core::fmt;
 
 /* macro */
 
@@ -66,6 +67,13 @@ macro_rules! define_nonpositive_integer_sized {
 
             #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, PartialOrd, Ord)]
             pub struct [<$name$bsize>](pub(crate) [< $p$bsize >]);
+
+            impl fmt::Display for [<$name$bsize>]  {
+                fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+                    // notice the negation
+                    write!(f, "-{}", self.0)
+                }
+            }
 
             /* sign */
 

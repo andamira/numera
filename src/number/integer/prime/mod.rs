@@ -7,6 +7,7 @@
 use primal_sieve::Sieve;
 
 use crate::all::{NumeraError, NumeraResult};
+use core::fmt;
 
 mod consts;
 mod family;
@@ -47,6 +48,22 @@ pub struct Prime16(u16);
 // pub struct Prime32(PositiveInteger32);
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Prime32(u32);
+
+impl fmt::Display for Prime8 {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.0)
+    }
+}
+impl fmt::Display for Prime16 {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.0)
+    }
+}
+impl fmt::Display for Prime32 {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.0)
+    }
+}
 
 impl Prime8 {
     /// Returns the number of primes upto and including the current one.

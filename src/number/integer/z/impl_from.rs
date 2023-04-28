@@ -38,6 +38,7 @@ impl_from_integer![many_int for: Integer + i + 128, from: Integer + 8, 16, 32, 6
 impl_from_integer![many_nonzero for: Integer + i + 8, from: NonZeroInteger + 8];
 impl_from_integer![many_nonzero for: Integer + i + 16, from: NonZeroInteger + 8, 16];
 impl_from_integer![many_nonzero for: Integer + i + 32, from: NonZeroInteger + 8, 16, 32];
+impl_from_integer![many_nonzero for: Integer + i + 64, from: NonZeroInteger + 8, 16, 32, 64];
 impl_from_integer![many_nonzero for: Integer + i + 128, from: NonZeroInteger + 8, 16, 32, 64, 128];
 
 /* from smaller sized NonNegativeInteger */

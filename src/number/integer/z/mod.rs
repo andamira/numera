@@ -44,7 +44,8 @@ pub use define_big::IntegerBig;
 
 /// Abbreviations for integers.
 pub mod abbr {
-    use super::{super::macros::define_abbreviations, *};
+    use super::*;
+    use crate::number::macros::define_abbreviations;
 
     define_abbreviations![many Z, Integer, 8, 16, 32, 64, 128];
 

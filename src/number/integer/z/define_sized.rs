@@ -16,6 +16,7 @@ use crate::{
         Countable, Ident, LowerBounded, NegOne, Number, One, Sign, Signed, UpperBounded, Zero,
     },
 };
+use core::fmt;
 
 /* macro */
 
@@ -65,6 +66,12 @@ macro_rules! define_integer_sized {
 
             #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, PartialOrd, Ord)]
             pub struct [<$name$bsize>](pub(crate) [< $p$bsize >]);
+
+            impl fmt::Display for [<$name$bsize>]  {
+                fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+                    write!(f, "{}", self.0)
+                }
+            }
 
             /* sign */
 
