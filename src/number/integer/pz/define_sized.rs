@@ -257,7 +257,7 @@ macro_rules! define_positive_integer_sized {
 /* definitions */
 
 define_positive_integer_sized![multi PositiveInteger, NonZeroU,
-    "integer number", ", from the set $\\Z^+$.",
+    "integer number", ", from the set $\\Z^+$ ($\\N _1$).",
     // "",
     "", MIN, MAX,
     ("An", 8), ("A", 16), ("A", 32), ("A", 64), ("A", 128)

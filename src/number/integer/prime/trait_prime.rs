@@ -5,7 +5,7 @@
 
 use super::{Prime16, Prime32, Prime8, PRIMES_U16, PRIMES_U8};
 
-/// Common functionality for all primes.
+/// Common trait for all primes.
 pub trait Prime {
     /// Returns the `nth` prime, or `None` if out of bounds.
     fn get_nth(nth: usize) -> Option<Self>

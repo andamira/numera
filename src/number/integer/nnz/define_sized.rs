@@ -177,7 +177,7 @@ macro_rules! define_nonnegative_integer_sized {
 /* definitions */
 
 define_nonnegative_integer_sized![multi NonNegativeInteger, u,
-    "non-negative integer number", ", from the set $\\Z^*$",
+    "non-negative integer number", ", from the set $\\Z^*$ ($\\N _0$)",
     // "",
     "", 0, MAX,
     ("An", 8), ("A", 16), ("A", 32), ("A", 64), ("A", 128)

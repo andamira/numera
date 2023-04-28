@@ -1,7 +1,7 @@
 // numera::number::integer::nnz
 //
 //! *Non-negative* integer numbers ([m][0m]/[o][0o]), from the set $\Z^*$
-//! (`>= 0`).
+//! ($\N _0$) (`>= 0`).
 //!
 //! $ \Z^* = \lbrace 0, 1, 2, … \rbrace $
 //!

@@ -1,6 +1,6 @@
 // numera::integer
 //
-//! All integer number types.
+//! All kinds of integers, subsets of $\Z$.
 //!
 //! An *integer* ([w][0w]/[m][0m]) is a number that can be written
 //! without a fractional component.
@@ -25,7 +25,7 @@ pub mod nz;
 pub mod pz;
 pub mod z;
 
-/// Abbreviations for all integers.
+/// Abbreviations for integers.
 pub mod abbr {
     #[doc(inline)]
     pub use super::{

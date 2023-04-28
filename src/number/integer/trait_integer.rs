@@ -19,7 +19,7 @@ use crate::all::is_prime_brute;
 #[cfg(feature = "std")]
 use crate::all::is_prime_sieve;
 
-/// Common functionality for all integers.
+/// Common trait for all integers.
 pub trait Integer: Number {
     /// Returns `true` if the number is even.
     fn is_even(&self) -> bool;

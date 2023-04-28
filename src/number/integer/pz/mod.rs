@@ -1,6 +1,6 @@
 // numera::number::integer::pz
 //
-//! *Positive* integer numbers ([m][0m]), from the set $\Z^+$ (`> 0`).
+//! *Positive* integer numbers ([m][0m]), from the set $\Z^+$ ($\N _1$) (`> 0`).
 //!
 //! $ \Z^+ = \lbrace 1, 2, … \rbrace $
 //!

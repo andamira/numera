@@ -1,6 +1,6 @@
 // numera::number::traits
 //
-//! All general number related traits.
+//! Number related traits.
 //
 
 pub mod bound;
