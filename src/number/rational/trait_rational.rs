@@ -57,6 +57,7 @@ pub trait Rational: Number {
     /// E.g.: $ \dfrac{48}{23} , \dfrac{3}{2} ... $
     ///
     /// [0m]: https://mathworld.wolfram.com/ImproperFraction.html
+    #[inline]
     fn is_improper(&self) -> bool {
         !self.is_proper()
     }
@@ -67,7 +68,22 @@ pub trait Rational: Number {
     /// greater than 1, indicating that the fraction can be reduced further.
     ///
     /// [0m]: https://mathworld.wolfram.com/ReducedFraction.html
+    #[inline]
     fn is_reducible(&self) -> bool {
         !self.is_reduced()
+    }
+
+    /// Inverts and reduces the fraction.
+    #[inline]
+    fn invert_reduce(&mut self) {
+        self.invert();
+        self.reduce();
+    }
+
+    /// Returns the inverted and reduced fraction.
+    #[inline]
+    #[must_use]
+    fn inverted_reduced(&self) -> Self where Self: Sized {
+        self.inverted().reduced()
     }
 }

@@ -161,8 +161,8 @@ macro_rules! define_rational_sized {
             }
 
             impl Countable for [<$name$bsize>] {
-                /// Returns the next rational value maintaining the same
-                /// denominator, increasing only the numerator.
+                /// Returns the next rational value by increasing the
+                /// numerator, while maintaining the same denominator.
                 #[inline]
                 fn next(&self) -> NumeraResult<Self> {
                     Ok(Self {
@@ -171,8 +171,8 @@ macro_rules! define_rational_sized {
                         den: self.den,
                     })
                 }
-                /// Returns the previous rational value maintaining the same
-                /// denominator, increasing only the numerator.
+                /// Returns the previous rational value by decreasing the
+                /// numerator, while maintaining the same denominator.
                 #[inline]
                 fn previous(&self) -> NumeraResult<Self> {
                     Ok(Self {

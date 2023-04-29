@@ -4,8 +4,8 @@
 //
 
 use crate::number::{
-    integer::{n0z::*, z::*, Integer},
-    rational::{q::*, Rational},
+    integer::{abbr::*, Integer},
+    rational::{abbr::*, Rational},
     traits::{ConstOne, ConstZero, Ident, Number},
 };
 
@@ -107,19 +107,46 @@ macro_rules! impl_rational {
 }
 
 impl_rational![
-    many: (Rational8, Integer8, NonZeroInteger8),
-    (Rational16, Integer16, NonZeroInteger16),
-    (Rational32, Integer32, NonZeroInteger32),
-    (Rational64, Integer64, NonZeroInteger64),
-    (Rational128, Integer128, NonZeroInteger128)
+    many: (Q8, Z8, N0z8),
+    (Q16, Z16, N0z16),
+    (Q32, Z32, N0z32),
+    (Q64, Z64, N0z64),
+    (Q128, Z128, N0z128)
 ];
 
-// TODO
-// #[cfg(test)]
-// mod tests {
-//     use super::*;
-//
-//     #[test]
-//     fn q_rational() {
-//     }
-// }
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::all::{Number, NumeraResult};
+
+    #[test]
+    fn q_rational() -> NumeraResult<()> {
+        // Integer
+        //
+        // true
+        assert![Q8::new((0, 7))?.is_integer()];
+        assert![Q8::new((1, 1))?.is_integer()];
+        assert![Q8::new((14, 1))?.is_integer()];
+        assert![Q8::new((32, 8))?.is_integer()];
+        // false
+        assert![!Q8::new((1, 2))?.is_integer()];
+        assert![!Q8::new((32, 9))?.is_integer()];
+
+        // Reduce
+        //
+        // true
+        assert![Q8::new((3, 14))?.is_reduced()];
+        // false
+        assert![!Q8::new((21, 98))?.is_reduced()];
+        //
+        assert_eq![Q8::new((21, 98))?.reduced(), Q8::new((3, 14))?];
+        assert_eq![Q8::new((0, 98))?.reduced(), Q8::new((0, 1))?];
+
+        // Invert
+        //
+        assert_eq![Q8::new((21, 98))?.inverted(), Q8::new((98, 21))?];
+        assert_eq![Q8::new((0, 5))?.inverted(), Q8::new((0, 5))?];
+
+        Ok(())
+    }
+}
