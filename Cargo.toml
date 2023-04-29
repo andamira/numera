@@ -51,7 +51,8 @@ opt-level = 3
 
 
 [package.metadata.docs.rs]
-features = ["nightly", "deps_all"]
+no-default-features = true
+features = ["nightly", "std", "deps_all"]
 rustdoc-args = [ "--html-in-header", "./res/rustdoc-header.html" ]
 
 [badges]
