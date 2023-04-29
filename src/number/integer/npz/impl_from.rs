@@ -11,17 +11,17 @@ use crate::number::{
 /* infallible conversions */
 
 // from smaller sized NonPositiveInteger (Self)
-impl_from_integer![many_int for: Npz + u + 16, from: Npz + 8];
-impl_from_integer![many_int for: Npz + u + 32, from: Npz + 8, 16];
-impl_from_integer![many_int for: Npz + u + 64, from: Npz + 8, 16, 32];
-impl_from_integer![many_int for: Npz + u + 128, from: Npz + 8, 16, 32, 64];
+impl_from_integer![int for: Npz + u + 16, from: Npz + 8];
+impl_from_integer![int for: Npz + u + 32, from: Npz + 8, 16];
+impl_from_integer![int for: Npz + u + 64, from: Npz + 8, 16, 32];
+impl_from_integer![int for: Npz + u + 128, from: Npz + 8, 16, 32, 64];
 
 // from smaller or equal sized NegativeInteger
-impl_from_integer![many_nonzero for: Npz + u + 8, from: Nz + 8];
-impl_from_integer![many_nonzero for: Npz + u + 16, from: Nz + 8, 16];
-impl_from_integer![many_nonzero for: Npz + u + 32, from: Nz + 8, 16, 32];
-impl_from_integer![many_nonzero for: Npz + u + 64, from: Nz + 8, 16, 32, 64];
-impl_from_integer![many_nonzero for: Npz + u + 128, from: Nz + 8, 16, 32, 64, 128];
+impl_from_integer![nonzero for: Npz + u + 8, from: Nz + 8];
+impl_from_integer![nonzero for: Npz + u + 16, from: Nz + 8, 16];
+impl_from_integer![nonzero for: Npz + u + 32, from: Nz + 8, 16, 32];
+impl_from_integer![nonzero for: Npz + u + 64, from: Nz + 8, 16, 32, 64];
+impl_from_integer![nonzero for: Npz + u + 128, from: Nz + 8, 16, 32, 64, 128];
 
 #[cfg(test)]
 mod tests {

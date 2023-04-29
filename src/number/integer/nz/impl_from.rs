@@ -4,17 +4,17 @@
 //
 
 use crate::number::{
-    integer::{macros::impl_from_integer, nz::*},
+    integer::{abbr::*, macros::impl_from_integer},
     traits::Number,
 };
 
 /* infallible conversions */
 
 // from smaller sized NegativeInteger (Self)
-impl_from_integer![many_nonzero for: Nz + u + 16, from: Nz + 8];
-impl_from_integer![many_nonzero for: Nz + u + 32, from: Nz + 8, 16];
-impl_from_integer![many_nonzero for: Nz + u + 64, from: Nz + 8, 16, 32];
-impl_from_integer![many_nonzero for: Nz + u + 128, from: Nz + 8, 16, 32, 64];
+impl_from_integer![nonzero for: Nz + u + 16, from: Nz + 8];
+impl_from_integer![nonzero for: Nz + u + 32, from: Nz + 8, 16];
+impl_from_integer![nonzero for: Nz + u + 64, from: Nz + 8, 16, 32];
+impl_from_integer![nonzero for: Nz + u + 128, from: Nz + 8, 16, 32, 64];
 
 #[cfg(test)]
 mod tests {

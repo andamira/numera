@@ -15,17 +15,17 @@
 ///
 /// # Examples
 /// ```ignore
-/// impl_from_integer![many_int for: Integer + i + 32, from: Integer + 8, 16];
+/// impl_from_integer![int for: Integer + i + 32, from: Integer + 8, 16];
 /// ```
 macro_rules! impl_from_integer {
     // having an inner integer primitive
-    (many_int
+    (int
      for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $( $from_size:expr ),+) => {
         $(
-            impl_from_integer![int for: $for + $p + $for_size, from: $from + $from_size];
+            impl_from_integer![@int for: $for + $p + $for_size, from: $from + $from_size];
         )+
     };
-    (int
+    (@int
      for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $from_size:expr) => {
         paste::paste! {
             impl From<[< $from $from_size >]> for [< $for $for_size >] {
@@ -42,13 +42,13 @@ macro_rules! impl_from_integer {
     };
 
     // having an inner NonZero*
-    (many_nonzero
+    (nonzero
      for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $( $from_size:expr ),+) => {
         $(
-            impl_from_integer![nonzero for: $for + $p + $for_size, from: $from + $from_size];
+            impl_from_integer![@nonzero for: $for + $p + $for_size, from: $from + $from_size];
         )+
     };
-    (nonzero
+    (@nonzero
      for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $from_size:expr) => {
         paste::paste! {
             impl From<[< $from $from_size >]> for [< $for $for_size >] {
@@ -65,13 +65,13 @@ macro_rules! impl_from_integer {
     };
 
     // having an unsigned inner primitive, representing only negative values.
-    (many_int_neg
+    (int_neg
      for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $( $from_size:expr ),+) => {
         $(
-            impl_from_integer![int_neg for: $for + $p + $for_size, from: $from + $from_size];
+            impl_from_integer![@int_neg for: $for + $p + $for_size, from: $from + $from_size];
         )+
     };
-    (int_neg
+    (@int_neg
      for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $from_size:expr) => {
         paste::paste! {
             impl From<[< $from $from_size >]> for [< $for $for_size >] {
@@ -90,14 +90,14 @@ macro_rules! impl_from_integer {
     };
 
     // having an unsigned inner NonZero*, representing only negative values.
-    (many_nonzero_neg
+    (nonzero_neg
      for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $( $from_size:expr ),+) => {
         $(
-            impl_from_integer![nonzero_neg
+            impl_from_integer![@nonzero_neg
             for: $for + $p + $for_size, from: $from + $from_size];
         )+
     };
-    (nonzero_neg
+    (@nonzero_neg
      for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $from_size:expr) => {
         paste::paste! {
             impl From<[< $from $from_size >]> for [< $for $for_size >] {
@@ -133,16 +133,16 @@ pub(crate) use impl_from_integer;
 /// ```
 macro_rules! impl_from_primitive {
     // having the same inner integer primitive
-    (many
+    (int
      for: $for:ident + $for_size:expr,
      from: $from_p:ident + $( $from_size:expr ),+
     ) => {
         $(
-            impl_from_primitive![for: $for + $for_size, from: $from_p + $from_size];
+            impl_from_primitive![@int for: $for + $for_size, from: $from_p + $from_size];
         )+
     };
 
-    (
+    (@int
      for: $for:ident + $for_size:expr,
      from: $from_p:ident + $from_size:expr
     ) => {
@@ -160,17 +160,17 @@ macro_rules! impl_from_primitive {
         }
     };
 
-    (many_nonzero
+    (nonzero
      for: $for:ident + $for_size:expr,
      from: $from_p:ident + $( $from_size:expr ),+
     ) => {
         $(
-            impl_from_primitive![nonzero for: $for + $for_size, from: $from_p + $from_size];
+            impl_from_primitive![@nonzero for: $for + $for_size, from: $from_p + $from_size];
         )+
     };
 
     // having to convert from nonzero to core primitive
-    (nonzero
+    (@nonzero
      for: $for:ident + $for_size:expr,
      from: $from_p:ident + $from_size:expr
     ) => {
