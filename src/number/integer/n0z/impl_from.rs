@@ -32,6 +32,12 @@ impl_from_primitive![nonzero for: N0z + 32, from: NonZeroI + 8, 16, 32];
 impl_from_primitive![nonzero for: N0z + 64, from: NonZeroI + 8, 16, 32, 64];
 impl_from_primitive![nonzero for: N0z + 128, from: NonZeroI + 8, 16, 32, 64, 128];
 
+// from smaller sized NonZeroInteger (Self)
+impl_from_integer![nonzero for: N0z + i + 16, from: N0z + 8];
+impl_from_integer![nonzero for: N0z + i + 32, from: N0z + 8, 16];
+impl_from_integer![nonzero for: N0z + i + 64, from: N0z + 8, 16, 32];
+impl_from_integer![nonzero for: N0z + i + 128, from: N0z + 8, 16, 32, 64];
+
 // from smaller sized PositiveInteger
 impl_from_integer![nonzero for: N0z + i + 16, from: Pz + 8];
 impl_from_integer![nonzero for: N0z + i + 32, from: Pz + 8, 16];

@@ -289,6 +289,7 @@ mod tests {
         let _q5 = Rational8::new((5, 1))?;
 
         // Display
+        #[cfg(feature = "std")]
         assert_eq![_q5.to_string(), "5/1"];
 
         // Bound

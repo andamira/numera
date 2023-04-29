@@ -3,9 +3,10 @@
 # CHECK
 cl = "clippy" # std, safe
 #
-cla = "clippy --features=deps_all" # std, safe, all-dependencies
+cla = "clippy --features=deps_all" # std, safe, all deps
 clu = "clippy --no-default-features --features=std" # std, unsafe
 cln = "clippy --no-default-features --features=safe" # no-std, safe
+clau = "clippy --no-default-features --features=std,deps_all" # std, unsafe, all deps
 clnu = "clippy --no-default-features" # no-std, unsafe
 
 # CLEAN PACKAGE
@@ -47,16 +48,22 @@ rrb = "run --release --bin"
 rre = "run --release --example"
 
 # TEST
+# std, safe
 t = "test"
 td = "test --doc"
-t_ = "test -- --nocapture"
+t_ = "test  -- --nocapture"
 t_1 = "test -- --test-threads 1 --nocapture"
-#
+# std, safe, all dependencies
 ta = "test --features=deps_all"
 tda = "test --features=deps_all --doc"
 ta_ = "test --features=deps_all -- --nocapture"
 ta_1 = "test --features=deps_all -- --test-threads 1 --nocapture"
-#
+# std, unsafe
+tu = "test --no-default-features --features=std"
+tdu = "test --no-default-features --features=std --doc"
+tu_ = "test --no-default-features --features=std -- --nocapture"
+tu_1 = "test --no-default-features --features=std -- --test-threads 1 --nocapture"
+# no-std, unsafe
 tn = "test --no-default-features"
 tdn = "test --no-default-features --doc"
 tn_ = "test --no-default-features -- --nocapture"

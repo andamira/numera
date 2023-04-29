@@ -7,7 +7,7 @@ use crate::number::{
     integer::abbr::*,
     rational::{
         abbr::*,
-        macros::impl_from_integer,
+        macros::{impl_from_integer, impl_from_rational},
     },
 };
 use core::num::{
@@ -75,12 +75,12 @@ impl_from_integer![integer for:Q+32, num:Z32, den:N0z32, from:Npz + 8, 16];
 impl_from_integer![integer for:Q+64, num:Z64, den:N0z64, from:Npz + 8, 16, 32];
 impl_from_integer![integer for:Q+128, num:Z128, den:N0z128, from:Npz + 8, 16, 32, 64];
 
-// // from smaller sized Rational (Self)
-// impl_from_rational![int for:Q + i + 16, from:Q + 8];
-// impl_from_rational![int for:Q + i + 32, from:Q + 8, 16];
-// impl_from_rational![int for:Q + i + 64, from:Q + 8, 16, 32];
-// impl_from_rational![int for:Q + i + 128, from:Q + 8, 16, 32, 64];
-//
+// from smaller sized Rational (Self)
+impl_from_rational![for:Q+16, num:Z16, den:N0z16, from:Q + 8];
+impl_from_rational![for:Q+32, num:Z32, den:N0z32, from:Q + 8, 16];
+impl_from_rational![for:Q+64, num:Z64, den:N0z64, from:Q + 8, 16, 32];
+impl_from_rational![for:Q+128, num:Z128, den:N0z128, from:Q + 8, 16, 32, 64];
+
 // // from smaller or equal sized NonZeroRational
 // impl_from_rational![nonzero for:Q + i + 8, from:N0q + 8];
 // impl_from_rational![nonzero for:Q + i + 16, from:N0q + 8, 16];

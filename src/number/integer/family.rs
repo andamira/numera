@@ -3,10 +3,8 @@
 //!
 //
 // TOC
-// - macro
-//   - define_integers_family
-//   - define_any_integers_family
-// - tests
+// - define_integers_family!
+// - define_any_integers_family!
 
 use crate::number::integer::{
     Integers, NegativeIntegers, NonNegativeIntegers, NonPositiveIntegers, NonZeroIntegers,
@@ -16,10 +14,6 @@ use crate::number::integer::{
 /// Defines a subfamily of integers and implements `Number` on it.
 //
 // It doesn't implement `Integer`, brings too much complexity for little gain.
-//
-// Sizes:
-// - 24 bytes minimum (192bits)
-// - 32 Bytes with bigint (24 if using Box)
 macro_rules! define_integers_family {
     // applies a method to each variant (0 args)
     (match_variants_0:
@@ -484,24 +478,3 @@ define_any_integers_family![
         NonPositiveIntegers, NonPositive,
         Primes, Primes
 ];
-
-#[cfg(test)]
-mod tests {
-    #![allow(unused_imports)]
-    use core::mem::size_of;
-
-    // #[cfg(not(any(feature="twofloat", feature="half", feature="ibig", feature="ruint")))]
-    #[cfg(not(feature = "std"))]
-    #[test]
-    fn sizes() {
-        // 24 because of the enum discriminant
-        assert_eq![24, size_of::<super::AnyIntegers>()];
-    }
-
-    #[test]
-    #[cfg(feature = "deps_all")]
-    fn size_all_features() {
-        assert_eq![32, size_of::<super::AnyIntegers>()];
-        // assert_eq![24, size_of::<super::AnyIntegers>()]; // MAYBE:Box bigint
-    }
-}

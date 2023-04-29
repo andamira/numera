@@ -84,7 +84,7 @@ impl_from_integer![nonzero_neg for: Z + i + 128, from: Nz + 8, 16, 32, 64];
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::all::NumeraResult;
+    use crate::all::{NegSigned, NumeraResult};
 
     #[test]
     fn z_from() -> NumeraResult<()> {

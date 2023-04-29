@@ -26,7 +26,7 @@ impl_from_integer![nonzero for: Npz + u + 128, from: Nz + 8, 16, 32, 64, 128];
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::all::NumeraResult;
+    use crate::all::{NegSigned, NumeraResult};
 
     #[test]
     fn npz_from() -> NumeraResult<()> {
