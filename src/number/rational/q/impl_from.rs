@@ -17,31 +17,31 @@ use core::num::{
 
 /* infallible conversions */
 
-// from smaller unsigned primitives
+// from smaller u
 impl_from_integer![prim for:Q+16, num:Z16, den:N0z16, from:u + 8];
 impl_from_integer![prim for:Q+32, num:Z32, den:N0z32, from:u + 8, 16];
 impl_from_integer![prim for:Q+64, num:Z64, den:N0z64, from:u + 8, 16, 32];
 impl_from_integer![prim for:Q+128, num:Z128, den:N0z128, from:u + 8, 16, 32, 64];
-// from smaller or equal sized signed primitives
+// from smaller or equal sized i
 impl_from_integer![prim for:Q+8, num:Z8, den:N0z8, from:i + 8];
 impl_from_integer![prim for:Q+16, num:Z16, den:N0z16, from:i + 8, 16];
 impl_from_integer![prim for:Q+32, num:Z32, den:N0z32, from:i + 8, 16, 32];
 impl_from_integer![prim for:Q+64, num:Z64, den:N0z64, from:i + 8, 16, 32, 64];
 impl_from_integer![prim for:Q+128, num:Z128, den:N0z128, from:i + 8, 16, 32, 64, 128];
 
-// from smaller unsigned non-zero primitives
+// from smaller NonZeroU
 impl_from_integer![nonzero for:Q+16, num:Z16, den:N0z16, from:NonZeroU + 8];
 impl_from_integer![nonzero for:Q+32, num:Z32, den:N0z32, from:NonZeroU + 8, 16];
 impl_from_integer![nonzero for:Q+64, num:Z64, den:N0z64, from:NonZeroU + 8, 16, 32];
 impl_from_integer![nonzero for:Q+128, num:Z128, den:N0z128, from:NonZeroU + 8, 16, 32, 64];
-// from smaller or equal sized signed non-zero primitives
+// from smaller or equal sized NonZeroI
 impl_from_integer![nonzero for:Q+8, num:Z8, den:N0z8, from:NonZeroI + 8];
 impl_from_integer![nonzero for:Q+16, num:Z16, den:N0z16, from:NonZeroI + 8, 16];
 impl_from_integer![nonzero for:Q+32, num:Z32, den:N0z32, from:NonZeroI + 8, 16, 32];
 impl_from_integer![nonzero for:Q+64, num:Z64, den:N0z64, from:NonZeroI + 8, 16, 32, 64];
 impl_from_integer![nonzero for:Q+128, num:Z128, den:N0z128, from:NonZeroI + 8, 16, 32, 64, 128];
 
-// from smaller or equal sized Ingeger
+// from smaller or equal sized Integer
 impl_from_integer![integer for:Q+8, num:Z8, den:N0z8, from:Z + 8];
 impl_from_integer![integer for:Q+16, num:Z16, den:N0z16, from:Z + 8, 16];
 impl_from_integer![integer for:Q+32, num:Z32, den:N0z32, from:Z + 8, 16, 32];
@@ -75,7 +75,7 @@ impl_from_integer![integer for:Q+32, num:Z32, den:N0z32, from:Npz + 8, 16];
 impl_from_integer![integer for:Q+64, num:Z64, den:N0z64, from:Npz + 8, 16, 32];
 impl_from_integer![integer for:Q+128, num:Z128, den:N0z128, from:Npz + 8, 16, 32, 64];
 
-// // from smaller sized Rational
+// // from smaller sized Rational (Self)
 // impl_from_rational![int for:Q + i + 16, from:Q + 8];
 // impl_from_rational![int for:Q + i + 32, from:Q + 8, 16];
 // impl_from_rational![int for:Q + i + 64, from:Q + 8, 16, 32];
@@ -111,13 +111,13 @@ impl_from_integer![integer for:Q+128, num:Z128, den:N0z128, from:Npz + 8, 16, 32
 // impl_from_rational![nonzero_neg for:Q + i + 64, from:Nnq + 8, 16, 32];
 // impl_from_rational![nonzero_neg for:Q + i + 128, from:Nnq + 8, 16, 32, 64];
 
-// TODO
 // #[cfg(test)]
 // mod tests {
-//     use crate::all::*;
+//     use super::*;
+//     use crate::all::NumeraResult;
 //
 //     #[test]
-//     fn q_from() -> NumeraResult<()> {
+//     fn q_from() -> NumeraResult<()> { // TODO
 //         // let _q5 = Rational8::new((5, 1))?;
 //         Ok(())
 //     }
