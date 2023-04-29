@@ -11,8 +11,8 @@
 mod define_sized;
 mod family;
 mod impl_from;
+mod impl_ops;
 mod impl_rational;
-// mod impl_ops; // TODO
 
 pub use define_sized::{Rational128, Rational16, Rational32, Rational64, Rational8};
 pub use family::Rationals;

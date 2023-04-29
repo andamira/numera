@@ -37,6 +37,6 @@ pub mod all {
     /// Abbreviations
     pub mod abbr {
         #[doc(inline)]
-        pub use crate::number::integer::abbr::*;
+        pub use crate::number::{integer::abbr::*, rational::abbr::*};
     }
 }

@@ -83,7 +83,10 @@ pub trait Rational: Number {
     /// Returns the inverted and reduced fraction.
     #[inline]
     #[must_use]
-    fn inverted_reduced(&self) -> Self where Self: Sized {
+    fn inverted_reduced(&self) -> Self
+    where
+        Self: Sized,
+    {
         self.inverted().reduced()
     }
 }
