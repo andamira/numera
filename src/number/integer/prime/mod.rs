@@ -73,8 +73,8 @@ impl Prime8 {
     /// use numera::all::{Number, Prime8};
     ///
     /// # fn main() -> numera::error::NumeraResult<()> {
-    /// assert_eq![1, Prime8::new(2)?.nth()];
-    /// assert_eq![54, Prime8::new(251)?.nth()];
+    /// assert_eq![1, Prime8::from_parts(2)?.nth()];
+    /// assert_eq![54, Prime8::from_parts(251)?.nth()];
     /// # Ok(()) }
     /// ```
     pub fn nth(&self) -> usize {
@@ -95,10 +95,10 @@ impl Prime16 {
     /// use numera::all::{Number, Prime16};
     ///
     /// # fn main() -> numera::error::NumeraResult<()> {
-    /// assert_eq![1, Prime16::new(2)?.nth()];
-    /// assert_eq![54, Prime16::new(251)?.nth()];
-    /// assert_eq![55, Prime16::new(257)?.nth()];
-    /// assert_eq![6_542, Prime16::new(65_521)?.nth()];
+    /// assert_eq![1, Prime16::from_parts(2)?.nth()];
+    /// assert_eq![54, Prime16::from_parts(251)?.nth()];
+    /// assert_eq![55, Prime16::from_parts(257)?.nth()];
+    /// assert_eq![6_542, Prime16::from_parts(65_521)?.nth()];
     /// # Ok(()) }
     /// ```
     pub fn nth(&self) -> usize {
@@ -136,12 +136,12 @@ impl Prime32 {
     /// use numera::all::{Number, Prime32};
     ///
     /// # fn main() -> numera::error::NumeraResult<()> {
-    /// assert_eq![1, Prime32::new(2)?.nth()];
-    /// assert_eq![54, Prime32::new(251)?.nth()];
-    /// assert_eq![55, Prime32::new(257)?.nth()];
-    /// assert_eq![6_542, Prime32::new(65_521)?.nth()];
-    /// assert_eq![6_543, Prime32::new(65_537)?.nth()];
-    /// assert_eq![40_000_000, Prime32::new(776_531_401)?.nth()];
+    /// assert_eq![1, Prime32::from_parts(2)?.nth()];
+    /// assert_eq![54, Prime32::from_parts(251)?.nth()];
+    /// assert_eq![55, Prime32::from_parts(257)?.nth()];
+    /// assert_eq![6_542, Prime32::from_parts(65_521)?.nth()];
+    /// assert_eq![6_543, Prime32::from_parts(65_537)?.nth()];
+    /// assert_eq![40_000_000, Prime32::from_parts(776_531_401)?.nth()];
     /// # Ok(()) }
     /// ```
     #[cfg(feature = "std")]

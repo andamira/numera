@@ -48,7 +48,7 @@ mod tests {
 
     #[test]
     fn nnz_from() -> NumeraResult<()> {
-        let _5 = Nnz8::new(5)?;
+        let _5 = Nnz8::from_parts(5)?;
 
         // 3 ways:
         assert_eq![<u8 as Into<Nnz8>>::into(5), _5];
@@ -56,16 +56,16 @@ mod tests {
         assert_eq![_5, 5.into()];
 
         // from smaller or equal sized u
-        assert_eq![Nnz16::new(100)?, 100_u8.into()];
-        assert_eq![Nnz16::new(100)?, 100_u16.into()];
+        assert_eq![Nnz16::from_parts(100)?, 100_u8.into()];
+        assert_eq![Nnz16::from_parts(100)?, 100_u16.into()];
 
         // from smaller NonNegativeInteger
-        assert_eq![Nnz16::new(100)?, Nnz8::new(100)?.into()];
-        assert_eq![Nnz32::new(100)?, Nnz8::new(100)?.into()];
-        assert_eq![Nnz32::new(100)?, Nnz16::new(100)?.into()];
+        assert_eq![Nnz16::from_parts(100)?, Nnz8::from_parts(100)?.into()];
+        assert_eq![Nnz32::from_parts(100)?, Nnz8::from_parts(100)?.into()];
+        assert_eq![Nnz32::from_parts(100)?, Nnz16::from_parts(100)?.into()];
         // ...
-        assert_eq![Nnz128::new(100)?, Nnz8::new(100)?.into()];
-        assert_eq![Nnz128::new(100)?, Nnz64::new(100)?.into()];
+        assert_eq![Nnz128::from_parts(100)?, Nnz8::from_parts(100)?.into()];
+        assert_eq![Nnz128::from_parts(100)?, Nnz64::from_parts(100)?.into()];
 
         Ok(())
     }

@@ -23,16 +23,19 @@ pub enum Primes {
 
 /// This implementation is no-op.
 impl Number for Primes {
-    type Inner = Self;
+    type Parts = Self;
 
+    /// Returns `value` unchanged.
     #[inline]
-    fn new(value: Primes) -> NumeraResult<Self> {
+    fn from_parts(value: Primes) -> NumeraResult<Self> {
         Ok(value)
     }
+
+    /// Returns `value` unchanged.
     #[inline]
     #[cfg(not(feature = "safe"))]
     #[cfg_attr(feature = "nightly", doc(cfg(feature = "non-safe")))]
-    unsafe fn new_unchecked(value: Primes) -> Self {
+    unsafe fn from_parts_unchecked(value: Primes) -> Self {
         value
     }
 }

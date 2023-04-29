@@ -29,25 +29,36 @@ use crate::{
 /// Common trait for all numbers.
 pub trait Number: Bound + Count + Ident + Sign {
     /// The inner value representation of the number.
-    type Inner;
+    type Parts;
 
-    /// Returns some new number,
+    /// Forms a new number from its constituent parts.
     ///
     /// # Errors
-    /// Errors if the `value` is not in a valid state for this number subset.
+    /// Returns an error if the `value` does not conform to the invariants
+    /// of what's considered a valid state for this type of number.
     #[rustfmt::skip]
-    fn new(value: Self::Inner) -> Result<Self> where Self: Sized;
+    fn from_parts(value: Self::Parts) -> Result<Self> where Self: Sized;
 
-    /// Returns a new number.
+    /// Forms a new number from its constituent parts.
     ///
     /// # Panics
-    /// Panics if the `value` is not in a valid state for this number subset.
+    /// Could panic (specially in debug) if the `value` does not conform to the
+    /// invariants of what's considered a valid state for this number.
     ///
     /// # Safety
     /// The invariants inherent to the specific number type must be maintained.
     #[cfg(not(feature = "safe"))]
     #[cfg_attr(feature = "nightly", doc(cfg(feature = "non-safe")))]
-    unsafe fn new_unchecked(value: Self::Inner) -> Self;
+    unsafe fn from_parts_unchecked(value: Self::Parts) -> Self;
+
+    /// Forms a new number from its converted constituent parts.
+    ///
+    /// # Errors
+    /// Returns an error if the converted `value` does not conform to the
+    /// invariants of what's considered a valid state for this number.
+    fn try_from_parts(value: impl Into<Self::Parts>) -> Result<Self> where Self: Sized {
+        Number::from_parts(value.into())
+    }
 }
 
 /* macros */
@@ -59,14 +70,14 @@ macro_rules! impl_number {
     };
     (single: $t:ty) => {
         impl Number for $t {
-            type Inner = $t;
+            type Parts = $t;
 
             #[inline]
-            fn new(value: $t) -> Result<Self> { Ok(value) }
+            fn from_parts(value: $t) -> Result<Self> { Ok(value) }
 
             #[inline]
             #[cfg(not(feature = "safe"))]
-            unsafe fn new_unchecked(value: Self::Inner) -> Self { value }
+            unsafe fn from_parts_unchecked(value: Self::Parts) -> Self { value }
         }
     };
 }

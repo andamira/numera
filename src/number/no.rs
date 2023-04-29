@@ -1,6 +1,5 @@
 //
-//! Implementing `Number` for the unit type [`()`] in order to be able
-//! to represent the absence of a number, where a number is expected.
+//!
 //
 
 use crate::{
@@ -8,17 +7,19 @@ use crate::{
     number::traits::{Bound, Count, Ident, Number, Sign},
 };
 
+/// This implementation allows to use the unit type for representing
+/// the absence of a number, where a number is expected.
 #[rustfmt::skip]
 impl Number for () {
-    type Inner = ();
+    type Parts = ();
 
     #[inline]
-    fn new(value: ()) -> Result<Self> { Ok(value) }
+    fn from_parts(value: ()) -> Result<Self> { Ok(value) }
 
     #[inline]
     #[cfg(not(feature = "safe"))]
     #[cfg_attr(feature = "nightly", doc(cfg(feature = "non-safe")))]
-    unsafe fn new_unchecked(value: ()) -> Self { value }
+    unsafe fn from_parts_unchecked(value: ()) -> Self { value }
 }
 #[rustfmt::skip]
 impl Bound for () {

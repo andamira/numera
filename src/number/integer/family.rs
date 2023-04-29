@@ -70,15 +70,15 @@ macro_rules! define_integers_family {
 
         /// This implementation is no-op.
         impl crate::all::Number for $fname {
-            type Inner = Self;
+            type Parts = Self;
 
             #[inline]
-            fn new(value: $fname) -> crate::all::NumeraResult<Self> { Ok(value) }
+            fn from_parts(value: $fname) -> crate::all::NumeraResult<Self> { Ok(value) }
 
             #[inline]
             #[cfg(not(feature = "safe"))]
             #[cfg_attr(feature = "nightly", doc(cfg(feature = "non-safe")))]
-            unsafe fn new_unchecked(value: $fname) -> Self { value }
+            unsafe fn from_parts_unchecked(value: $fname) -> Self { value }
         }
 
         /// This implementation defers to the actual integer variant.
@@ -294,15 +294,15 @@ macro_rules! define_any_integers_family {
 
         /// This implementation is no-op.
         impl crate::all::Number for $fname {
-            type Inner = Self;
+            type Parts = Self;
 
             #[inline]
-            fn new(value: $fname) -> crate::all::NumeraResult<Self> { Ok(value) }
+            fn from_parts(value: $fname) -> crate::all::NumeraResult<Self> { Ok(value) }
 
             #[inline]
             #[cfg(not(feature = "safe"))]
             #[cfg_attr(feature = "nightly", doc(cfg(feature = "non-safe")))]
-            unsafe fn new_unchecked(value: $fname) -> Self { value }
+            unsafe fn from_parts_unchecked(value: $fname) -> Self { value }
         }
 
         /// This implementation defers to the actual integer variant.

@@ -62,11 +62,11 @@ macro_rules! impl_from_integer {
             impl From<[< $from $from_size >]> for [< $for $for_size >] {
                 fn from(from: [< $from $from_size >]) -> Self {
                     #[cfg(feature = "safe")]
-                    return Self::new(from.0.get().into()).unwrap();
+                    return Self::from_parts(from.0.get().into()).unwrap();
 
                     #[cfg(not(feature = "safe"))]
                     // SAFETY: coming from a type that respects the invariant of not having 0
-                    return unsafe { Self::new_unchecked(from.0.get().into()) };
+                    return unsafe { Self::from_parts_unchecked(from.0.get().into()) };
                 }
             }
         }
@@ -105,12 +105,12 @@ macro_rules! impl_from_integer {
                 fn from(from: [< $from $from_size >]) -> Self {
                     #[cfg(feature = "safe")]
                     return
-                        Self::new(Into::<[< $p $for_size >]>::into(from.0.get()).neg()).unwrap();
+                        Self::from_parts(Into::<[< $p $for_size >]>::into(from.0.get()).neg()).unwrap();
 
                     #[cfg(not(feature = "safe"))]
                     // SAFETY: coming from a type that respects the invariant of not having 0
                     return unsafe {
-                        Self::new_unchecked(Into::<[< $p $for_size >]>::into(from.0.get()).neg())
+                        Self::from_parts_unchecked(Into::<[< $p $for_size >]>::into(from.0.get()).neg())
                     };
                 }
             }
@@ -151,11 +151,11 @@ macro_rules! impl_from_primitive {
             impl From<[< $from_p $from_size >]> for [< $for $for_size >] {
                 fn from(from: [< $from_p $from_size >]) -> Self {
                     #[cfg(feature = "safe")]
-                    return Self::new(from.into()).unwrap();
+                    return Self::from_parts(from.into()).unwrap();
 
                     #[cfg(not(feature = "safe"))]
                     // SAFETY: all values should be valid
-                    return unsafe { Self::new_unchecked(from.into()) };
+                    return unsafe { Self::from_parts_unchecked(from.into()) };
                 }
             }
         }
@@ -179,11 +179,11 @@ macro_rules! impl_from_primitive {
             impl From<[< $from_p $from_size >]> for [< $for $for_size >] {
                 fn from(from: [< $from_p $from_size >]) -> Self {
                     #[cfg(feature = "safe")]
-                    return Self::new(from.get().into()).unwrap();
+                    return Self::from_parts(from.get().into()).unwrap();
 
                     #[cfg(not(feature = "safe"))]
                     // SAFETY: coming from a type that respects the invariant of not having 0
-                    return unsafe { Self::new_unchecked(from.get().into()) };
+                    return unsafe { Self::from_parts_unchecked(from.get().into()) };
                 }
             }
         }
@@ -227,10 +227,10 @@ macro_rules! impl_try_from_integer {
                     return Ok(Self(from.0.try_into()?));
                     // MAYBE DELETE
                     // #[cfg(feature = "safe")]
-                    // return Self::new(from.0.try_into()?);
+                    // return Self::from_parts(from.0.try_into()?);
                     // #[cfg(not(feature = "safe"))]
                     // // SAFETY: all ok results of try_from should be valid
-                    // return Ok(unsafe { Self::new_unchecked(from.0.try_into()?) });
+                    // return Ok(unsafe { Self::from_parts_unchecked(from.0.try_into()?) });
                 }
             }
         }
@@ -255,11 +255,11 @@ macro_rules! impl_try_from_integer {
                     // return Ok(Self(from.0.get().try_into()?)); // TODO CHECK (I don't think'll work with n0z)
 
                     #[cfg(feature = "safe")]
-                    return Self::new(from.0.get().try_into()?);
+                    return Self::from_parts(from.0.get().try_into()?);
 
                     #[cfg(not(feature = "safe"))]
                     // SAFETY: all ok results of try_from should be valid
-                    return Ok(unsafe { Self::new_unchecked(from.0.get().try_into()?) });
+                    return Ok(unsafe { Self::from_parts_unchecked(from.0.get().try_into()?) });
                 }
             }
         }
@@ -303,12 +303,12 @@ macro_rules! impl_try_from_integer {
                     -> $crate::error::NumeraResult<[<$for$for_size>]> {
                     #[cfg(feature = "safe")]
                     return
-                        Self::new(TryInto::<[< $p $for_size >]>::try_into(from.0.get())?.neg());
+                        Self::from_parts(TryInto::<[< $p $for_size >]>::try_into(from.0.get())?.neg());
 
                     #[cfg(not(feature = "safe"))]
                     // SAFETY: all ok results of try_from should be valid
                     return unsafe {
-                        Ok(Self::new_unchecked(
+                        Ok(Self::from_parts_unchecked(
                                 TryInto::<[< $p $for_size >]>::try_into(from.0.get())?.neg()
                         ))
                     };
@@ -353,11 +353,11 @@ macro_rules! impl_try_from_primitive {
                     -> $crate::error::NumeraResult<[<$for$for_size>]> {
 
                     #[cfg(feature = "safe")]
-                    return Self::new(from.try_into()?);
+                    return Self::from_parts(from.try_into()?);
 
                     #[cfg(not(feature = "safe"))]
                     // SAFETY: all ok results of try_from should be valid
-                    return Ok(unsafe { Self::new_unchecked(from.try_into()?) });
+                    return Ok(unsafe { Self::from_parts_unchecked(from.try_into()?) });
                 }
             }
         }
@@ -384,11 +384,11 @@ macro_rules! impl_try_from_primitive {
                     -> $crate::error::NumeraResult<[<$for$for_size>]> {
 
                     #[cfg(feature = "safe")]
-                    return Self::new(from.get().try_into()?);
+                    return Self::from_parts(from.get().try_into()?);
 
                     #[cfg(not(feature = "safe"))]
                     // SAFETY: all ok results of try_from should be valid
-                    return Ok(unsafe { Self::new_unchecked(from.get().try_into()?) });
+                    return Ok(unsafe { Self::from_parts_unchecked(from.get().try_into()?) });
                 }
             }
         }

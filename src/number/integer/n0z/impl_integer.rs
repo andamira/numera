@@ -45,17 +45,17 @@ macro_rules! impl_nonzero_integer {
                 }
 
                 #[cfg(feature = "safe")]
-                return Some($t::new(a).unwrap());
+                return Some($t::from_parts(a).unwrap());
 
                 #[cfg(not(feature = "safe"))]
                 // SAFETY: it can't be 0
-                return Some(unsafe { $t::new_unchecked(a) });
+                return Some(unsafe { $t::from_parts_unchecked(a) });
             }
             #[inline]
             fn lcm(&self, other: &Self) -> Option<Self> {
                 #[cfg(feature = "safe")]
                 return Some(
-                    $t::new(
+                    $t::from_parts(
                         self.0.get() * other.0.get() /
                         self.0.get().gcd(&other.0.get()).unwrap()
                     ).unwrap()
@@ -65,7 +65,7 @@ macro_rules! impl_nonzero_integer {
                 return Some(
                     // SAFETY: it can't be 0
                     unsafe {
-                        $t::new_unchecked(
+                        $t::from_parts_unchecked(
                             self.0.get() * other.0.get() /
                             self.0.get().gcd(&other.0.get()).unwrap()
                         )
@@ -95,15 +95,15 @@ mod tests {
 
     #[test]
     fn n0z_lcm_gcd() {
-        let n0z10 = NonZeroInteger32::new(10).unwrap();
-        let n0z15 = NonZeroInteger32::new(15).unwrap();
+        let n0z10 = NonZeroInteger32::from_parts(10).unwrap();
+        let n0z15 = NonZeroInteger32::from_parts(15).unwrap();
 
         assert_eq![
-            NonZeroInteger32::new(30).unwrap(),
+            NonZeroInteger32::from_parts(30).unwrap(),
             n0z10.lcm(&n0z15).unwrap()
         ];
         assert_eq![
-            NonZeroInteger32::new(5).unwrap(),
+            NonZeroInteger32::from_parts(5).unwrap(),
             n0z10.gcd(&n0z15).unwrap()
         ];
     }

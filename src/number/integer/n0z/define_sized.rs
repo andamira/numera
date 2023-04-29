@@ -271,17 +271,17 @@ macro_rules! define_nonzero_integer_sized {
             /* number */
 
             impl Number for [<$name$bsize>] {
-                type Inner = [<i$bsize>];
+                type Parts = [<i$bsize>];
 
                 #[inline]
-                fn new(value: Self::Inner) -> NumeraResult<Self> {
+                fn from_parts(value: Self::Parts) -> NumeraResult<Self> {
                     Ok(Self([<$p$bsize>]::new(value).ok_or(IntegerError::Zero)?))
                 }
 
                 #[inline]
                 #[cfg(not(feature = "safe"))]
                 #[cfg_attr(feature = "nightly", doc(cfg(feature = "non-safe")))]
-                unsafe fn new_unchecked(value: Self::Inner) -> Self {
+                unsafe fn from_parts_unchecked(value: Self::Parts) -> Self {
                     debug_assert![value != 0];
                     Self([<$p$bsize>]::new_unchecked(value))
                 }

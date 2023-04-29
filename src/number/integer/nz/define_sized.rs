@@ -89,9 +89,9 @@ macro_rules! define_negative_integer_sized {
                 fn is_positive(&self) -> bool { false }
             }
             impl NegSigned for [<$name$bsize>] {
-                type Inner = [<u$bsize>];
+                type Parts = [<u$bsize>];
                 #[inline]
-                fn new_neg(value: Self::Inner) -> NumeraResult<Self> {
+                fn new_neg(value: Self::Parts) -> NumeraResult<Self> {
                     Ok(Self([<$p$bsize>]::new(value).ok_or(IntegerError::Zero)?))
                 }
             }
@@ -240,19 +240,19 @@ macro_rules! define_negative_integer_sized {
             /* number */
 
             impl Number for [<$name$bsize>] {
-                type Inner = [<u$bsize>];
+                type Parts = [<u$bsize>];
 
-                /// Please note that the `value` provided will interpreted as negative.
+                /// Please note that the `value` provided will be interpreted as negative.
                 ///
                 /// # Errors
-                /// If the value provided is `0`.
+                /// If the `value` provided is `0`.
                 //
                 // ALTERNATIVE:
                 // This constructur always return an error. Please use the
                 // [`new_neg`][NegSigned#method.new_neg] method from the
                 // [`NegSigned`] trait.
                 #[inline]
-                fn new(value: Self::Inner) -> NumeraResult<Self> {
+                fn from_parts(value: Self::Parts) -> NumeraResult<Self> {
                     Ok(Self([<$p$bsize>]::new(value).ok_or(IntegerError::Zero)?))
 
                     // ALTERNATIVE:
@@ -262,7 +262,7 @@ macro_rules! define_negative_integer_sized {
                 #[inline]
                 #[cfg(not(feature = "safe"))]
                 #[cfg_attr(feature = "nightly", doc(cfg(feature = "non-safe")))]
-                unsafe fn new_unchecked(value: Self::Inner) -> Self {
+                unsafe fn from_parts_unchecked(value: Self::Parts) -> Self {
                     debug_assert![value != 0];
                     Self([<$p$bsize>]::new_unchecked(value))
                 }

@@ -65,13 +65,13 @@ mod tests {
 
     #[test]
     fn nnz_ops() -> NumeraResult<()> {
-        let _5 = NonNegativeInteger8::new(5)?;
-        let _7 = NonNegativeInteger8::new(7)?;
-        assert_eq![_7 + _5, NonNegativeInteger8::new(12)?];
-        assert_eq![_7 - _5, NonNegativeInteger8::new(2)?];
-        assert_eq![_7 * _5, NonNegativeInteger8::new(35)?];
-        assert_eq![_7 / _5, NonNegativeInteger8::new(1)?];
-        assert_eq![_5 / _7, NonNegativeInteger8::new(0)?];
+        let _5 = NonNegativeInteger8::from_parts(5)?;
+        let _7 = NonNegativeInteger8::from_parts(7)?;
+        assert_eq![_7 + _5, NonNegativeInteger8::from_parts(12)?];
+        assert_eq![_7 - _5, NonNegativeInteger8::from_parts(2)?];
+        assert_eq![_7 * _5, NonNegativeInteger8::from_parts(35)?];
+        assert_eq![_7 / _5, NonNegativeInteger8::from_parts(1)?];
+        assert_eq![_5 / _7, NonNegativeInteger8::from_parts(0)?];
 
         #[cfg(feature = "std")]
         {

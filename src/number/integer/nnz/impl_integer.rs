@@ -41,11 +41,11 @@ macro_rules! impl_integer {
                     b = a % b;
                     a = temp;
                 }
-                Some($t::new(a).unwrap())
+                Some($t::from_parts(a).unwrap())
             }
             #[inline]
             fn lcm(&self, other: &Self) -> Option<Self> {
-                Some($t::new(self.0 * other.0 / self.0.gcd(&other.0).unwrap()).unwrap())
+                Some($t::from_parts(self.0 * other.0 / self.0.gcd(&other.0).unwrap()).unwrap())
             }
         }
     };
@@ -69,11 +69,11 @@ mod tests {
         let nnz15: NonNegativeInteger32 = 15_u32.into();
 
         assert_eq![
-            NonNegativeInteger32::new(30).unwrap(),
+            NonNegativeInteger32::from_parts(30).unwrap(),
             nnz10.lcm(&nnz15).unwrap()
         ];
         assert_eq![
-            NonNegativeInteger32::new(5).unwrap(),
+            NonNegativeInteger32::from_parts(5).unwrap(),
             nnz10.gcd(&nnz15).unwrap()
         ];
     }

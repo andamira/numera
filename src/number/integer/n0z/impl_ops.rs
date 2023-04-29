@@ -85,19 +85,19 @@ impl_integer_ops![
 
 #[cfg(test)]
 mod tests {
-    use crate::all::*;
+    use crate::all::{abbr::*, *};
 
     #[test]
     fn n0z_ops() -> NumeraResult<()> {
-        let _5 = NonZeroInteger8::new(5)?;
-        let _7 = NonZeroInteger8::new(7)?;
+        let _5 = N0z8::from_parts(5)?;
+        let _7 = N0z8::from_parts(7)?;
 
-        assert_eq![_7 + _5, NonZeroInteger8::new(12)?];
-        assert_eq![_7 - _5, NonZeroInteger8::new(2)?];
-        assert_eq![_5 - _7, NonZeroInteger8::new(-2)?];
-        assert_eq![_7 * _5, NonZeroInteger8::new(35)?];
-        assert_eq![_7 / _5, NonZeroInteger8::new(1)?];
-        assert_eq![-_7, NonZeroInteger8::new(-7)?];
+        assert_eq![_7 + _5, N0z8::from_parts(12)?];
+        assert_eq![_7 - _5, N0z8::from_parts(2)?];
+        assert_eq![_5 - _7, N0z8::from_parts(-2)?];
+        assert_eq![_7 * _5, N0z8::from_parts(35)?];
+        assert_eq![_7 / _5, N0z8::from_parts(1)?];
+        assert_eq![-_7, N0z8::from_parts(-7)?];
 
         #[cfg(feature = "std")]
         {
@@ -105,7 +105,7 @@ mod tests {
             // overflow
             assert![catch_unwind(|| _7 * _7 * _7).is_err()];
             // underflow
-            assert![catch_unwind(|| NonZeroInteger8::MIN - _5).is_err()];
+            assert![catch_unwind(|| N0z8::MIN - _5).is_err()];
             // zero
             assert![catch_unwind(|| _5 / _7).is_err()];
         }

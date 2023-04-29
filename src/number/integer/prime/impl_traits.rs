@@ -60,12 +60,12 @@ impl Countable for Prime8 {
     ///
     /// # Examples
     /// ```
-    /// use numera::number::{Number, integer::Prime8, traits::Countable};
+    /// use numera::all::{Countable, Number, Prime8};
     /// # use numera::error::NumeraResult;
     /// # fn main() -> NumeraResult<()> {
-    /// assert_eq![Prime8::new(2)?.next()?, Prime8::new(3)?];
-    /// assert_eq![Prime8::new(241)?.next()?, Prime8::new(251)?];
-    /// assert![Prime8::new(251)?.next().is_err()];
+    /// assert_eq![Prime8::from_parts(2)?.next()?, Prime8::from_parts(3)?];
+    /// assert_eq![Prime8::from_parts(241)?.next()?, Prime8::from_parts(251)?];
+    /// assert![Prime8::from_parts(251)?.next().is_err()];
     /// # Ok(()) }
     /// ```
     #[inline]
@@ -80,12 +80,12 @@ impl Countable for Prime8 {
     ///
     /// # Examples
     /// ```
-    /// use numera::number::{Number, integer::Prime8, traits::Countable};
+    /// use numera::all::{Countable, Number, Prime8};
     /// # use numera::error::NumeraResult;
     /// # fn main() -> NumeraResult<()> {
-    /// assert_eq![Prime8::new(3)?.previous()?, Prime8::new(2)?, ];
-    /// assert_eq![Prime8::new(251)?.previous()?, Prime8::new(241)?];
-    /// assert![Prime8::new(2)?.previous().is_err()];
+    /// assert_eq![Prime8::from_parts(3)?.previous()?, Prime8::from_parts(2)?, ];
+    /// assert_eq![Prime8::from_parts(251)?.previous()?, Prime8::from_parts(241)?];
+    /// assert![Prime8::from_parts(2)?.previous().is_err()];
     /// # Ok(()) }
     /// ```
     #[inline]
@@ -131,10 +131,10 @@ impl Sign for Prime8 {
 impl Unsigned for Prime8 {}
 
 impl Number for Prime8 {
-    type Inner = u8;
+    type Parts = u8;
 
     #[inline]
-    fn new(value: Self::Inner) -> NumeraResult<Self> {
+    fn from_parts(value: Self::Parts) -> NumeraResult<Self> {
         if is_prime_brute(value.into()) {
             Ok(Prime8(value))
         } else {
@@ -145,7 +145,7 @@ impl Number for Prime8 {
     #[inline]
     #[cfg(not(feature = "safe"))]
     #[cfg_attr(feature = "nightly", doc(cfg(feature = "non-safe")))]
-    unsafe fn new_unchecked(value: Self::Inner) -> Self {
+    unsafe fn from_parts_unchecked(value: Self::Parts) -> Self {
         Self(value)
     }
 }
@@ -193,14 +193,14 @@ impl Countable for Prime16 {
     ///
     /// # Examples
     /// ```
-    /// use numera::number::{Number, integer::Prime16, traits::Countable};
+    /// use numera::all::{Countable, Number, Prime16};
     /// # use numera::error::NumeraResult;
     /// # fn main() -> NumeraResult<()> {
-    /// assert_eq![Prime16::new(5)?.next()?, Prime16::new(7)?];
-    /// assert_eq![Prime16::new(251)?.next()?, Prime16::new(257)?];
-    /// assert_eq![Prime16::new(257)?.next()?, Prime16::new(263)?];
-    /// assert_eq![Prime16::new(65_519)?.next()?, Prime16::new(65_521)?];
-    /// assert![Prime16::new(65_521)?.next().is_err()];
+    /// assert_eq![Prime16::from_parts(5)?.next()?, Prime16::from_parts(7)?];
+    /// assert_eq![Prime16::from_parts(251)?.next()?, Prime16::from_parts(257)?];
+    /// assert_eq![Prime16::from_parts(257)?.next()?, Prime16::from_parts(263)?];
+    /// assert_eq![Prime16::from_parts(65_519)?.next()?, Prime16::from_parts(65_521)?];
+    /// assert![Prime16::from_parts(65_521)?.next().is_err()];
     /// # Ok(()) }
     /// ```
     #[inline]
@@ -227,14 +227,14 @@ impl Countable for Prime16 {
     ///
     /// # Examples
     /// ```
-    /// use numera::number::{Number, integer::Prime16, traits::Countable};
+    /// use numera::all::{Countable, Number, Prime16};
     /// # use numera::error::NumeraResult;
     /// # fn main() -> NumeraResult<()> {
-    /// assert_eq![Prime16::new(7)?.previous()?, Prime16::new(5)?];
-    /// assert_eq![Prime16::new(251)?.previous()?, Prime16::new(241)?];
-    /// assert_eq![Prime16::new(257)?.previous()?, Prime16::new(251)?];
-    /// assert_eq![Prime16::new(65_521)?.previous()?, Prime16::new(65_519)?];
-    /// assert![Prime16::new(2)?.previous().is_err()];
+    /// assert_eq![Prime16::from_parts(7)?.previous()?, Prime16::from_parts(5)?];
+    /// assert_eq![Prime16::from_parts(251)?.previous()?, Prime16::from_parts(241)?];
+    /// assert_eq![Prime16::from_parts(257)?.previous()?, Prime16::from_parts(251)?];
+    /// assert_eq![Prime16::from_parts(65_521)?.previous()?, Prime16::from_parts(65_519)?];
+    /// assert![Prime16::from_parts(2)?.previous().is_err()];
     /// # Ok(()) }
     /// ```
     #[inline]
@@ -290,10 +290,10 @@ impl Sign for Prime16 {
 impl Unsigned for Prime16 {}
 
 impl Number for Prime16 {
-    type Inner = u16;
+    type Parts = u16;
 
     #[inline]
-    fn new(value: Self::Inner) -> NumeraResult<Self> {
+    fn from_parts(value: Self::Parts) -> NumeraResult<Self> {
         if is_prime_brute(value.into()) {
             Ok(Prime16(value))
         } else {
@@ -304,7 +304,7 @@ impl Number for Prime16 {
     #[inline]
     #[cfg(not(feature = "safe"))]
     #[cfg_attr(feature = "nightly", doc(cfg(feature = "non-safe")))]
-    unsafe fn new_unchecked(value: Self::Inner) -> Self {
+    unsafe fn from_parts_unchecked(value: Self::Parts) -> Self {
         Self(value)
     }
 }
@@ -366,14 +366,14 @@ impl Countable for Prime32 {
     ///
     /// # Examples
     /// ```
-    /// use numera::number::{Number, integer::Prime32, traits::Countable};
+    /// use numera::all::{Countable, Number, Prime32};
     /// # use numera::error::NumeraResult;
     /// # fn main() -> NumeraResult<()> {
-    /// assert_eq![Prime32::new(5)?.next()?, Prime32::new(7)?];
-    /// assert_eq![Prime32::new(251)?.next()?, Prime32::new(257)?];
-    /// assert_eq![Prime32::new(65_521)?.next()?, Prime32::new(65_537)?];
-    /// assert_eq![Prime32::new(50_000_017)?.next()?, Prime32::new(50_000_021)?];
-    /// // assert![Prime32::new(4_294_967_291)?.next().is_err()]; // SLOW
+    /// assert_eq![Prime32::from_parts(5)?.next()?, Prime32::from_parts(7)?];
+    /// assert_eq![Prime32::from_parts(251)?.next()?, Prime32::from_parts(257)?];
+    /// assert_eq![Prime32::from_parts(65_521)?.next()?, Prime32::from_parts(65_537)?];
+    /// assert_eq![Prime32::from_parts(50_000_017)?.next()?, Prime32::from_parts(50_000_021)?];
+    /// // assert![Prime32::from_parts(4_294_967_291)?.next().is_err()]; // SLOW
     /// # Ok(()) }
     /// ```
     #[inline]
@@ -393,14 +393,14 @@ impl Countable for Prime32 {
     ///
     /// # Examples
     /// ```
-    /// use numera::number::{Number, integer::Prime32, traits::Countable};
+    /// use numera::all::{Countable, Number, Prime32};
     /// # use numera::error::NumeraResult;
     /// # fn main() -> NumeraResult<()> {
-    /// assert_eq![Prime32::new(7)?.previous()?, Prime32::new(5)?];
-    /// assert_eq![Prime32::new(257)?.previous()?, Prime32::new(251)?];
-    /// assert_eq![Prime32::new(65_537)?.previous()?, Prime32::new(65_521)?];
-    /// assert_eq![Prime32::new(50_000_021)?.previous()?, Prime32::new(50_000_017)?];
-    /// // assert![Prime32::new(4_294_967_291)?.previous().is_err()]; // SLOW
+    /// assert_eq![Prime32::from_parts(7)?.previous()?, Prime32::from_parts(5)?];
+    /// assert_eq![Prime32::from_parts(257)?.previous()?, Prime32::from_parts(251)?];
+    /// assert_eq![Prime32::from_parts(65_537)?.previous()?, Prime32::from_parts(65_521)?];
+    /// assert_eq![Prime32::from_parts(50_000_021)?.previous()?, Prime32::from_parts(50_000_017)?];
+    /// // assert![Prime32::from_parts(4_294_967_291)?.previous().is_err()]; // SLOW
     /// # Ok(()) }
     /// ```
     #[inline]
@@ -449,10 +449,10 @@ impl Sign for Prime32 {
 impl Unsigned for Prime32 {}
 
 impl Number for Prime32 {
-    type Inner = u32;
+    type Parts = u32;
     #[inline]
     #[cfg(not(feature = "std"))]
-    fn new(value: Self::Inner) -> NumeraResult<Self> {
+    fn from_parts(value: Self::Parts) -> NumeraResult<Self> {
         if is_prime_brute(value) {
             Ok(Prime32(value))
         } else {
@@ -461,7 +461,7 @@ impl Number for Prime32 {
     }
     #[inline]
     #[cfg(feature = "std")]
-    fn new(value: Self::Inner) -> NumeraResult<Self> {
+    fn from_parts(value: Self::Parts) -> NumeraResult<Self> {
         if is_prime_sieve(value.checked_as::<usize>().ok_or(IntegerError::Overflow)?) {
             Ok(Prime32(value))
         } else {
@@ -472,7 +472,7 @@ impl Number for Prime32 {
     #[inline]
     #[cfg(not(feature = "safe"))]
     #[cfg_attr(feature = "nightly", doc(cfg(feature = "non-safe")))]
-    unsafe fn new_unchecked(value: Self::Inner) -> Self {
+    unsafe fn from_parts_unchecked(value: Self::Parts) -> Self {
         Self(value)
     }
 }

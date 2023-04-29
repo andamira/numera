@@ -29,10 +29,11 @@ define_integers_family![build_variants:
 
 /// This implementation is a no-op.
 impl NegSigned for NonPositiveIntegers {
-    type Inner = Self;
+    type Parts = Self;
 
+    /// Returns `value` unchanged.
     #[inline]
-    fn new_neg(value: Self::Inner) -> NumeraResult<Self> {
+    fn new_neg(value: Self::Parts) -> NumeraResult<Self> {
         Ok(value)
     }
 }

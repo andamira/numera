@@ -234,30 +234,32 @@ macro_rules! define_rational_sized {
             /* number */
 
             impl Number for [<$name$bsize>] {
-                type Inner = ([<$p$bsize>], [<$p$bsize>]);
+                type Parts = ([<$p$bsize>], [<$p$bsize>]);
 
-                /// Returns a new rational.
+                /// Forms a new rational from a numerator and denominator.
                 ///
                 /// # Errors
-                /// If the denominator (`value.1`) is 0.
+                /// If the denominator (`value.1`) equals 0.
                 #[inline]
-                fn new(value: Self::Inner) -> NumeraResult<Self> {
+                fn from_parts(value: Self::Parts) -> NumeraResult<Self> {
                     Ok(
                         Self {
-                            num: [<$num$bsize>]::new(value.0)?,
-                            den: [<$den$bsize>]::new(value.1)
+                            num: [<$num$bsize>]::from_parts(value.0)?,
+                            den: [<$den$bsize>]::from_parts(value.1)
                                 .map_err(|_| RationalError::ZeroDenominator)?,
                         }
                     )
                 }
 
+                /// Forms a new rational from a numerator and denominator.
                 #[inline]
                 #[cfg(not(feature = "safe"))]
                 #[cfg_attr(feature = "nightly", doc(cfg(feature = "non-safe")))]
-                unsafe fn new_unchecked(value: Self::Inner) -> Self {
+                unsafe fn from_parts_unchecked(value: Self::Parts) -> Self {
+                    debug_assert![value.1 != [<$p$bsize>]::ZERO];
                     Self {
-                        num: [<$num$bsize>]::new_unchecked(value.0),
-                        den: [<$den$bsize>]::new_unchecked(value.1),
+                        num: [<$num$bsize>]::from_parts_unchecked(value.0),
+                        den: [<$den$bsize>]::from_parts_unchecked(value.1),
                     }
                 }
             }
@@ -267,7 +269,7 @@ macro_rules! define_rational_sized {
 
 /* definitions */
 
-define_rational_sized![multi Rational, i, // CHECK
+define_rational_sized![multi Rational, i,
     "rational number", ", from the set $\\Bbb{Q}$.",
     // "",
     "", MIN, MAX,
@@ -282,11 +284,11 @@ mod tests {
     #[test]
     fn q_define_sized() -> NumeraResult<()> {
         assert_eq![
-            Rational8::new((5, 0)),
+            Rational8::from_parts((5, 0)),
             Err(RationalError::ZeroDenominator.into())
         ];
 
-        let _q5 = Rational8::new((5, 1))?;
+        let _q5 = Rational8::from_parts((5, 1))?;
 
         // Display
         #[cfg(feature = "std")]
@@ -301,7 +303,7 @@ mod tests {
         // {
         //     use std::panic::catch_unwind;
         //     // 0 denominator
-        //     assert![catch_unwind(|| Rational8::new((5, 0)).unwrap()).is_err()];
+        //     assert![catch_unwind(|| Rational8::from_parts((5, 0)).unwrap()).is_err()];
         // }
 
         Ok(())

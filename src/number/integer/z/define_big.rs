@@ -118,17 +118,17 @@ impl NegOne for IntegerBig {
 /* number */
 
 impl Number for IntegerBig {
-    type Inner = IBig;
+    type Parts = IBig;
 
     #[inline]
-    fn new(value: Self::Inner) -> NumeraResult<Self> {
+    fn from_parts(value: Self::Parts) -> NumeraResult<Self> {
         Ok(Self(value))
     }
 
     #[inline]
     #[cfg(not(feature = "safe"))]
     #[cfg_attr(feature = "nightly", doc(cfg(feature = "non-safe")))]
-    unsafe fn new_unchecked(value: Self::Inner) -> Self {
+    unsafe fn from_parts_unchecked(value: Self::Parts) -> Self {
         Self(value)
     }
 }

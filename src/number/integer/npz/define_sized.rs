@@ -88,9 +88,9 @@ macro_rules! define_nonpositive_integer_sized {
                 fn is_positive(&self) -> bool { false }
             }
             impl NegSigned for [<$name$bsize>] {
-                type Inner = [<$p$bsize>];
+                type Parts = [<$p$bsize>];
                 #[inline]
-                fn new_neg(value: Self::Inner) -> NumeraResult<Self> {
+                fn new_neg(value: Self::Parts) -> NumeraResult<Self> {
                     Ok(Self(value))
                 }
             }
@@ -176,7 +176,7 @@ macro_rules! define_nonpositive_integer_sized {
             /* number */
 
             impl Number for [<$name$bsize>] {
-                type Inner = [<$p$bsize>];
+                type Parts = [<$p$bsize>];
 
                 /// Please note that the `value` provided will interpreted as negative.
                 //
@@ -185,7 +185,7 @@ macro_rules! define_nonpositive_integer_sized {
                 // [`new_neg`][NegSigned#method.new_neg] method from the
                 // [`NegSigned`] trait.
                 #[inline]
-                fn new(value: Self::Inner) -> NumeraResult<Self> {
+                fn from_parts(value: Self::Parts) -> NumeraResult<Self> {
                     Ok(Self(value))
 
                     // ALTERNATIVE:
@@ -199,7 +199,7 @@ macro_rules! define_nonpositive_integer_sized {
                 #[inline]
                 #[cfg(not(feature = "safe"))]
                 #[cfg_attr(feature = "nightly", doc(cfg(feature = "non-safe")))]
-                unsafe fn new_unchecked(value: Self::Inner) -> Self { Self(value) }
+                unsafe fn from_parts_unchecked(value: Self::Parts) -> Self { Self(value) }
             }
         }
     };

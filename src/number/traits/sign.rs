@@ -67,8 +67,8 @@ pub trait Unsigned: Sign {}
 ///
 /// This trait is mutually exclusive with [`Unsigned`] and [`Signed`].
 pub trait NegSigned: Sign {
-    /// The number's inner value representation.
-    type Inner;
+    /// The number's inner constituent parts.
+    type Parts;
 
     /// Returns a new number that contains the negation of the `value`.
     ///
@@ -77,7 +77,7 @@ pub trait NegSigned: Sign {
     /// # Errors
     /// If the provided `value` doesn't maintain the expected invariances for
     /// the concrete type.
-    fn new_neg(value: Self::Inner) -> NumeraResult<Self>
+    fn new_neg(value: Self::Parts) -> NumeraResult<Self>
     where
         Self: Sized;
 }

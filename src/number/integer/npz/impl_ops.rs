@@ -65,13 +65,13 @@ mod tests {
 
     #[test]
     fn npz_ops() -> NumeraResult<()> {
-        // assert![NonPositiveInteger8::new(5).is_err()]; // not an error currently
+        // assert![NonPositiveInteger8::from_parts(5).is_err()]; // not an error currently
         let _n5 = NonPositiveInteger8::new_neg(5)?;
         let _n7 = NonPositiveInteger8::new_neg(7)?;
 
         assert_eq![_n7 + _n5, NonPositiveInteger8::new_neg(12)?];
         assert_eq![_n7 - _n5, NonPositiveInteger8::new_neg(2)?];
-        assert_eq![_n7 - _n7, NonPositiveInteger8::new(0)?];
+        assert_eq![_n7 - _n7, NonPositiveInteger8::from_parts(0)?];
 
         #[cfg(feature = "std")]
         {

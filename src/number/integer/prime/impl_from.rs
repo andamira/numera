@@ -113,15 +113,15 @@ try_from_prime_to_primitive![Prime32, u8, u16, usize, i8, i16, i32, isize];
 
 // tries to convert a primitive into a prime.
 macro_rules! try_from_primitive_to_prime {
-    ($Prime:ident, $PrimeInner:ty; $($primitive:ty),+) => {
-        $( try_from_primitive_to_prime![@ $Prime, $PrimeInner; $primitive]; )*
+    ($Prime:ident, $PrimeParts:ty; $($primitive:ty),+) => {
+        $( try_from_primitive_to_prime![@ $Prime, $PrimeParts; $primitive]; )*
     };
-    (@ $Prime:ident, $PrimeInner:ty; $primitive:ty) => {
+    (@ $Prime:ident, $PrimeParts:ty; $primitive:ty) => {
         impl TryFrom<$primitive> for $Prime {
             type Error = NumeraError;
             fn try_from(p: $primitive) -> NumeraResult<$Prime> {
-                let arg = p.checked_as::<$PrimeInner>().ok_or(IntegerError::Overflow)?;
-                $Prime::new(arg)
+                let arg = p.checked_as::<$PrimeParts>().ok_or(IntegerError::Overflow)?;
+                $Prime::from_parts(arg)
             }
         }
     };

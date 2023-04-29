@@ -34,19 +34,19 @@ mod tests {
 
     #[test]
     fn pz_from() -> NumeraResult<()> {
-        assert_eq![Pz8::new(5)?, NonZeroU8::new(5).unwrap().into()];
+        assert_eq![Pz8::from_parts(5)?, NonZeroU8::new(5).unwrap().into()];
 
         /* from primitive */
-        assert_eq![Pz16::new(100)?, NonZeroU8::new(100).unwrap().into()];
-        assert_eq![Pz16::new(100)?, NonZeroU16::new(100).unwrap().into()];
+        assert_eq![Pz16::from_parts(100)?, NonZeroU8::new(100).unwrap().into()];
+        assert_eq![Pz16::from_parts(100)?, NonZeroU16::new(100).unwrap().into()];
 
         /* from smaller Pz */
-        assert_eq![Pz16::new(100)?, Pz8::new(100)?.into()];
-        assert_eq![Pz32::new(100)?, Pz8::new(100)?.into()];
-        assert_eq![Pz32::new(100)?, Pz16::new(100)?.into()];
+        assert_eq![Pz16::from_parts(100)?, Pz8::from_parts(100)?.into()];
+        assert_eq![Pz32::from_parts(100)?, Pz8::from_parts(100)?.into()];
+        assert_eq![Pz32::from_parts(100)?, Pz16::from_parts(100)?.into()];
         // ...
-        assert_eq![Pz128::new(100)?, Pz8::new(100)?.into()];
-        assert_eq![Pz128::new(100)?, Pz64::new(100)?.into()];
+        assert_eq![Pz128::from_parts(100)?, Pz8::from_parts(100)?.into()];
+        assert_eq![Pz128::from_parts(100)?, Pz64::from_parts(100)?.into()];
 
         Ok(())
     }

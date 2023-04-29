@@ -69,16 +69,16 @@ macro_rules! define_numbers {
 
         /// This implementation is no-op.
         impl<N: Number> traits::Number for AnyNumbers<N> {
-            type Inner = Self;
-            // fn new(value: Numbers<N>) -> Result<Self> { Ok(value) }
-            // unsafe fn new_unchecked(value: Numbers<N>) -> Self { value }
+            type Parts = Self;
+            /// Returns `value` unchanged.
             #[inline]
-            fn new(value: AnyNumbers<N>) -> Result<Self> { Ok(value) }
+            fn from_parts(value: AnyNumbers<N>) -> Result<Self> { Ok(value) }
 
+            /// Returns `value` unchanged.
             #[inline]
             #[cfg(not(feature = "safe"))]
             #[cfg_attr(feature = "nightly", doc(cfg(feature = "non-safe")))]
-            unsafe fn new_unchecked(value: AnyNumbers<N>) -> Self { value }
+            unsafe fn from_parts_unchecked(value: AnyNumbers<N>) -> Self { value }
         }
 
         /// This implementation defers to the actual number variant.

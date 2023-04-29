@@ -74,15 +74,15 @@ mod tests {
 
     #[test]
     fn z_ops() -> NumeraResult<()> {
-        let _5 = Integer8::new(5)?;
-        let _7 = Integer8::new(7)?;
-        assert_eq![_7 + _5, Integer8::new(12)?];
-        assert_eq![_7 - _5, Integer8::new(2)?];
-        assert_eq![_5 - _7, Integer8::new(-2)?];
-        assert_eq![_7 * _5, Integer8::new(35)?];
-        assert_eq![_7 / _5, Integer8::new(1)?];
-        assert_eq![_5 / _7, Integer8::new(0)?];
-        assert_eq![-_7, Integer8::new(-7)?];
+        let _5 = Integer8::from_parts(5)?;
+        let _7 = Integer8::from_parts(7)?;
+        assert_eq![_7 + _5, Integer8::from_parts(12)?];
+        assert_eq![_7 - _5, Integer8::from_parts(2)?];
+        assert_eq![_5 - _7, Integer8::from_parts(-2)?];
+        assert_eq![_7 * _5, Integer8::from_parts(35)?];
+        assert_eq![_7 / _5, Integer8::from_parts(1)?];
+        assert_eq![_5 / _7, Integer8::from_parts(0)?];
+        assert_eq![-_7, Integer8::from_parts(-7)?];
 
         #[cfg(feature = "std")]
         {

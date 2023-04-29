@@ -101,6 +101,15 @@ impl_try_from_primitive![int for: N0z + 8, from: u + 8, 16, 32, 64, 128];
 
 /* fallible integer conversions */
 
+// try_from Integer
+// impl_try_from_integer![int for: N0z + i + 8, from: Z + 16]; // FIX EXAMPLE :S
+//
+// impl_try_from_integer![int for: N0z + i + 8, from: Z + 8, 16, 32, 64, 128];
+// impl_try_from_integer![int for: N0z + i + 16, from: Z + 8, 16, 32, 64, 128];
+// impl_try_from_integer![int for: N0z + i + 32, from: Z + 8, 16, 32, 64, 128];
+// impl_try_from_integer![int for: N0z + i + 64, from: Z + 8, 16, 32, 64, 128];
+// impl_try_from_integer![int for: N0z + i + 128, from: Z + 8, 16, 32, 64, 128];
+
 // try_from NonNegativeInteger
 
 // try_from NonPositiveInteger

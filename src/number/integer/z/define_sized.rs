@@ -172,15 +172,15 @@ macro_rules! define_integer_sized {
             /* number */
 
             impl Number for [<$name$bsize>] {
-                type Inner = [<$p$bsize>];
+                type Parts = [<$p$bsize>];
 
                 #[inline]
-                fn new(value: Self::Inner) -> NumeraResult<Self> { Ok(Self(value)) }
+                fn from_parts(value: Self::Parts) -> NumeraResult<Self> { Ok(Self(value)) }
 
                 #[inline]
                 #[cfg(not(feature = "safe"))]
                 #[cfg_attr(feature = "nightly", doc(cfg(feature = "non-safe")))]
-                unsafe fn new_unchecked(value: Self::Inner) -> Self { Self(value) }
+                unsafe fn from_parts_unchecked(value: Self::Parts) -> Self { Self(value) }
             }
         }
     };
