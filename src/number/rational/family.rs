@@ -445,7 +445,7 @@ macro_rules! define_any_rationals_family {
             fn try_from(z: $fname) -> core::result::Result<$vtype, Self::Error> {
                 match z {
                     $fname::$vname(z) => Ok(z),
-                    _ => Err(Self::Error::Conversion)
+                    // _ => Err(Self::Error::Conversion) // TODO
                 }
             }
         }

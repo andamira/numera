@@ -149,8 +149,12 @@ macro_rules! impl_from_primitive {
         paste::paste! {
             impl From<[< $from_p $from_size >]> for [< $for $for_size >] {
                 fn from(from: [< $from_p $from_size >]) -> Self {
-                    // TODO: safe/unsafe
-                    Self::new(from.into()).unwrap()
+                    #[cfg(feature = "safe")]
+                    return Self::new(from.into()).unwrap();
+
+                    #[cfg(not(feature = "safe"))]
+                    // SAFETY: all values should be valid
+                    return unsafe { Self::new_unchecked(from.into()) };
                 }
             }
         }
@@ -173,8 +177,12 @@ macro_rules! impl_from_primitive {
         paste::paste! {
             impl From<[< $from_p $from_size >]> for [< $for $for_size >] {
                 fn from(from: [< $from_p $from_size >]) -> Self {
-                    // TODO: safe/unsafe
-                    Self::new(from.get().into()).unwrap()
+                    #[cfg(feature = "safe")]
+                    return Self::new(from.get().into()).unwrap();
+
+                    #[cfg(not(feature = "safe"))]
+                    // SAFETY: coming from a type that respects the invariant of not having 0
+                    return unsafe { Self::new_unchecked(from.get().into()) };
                 }
             }
         }

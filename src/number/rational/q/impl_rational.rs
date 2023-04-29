@@ -3,10 +3,9 @@
 //!
 //
 
-use super::*;
 use crate::number::{
     integer::{n0z::*, z::*, Integer},
-    rational::Rational,
+    rational::{q::*, Rational},
     traits::{ConstOne, ConstZero, Ident, Number},
 };
 
@@ -115,12 +114,12 @@ impl_rational![
     (Rational128, Integer128, NonZeroInteger128)
 ];
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    // TODO: test Rational
-    // #[test]
-    // fn q_rational() {
-    // }
-}
+// TODO
+// #[cfg(test)]
+// mod tests {
+//     use super::*;
+//
+//     #[test]
+//     fn q_rational() {
+//     }
+// }

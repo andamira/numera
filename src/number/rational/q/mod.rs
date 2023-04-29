@@ -10,7 +10,7 @@
 
 mod define_sized;
 mod family;
-// mod impl_from; // TODO
+mod impl_from;
 mod impl_rational;
 // mod impl_ops; // TODO
 

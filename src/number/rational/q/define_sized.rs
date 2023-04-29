@@ -142,7 +142,7 @@ macro_rules! define_rational_sized {
             }
             impl ConstLowerBounded for [<$name$bsize>] {
                 const MIN: Self = Self {
-                        num: [<$num$bsize>]::MAX,
+                        num: [<$num$bsize>]::MIN,
                         den: [<$den$bsize>]::ONE,
                     };
             }
@@ -245,7 +245,8 @@ macro_rules! define_rational_sized {
                     Ok(
                         Self {
                             num: [<$num$bsize>]::new(value.0)?,
-                            den: [<$den$bsize>]::new(value.0)?,
+                            den: [<$den$bsize>]::new(value.1)
+                                .map_err(|_| RationalError::ZeroDenominator)?,
                         }
                     )
                 }
@@ -256,7 +257,7 @@ macro_rules! define_rational_sized {
                 unsafe fn new_unchecked(value: Self::Inner) -> Self {
                     Self {
                         num: [<$num$bsize>]::new_unchecked(value.0),
-                        den: [<$den$bsize>]::new_unchecked(value.0),
+                        den: [<$den$bsize>]::new_unchecked(value.1),
                     }
                 }
             }
@@ -273,3 +274,35 @@ define_rational_sized![multi Rational, i, // CHECK
     Integer, NonZeroInteger,
     ("A 2×", 8), ("A 2×", 16), ("A 2×", 32), ("A 2×", 64), ("A 2x", 128)
 ];
+
+#[cfg(test)]
+mod tests {
+    use crate::all::*;
+
+    #[test]
+    fn q_define_sized() -> NumeraResult<()> {
+        assert_eq![
+            Rational8::new((5, 0)),
+            Err(RationalError::ZeroDenominator.into())
+        ];
+
+        let _q5 = Rational8::new((5, 1))?;
+
+        // Display
+        assert_eq![_q5.to_string(), "5/1"];
+
+        // Bound
+        // Count
+        // Ident
+        // Sign
+
+        // #[cfg(feature = "std")]
+        // {
+        //     use std::panic::catch_unwind;
+        //     // 0 denominator
+        //     assert![catch_unwind(|| Rational8::new((5, 0)).unwrap()).is_err()];
+        // }
+
+        Ok(())
+    }
+}

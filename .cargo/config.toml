@@ -1,10 +1,12 @@
 [alias]
 
 # CHECK
-cl = "clippy"
+cl = "clippy" # std, safe
 #
-cla = "clippy --features=deps_all"
-cln = "clippy --no-default-features"
+cla = "clippy --features=deps_all" # std, safe, all-dependencies
+clu = "clippy --no-default-features --features=std" # std, unsafe
+cln = "clippy --no-default-features --features=safe" # no-std, safe
+clnu = "clippy --no-default-features" # no-std, unsafe
 
 # CLEAN PACKAGE
 cp = "clean --package"

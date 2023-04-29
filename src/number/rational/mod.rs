@@ -12,7 +12,7 @@
 //! [0m]: https://mathworld.wolfram.com/RationalNumber.html
 //
 
-// pub(crate) mod macros;
+pub(crate) mod macros;
 
 mod family;
 mod trait_rational;
