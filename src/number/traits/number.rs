@@ -47,16 +47,23 @@ pub trait Number: Bound + Count + Ident + Sign {
     ///
     /// # Safety
     /// The invariants inherent to the specific number type must be maintained.
+    #[must_use]
     #[cfg(not(feature = "safe"))]
     #[cfg_attr(feature = "nightly", doc(cfg(feature = "non-safe")))]
     unsafe fn from_parts_unchecked(value: Self::Parts) -> Self;
+
+    /* auto */
 
     /// Forms a new number from its converted constituent parts.
     ///
     /// # Errors
     /// Returns an error if the converted `value` does not conform to the
     /// invariants of what's considered a valid state for this number.
-    fn try_from_parts(value: impl Into<Self::Parts>) -> Result<Self> where Self: Sized {
+    #[inline]
+    fn try_from_parts(value: impl Into<Self::Parts>) -> Result<Self>
+    where
+        Self: Sized,
+    {
         Number::from_parts(value.into())
     }
 }
