@@ -153,7 +153,7 @@ mod tests {
 
     #[test]
     fn z_from() -> NumeraResult<()> {
-        let _5 = Z8::from_parts(5)?;
+        let _5 = Z8::new(5);
 
         // 3 ways:
         assert_eq![<i8 as Into<Z8>>::into(5), _5];
@@ -161,29 +161,29 @@ mod tests {
         assert_eq![_5, 5.into()];
 
         // from u,i
-        assert_eq![Z16::from_parts(100)?, 100_u8.into()];
-        assert_eq![Z16::from_parts(100)?, 100_i16.into()];
+        assert_eq![Z16::new(100), 100_u8.into()];
+        assert_eq![Z16::new(100), 100_i16.into()];
 
         // from smaller Z
-        assert_eq![Z16::from_parts(100)?, Z8::from_parts(100)?.into()];
-        assert_eq![Z32::from_parts(100)?, Z8::from_parts(100)?.into()];
-        assert_eq![Z32::from_parts(100)?, Z16::from_parts(100)?.into()];
+        assert_eq![Z16::new(100), Z8::new(100).into()];
+        assert_eq![Z32::new(100), Z8::new(100).into()];
+        assert_eq![Z32::new(100), Z16::new(100).into()];
         // ...
-        assert_eq![Z128::from_parts(100)?, Z8::from_parts(100)?.into()];
-        assert_eq![Z128::from_parts(100)?, Z64::from_parts(100)?.into()];
+        assert_eq![Z128::new(100), Z8::new(100).into()];
+        assert_eq![Z128::new(100), Z64::new(100).into()];
 
         // from smaller or equal sized N0z
-        assert_eq![Z16::from_parts(100)?, N0z8::from_parts(100)?.into()];
-        assert_eq![Z16::from_parts(100)?, N0z16::from_parts(100)?.into()];
-        assert_eq![Z128::from_parts(100)?, N0z128::from_parts(100)?.into()];
+        assert_eq![Z16::new(100), N0z8::from_parts(100)?.into()];
+        assert_eq![Z16::new(100), N0z16::from_parts(100)?.into()];
+        assert_eq![Z128::new(100), N0z128::from_parts(100)?.into()];
 
         // from smaller Nnz
-        assert_eq![Z16::from_parts(100)?, Nnz8::from_parts(100)?.into()];
-        assert_eq![Z128::from_parts(100)?, Nnz64::from_parts(100)?.into()];
+        assert_eq![Z16::new(100), Nnz8::from_parts(100)?.into()];
+        assert_eq![Z128::new(100), Nnz64::from_parts(100)?.into()];
 
         // from smaller Npz
-        assert_eq![Z16::from_parts(-100)?, Npz8::new_neg(100)?.into()];
-        assert_eq![Z128::from_parts(-100)?, Npz64::new_neg(100)?.into()];
+        assert_eq![Z16::new(-100), Npz8::new_neg(100)?.into()];
+        assert_eq![Z128::new(-100), Npz64::new_neg(100)?.into()];
 
         Ok(())
     }

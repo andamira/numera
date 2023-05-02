@@ -123,67 +123,34 @@ impl_rational_ops![Q8, Q16, Q32, Q64, Q128];
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::all::{Number, NumeraResult};
+    use crate::all::NumeraResult;
 
     #[test]
     fn q_ops() -> NumeraResult<()> {
-        let _5 = Q8::from_parts((5, 1))?;
-        let _7 = Q8::from_parts((7, 1))?;
+        let _5 = Q8::new(5, 1)?;
+        let _7 = Q8::new(7, 1)?;
 
         // Neg
-        assert_eq![-Q8::from_parts((5, 1))?, Q8::from_parts((-5, 1))?];
-        assert_eq![-Q8::from_parts((-5, 1))?, Q8::from_parts((5, 1))?];
-        assert_eq![-Q8::from_parts((5, -1))?, Q8::from_parts((5, 1))?];
+        assert_eq![-Q8::new(5, 1)?, Q8::new(-5, 1)?];
+        assert_eq![-Q8::new(-5, 1)?, Q8::new(5, 1)?];
+        assert_eq![-Q8::new(5, -1)?, Q8::new(5, 1)?];
 
         // Add
-        assert_eq![
-            Q8::from_parts((5, 1))? + Q8::from_parts((7, 1))?,
-            Q8::from_parts((12, 1))?
-        ];
-        assert_eq![
-            Q8::from_parts((1, 5))? + Q8::from_parts((1, 7))?,
-            Q8::from_parts((12, 35))?
-        ];
-        assert_eq![
-            Q8::from_parts((2, 7))? + Q8::from_parts((3, 8))?,
-            Q8::from_parts((37, 56))?
-        ];
-        assert_eq![
-            Q8::from_parts((15, 32))? + Q8::from_parts((27, 9))?,
-            Q8::from_parts((111, 32))?
-        ];
+        assert_eq![Q8::new(5, 1)? + Q8::new(7, 1)?, Q8::new(12, 1)?];
+        assert_eq![Q8::new(1, 5)? + Q8::new(1, 7)?, Q8::new(12, 35)?];
+        assert_eq![Q8::new(2, 7)? + Q8::new(3, 8)?, Q8::new(37, 56)?];
+        assert_eq![Q8::new(15, 32)? + Q8::new(27, 9)?, Q8::new(111, 32)?];
 
         // Sub
-        assert_eq![
-            Q8::from_parts((12, 1))? - Q8::from_parts((7, 1))?,
-            Q8::from_parts((5, 1))?
-        ];
-        assert_eq![
-            Q16::from_parts((12, 35))? - Q16::from_parts((1, 7))?,
-            Q16::from_parts((1, 5))?
-        ];
-        assert_eq![
-            Q16::from_parts((37, 56))? - Q16::from_parts((3, 8))?,
-            Q16::from_parts((2, 7))?
-        ];
-        assert_eq![
-            Q16::from_parts((111, 32))? - Q16::from_parts((27, 9))?,
-            Q16::from_parts((15, 32))?
-        ];
+        assert_eq![Q8::new(12, 1)? - Q8::new(7, 1)?, Q8::new(5, 1)?];
+        assert_eq![Q16::new(12, 35)? - Q16::new(1, 7)?, Q16::new(1, 5)?];
+        assert_eq![Q16::new(37, 56)? - Q16::new(3, 8)?, Q16::new(2, 7)?];
+        assert_eq![Q16::new(111, 32)? - Q16::new(27, 9)?, Q16::new(15, 32)?];
 
         // Mul
-        assert_eq![
-            Q8::from_parts((12, 1))? * Q8::from_parts((7, 1))?,
-            Q8::from_parts((84, 1))?
-        ];
-        assert_eq![
-            Q16::from_parts((2, 7))? * Q16::from_parts((3, 8))?,
-            Q16::from_parts((3, 28))?
-        ];
-        assert_eq![
-            Q16::from_parts((11, 5))? * Q16::from_parts((4, 9))?,
-            Q16::from_parts((44, 45))?
-        ];
+        assert_eq![Q8::new(12, 1)? * Q8::new(7, 1)?, Q8::new(84, 1)?];
+        assert_eq![Q16::new(2, 7)? * Q16::new(3, 8)?, Q16::new(3, 28)?];
+        assert_eq![Q16::new(11, 5)? * Q16::new(4, 9)?, Q16::new(44, 45)?];
 
         // Div
         // TODO
@@ -191,8 +158,8 @@ mod tests {
         #[cfg(feature = "std")]
         {
             use std::panic::catch_unwind;
-            let a = Q8::from_parts((125, 13)).unwrap();
-            let b = Q8::from_parts((2, 26)).unwrap();
+            let a = Q8::new(125, 13).unwrap();
+            let b = Q8::new(2, 26).unwrap();
 
             // overflow
             assert![catch_unwind(|| a + b).is_err()];

@@ -6,19 +6,25 @@
 use crate::number::{
     integer::{abbr::*, Integer},
     rational::{abbr::*, Rational},
-    traits::{ConstOne, ConstZero, Ident, Number},
+    traits::{ConstOne, ConstZero, Ident},
 };
 
 /// Implements the `Rational` trait on sized rationals.
 macro_rules! impl_rational {
     // Args:
-    // `$t`: the type of the rational
-    // `$num`: the type of the numerator
-    // `$den`: the type of the denominator
+    // $(
+    //   `$t`: the type of the rational. E.g. Rational16.
+    //   `$num`: the type of the numerator. E.g. Integer16.
+    //   `$den`: the type of the denominator. E.g. NonZeroInteger16.
+    // ),+
     (many: $(($t:ident, $num:ident, $den:ident)),+) => {
         $( impl_rational![single: $t, $num, $den]; )+
     };
 
+    // Args:
+    //   `$t`: the type of the rational. E.g. Rational16.
+    //   `$num`: the type of the numerator. E.g. Integer16.
+    //   `$den`: the type of the denominator. E.g. NonZeroInteger16.
     (single: $t:ident, $num:ident, $den:ident) => {
         impl Rational for $t {
             #[inline]
@@ -43,16 +49,18 @@ macro_rules! impl_rational {
                 // self.num /= gcd_value; // IMPROVE: impl DivAssign
                 self.num = self.num / gcd_value;
 
-                #[cfg(feature = "safe")]
+                // RETHINK safe/unsafe
+                // #[cfg(feature = "safe")]
                 {
-                    self.den = $den::from_parts(self.den.0.get() / gcd_value.0).unwrap();
+                    self.den = $den::new(self.den.0.get() / gcd_value.0).unwrap();
                     // BENCH:ALTERNATIVE:
                     // self.den = $den::from_parts((Into::<$num>::into(self.den) / gcd_value).0).unwrap();
                 }
 
-                #[cfg(not(feature = "safe"))]
-                // SAFETY: the value returned by gcd can't be zero.
-                { unsafe { self.den = $den::from_parts_unchecked(self.den.0.get() / gcd_value.0); } }
+                // RETHINK safe/unsafe
+                // #[cfg(not(feature = "safe"))]
+                // // SAFETY: the value returned by gcd can't be zero.
+                // { unsafe { self.den = $den::from_parts_unchecked(self.den.0.get() / gcd_value.0); } }
             }
 
             #[inline]
@@ -62,12 +70,14 @@ macro_rules! impl_rational {
                 $t {
                     num: self.num / gcd_value,
 
-                    #[cfg(feature = "safe")]
-                    den: $den::from_parts(self.den.0.get() / gcd_value.0).unwrap(),
+                    // RETHINK safe/unsafe
+                    // #[cfg(feature = "safe")]
+                    den: $den::new(self.den.0.get() / gcd_value.0).unwrap(),
 
-                    #[cfg(not(feature = "safe"))]
-                    // SAFETY: the value returned by gcd can't be zero.
-                    den: unsafe { $den::from_parts_unchecked(self.den.0.get() / gcd_value.0) },
+                    // RETHINK safe/unsafe
+                    // #[cfg(not(feature = "safe"))]
+                    // // SAFETY: the value returned by gcd can't be zero.
+                    // den: unsafe { $den::from_parts_unchecked(self.den.0.get() / gcd_value.0) },
                 }
             }
 
@@ -77,12 +87,14 @@ macro_rules! impl_rational {
                     let old_num = self.num;
                     self.num = self.den.into();
 
-                    #[cfg(feature = "safe")]
-                    { self.den = $den::from_parts(old_num.0).unwrap(); }
+                    // RETHINK safe/unsafe
+                    // #[cfg(feature = "safe")]
+                    { self.den = $den::new(old_num.0).unwrap(); }
 
-                    #[cfg(not(feature = "safe"))]
-                    // SAFETY: we've just checked the value is not 0.
-                    { self.den = unsafe { $den::from_parts_unchecked(old_num.0) }; }
+                    // RETHINK safe/unsafe
+                    // #[cfg(not(feature = "safe"))]
+                    // // SAFETY: we've just checked the value is not 0.
+                    // { self.den = unsafe { $den::from_parts_unchecked(old_num.0) }; }
                 }
             }
             #[inline]
@@ -93,12 +105,15 @@ macro_rules! impl_rational {
                     $t {
                         num: self.den.into(),
 
-                        #[cfg(feature = "safe")]
-                        den: $den::from_parts(self.num.0).unwrap(),
+                        // RETHINK safe/unsafe
+                        // #[cfg(feature = "safe")]
+                        // den: $den::from_parts(self.num.0).unwrap(),
+                        den: $den::new(self.num.0).unwrap(),
 
-                        #[cfg(not(feature = "safe"))]
-                        // SAFETY: we've just checked the value is not 0.
-                        den: unsafe { $den::from_parts_unchecked(self.num.0) },
+                        // RETHINK safe/unsafe
+                        // #[cfg(not(feature = "safe"))]
+                        // // SAFETY: we've just checked the value is not 0.
+                        // den: unsafe { $den::from_parts_unchecked(self.num.0) },
                     }
                 }
             }
@@ -117,41 +132,35 @@ impl_rational![
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::all::{Number, NumeraResult};
+    use crate::all::NumeraResult;
 
     #[test]
     fn q_rational() -> NumeraResult<()> {
         // Integer
         //
         // true
-        assert![Q8::from_parts((0, 7))?.is_integer()];
-        assert![Q8::from_parts((1, 1))?.is_integer()];
-        assert![Q8::from_parts((14, 1))?.is_integer()];
-        assert![Q8::from_parts((32, 8))?.is_integer()];
+        assert![Q8::new(0, 7)?.is_integer()];
+        assert![Q8::new(1, 1)?.is_integer()];
+        assert![Q8::new(14, 1)?.is_integer()];
+        assert![Q8::new(32, 8)?.is_integer()];
         // false
-        assert![!Q8::from_parts((1, 2))?.is_integer()];
-        assert![!Q8::from_parts((32, 9))?.is_integer()];
+        assert![!Q8::new(1, 2)?.is_integer()];
+        assert![!Q8::new(32, 9)?.is_integer()];
 
         // Reduce
         //
         // true
-        assert![Q8::from_parts((3, 14))?.is_reduced()];
+        assert![Q8::new(3, 14)?.is_reduced()];
         // false
-        assert![!Q8::from_parts((21, 98))?.is_reduced()];
+        assert![!Q8::new(21, 98)?.is_reduced()];
         //
-        assert_eq![
-            Q8::from_parts((21, 98))?.reduced(),
-            Q8::from_parts((3, 14))?
-        ];
-        assert_eq![Q8::from_parts((0, 98))?.reduced(), Q8::from_parts((0, 1))?];
+        assert_eq![Q8::new(21, 98)?.reduced(), Q8::new(3, 14)?];
+        assert_eq![Q8::new(0, 98)?.reduced(), Q8::new(0, 1)?];
 
         // Invert
         //
-        assert_eq![
-            Q8::from_parts((21, 98))?.inverted(),
-            Q8::from_parts((98, 21))?
-        ];
-        assert_eq![Q8::from_parts((0, 5))?.inverted(), Q8::from_parts((0, 5))?];
+        assert_eq![Q8::new(21, 98)?.inverted(), Q8::new(98, 21)?];
+        assert_eq![Q8::new(0, 5)?.inverted(), Q8::new(0, 5)?];
 
         Ok(())
     }

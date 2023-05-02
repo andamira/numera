@@ -10,7 +10,7 @@
 //   - NonZeroInteger[8|16|32|64|128]
 
 use crate::{
-    error::{IntegerError, NumeraResult},
+    error::{IntegerError, NumeraError, NumeraResult},
     number::traits::{
         Bound, ConstLowerBounded, ConstNegOne, ConstOne, ConstUpperBounded, Count, Countable,
         Ident, LowerBounded, NegOne, NonZero, Number, One, Sign, Signed, UpperBounded,
@@ -72,6 +72,38 @@ macro_rules! define_nonzero_integer_sized {
             impl fmt::Display for [<$name$bsize>]  {
                 fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
                     write!(f, "{}", self.0)
+                }
+            }
+
+            impl [<$name$bsize>]  {
+                #[doc = "Returns a new `" [<$name$bsize>] "`."]
+                ///
+                /// # Errors
+                /// If the provided `value` equals 0.
+                //
+                // NOTE: accepting i* for converting to NonZeroI
+                #[inline]
+                pub const fn new(value: [<i$bsize>]) -> NumeraResult<Self> {
+                    if let Some(n) = [<$p$bsize>]::new(value) {
+                        Ok(Self(n))
+                    } else {
+                        Err(NumeraError::Integer(IntegerError::Zero))
+                    }
+                }
+
+                #[doc = "Returns a new `" [<$name$bsize>] "`."]
+                ///
+                /// # Safety
+                /// The provided `value` must not be 0.
+                ///
+                /// # Panics
+                /// Panics in debug if the `value` is 0.
+                #[inline]
+                #[cfg(not(feature = "safe"))]
+                #[cfg_attr(feature = "nightly", doc(cfg(feature = "non-safe")))]
+                pub const unsafe fn new_unchecked(value: [<i$bsize>]) -> Self {
+                    debug_assert![value != 0];
+                    Self([<$p$bsize>]::new_unchecked(value))
                 }
             }
 
@@ -273,11 +305,19 @@ macro_rules! define_nonzero_integer_sized {
             impl Number for [<$name$bsize>] {
                 type Parts = [<i$bsize>];
 
+                #[doc = "Returns a new `" [<$name$bsize>] " from the constituent parts`."]
+                ///
+                /// # Errors
+                /// This function can't fail.
                 #[inline]
                 fn from_parts(value: Self::Parts) -> NumeraResult<Self> {
                     Ok(Self([<$p$bsize>]::new(value).ok_or(IntegerError::Zero)?))
                 }
 
+                #[doc = "Returns a new `" [<$name$bsize>] " from the constituent parts`."]
+                ///
+                /// # Safety
+                /// This function is safe.
                 #[inline]
                 #[cfg(not(feature = "safe"))]
                 #[cfg_attr(feature = "nightly", doc(cfg(feature = "non-safe")))]

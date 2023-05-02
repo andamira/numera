@@ -6,7 +6,8 @@
 #[cfg(feature = "std")]
 use primal_sieve::Sieve;
 
-use crate::all::{NumeraError, NumeraResult};
+use crate::all::{IntegerError, NumeraError, NumeraResult};
+use az::CheckedAs;
 use core::fmt;
 
 mod consts;
@@ -66,6 +67,46 @@ impl fmt::Display for Prime32 {
 }
 
 impl Prime8 {
+    /// Returns a new `Prime8`.
+    ///
+    /// # Errors
+    /// If the `value` provided is not a prime number.
+    #[inline]
+    pub fn new(value: u8) -> NumeraResult<Self> {
+        if is_prime_brute(value.into()) {
+            Ok(Prime8(value))
+        } else {
+            Err(IntegerError::NotPrime.into())
+        }
+    }
+
+    // NOTE: the following 2 functions are duplicated because calling
+    // is_prime_brute makes it non-const.
+
+    /// Returns a new `Prime8`.
+    ///
+    /// # Safety
+    /// The provided `value` must be a prime number.
+    /// # Panics
+    /// Panics in debug if `value` is not a prime number.
+    #[inline]
+    #[cfg(all(debug_assertions, not(feature = "safe")))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "non-safe")))]
+    pub unsafe fn new_unchecked(value: u8) -> Self {
+        debug_assert![is_prime_brute(value.into())];
+        Self(value)
+    }
+    /// Returns a new `Prime8`.
+    ///
+    /// # Safety
+    /// The provided `value` must be a prime number.
+    #[inline]
+    #[cfg(all(not(debug_assertions), not(feature = "safe")))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "non-safe")))]
+    pub const unsafe fn new_unchecked(value: u8) -> Self {
+        Self(value)
+    }
+
     /// Returns the number of primes upto and including the current one.
     ///
     /// # Example
@@ -88,6 +129,46 @@ impl Prime8 {
 }
 
 impl Prime16 {
+    /// Returns a new `Prime16`.
+    ///
+    /// # Errors
+    /// If the `value` provided is not a prime number.
+    #[inline]
+    pub fn new(value: u16) -> NumeraResult<Self> {
+        if is_prime_brute(value.into()) {
+            Ok(Prime16(value))
+        } else {
+            Err(IntegerError::NotPrime.into())
+        }
+    }
+
+    // NOTE: the following 2 functions are duplicated because calling
+    // is_prime_brute makes it non-const.
+
+    /// Returns a new `Prime16`.
+    ///
+    /// # Safety
+    /// The provided `value` must be a prime number.
+    /// # Panics
+    /// Panics in debug if `value` is not a prime number.
+    #[inline]
+    #[cfg(all(debug_assertions, not(feature = "safe")))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "non-safe")))]
+    pub unsafe fn new_unchecked(value: u16) -> Self {
+        debug_assert![is_prime_brute(value.into())];
+        Self(value)
+    }
+    /// Returns a new `Prime16`.
+    ///
+    /// # Safety
+    /// The provided `value` must be a prime number.
+    #[inline]
+    #[cfg(all(not(debug_assertions), not(feature = "safe")))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "non-safe")))]
+    pub const unsafe fn new_unchecked(value: u16) -> Self {
+        Self(value)
+    }
+
     /// Returns the number of primes upto and including the current one.
     ///
     /// # Example
@@ -126,6 +207,67 @@ impl Prime16 {
     }
 }
 impl Prime32 {
+    /// Returns a new `Prime32`.
+    ///
+    /// This can be very slow for big numbers, specially with the `no-std`
+    /// implementation that calls [`is_prime_brute`].
+    ///
+    /// # Errors
+    /// If the `value` provided is not a prime number.
+    #[inline]
+    #[cfg(not(feature = "std"))]
+    pub fn new(value: u32) -> NumeraResult<Self> {
+        if is_prime_brute(value.into()) {
+            Ok(Prime32(value))
+        } else {
+            Err(IntegerError::NotPrime.into())
+        }
+    }
+    /// Returns a new `Prime32`.
+    ///
+    /// This can be very slow for big numbers, specially with the `no-std`
+    /// implementation that calls [`is_prime_brute`].
+    ///
+    /// # Errors
+    /// If the `value` provided is not a prime number or can't fit in a `usize`.
+    #[inline]
+    #[cfg(feature = "std")]
+    pub fn new(value: u32) -> NumeraResult<Self> {
+        if is_prime_sieve(value.checked_as::<usize>().ok_or(IntegerError::Overflow)?) {
+            Ok(Prime32(value))
+        } else {
+            Err(IntegerError::NotPrime.into())
+        }
+    }
+
+    // NOTE: the next 2 functions are mostly a duplication, because calling
+    // `is_prime_brute` doesn't allow the function to be `const`.
+
+    /// Returns a new `Prime32`.
+    ///
+    /// # Safety
+    /// The provided `value` must be a prime number.
+    /// # Panics
+    /// Panics in debug if `value` is not a prime number, or if can't fit in
+    /// a `usize`.
+    #[inline]
+    #[cfg(all(debug_assertions, not(feature = "safe"), feature = "std"))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "non-safe")))]
+    pub unsafe fn new_unchecked(value: u32) -> Self {
+        debug_assert![is_prime_sieve(value.checked_as::<usize>().unwrap())];
+        Self(value)
+    }
+    /// Returns a new `Prime32`.
+    ///
+    /// # Safety
+    /// The provided `value` must be a prime number.
+    #[inline]
+    #[cfg(all(not(debug_assertions), not(feature = "safe")))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "non-safe")))]
+    pub const unsafe fn new_unchecked(value: u32) -> Self {
+        Self(value)
+    }
+
     /// Returns the number of primes upto and including the current one.
     ///
     /// Note that this operation can be slow for big 32-bit numbers,

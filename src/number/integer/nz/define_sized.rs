@@ -10,7 +10,7 @@
 //   - NegativeInteger[8|16|32|64|128]
 
 use crate::{
-    error::{IntegerError, NumeraResult},
+    error::{IntegerError, NumeraError, NumeraResult},
     number::traits::{
         Bound, ConstLowerBounded, ConstNegOne, ConstUpperBounded, Count, Countable, Ident,
         LowerBounded, NegOne, NegSigned, NonOne, NonZero, Number, Sign, UpperBounded,
@@ -73,6 +73,25 @@ macro_rules! define_negative_integer_sized {
                 fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
                     // notice the negation
                     write!(f, "-{}", self.0)
+                }
+            }
+
+            impl [<$name$bsize>]  {
+                #[doc = "Returns a new `" [<$name$bsize>] "`."]
+                ///
+                /// Please note that the `value` provided will interpreted as negative.
+                ///
+                /// # Errors
+                /// If the `value` provided is `0`.
+                //
+                // NOTE: accepting u* for converting to NonZeroU
+                #[inline]
+                pub const fn new(value: [<u$bsize>]) -> NumeraResult<Self> {
+                    if let Some(n) = [<$p$bsize>]::new(value) {
+                        Ok(Self(n))
+                    } else {
+                        Err(NumeraError::Integer(IntegerError::Zero))
+                    }
                 }
             }
 

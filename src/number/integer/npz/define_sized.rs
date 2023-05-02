@@ -75,6 +75,12 @@ macro_rules! define_nonpositive_integer_sized {
                 }
             }
 
+            impl [<$name$bsize>]  {
+                #[inline]
+                #[doc = "Returns a new `" [<$name$bsize>] "`."]
+                pub const fn new(value: [<$p$bsize>]) -> Self { Self(value) }
+            }
+
             /* sign */
 
             impl Sign for [<$name$bsize>] {
@@ -178,7 +184,12 @@ macro_rules! define_nonpositive_integer_sized {
             impl Number for [<$name$bsize>] {
                 type Parts = [<$p$bsize>];
 
+                #[doc = "Returns a new `" [<$name$bsize>] " from the constituent parts`."]
+                ///
                 /// Please note that the `value` provided will interpreted as negative.
+                ///
+                /// # Errors
+                /// This function can't fail.
                 //
                 // ALTERNATIVE:
                 // For `value`s other than 0, please use the
@@ -188,6 +199,7 @@ macro_rules! define_nonpositive_integer_sized {
                 fn from_parts(value: Self::Parts) -> NumeraResult<Self> {
                     Ok(Self(value))
 
+                    // IMPROVE number constructor
                     // ALTERNATIVE:
                     // if value == 0 {
                     //     Ok(Self(value))
@@ -195,7 +207,12 @@ macro_rules! define_nonpositive_integer_sized {
                     //     Err(IntegerError::MoreThanZero.into())
                     // }
                 }
+                #[doc = "Returns a new `" [<$name$bsize>] " from the constituent parts`."]
+                ///
                 /// Please note that the `value` provided will interpreted as negative.
+                ///
+                /// # Safety
+                /// This function is safe.
                 #[inline]
                 #[cfg(not(feature = "safe"))]
                 #[cfg_attr(feature = "nightly", doc(cfg(feature = "non-safe")))]

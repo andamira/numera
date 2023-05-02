@@ -10,7 +10,7 @@
 //   - PositiveInteger[8|16|32|64|128]
 
 use crate::{
-    error::{IntegerError, NumeraResult},
+    error::{IntegerError, NumeraError, NumeraResult},
     number::traits::{
         Bound, ConstLowerBounded, ConstOne, ConstUpperBounded, Count, Countable, Ident,
         LowerBounded, NonNegOne, NonZero, Number, One, Sign, Signed, UpperBounded,
@@ -72,6 +72,38 @@ macro_rules! define_positive_integer_sized {
             impl fmt::Display for [<$name$bsize>]  {
                 fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
                     write!(f, "{}", self.0)
+                }
+            }
+
+            impl [<$name$bsize>]  {
+                #[doc = "Returns a new `" [<$name$bsize>] "`."]
+                ///
+                /// # Errors
+                /// If the `value` provided is `0`.
+                //
+                // NOTE: accepting u* for converting to NonZeroU
+                #[inline]
+                pub const fn new(value: [<u$bsize>]) -> NumeraResult<Self> {
+                    if let Some(n) = [<$p$bsize>]::new(value) {
+                        Ok(Self(n))
+                    } else {
+                        Err(NumeraError::Integer(IntegerError::Zero))
+                    }
+                }
+
+                #[doc = "Returns a new `" [<$name$bsize>] "`."]
+                ///
+                /// # Safety
+                /// The provided `value` must not be 0.
+                ///
+                /// # Panics
+                /// Panics in debug if the `value` is 0.
+                #[inline]
+                #[cfg(not(feature = "safe"))]
+                #[cfg_attr(feature = "nightly", doc(cfg(feature = "non-safe")))]
+                pub const unsafe fn new_unchecked(value: [<u$bsize>]) -> Self {
+                    debug_assert![value != 0];
+                    Self([<$p$bsize>]::new_unchecked(value))
                 }
             }
 

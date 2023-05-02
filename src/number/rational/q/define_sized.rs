@@ -10,7 +10,7 @@
 //   - Rational[8|16|32|64|128]
 
 use crate::{
-    error::{NumeraResult, RationalError},
+    error::{NumeraError, NumeraResult, RationalError},
     number::{
         integer::n0z::*,
         integer::z::*,
@@ -93,6 +93,42 @@ macro_rules! define_rational_sized {
             impl fmt::Display for [<$name$bsize>]  {
                 fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
                     write!(f, "{}/{}", self.num, self.den)
+                }
+            }
+
+            impl [<$name$bsize>]  {
+                #[doc = "Returns a new `" [<$name$bsize>] "`."]
+                ///
+                /// # Errors
+                /// If the `denominator` is `0`.
+                #[inline]
+                pub const fn new(numerator: [<i$bsize>], denominator: [<i$bsize>])
+                    -> NumeraResult<Self> {
+                    if let Ok(den) = [<$den$bsize>]::new(denominator) {
+                        let num = [<$num$bsize>]::new(numerator);
+                        Ok(Self{ num, den })
+                    } else {
+                        Err(NumeraError::Rational(RationalError::ZeroDenominator))
+                    }
+                }
+
+                #[doc = "Returns a new `" [<$name$bsize>] "`."]
+                ///
+                /// # Safety
+                /// The `denominator` must not be 0.
+                ///
+                /// # Panic
+                /// Panics in debug if the `denominator` is 0.
+                #[inline]
+                #[cfg(not(feature = "safe"))]
+                #[cfg_attr(feature = "nightly", doc(cfg(feature = "non-safe")))]
+                pub const unsafe fn new_unchecked(numerator: [<i$bsize>], denominator: [<i$bsize>])
+                    -> Self {
+                    debug_assert![denominator != 0];
+                    Self {
+                        num: [<$num$bsize>]::new(numerator),
+                        den: [<$den$bsize>]::new_unchecked(denominator),
+                    }
                 }
             }
 

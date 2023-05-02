@@ -73,6 +73,14 @@ macro_rules! define_nonnegative_integer_sized {
                 }
             }
 
+            impl [<$name$bsize>]  {
+                #[doc = "Returns a new `" [<$name$bsize>] "`."]
+                #[inline]
+                pub const fn new(value: [<$p$bsize>]) -> Self {
+                    Self(value)
+                }
+            }
+
             /* sign */
 
             impl Sign for [<$name$bsize>] {
@@ -170,9 +178,17 @@ macro_rules! define_nonnegative_integer_sized {
             impl Number for [<$name$bsize>] {
                 type Parts = [<$p$bsize>];
 
+                #[doc = "Returns a new `" [<$name$bsize>] " from the constituent parts`."]
+                ///
+                /// # Errors
+                /// This function can't fail.
                 #[inline]
                 fn from_parts(value: Self::Parts) -> NumeraResult<Self> { Ok(Self(value)) }
 
+                #[doc = "Returns a new `" [<$name$bsize>] " from the constituent parts`."]
+                ///
+                /// # Safety
+                /// This function is safe.
                 #[inline]
                 #[cfg(not(feature = "safe"))]
                 #[cfg_attr(feature = "nightly", doc(cfg(feature = "non-safe")))]
