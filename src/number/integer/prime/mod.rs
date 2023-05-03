@@ -7,8 +7,10 @@
 use primal_sieve::Sieve;
 
 use crate::all::{IntegerError, NumeraError, NumeraResult};
-use az::CheckedAs;
 use core::fmt;
+
+#[cfg(all(debug_assertions, feature = "std"))]
+use az::CheckedAs;
 
 mod consts;
 mod family;
@@ -217,7 +219,7 @@ impl Prime32 {
     #[inline]
     #[cfg(not(feature = "std"))]
     pub fn new(value: u32) -> NumeraResult<Self> {
-        if is_prime_brute(value.into()) {
+        if is_prime_brute(value) {
             Ok(Prime32(value))
         } else {
             Err(IntegerError::NotPrime.into())

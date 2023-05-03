@@ -21,43 +21,42 @@ use crate::all::is_prime_sieve;
 
 /// Common trait for all integers.
 pub trait Integer: Number {
-    /// Returns `true` if the number is even.
-    fn is_even(&self) -> bool;
-    /// Returns `true` if the number is odd.
-    #[rustfmt::skip]
-    fn is_odd(&self) -> bool { !self.is_even() }
+    /// Returns `true` if this integer is even.
+    fn integer_is_even(&self) -> bool;
+    /// Returns `true` if this integer is odd.
+    fn integer_is_odd(&self) -> bool {
+        !self.integer_is_even()
+    }
 
-    /// Returns `true` if the number is a multiple of `other`.
-    fn is_multiple_of(&self, other: &Self) -> bool;
-    #[rustfmt::skip]
-    fn is_divisor_of(&self, other: &Self) -> bool { other.is_multiple_of(self) }
+    /// Returns `true` if this integer is a multiple of the `other`.
+    fn integer_is_multiple_of(&self, other: &Self) -> bool;
+    /// Returns `true` if this integer is a divisor of the `other`.
+    fn integer_is_divisor_of(&self, other: &Self) -> bool {
+        other.integer_is_multiple_of(self)
+    }
 
-    /// Returns `Some(true)` if the number is prime, `Some(false)` if not prime,
-    /// or `None` if it can not be determined.
+    /// Returns `Some(true)` if this integer is prime, `Some(false)` if it's not
+    /// prime, or `None` if it can not be determined.
     ///
-    /// Returns `None` if the number can't be represented as a [`usize`],
+    /// Returns `None` if this integer can't be represented as a [`usize`],
     /// or as a [`u32`] in `no-std`.
-    fn is_prime(&self) -> Option<bool>;
+    fn integer_is_prime(&self) -> Option<bool>;
 
-    /// Calculates the Greatest Common Divisor of `self` and `other`.
+    /// Calculates the *Greatest Common Divisor* of this integer and `other`.
     ///
-    /// Returns `None` if the operation can't return a number of the same kind,
-    /// e.g. for `Negative` numbers.
-    // THINK IMPROVE
+    /// Returns `None` if the operation can't return an integer of the same kind,
+    /// e.g. for a `NegativeInteger`.
+    #[rustfmt::skip]
     #[must_use]
-    fn gcd(&self, other: &Self) -> Option<Self>
-    where
-        Self: Sized;
+    fn integer_gcd(&self, other: &Self) -> Option<Self> where Self: Sized;
 
-    /// Calculates the Lowest Common Multiple of `self` and `other`.
+    /// Calculates the *Lowest Common Multiple* of this integer and `other`.
     ///
-    /// Returns `None` if the operation can't return a number of the same kind,
-    /// e.g. for `Negative` numbers.
-    // THINK IMPROVE
+    /// Returns `None` if the operation can't return an integer of the same kind,
+    /// e.g. for `NegativeInteger`.
+    #[rustfmt::skip]
     #[must_use]
-    fn lcm(&self, other: &Self) -> Option<Self>
-    where
-        Self: Sized;
+    fn integer_lcm(&self, other: &Self) -> Option<Self> where Self: Sized;
 
     // /// Calculates the Greatest Common Divisor of `self` and `other`.
     // fn gcd_lcm(&self, other: &Self) -> Result<(Self, Self)> where Self: Sized;
@@ -72,16 +71,16 @@ macro_rules! impl_integer {
     ($t:ident) => {
         impl Integer for $t {
             #[inline]
-            fn is_even(&self) -> bool {
+            fn integer_is_even(&self) -> bool {
                 *self & 1 == 0
             }
             #[inline]
-            fn is_multiple_of(&self, other: &Self) -> bool {
+            fn integer_is_multiple_of(&self, other: &Self) -> bool {
                 *self % *other == 0
             }
 
             #[inline]
-            fn is_prime(&self) -> Option<bool> {
+            fn integer_is_prime(&self) -> Option<bool> {
                 #[cfg(feature = "std")]
                 return Some(is_prime_sieve((*self).checked_as::<usize>()?));
                 #[cfg(not(feature = "std"))]
@@ -89,7 +88,7 @@ macro_rules! impl_integer {
             }
 
             #[inline]
-            fn gcd(&self, other: &Self) -> Option<Self> {
+            fn integer_gcd(&self, other: &Self) -> Option<Self> {
                 let (mut a, mut b) = (*self, *other);
                 while b != Self::ZERO {
                     let temp = b;
@@ -99,8 +98,8 @@ macro_rules! impl_integer {
                 Some(a)
             }
             #[inline]
-            fn lcm(&self, other: &Self) -> Option<Self> {
-                Some(*self * *other / self.gcd(other).unwrap())
+            fn integer_lcm(&self, other: &Self) -> Option<Self> {
+                Some(*self * *other / self.integer_gcd(other).unwrap())
             }
         }
     };
@@ -109,22 +108,22 @@ macro_rules! impl_integer {
     (nonzero $t:ident) => {
         impl Integer for $t {
             #[inline]
-            fn is_even(&self) -> bool {
+            fn integer_is_even(&self) -> bool {
                 self.get() & 1 == 0
             }
             #[inline]
-            fn is_multiple_of(&self, other: &Self) -> bool {
+            fn integer_is_multiple_of(&self, other: &Self) -> bool {
                 self.get() % other.get() == 0
             }
             #[inline]
-            fn is_prime(&self) -> Option<bool> {
+            fn integer_is_prime(&self) -> Option<bool> {
                 #[cfg(feature = "std")]
                 return Some(is_prime_sieve(self.get().checked_as::<usize>()?));
                 #[cfg(not(feature = "std"))]
                 return Some(is_prime_brute(self.get().checked_as::<u32>()?));
             }
             #[inline]
-            fn gcd(&self, other: &Self) -> Option<Self> {
+            fn integer_gcd(&self, other: &Self) -> Option<Self> {
                 let (mut a, mut b) = (self.get(), other.get());
                 while b != 0 {
                     let temp = b;
@@ -134,9 +133,9 @@ macro_rules! impl_integer {
                 Some($t::new(a).unwrap())
             }
             #[inline]
-            fn lcm(&self, other: &Self) -> Option<Self> {
+            fn integer_lcm(&self, other: &Self) -> Option<Self> {
                 Some($t::new(
-                    self.get() * other.get() / self.get().gcd(&other.get()).unwrap()
+                    self.get() * other.get() / self.get().integer_gcd(&other.get()).unwrap()
                 ).unwrap())
             }
         }

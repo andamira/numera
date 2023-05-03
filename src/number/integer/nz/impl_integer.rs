@@ -13,32 +13,55 @@ macro_rules! impl_nonzero_integer {
         $( impl_nonzero_integer![$t, $inner]; )+
     };
     ($t:ident, $inner:ident) => {
+        /// # Methods for all integers.
+        impl $t {
+            /// Returns `true` if this integer is even.
+            #[inline]
+            pub const fn is_even(&self) -> bool {
+                self.0.get() & 1 == 0
+            }
+            /// Returns `true` if this integer is odd.
+            #[inline]
+            pub const fn is_odd(&self) -> bool {
+                !self.is_even()
+            }
+
+            /// Returns `true` if this integer is a multiple of the `other`.
+            #[inline]
+            pub const fn is_multiple_of(&self, other: &Self) -> bool {
+                self.0.get() % other.0.get() == 0
+            }
+            /// Returns `true` if this integer is a divisor of the `other`.
+            #[inline]
+            pub const fn is_divisor_of(&self, other: &Self) -> bool {
+                other.is_multiple_of(self)
+            }
+        }
+
         impl Integer for $t {
             #[inline]
-            fn is_even(&self) -> bool {
-                self.0.get().is_even()
+            fn integer_is_even(&self) -> bool {
+                self.is_even()
             }
             #[inline]
-            fn is_multiple_of(&self, other: &Self) -> bool {
-                self.0.get().is_multiple_of(&other.0.get())
+            fn integer_is_multiple_of(&self, other: &Self) -> bool {
+                self.is_multiple_of(other)
             }
 
 
-            /// Returns always `None`, assumming negative numbers can't be prime.
-            // https://www.themathdoctors.org/prime-numbers-what-about-negatives/
-            // https://math.stackexchange.com/questions/2355731/can-negative-integers-be-prime
+            /// Returns always `None`, since negative numbers can't be prime.
             #[inline]
-            fn is_prime(&self) -> Option<bool> {
+            fn integer_is_prime(&self) -> Option<bool> {
                 None
             }
-            /// Returns always `None`, since the result should be a positive number.
+            /// Returns always `None`, since the result must be a positive number.
             #[inline]
-            fn gcd(&self, _other: &Self) -> Option<Self> {
+            fn integer_gcd(&self, _other: &Self) -> Option<Self> {
                 None
             }
-            /// Returns always `None`, since the result should be a positive number.
+            /// Returns always `None`, since the result must be a non-negative number.
             #[inline]
-            fn lcm(&self, _other: &Self) -> Option<Self> {
+            fn integer_lcm(&self, _other: &Self) -> Option<Self> {
                 None
             }
         }

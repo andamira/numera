@@ -3,8 +3,7 @@
 //!
 //
 
-use super::*;
-use crate::number::{integer::Integer, traits::Number};
+use crate::number::integer::{z::*, Integer};
 use az::CheckedAs;
 
 #[cfg(not(feature = "std"))]
@@ -17,35 +16,87 @@ macro_rules! impl_integer {
         $( impl_integer![$t]; )+
     };
     ($t:ident) => {
-        impl Integer for $t {
+        /// # Methods for all integers.
+        impl $t {
+            /// Returns `true` if this integer is even.
             #[inline]
-            fn is_even(&self) -> bool {
-                self.0.is_even()
+            pub const fn is_even(&self) -> bool {
+                self.0 & 1 == 0
             }
+            /// Returns `true` if this integer is odd.
             #[inline]
-            fn is_multiple_of(&self, other: &Self) -> bool {
-                self.0.is_multiple_of(&other.0)
+            pub const fn is_odd(&self) -> bool {
+                !self.is_even()
             }
+
+            /// Returns `true` if this integer is a multiple of the `other`.
             #[inline]
-            fn is_prime(&self) -> Option<bool> {
+            pub const fn is_multiple_of(&self, other: &Self) -> bool {
+                self.0 % other.0 == 0
+            }
+            /// Returns `true` if this integer is a divisor of the `other`.
+            #[inline]
+            pub const fn is_divisor_of(&self, other: &Self) -> bool {
+                other.is_multiple_of(self)
+            }
+        }
+
+        /// # Methods for non-negative integers.
+        impl $t {
+            /// Returns `Some(true)` if this integer is prime, `Some(false)` if it's not
+            /// prime, or `None` if it can not be determined.
+            ///
+            /// Returns `None` if this integer can't be represented as a [`usize`],
+            /// or as a [`u32`] in `no-std`.
+            #[inline]
+            pub fn is_prime(&self) -> Option<bool> {
                 #[cfg(feature = "std")]
-                return Some(is_prime_sieve(self.0.checked_as::<usize>()?));
+                return Some(is_prime_sieve((self.0).checked_as::<usize>()?));
                 #[cfg(not(feature = "std"))]
-                return Some(is_prime_brute(self.0.checked_as::<u32>()?));
+                return Some(is_prime_brute((self.0).checked_as::<u32>()?));
             }
+
+            /// Calculates the *Greatest Common Divisor* of this integer and `other`.
             #[inline]
-            fn gcd(&self, other: &Self) -> Option<Self> {
+            #[must_use]
+            pub const fn gcd(&self, other: &Self) -> Self {
                 let (mut a, mut b) = (self.0, other.0);
                 while b != 0 {
                     let temp = b;
                     b = a % b;
                     a = temp;
                 }
-                Some($t::from_parts(a).unwrap())
+                $t(a)
+            }
+
+            /// Calculates the *Lowest Common Multiple* of this integer and `other`.
+            #[inline]
+            #[must_use]
+            pub const fn lcm(&self, other: &Self) -> Self {
+                $t(self.0 * other.0 / self.gcd(other).0)
+            }
+        }
+
+        impl Integer for $t {
+            #[inline]
+            fn integer_is_even(&self) -> bool {
+                self.is_even()
             }
             #[inline]
-            fn lcm(&self, other: &Self) -> Option<Self> {
-                Some($t::from_parts(self.0 * other.0 / self.0.gcd(&other.0).unwrap()).unwrap())
+            fn integer_is_multiple_of(&self, other: &Self) -> bool {
+                self.is_multiple_of(&other)
+            }
+            #[inline]
+            fn integer_is_prime(&self) -> Option<bool> {
+                self.is_prime()
+            }
+            #[inline]
+            fn integer_gcd(&self, other: &Self) -> Option<Self> {
+                Some(self.gcd(other))
+            }
+            #[inline]
+            fn integer_lcm(&self, other: &Self) -> Option<Self> {
+                Some(self.lcm(other))
             }
         }
     };
@@ -55,14 +106,14 @@ impl_integer![many: Integer8, Integer16, Integer32, Integer64, Integer128];
 
 #[cfg(test)]
 mod tests {
-    use super::*;
+    use crate::number::integer::abbr::*;
 
     #[test]
     fn z_lcm_gcd() {
-        let z10: Integer32 = 10.into();
-        let z15: Integer32 = 15.into();
+        let z10 = Z32::new(10);
+        let z15 = Z32::new(15);
 
-        assert_eq![Integer32::from_parts(30).unwrap(), z10.lcm(&z15).unwrap()];
-        assert_eq![Integer32::from_parts(5).unwrap(), z10.gcd(&z15).unwrap()];
+        assert_eq![Z32::new(30), z10.lcm(&z15)];
+        assert_eq![Z32::new(5), z10.gcd(&z15)];
     }
 }

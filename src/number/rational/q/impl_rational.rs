@@ -40,11 +40,11 @@ macro_rules! impl_rational {
             fn is_reduced(&self) -> bool {
                 // IMPROVE when impl From for references.
                 // self.num.gcd(self.den.into()).unwrap() == $num::ONE
-                self.num.gcd(&Into::<$num>::into(self.den)).unwrap() == $num::ONE
+                self.num.integer_gcd(&Into::<$num>::into(self.den)).unwrap() == $num::ONE
             }
             #[inline]
             fn reduce(&mut self) {
-                let gcd_value = self.num.gcd(&Into::<$num>::into(self.den)).unwrap();
+                let gcd_value = self.num.integer_gcd(&Into::<$num>::into(self.den)).unwrap();
 
                 // self.num /= gcd_value; // IMPROVE: impl DivAssign
                 self.num = self.num / gcd_value;
@@ -65,7 +65,7 @@ macro_rules! impl_rational {
 
             #[inline]
             fn reduced(&self) -> Self {
-                let gcd_value = self.num.gcd(&Into::<$num>::into(self.den)).unwrap();
+                let gcd_value = self.num.integer_gcd(&Into::<$num>::into(self.den)).unwrap();
 
                 $t {
                     num: self.num / gcd_value,
