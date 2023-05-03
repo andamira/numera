@@ -5,8 +5,8 @@
 
 use crate::number::{
     integer::{
-        macros::{impl_from_integer, impl_from_primitive},
-        pz::abbr::*,
+        macros::{from_integer, from_primitive},
+        pz::*,
     },
     traits::Number,
 };
@@ -15,22 +15,22 @@ use core::num::{NonZeroU128, NonZeroU16, NonZeroU32, NonZeroU64, NonZeroU8};
 /* infallibe conversions*/
 
 // from smaller or equal sized NonZeroU
-impl_from_primitive![nonzero for: Pz + 8, from: NonZeroU + 8];
-impl_from_primitive![nonzero for: Pz + 16, from: NonZeroU + 8, 16];
-impl_from_primitive![nonzero for: Pz + 32, from: NonZeroU + 8, 16, 32];
-impl_from_primitive![nonzero for: Pz + 64, from: NonZeroU + 8, 16, 32, 64];
-impl_from_primitive![nonzero for: Pz + 128, from: NonZeroU + 8, 16, 32, 64, 128];
+from_primitive![nonzero for: PositiveInteger+8, from: NonZeroU+8];
+from_primitive![nonzero for: PositiveInteger+16, from: NonZeroU+8,16];
+from_primitive![nonzero for: PositiveInteger+32, from: NonZeroU+8,16,32];
+from_primitive![nonzero for: PositiveInteger+64, from: NonZeroU+8,16,32,64];
+from_primitive![nonzero for: PositiveInteger+128, from: NonZeroU+8,16,32,64,128];
 
 // from smaller sized PositiveInteger (Self)
-impl_from_integer![nonzero for: Pz + u + 16, from: Pz + 8];
-impl_from_integer![nonzero for: Pz + u + 32, from: Pz + 8, 16];
-impl_from_integer![nonzero for: Pz + u + 64, from: Pz + 8, 16, 32];
-impl_from_integer![nonzero for: Pz + u + 128, from: Pz + 8, 16, 32, 64];
+from_integer![nonzero for: PositiveInteger+u+16, from: PositiveInteger+8];
+from_integer![nonzero for: PositiveInteger+u+32, from: PositiveInteger+8,16];
+from_integer![nonzero for: PositiveInteger+u+64, from: PositiveInteger+8,16,32];
+from_integer![nonzero for: PositiveInteger+u+128, from: PositiveInteger+8,16,32,64];
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-    use crate::all::NumeraResult;
+    use crate::all::{abbr::*, NumeraResult};
+    use core::num::{NonZeroU16, NonZeroU8};
 
     #[test]
     fn pz_from() -> NumeraResult<()> {

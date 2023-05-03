@@ -3,8 +3,8 @@
 //!
 //
 // TOC
-// - impl_from_rational! IMPROVE
-// - impl_from_integer!
+// - from_rational! IMPROVE
+// - from_integer!
 
 /* conversions */
 
@@ -20,9 +20,9 @@
 ///
 /// # Examples
 /// ```ignore
-/// impl_from_rational![signed for:Q+16, num:Z16, den:N0z16, from:Q + 8, 16];
+/// from_rational![signed for:Q+16, num:Z16, den:N0z16, from:Q + 8, 16];
 /// ```
-macro_rules! impl_from_rational {
+macro_rules! from_rational {
     // default
     (
      for: $for:ident + $for_size:expr,
@@ -30,7 +30,7 @@ macro_rules! impl_from_rational {
      from: $from_p:ident + $( $from_size:expr ),+
     ) => {
         $(
-            impl_from_rational![@ for: $for + $for_size, num: $num, den: $den,
+            from_rational![@ for: $for + $for_size, num: $num, den: $den,
             from: $from_p + $from_size];
         )+
     };
@@ -72,7 +72,7 @@ macro_rules! impl_from_rational {
     // (nonzero
     //  for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $( $from_size:expr ),+) => {
     //     $(
-    //         impl_from_rational![@nonzero for: $for + $p + $for_size, from: $from + $from_size];
+    //         from_rational![@nonzero for: $for + $p + $for_size, from: $from + $from_size];
     //     )+
     // };
     // (@nonzero
@@ -90,7 +90,7 @@ macro_rules! impl_from_rational {
     // (int_neg
     //  for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $( $from_size:expr ),+) => {
     //     $(
-    //         impl_from_rational![@int_neg for: $for + $p + $for_size, from: $from + $from_size];
+    //         from_rational![@int_neg for: $for + $p + $for_size, from: $from + $from_size];
     //     )+
     // };
     // (@int_neg
@@ -108,7 +108,7 @@ macro_rules! impl_from_rational {
     // (nonzero_neg
     //  for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $( $from_size:expr ),+) => {
     //     $(
-    //         impl_from_rational![@nonzero_neg
+    //         from_rational![@nonzero_neg
     //         for: $for + $p + $for_size, from: $from + $from_size];
     //     )+
     // };
@@ -124,7 +124,7 @@ macro_rules! impl_from_rational {
     //     }
     // };
 }
-pub(crate) use impl_from_rational;
+pub(crate) use from_rational;
 
 /// Implements From<`$from_p$from_size`> for `$for$for_size`.
 ///
@@ -138,11 +138,11 @@ pub(crate) use impl_from_rational;
 ///
 /// # Examples
 /// ```ignore
-/// impl_from_integer![prim for:Q+16, num:Z16, den:N0z16, from:i + 8, 16];
-/// impl_from_integer![nonzero for:Q+16, num:Z16, den:N0z16, from:NonZeroI + 8, 16];
-/// impl_from_integer![integer for:Q+16, num:Z16, den:N0z16, from:Integer + 8, 16];
+/// from_integer![prim for:Q+16, num:Z16, den:N0z16, from:i + 8, 16];
+/// from_integer![nonzero for:Q+16, num:Z16, den:N0z16, from:NonZeroI + 8, 16];
+/// from_integer![integer for:Q+16, num:Z16, den:N0z16, from:Integer + 8, 16];
 /// ```
-macro_rules! impl_from_integer {
+macro_rules! from_integer {
     // from signed & unsigned primitives
     (prim
      for: $for:ident + $for_size:expr,
@@ -150,7 +150,7 @@ macro_rules! impl_from_integer {
      from: $from_p:ident + $( $from_size:expr ),+
     ) => {
         $(
-            impl_from_integer![@prim for: $for + $for_size, num: $num, den: $den,
+            from_integer![@prim for: $for + $for_size, num: $num, den: $den,
             from: $from_p + $from_size];
         )+
     };
@@ -195,7 +195,7 @@ macro_rules! impl_from_integer {
      from: $from_p:ident + $( $from_size:expr ),+
     ) => {
         $(
-            impl_from_integer![@nonzero for: $for + $for_size, num: $num, den: $den,
+            from_integer![@nonzero for: $for + $for_size, num: $num, den: $den,
             from: $from_p + $from_size];
         )+
     };
@@ -241,7 +241,7 @@ macro_rules! impl_from_integer {
      from: $from_p:ident + $( $from_size:expr ),+
     ) => {
         $(
-            impl_from_integer![@integer for: $for + $for_size, num: $num, den: $den,
+            from_integer![@integer for: $for + $for_size, num: $num, den: $den,
             from: $from_p + $from_size];
         )+
     };
@@ -280,4 +280,4 @@ macro_rules! impl_from_integer {
         }
     };
 }
-pub(crate) use impl_from_integer;
+pub(crate) use from_integer;

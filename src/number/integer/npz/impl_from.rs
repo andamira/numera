@@ -4,29 +4,28 @@
 //
 
 use crate::number::{
-    integer::{abbr::*, macros::impl_from_integer},
+    integer::{macros::from_integer, *},
     traits::Number,
 };
 
 /* infallible conversions */
 
 // from smaller sized NonPositiveInteger (Self)
-impl_from_integer![int for: Npz + u + 16, from: Npz + 8];
-impl_from_integer![int for: Npz + u + 32, from: Npz + 8, 16];
-impl_from_integer![int for: Npz + u + 64, from: Npz + 8, 16, 32];
-impl_from_integer![int for: Npz + u + 128, from: Npz + 8, 16, 32, 64];
+from_integer![int for: NonPositiveInteger+u+16, from: NonPositiveInteger+8];
+from_integer![int for: NonPositiveInteger+u+32, from: NonPositiveInteger+8,16];
+from_integer![int for: NonPositiveInteger+u+64, from: NonPositiveInteger+8,16,32];
+from_integer![int for: NonPositiveInteger+u+128, from: NonPositiveInteger+8,16,32,64];
 
 // from smaller or equal sized NegativeInteger
-impl_from_integer![nonzero for: Npz + u + 8, from: Nz + 8];
-impl_from_integer![nonzero for: Npz + u + 16, from: Nz + 8, 16];
-impl_from_integer![nonzero for: Npz + u + 32, from: Nz + 8, 16, 32];
-impl_from_integer![nonzero for: Npz + u + 64, from: Nz + 8, 16, 32, 64];
-impl_from_integer![nonzero for: Npz + u + 128, from: Nz + 8, 16, 32, 64, 128];
+from_integer![nonzero for: NonPositiveInteger+u+8, from: NegativeInteger+8];
+from_integer![nonzero for: NonPositiveInteger+u+16, from: NegativeInteger+8,16];
+from_integer![nonzero for: NonPositiveInteger+u+32, from: NegativeInteger+8,16,32];
+from_integer![nonzero for: NonPositiveInteger+u+64, from: NegativeInteger+8,16,32,64];
+from_integer![nonzero for: NonPositiveInteger+u+128, from: NegativeInteger+8,16,32,64,128];
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-    use crate::all::{NegSigned, NumeraResult};
+    use crate::all::{abbr::*, NegSigned, NumeraResult};
 
     #[test]
     fn npz_from() -> NumeraResult<()> {

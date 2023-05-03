@@ -5,12 +5,12 @@
 // TOC
 //
 // infallible conversions:
-//   - impl_from_integer!
-//   - impl_from_primitive!
+//   - from_integer!
+//   - from_primitive!
 //
 // fallible conversions:
-//   - impl_try_from_integer!
-//   - impl_try_from_primitive!
+//   - try_from_integer!
+//   - try_from_primitive!
 
 /* infallible From conversions */
 
@@ -26,15 +26,15 @@
 ///
 /// # Examples
 /// ```ignore
-/// impl_from_integer![int for: Integer + i + 32, from: Integer + 8, 16];
+/// from_integer![int for: Integer + i + 32, from: Integer + 8, 16];
 /// ```
-macro_rules! impl_from_integer {
+macro_rules! from_integer {
     // having an inner integer primitive
     (int
      for: $for:ident + $p:ident + $for_size:expr,
      from: $from:ident + $( $from_size:expr ),+) => {
         $(
-            impl_from_integer![@int for: $for + $p + $for_size, from: $from + $from_size];
+            from_integer![@int for: $for + $p + $for_size, from: $from + $from_size];
         )+
     };
     (@int
@@ -63,7 +63,7 @@ macro_rules! impl_from_integer {
      for: $for:ident + $p:ident + $for_size:expr,
      from: $from:ident + $( $from_size:expr ),+) => {
         $(
-            impl_from_integer![@nonzero for: $for + $p + $for_size, from: $from + $from_size];
+            from_integer![@nonzero for: $for + $p + $for_size, from: $from + $from_size];
         )+
     };
     (@nonzero
@@ -106,7 +106,7 @@ macro_rules! impl_from_integer {
     (int_neg
      for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $( $from_size:expr ),+) => {
         $(
-            impl_from_integer![@int_neg for: $for + $p + $for_size, from: $from + $from_size];
+            from_integer![@int_neg for: $for + $p + $for_size, from: $from + $from_size];
         )+
     };
     (@int_neg
@@ -134,7 +134,7 @@ macro_rules! impl_from_integer {
     (nonzero_neg
      for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $( $from_size:expr ),+) => {
         $(
-            impl_from_integer![@nonzero_neg
+            from_integer![@nonzero_neg
             for: $for + $p + $for_size, from: $from + $from_size];
         )+
     };
@@ -183,7 +183,7 @@ macro_rules! impl_from_integer {
         }
     };
 }
-pub(crate) use impl_from_integer;
+pub(crate) use from_integer;
 
 /// Implements From<`$from_p$from_size`> for `$for$for_size`.
 ///
@@ -195,17 +195,17 @@ pub(crate) use impl_from_integer;
 ///
 /// # Examples
 /// ```ignore
-/// impl_from_primitive![many for: Integer + 16, from: u + 8];
-/// impl_from_primitive![many for: Integer + 16, from: i + 8, 16];
+/// from_primitive![many for: Integer + 16, from: u + 8];
+/// from_primitive![many for: Integer + 16, from: i + 8, 16];
 /// ```
-macro_rules! impl_from_primitive {
+macro_rules! from_primitive {
     // having the same inner integer primitive
     (int
      for: $for:ident + $for_size:expr,
      from: $from_p:ident + $( $from_size:expr ),+
     ) => {
         $(
-            impl_from_primitive![@int for: $for + $for_size, from: $from_p + $from_size];
+            from_primitive![@int for: $for + $for_size, from: $from_p + $from_size];
         )+
     };
 
@@ -252,7 +252,7 @@ macro_rules! impl_from_primitive {
      from: $from_p:ident + $( $from_size:expr ),+
     ) => {
         $(
-            impl_from_primitive![@nonzero for: $for + $for_size, from: $from_p + $from_size];
+            from_primitive![@nonzero for: $for + $for_size, from: $from_p + $from_size];
         )+
     };
 
@@ -295,7 +295,7 @@ macro_rules! impl_from_primitive {
         }
     };
 }
-pub(crate) use impl_from_primitive;
+pub(crate) use from_primitive;
 
 /* fallible TryFrom conversions */
 
@@ -311,15 +311,15 @@ pub(crate) use impl_from_primitive;
 ///
 /// # Examples
 /// ```ignore
-/// impl_try_from_integer![int for: Integer + i + 8, from: Integer + 8, 16];
+/// try_from_integer![int for: Integer + i + 8, from: Integer + 8, 16];
 /// ```
-macro_rules! impl_try_from_integer {
+macro_rules! try_from_integer {
     // having an inner integer primitive
     (int
      for: $for:ident + $p:ident + $for_size:expr,
      from: $from:ident + $( $from_size:expr ),+) => {
         $(
-            impl_try_from_integer![@int for: $for + $p + $for_size, from: $from + $from_size];
+            try_from_integer![@int for: $for + $p + $for_size, from: $from + $from_size];
         )+
     };
     (@int
@@ -354,7 +354,7 @@ macro_rules! impl_try_from_integer {
      for: $for:ident + $p:ident + $for_size:expr,
      from: $from:ident + $( $from_size:expr ),+) => {
         $(
-            impl_try_from_integer![@nonzero for: $for + $p + $for_size, from: $from + $from_size];
+            try_from_integer![@nonzero for: $for + $p + $for_size, from: $from + $from_size];
         )+
     };
     (@nonzero
@@ -409,7 +409,7 @@ macro_rules! impl_try_from_integer {
     (int_neg
      for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $( $from_size:expr ),+) => {
         $(
-            impl_try_from_integer![@int_neg for: $for + $p + $for_size, from: $from + $from_size];
+            try_from_integer![@int_neg for: $for + $p + $for_size, from: $from + $from_size];
         )+
     };
     (@int_neg
@@ -446,7 +446,7 @@ macro_rules! impl_try_from_integer {
     (nonzero_neg
      for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $( $from_size:expr ),+) => {
         $(
-            impl_try_from_integer![@nonzero_neg
+            try_from_integer![@nonzero_neg
             for: $for + $p + $for_size, from: $from + $from_size];
         )+
     };
@@ -507,7 +507,7 @@ macro_rules! impl_try_from_integer {
         }
     };
 }
-pub(crate) use impl_try_from_integer;
+pub(crate) use try_from_integer;
 
 /// Implements `TryFrom`<`$from$from_size`> for `$for$for_size`.
 ///
@@ -519,16 +519,16 @@ pub(crate) use impl_try_from_integer;
 ///
 /// # Examples
 /// ```ignore
-/// impl_try_from_primitive![many for: Integer + 8, from: u + 8, 16, 32, 64, 128];
+/// try_from_primitive![many for: Integer + 8, from: u + 8, 16, 32, 64, 128];
 /// ```
-macro_rules! impl_try_from_primitive {
+macro_rules! try_from_primitive {
     // having the same inner integer primitive
     (int
      for: $for:ident + $for_size:expr,
      from: $from:ident + $( $from_size:expr ),+
     ) => {
         $(
-            impl_try_from_primitive![@int for: $for + $for_size, from: $from + $from_size];
+            try_from_primitive![@int for: $for + $for_size, from: $from + $from_size];
         )+
     };
 
@@ -558,7 +558,7 @@ macro_rules! impl_try_from_primitive {
      from: $from:ident + $( $from_size:expr ),+
     ) => {
         $(
-            impl_try_from_primitive![@nonzero for: $for + $for_size, from: $from + $from_size];
+            try_from_primitive![@nonzero for: $for + $for_size, from: $from + $from_size];
         )+
     };
 
@@ -584,4 +584,4 @@ macro_rules! impl_try_from_primitive {
         }
     };
 }
-pub(crate) use impl_try_from_primitive;
+pub(crate) use try_from_primitive;
