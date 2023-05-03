@@ -45,21 +45,24 @@ macro_rules! define_negative_integer_sized {
     // defines multiple integer types, with an inner primitive.
     (multi $name:ident, $p:ident,
      $doc_num:literal, $doc_type:literal, // $doc_new:literal,
-     $sign:literal, $lower:expr, $upper:expr,
-     $(($det:literal,$bsize:expr)),+) => {
+     $doc_sign:literal, $doc_lower:expr, $doc_upper:expr,
+        $(
+            ($doc_det:literal, $bsize:expr)
+        ),+
+    ) => {
         $(
             define_negative_integer_sized![single $name, $p,
                $doc_num, $doc_type, // $doc_new,
-               $sign, $lower, $upper,
-               ($det,$bsize)];
+               $doc_sign, $doc_lower, $doc_upper,
+               ($doc_det, $bsize)];
         )+
     };
     // defines a single integer type, with an inner primitive.
     (single $name:ident, $p:ident,
      $doc_num:literal, $doc_type:literal, // $doc_new:literal,
      $doc_sign:literal, $doc_lower:expr, $doc_upper:expr,
-     ($doc_det:literal,$bsize:expr)) => {
-
+     ($doc_det:literal,$bsize:expr)
+    ) => {
         paste::paste! {
             #[doc = $doc_det " "$bsize "-bit " $doc_num $doc_type]
             #[doc = "\n\nThe range of valid numeric values is $\\lbrack$"
@@ -67,7 +70,7 @@ macro_rules! define_negative_integer_sized {
             " $\\dots"  $doc_sign $doc_upper  "\\rbrack$."]
 
             #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
-            pub struct [<$name$bsize>](pub(crate) [< $p$bsize >]);
+            pub struct [<$name$bsize>](pub(crate) [<$p$bsize>]);
 
             impl fmt::Display for [<$name$bsize>]  {
                 fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {

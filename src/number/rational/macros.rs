@@ -42,8 +42,8 @@ macro_rules! impl_from_rational {
      from: $from_p:ident + $from_size:expr
     ) => {
         paste::paste! {
-            impl From<[< $from_p $from_size >]> for [< $for $for_size >] {
-                fn from(from: [< $from_p $from_size >]) -> Self {
+            impl From<[<$from_p$from_size>]> for [<$for$for_size>] {
+                fn from(from: [<$from_p$from_size>]) -> Self {
                     return Self {
                         num: from.num.into(),
                         den: from.den.into(),
@@ -62,8 +62,8 @@ macro_rules! impl_from_rational {
     // (@nonzero
     //  for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $from_size:expr) => {
     //     paste::paste! {
-    //         impl From<[< $from $from_size >]> for [< $for $for_size >] {
-    //             fn from(from: [< $from $from_size >]) -> Self {
+    //         impl From<[<$from$from_size>]> for [<$for$for_size>] {
+    //             fn from(from: [<$from$from_size>]) -> Self {
     //                 // TODO
     //                 todo![]
     //             }
@@ -80,8 +80,8 @@ macro_rules! impl_from_rational {
     // (@int_neg
     //  for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $from_size:expr) => {
     //     paste::paste! {
-    //         impl From<[< $from $from_size >]> for [< $for $for_size >] {
-    //             fn from(from: [< $from $from_size >]) -> Self {
+    //         impl From<[<$from$from_size>]> for [<$for$for_size>] {
+    //             fn from(from: [<$from$from_size>]) -> Self {
     //                 // TODO
     //                 todo![]
     //             }
@@ -99,8 +99,8 @@ macro_rules! impl_from_rational {
     // (@nonzero_neg
     //  for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $from_size:expr) => {
     //     paste::paste! {
-    //         impl From<[< $from $from_size >]> for [< $for $for_size >] {
-    //             fn from(from: [< $from $from_size >]) -> Self {
+    //         impl From<[<$from$from_size>]> for [<$for$for_size>] {
+    //             fn from(from: [<$from$from_size>]) -> Self {
     //                 // TODO
     //                 todo![]
     //             }
@@ -110,7 +110,7 @@ macro_rules! impl_from_rational {
 }
 pub(crate) use impl_from_rational;
 
-/// Implements From<`$from_p $from_size`> for `$for$for_size`.
+/// Implements From<`$from_p$from_size`> for `$for$for_size`.
 ///
 /// # Args
 /// - `$for`:       the base name of the target. e.g. `NonZeroRational`.
@@ -145,8 +145,8 @@ macro_rules! impl_from_integer {
      from: $from_p:ident + $from_size:expr
     ) => {
         paste::paste! {
-            impl From<[< $from_p $from_size >]> for [< $for $for_size >] {
-                fn from(from: [< $from_p $from_size >]) -> Self {
+            impl From<[<$from_p$from_size>]> for [<$for$for_size>] {
+                fn from(from: [<$from_p$from_size>]) -> Self {
                     return Self {
                         num: from.into(),
                         den: <$den as $crate::all::ConstOne>::ONE,
@@ -175,8 +175,8 @@ macro_rules! impl_from_integer {
      from: $from_p:ident + $from_size:expr
     ) => {
         paste::paste! {
-            impl From<[< $from_p $from_size >]> for [< $for $for_size >] {
-                fn from(from: [< $from_p $from_size >]) -> Self {
+            impl From<[<$from_p$from_size>]> for [<$for$for_size>] {
+                fn from(from: [<$from_p$from_size>]) -> Self {
                     return Self {
                         num: from.get().into(),
                         den: <$den as $crate::all::ConstOne>::ONE,
@@ -205,8 +205,8 @@ macro_rules! impl_from_integer {
      from: $from_p:ident + $from_size:expr
     ) => {
         paste::paste! {
-            impl From<[< $from_p $from_size >]> for [< $for $for_size >] {
-                fn from(from: [< $from_p $from_size >]) -> Self {
+            impl From<[<$from_p$from_size>]> for [<$for$for_size>] {
+                fn from(from: [<$from_p$from_size>]) -> Self {
                     return Self {
                         num: from.into(),
                         den: <$den as $crate::all::ConstOne>::ONE,

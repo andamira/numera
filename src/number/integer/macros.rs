@@ -40,8 +40,8 @@ macro_rules! impl_from_integer {
     (@int
      for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $from_size:expr) => {
         paste::paste! {
-            impl From<[< $from $from_size >]> for [< $for $for_size >] {
-                fn from(from: [< $from $from_size >]) -> Self {
+            impl From<[<$from$from_size>]> for [<$for$for_size>] {
+                fn from(from: [<$from$from_size>]) -> Self {
                     Self(from.0.into())
                 }
             }
@@ -59,8 +59,8 @@ macro_rules! impl_from_integer {
     (@nonzero
      for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $from_size:expr) => {
         paste::paste! {
-            impl From<[< $from $from_size >]> for [< $for $for_size >] {
-                fn from(from: [< $from $from_size >]) -> Self {
+            impl From<[<$from$from_size>]> for [<$for$for_size>] {
+                fn from(from: [<$from$from_size>]) -> Self {
                     #[cfg(feature = "safe")]
                     return Self::from_parts(from.0.get().into()).unwrap();
 
@@ -82,9 +82,9 @@ macro_rules! impl_from_integer {
     (@int_neg
      for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $from_size:expr) => {
         paste::paste! {
-            impl From<[< $from $from_size >]> for [< $for $for_size >] {
-                fn from(from: [< $from $from_size >]) -> Self {
-                    Self(Into::<[< $p $for_size >]>::into(from.0).neg())
+            impl From<[<$from$from_size>]> for [<$for$for_size>] {
+                fn from(from: [<$from$from_size>]) -> Self {
+                    Self(Into::<[<$p$for_size>]>::into(from.0).neg())
                 }
             }
         }
@@ -101,16 +101,16 @@ macro_rules! impl_from_integer {
     (@nonzero_neg
      for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $from_size:expr) => {
         paste::paste! {
-            impl From<[< $from $from_size >]> for [< $for $for_size >] {
-                fn from(from: [< $from $from_size >]) -> Self {
+            impl From<[<$from$from_size>]> for [<$for$for_size>] {
+                fn from(from: [<$from$from_size>]) -> Self {
                     #[cfg(feature = "safe")]
                     return
-                        Self::from_parts(Into::<[< $p $for_size >]>::into(from.0.get()).neg()).unwrap();
+                        Self::from_parts(Into::<[<$p$for_size>]>::into(from.0.get()).neg()).unwrap();
 
                     #[cfg(not(feature = "safe"))]
                     // SAFETY: coming from a type that respects the invariant of not having 0
                     return unsafe {
-                        Self::from_parts_unchecked(Into::<[< $p $for_size >]>::into(from.0.get()).neg())
+                        Self::from_parts_unchecked(Into::<[<$p$for_size>]>::into(from.0.get()).neg())
                     };
                 }
             }
@@ -119,7 +119,7 @@ macro_rules! impl_from_integer {
 }
 pub(crate) use impl_from_integer;
 
-/// Implements From<`$from_p $from_size`> for `$for$for_size`.
+/// Implements From<`$from_p$from_size`> for `$for$for_size`.
 ///
 /// # Args
 /// - `$for`:       the base name of the target. e.g. `NonZeroInteger`.
@@ -148,8 +148,8 @@ macro_rules! impl_from_primitive {
      from: $from_p:ident + $from_size:expr
     ) => {
         paste::paste! {
-            impl From<[< $from_p $from_size >]> for [< $for $for_size >] {
-                fn from(from: [< $from_p $from_size >]) -> Self {
+            impl From<[<$from_p$from_size>]> for [<$for$for_size>] {
+                fn from(from: [<$from_p$from_size>]) -> Self {
                     #[cfg(feature = "safe")]
                     return Self::from_parts(from.into()).unwrap();
 
@@ -176,8 +176,8 @@ macro_rules! impl_from_primitive {
      from: $from_p:ident + $from_size:expr
     ) => {
         paste::paste! {
-            impl From<[< $from_p $from_size >]> for [< $for $for_size >] {
-                fn from(from: [< $from_p $from_size >]) -> Self {
+            impl From<[<$from_p$from_size>]> for [<$for$for_size>] {
+                fn from(from: [<$from_p$from_size>]) -> Self {
                     #[cfg(feature = "safe")]
                     return Self::from_parts(from.get().into()).unwrap();
 
@@ -219,7 +219,7 @@ macro_rules! impl_try_from_integer {
     (@int
      for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $from_size:expr) => {
         paste::paste! {
-            impl TryFrom<[< $from $from_size >]> for [< $for $for_size >] {
+            impl TryFrom<[<$from$from_size>]> for [<$for$for_size>] {
                 type Error = $crate::error::NumeraError;
                 fn try_from(from: [<$from$from_size>])
                     -> $crate::error::NumeraResult<[<$for$for_size>]> {
@@ -247,7 +247,7 @@ macro_rules! impl_try_from_integer {
     (@nonzero
      for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $from_size:expr) => {
         paste::paste! {
-            impl TryFrom<[< $from $from_size >]> for [< $for $for_size >] {
+            impl TryFrom<[<$from$from_size>]> for [<$for$for_size>] {
                 type Error = $crate::error::NumeraError;
                 fn try_from(from: [<$from$from_size>])
                     -> $crate::error::NumeraResult<[<$for$for_size>]> {
@@ -275,12 +275,12 @@ macro_rules! impl_try_from_integer {
     (@int_neg
      for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $from_size:expr) => {
         paste::paste! {
-            impl TryFrom<[< $from $from_size >]> for [< $for $for_size >] {
+            impl TryFrom<[<$from$from_size>]> for [<$for$for_size>] {
                 type Error = $crate::error::NumeraError;
                 fn try_from(from: [<$from$from_size>])
                     -> $crate::error::NumeraResult<[<$for$for_size>]> {
 
-                    Ok(Self(TryInto::<[<$p$for_size >]>::try_into(from.0)?.neg()))
+                    Ok(Self(TryInto::<[<$p$for_size>]>::try_into(from.0)?.neg()))
                 }
             }
         }
@@ -297,19 +297,19 @@ macro_rules! impl_try_from_integer {
     (@nonzero_neg
      for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $from_size:expr) => {
         paste::paste! {
-            impl TryFrom<[< $from $from_size >]> for [< $for $for_size >] {
+            impl TryFrom<[<$from$from_size>]> for [<$for$for_size>] {
                 type Error = $crate::error::NumeraError;
                 fn try_from(from: [<$from$from_size>])
                     -> $crate::error::NumeraResult<[<$for$for_size>]> {
                     #[cfg(feature = "safe")]
                     return
-                        Self::from_parts(TryInto::<[< $p $for_size >]>::try_into(from.0.get())?.neg());
+                        Self::from_parts(TryInto::<[<$p$for_size>]>::try_into(from.0.get())?.neg());
 
                     #[cfg(not(feature = "safe"))]
                     // SAFETY: all ok results of try_from should be valid
                     return unsafe {
                         Ok(Self::from_parts_unchecked(
-                                TryInto::<[< $p $for_size >]>::try_into(from.0.get())?.neg()
+                                TryInto::<[<$p$for_size>]>::try_into(from.0.get())?.neg()
                         ))
                     };
                 }
@@ -319,7 +319,7 @@ macro_rules! impl_try_from_integer {
 }
 pub(crate) use impl_try_from_integer;
 
-/// Implements `TryFrom`<`$from $from_size`> for `$for$for_size`.
+/// Implements `TryFrom`<`$from$from_size`> for `$for$for_size`.
 ///
 /// # Args
 /// - `$for`:       the base name of the target. e.g. `NonZeroInteger`.
@@ -347,7 +347,7 @@ macro_rules! impl_try_from_primitive {
      from: $from:ident + $from_size:expr
     ) => {
         paste::paste! {
-            impl TryFrom<[< $from $from_size >]> for [< $for $for_size >] {
+            impl TryFrom<[<$from$from_size>]> for [<$for$for_size>] {
                 type Error = $crate::error::NumeraError;
                 fn try_from(from: [<$from$from_size>])
                     -> $crate::error::NumeraResult<[<$for$for_size>]> {
@@ -378,7 +378,7 @@ macro_rules! impl_try_from_primitive {
      from: $from:ident + $from_size:expr
     ) => {
         paste::paste! {
-            impl TryFrom<[< $from $from_size >]> for [< $for $for_size >] {
+            impl TryFrom<[<$from$from_size>]> for [<$for$for_size>] {
                 type Error = $crate::error::NumeraError;
                 fn try_from(from: [<$from$from_size>])
                     -> $crate::error::NumeraResult<[<$for$for_size>]> {
