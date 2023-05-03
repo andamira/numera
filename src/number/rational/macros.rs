@@ -50,6 +50,22 @@ macro_rules! impl_from_rational {
                     };
                 }
             }
+            impl From<&[<$from_p$from_size>]> for [<$for$for_size>] {
+                fn from(from: &[<$from_p$from_size>]) -> Self {
+                    return Self {
+                        num: from.num.into(),
+                        den: from.den.into(),
+                    };
+                }
+            }
+            impl From<&mut [<$from_p$from_size>]> for [<$for$for_size>] {
+                fn from(from: &mut [<$from_p$from_size>]) -> Self {
+                    return Self {
+                        num: from.num.into(),
+                        den: from.den.into(),
+                    };
+                }
+            }
         }
     };
 
@@ -153,6 +169,22 @@ macro_rules! impl_from_integer {
                     };
                 }
             }
+            impl From<&[<$from_p$from_size>]> for [<$for$for_size>] {
+                fn from(from: &[<$from_p$from_size>]) -> Self {
+                    return Self {
+                        num: (*from).into(),
+                        den: <$den as $crate::all::ConstOne>::ONE,
+                    };
+                }
+            }
+            impl From<&mut [<$from_p$from_size>]> for [<$for$for_size>] {
+                fn from(from: &mut [<$from_p$from_size>]) -> Self {
+                    return Self {
+                        num: (*from).into(),
+                        den: <$den as $crate::all::ConstOne>::ONE,
+                    };
+                }
+            }
         }
     };
 
@@ -177,6 +209,22 @@ macro_rules! impl_from_integer {
         paste::paste! {
             impl From<[<$from_p$from_size>]> for [<$for$for_size>] {
                 fn from(from: [<$from_p$from_size>]) -> Self {
+                    return Self {
+                        num: from.get().into(),
+                        den: <$den as $crate::all::ConstOne>::ONE,
+                    };
+                }
+            }
+            impl From<&[<$from_p$from_size>]> for [<$for$for_size>] {
+                fn from(from: &[<$from_p$from_size>]) -> Self {
+                    return Self {
+                        num: from.get().into(),
+                        den: <$den as $crate::all::ConstOne>::ONE,
+                    };
+                }
+            }
+            impl From<&mut [<$from_p$from_size>]> for [<$for$for_size>] {
+                fn from(from: &mut [<$from_p$from_size>]) -> Self {
                     return Self {
                         num: from.get().into(),
                         den: <$den as $crate::all::ConstOne>::ONE,
@@ -209,6 +257,22 @@ macro_rules! impl_from_integer {
                 fn from(from: [<$from_p$from_size>]) -> Self {
                     return Self {
                         num: from.into(),
+                        den: <$den as $crate::all::ConstOne>::ONE,
+                    };
+                }
+            }
+            impl From<&[<$from_p$from_size>]> for [<$for$for_size>] {
+                fn from(from: &[<$from_p$from_size>]) -> Self {
+                    return Self {
+                        num: (*from).into(),
+                        den: <$den as $crate::all::ConstOne>::ONE,
+                    };
+                }
+            }
+            impl From<&mut [<$from_p$from_size>]> for [<$for$for_size>] {
+                fn from(from: &mut [<$from_p$from_size>]) -> Self {
+                    return Self {
+                        num: (*from).into(),
                         den: <$den as $crate::all::ConstOne>::ONE,
                     };
                 }

@@ -45,6 +45,16 @@ macro_rules! impl_from_integer {
                     Self(from.0.into())
                 }
             }
+            impl From<&[<$from$from_size>]> for [<$for$for_size>] {
+                fn from(from: &[<$from$from_size>]) -> Self {
+                    Self(from.0.into())
+                }
+            }
+            impl From<&mut [<$from$from_size>]> for [<$for$for_size>] {
+                fn from(from: &mut [<$from$from_size>]) -> Self {
+                    Self(from.0.into())
+                }
+            }
         }
     };
 
@@ -61,6 +71,26 @@ macro_rules! impl_from_integer {
         paste::paste! {
             impl From<[<$from$from_size>]> for [<$for$for_size>] {
                 fn from(from: [<$from$from_size>]) -> Self {
+                    #[cfg(feature = "safe")]
+                    return Self::from_parts(from.0.get().into()).unwrap();
+
+                    #[cfg(not(feature = "safe"))]
+                    // SAFETY: coming from a type that respects the invariant of not having 0
+                    return unsafe { Self::from_parts_unchecked(from.0.get().into()) };
+                }
+            }
+            impl From<&[<$from$from_size>]> for [<$for$for_size>] {
+                fn from(from: &[<$from$from_size>]) -> Self {
+                    #[cfg(feature = "safe")]
+                    return Self::from_parts(from.0.get().into()).unwrap();
+
+                    #[cfg(not(feature = "safe"))]
+                    // SAFETY: coming from a type that respects the invariant of not having 0
+                    return unsafe { Self::from_parts_unchecked(from.0.get().into()) };
+                }
+            }
+            impl From<&mut [<$from$from_size>]> for [<$for$for_size>] {
+                fn from(from: &mut [<$from$from_size>]) -> Self {
                     #[cfg(feature = "safe")]
                     return Self::from_parts(from.0.get().into()).unwrap();
 
@@ -87,6 +117,16 @@ macro_rules! impl_from_integer {
                     Self(Into::<[<$p$for_size>]>::into(from.0).neg())
                 }
             }
+            impl From<&[<$from$from_size>]> for [<$for$for_size>] {
+                fn from(from: &[<$from$from_size>]) -> Self {
+                    Self(Into::<[<$p$for_size>]>::into(from.0).neg())
+                }
+            }
+            impl From<&mut [<$from$from_size>]> for [<$for$for_size>] {
+                fn from(from: &mut [<$from$from_size>]) -> Self {
+                    Self(Into::<[<$p$for_size>]>::into(from.0).neg())
+                }
+            }
         }
     };
 
@@ -103,6 +143,32 @@ macro_rules! impl_from_integer {
         paste::paste! {
             impl From<[<$from$from_size>]> for [<$for$for_size>] {
                 fn from(from: [<$from$from_size>]) -> Self {
+                    #[cfg(feature = "safe")]
+                    return
+                        Self::from_parts(Into::<[<$p$for_size>]>::into(from.0.get()).neg()).unwrap();
+
+                    #[cfg(not(feature = "safe"))]
+                    // SAFETY: coming from a type that respects the invariant of not having 0
+                    return unsafe {
+                        Self::from_parts_unchecked(Into::<[<$p$for_size>]>::into(from.0.get()).neg())
+                    };
+                }
+            }
+            impl From<&[<$from$from_size>]> for [<$for$for_size>] {
+                fn from(from: &[<$from$from_size>]) -> Self {
+                    #[cfg(feature = "safe")]
+                    return
+                        Self::from_parts(Into::<[<$p$for_size>]>::into(from.0.get()).neg()).unwrap();
+
+                    #[cfg(not(feature = "safe"))]
+                    // SAFETY: coming from a type that respects the invariant of not having 0
+                    return unsafe {
+                        Self::from_parts_unchecked(Into::<[<$p$for_size>]>::into(from.0.get()).neg())
+                    };
+                }
+            }
+            impl From<&mut [<$from$from_size>]> for [<$for$for_size>] {
+                fn from(from: &mut [<$from$from_size>]) -> Self {
                     #[cfg(feature = "safe")]
                     return
                         Self::from_parts(Into::<[<$p$for_size>]>::into(from.0.get()).neg()).unwrap();
@@ -158,6 +224,26 @@ macro_rules! impl_from_primitive {
                     return unsafe { Self::from_parts_unchecked(from.into()) };
                 }
             }
+            impl From<&[<$from_p$from_size>]> for [<$for$for_size>] {
+                fn from(from: &[<$from_p$from_size>]) -> Self {
+                    #[cfg(feature = "safe")]
+                    return Self::from_parts((*from).into()).unwrap();
+
+                    #[cfg(not(feature = "safe"))]
+                    // SAFETY: all values should be valid
+                    return unsafe { Self::from_parts_unchecked((*from).into()) };
+                }
+            }
+            impl From<&mut [<$from_p$from_size>]> for [<$for$for_size>] {
+                fn from(from: &mut [<$from_p$from_size>]) -> Self {
+                    #[cfg(feature = "safe")]
+                    return Self::from_parts((*from).into()).unwrap();
+
+                    #[cfg(not(feature = "safe"))]
+                    // SAFETY: all values should be valid
+                    return unsafe { Self::from_parts_unchecked((*from).into()) };
+                }
+            }
         }
     };
 
@@ -184,6 +270,26 @@ macro_rules! impl_from_primitive {
                     #[cfg(not(feature = "safe"))]
                     // SAFETY: coming from a type that respects the invariant of not having 0
                     return unsafe { Self::from_parts_unchecked(from.get().into()) };
+                }
+            }
+            impl From<&[<$from_p$from_size>]> for [<$for$for_size>] {
+                fn from(from: &[<$from_p$from_size>]) -> Self {
+                    #[cfg(feature = "safe")]
+                    return Self::from_parts((*from).get().into()).unwrap();
+
+                    #[cfg(not(feature = "safe"))]
+                    // SAFETY: coming from a type that respects the invariant of not having 0
+                    return unsafe { Self::from_parts_unchecked((*from).get().into()) };
+                }
+            }
+            impl From<&mut [<$from_p$from_size>]> for [<$for$for_size>] {
+                fn from(from: &mut [<$from_p$from_size>]) -> Self {
+                    #[cfg(feature = "safe")]
+                    return Self::from_parts((*from).get().into()).unwrap();
+
+                    #[cfg(not(feature = "safe"))]
+                    // SAFETY: coming from a type that respects the invariant of not having 0
+                    return unsafe { Self::from_parts_unchecked((*from).get().into()) };
                 }
             }
         }
@@ -223,14 +329,21 @@ macro_rules! impl_try_from_integer {
                 type Error = $crate::error::NumeraError;
                 fn try_from(from: [<$from$from_size>])
                     -> $crate::error::NumeraResult<[<$for$for_size>]> {
-
                     return Ok(Self(from.0.try_into()?));
-                    // MAYBE DELETE
-                    // #[cfg(feature = "safe")]
-                    // return Self::from_parts(from.0.try_into()?);
-                    // #[cfg(not(feature = "safe"))]
-                    // // SAFETY: all ok results of try_from should be valid
-                    // return Ok(unsafe { Self::from_parts_unchecked(from.0.try_into()?) });
+                }
+            }
+            impl TryFrom<&[<$from$from_size>]> for [<$for$for_size>] {
+                type Error = $crate::error::NumeraError;
+                fn try_from(from: &[<$from$from_size>])
+                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
+                    return Ok(Self(from.0.try_into()?));
+                }
+            }
+            impl TryFrom<&mut [<$from$from_size>]> for [<$for$for_size>] {
+                type Error = $crate::error::NumeraError;
+                fn try_from(from: &mut [<$from$from_size>])
+                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
+                    return Ok(Self(from.0.try_into()?));
                 }
             }
         }
@@ -251,8 +364,35 @@ macro_rules! impl_try_from_integer {
                 type Error = $crate::error::NumeraError;
                 fn try_from(from: [<$from$from_size>])
                     -> $crate::error::NumeraResult<[<$for$for_size>]> {
-
                     // return Ok(Self(from.0.get().try_into()?)); // TODO CHECK (I don't think'll work with n0z)
+
+                    #[cfg(feature = "safe")]
+                    return Self::from_parts(from.0.get().try_into()?);
+
+                    #[cfg(not(feature = "safe"))]
+                    // SAFETY: all ok results of try_from should be valid
+                    return Ok(unsafe { Self::from_parts_unchecked(from.0.get().try_into()?) });
+                }
+            }
+            impl TryFrom<&[<$from$from_size>]> for [<$for$for_size>] {
+                type Error = $crate::error::NumeraError;
+                fn try_from(from: &[<$from$from_size>])
+                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
+                    // return Ok(Self(from.0.get().try_into()?)); // CHECK
+
+                    #[cfg(feature = "safe")]
+                    return Self::from_parts(from.0.get().try_into()?);
+
+                    #[cfg(not(feature = "safe"))]
+                    // SAFETY: all ok results of try_from should be valid
+                    return Ok(unsafe { Self::from_parts_unchecked(from.0.get().try_into()?) });
+                }
+            }
+            impl TryFrom<&mut [<$from$from_size>]> for [<$for$for_size>] {
+                type Error = $crate::error::NumeraError;
+                fn try_from(from: &mut [<$from$from_size>])
+                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
+                    // return Ok(Self(from.0.get().try_into()?)); // CHECK
 
                     #[cfg(feature = "safe")]
                     return Self::from_parts(from.0.get().try_into()?);
@@ -283,6 +423,22 @@ macro_rules! impl_try_from_integer {
                     Ok(Self(TryInto::<[<$p$for_size>]>::try_into(from.0)?.neg()))
                 }
             }
+            impl TryFrom<&[<$from$from_size>]> for [<$for$for_size>] {
+                type Error = $crate::error::NumeraError;
+                fn try_from(from: &[<$from$from_size>])
+                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
+
+                    Ok(Self(TryInto::<[<$p$for_size>]>::try_into(from.0)?.neg()))
+                }
+            }
+            impl TryFrom<&mut [<$from$from_size>]> for [<$for$for_size>] {
+                type Error = $crate::error::NumeraError;
+                fn try_from(from: &mut [<$from$from_size>])
+                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
+
+                    Ok(Self(TryInto::<[<$p$for_size>]>::try_into(from.0)?.neg()))
+                }
+            }
         }
     };
 
@@ -300,6 +456,40 @@ macro_rules! impl_try_from_integer {
             impl TryFrom<[<$from$from_size>]> for [<$for$for_size>] {
                 type Error = $crate::error::NumeraError;
                 fn try_from(from: [<$from$from_size>])
+                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
+                    #[cfg(feature = "safe")]
+                    return
+                        Self::from_parts(TryInto::<[<$p$for_size>]>::try_into(from.0.get())?.neg());
+
+                    #[cfg(not(feature = "safe"))]
+                    // SAFETY: all ok results of try_from should be valid
+                    return unsafe {
+                        Ok(Self::from_parts_unchecked(
+                                TryInto::<[<$p$for_size>]>::try_into(from.0.get())?.neg()
+                        ))
+                    };
+                }
+            }
+            impl TryFrom<&[<$from$from_size>]> for [<$for$for_size>] {
+                type Error = $crate::error::NumeraError;
+                fn try_from(from: &[<$from$from_size>])
+                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
+                    #[cfg(feature = "safe")]
+                    return
+                        Self::from_parts(TryInto::<[<$p$for_size>]>::try_into(from.0.get())?.neg());
+
+                    #[cfg(not(feature = "safe"))]
+                    // SAFETY: all ok results of try_from should be valid
+                    return unsafe {
+                        Ok(Self::from_parts_unchecked(
+                                TryInto::<[<$p$for_size>]>::try_into(from.0.get())?.neg()
+                        ))
+                    };
+                }
+            }
+            impl TryFrom<&mut [<$from$from_size>]> for [<$for$for_size>] {
+                type Error = $crate::error::NumeraError;
+                fn try_from(from: &mut [<$from$from_size>])
                     -> $crate::error::NumeraResult<[<$for$for_size>]> {
                     #[cfg(feature = "safe")]
                     return
