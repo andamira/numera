@@ -77,7 +77,7 @@ macro_rules! define_integers_family {
 
             #[inline]
             #[cfg(not(feature = "safe"))]
-            #[cfg_attr(feature = "nightly", doc(cfg(feature = "non-safe")))]
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
             unsafe fn from_parts_unchecked(value: $fname) -> Self { value }
         }
 
@@ -301,7 +301,7 @@ macro_rules! define_any_integers_family {
 
             #[inline]
             #[cfg(not(feature = "safe"))]
-            #[cfg_attr(feature = "nightly", doc(cfg(feature = "non-safe")))]
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
             unsafe fn from_parts_unchecked(value: $fname) -> Self { value }
         }
 

@@ -121,7 +121,7 @@ macro_rules! define_rational_sized {
                 /// Panics in debug if the `denominator` is 0.
                 #[inline]
                 #[cfg(not(feature = "safe"))]
-                #[cfg_attr(feature = "nightly", doc(cfg(feature = "non-safe")))]
+                #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
                 pub const unsafe fn new_unchecked(numerator: [<i$bsize>], denominator: [<i$bsize>])
                     -> Self {
                     debug_assert![denominator != 0];
@@ -290,7 +290,7 @@ macro_rules! define_rational_sized {
                 /// Forms a new rational from a numerator and denominator.
                 #[inline]
                 #[cfg(not(feature = "safe"))]
-                #[cfg_attr(feature = "nightly", doc(cfg(feature = "non-safe")))]
+                #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
                 unsafe fn from_parts_unchecked(value: Self::Parts) -> Self {
                     debug_assert![value.1 != [<$p$bsize>]::ZERO];
                     Self {

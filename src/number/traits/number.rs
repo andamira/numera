@@ -49,7 +49,7 @@ pub trait Number: Bound + Count + Ident + Sign {
     /// The invariants inherent to the specific number type must be maintained.
     #[must_use]
     #[cfg(not(feature = "safe"))]
-    #[cfg_attr(feature = "nightly", doc(cfg(feature = "non-safe")))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
     unsafe fn from_parts_unchecked(value: Self::Parts) -> Self;
 
     /* auto */

@@ -24,7 +24,7 @@ doa = "doc --no-deps --open --features=deps_all"
 #
 dn = "doc --no-deps --no-default-features"
 don = "doc --no-deps --open --no-default-features"
-# +nightly; document everything, non-safe
+# +nightly; document everything, unsafe
 nd = "doc --no-deps --no-default-features --features=nightly,std,deps_all"
 ndo = "doc --no-deps --no-default-features --open --features=nightly,std,deps_all"
 #

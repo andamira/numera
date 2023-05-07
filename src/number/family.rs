@@ -77,7 +77,7 @@ macro_rules! define_numbers {
             /// Returns `value` unchanged.
             #[inline]
             #[cfg(not(feature = "safe"))]
-            #[cfg_attr(feature = "nightly", doc(cfg(feature = "non-safe")))]
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
             unsafe fn from_parts_unchecked(value: AnyNumbers<N>) -> Self { value }
         }
 

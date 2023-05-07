@@ -93,7 +93,7 @@ impl Prime8 {
     /// Panics in debug if `value` is not a prime number.
     #[inline]
     #[cfg(all(debug_assertions, not(feature = "safe")))]
-    #[cfg_attr(feature = "nightly", doc(cfg(feature = "non-safe")))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
     pub unsafe fn new_unchecked(value: u8) -> Self {
         debug_assert![is_prime_brute(value.into())];
         Self(value)
@@ -104,7 +104,7 @@ impl Prime8 {
     /// The provided `value` must be a prime number.
     #[inline]
     #[cfg(all(not(debug_assertions), not(feature = "safe")))]
-    #[cfg_attr(feature = "nightly", doc(cfg(feature = "non-safe")))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
     pub const unsafe fn new_unchecked(value: u8) -> Self {
         Self(value)
     }
@@ -155,7 +155,7 @@ impl Prime16 {
     /// Panics in debug if `value` is not a prime number.
     #[inline]
     #[cfg(all(debug_assertions, not(feature = "safe")))]
-    #[cfg_attr(feature = "nightly", doc(cfg(feature = "non-safe")))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
     pub unsafe fn new_unchecked(value: u16) -> Self {
         debug_assert![is_prime_brute(value.into())];
         Self(value)
@@ -166,7 +166,7 @@ impl Prime16 {
     /// The provided `value` must be a prime number.
     #[inline]
     #[cfg(all(not(debug_assertions), not(feature = "safe")))]
-    #[cfg_attr(feature = "nightly", doc(cfg(feature = "non-safe")))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
     pub const unsafe fn new_unchecked(value: u16) -> Self {
         Self(value)
     }
@@ -254,7 +254,7 @@ impl Prime32 {
     /// a `usize`.
     #[inline]
     #[cfg(all(debug_assertions, not(feature = "safe"), feature = "std"))]
-    #[cfg_attr(feature = "nightly", doc(cfg(feature = "non-safe")))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
     pub unsafe fn new_unchecked(value: u32) -> Self {
         debug_assert![is_prime_sieve(value.checked_as::<usize>().unwrap())];
         Self(value)
@@ -265,7 +265,7 @@ impl Prime32 {
     /// The provided `value` must be a prime number.
     #[inline]
     #[cfg(all(not(debug_assertions), not(feature = "safe")))]
-    #[cfg_attr(feature = "nightly", doc(cfg(feature = "non-safe")))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
     pub const unsafe fn new_unchecked(value: u32) -> Self {
         Self(value)
     }

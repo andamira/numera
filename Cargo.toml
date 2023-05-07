@@ -25,7 +25,7 @@ default = ["std", "safe"]
 std = ["primal-sieve", "half?/std", "ibig?/std"]
 #
 safe = []
-non-safe = []
+unsafe = []
 #
 nightly = [] # used only for docs
 

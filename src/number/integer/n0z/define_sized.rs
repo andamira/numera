@@ -103,7 +103,7 @@ macro_rules! define_nonzero_integer_sized {
                 /// Panics in debug if the `value` is 0.
                 #[inline]
                 #[cfg(not(feature = "safe"))]
-                #[cfg_attr(feature = "nightly", doc(cfg(feature = "non-safe")))]
+                #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
                 pub const unsafe fn new_unchecked(value: [<i$bsize>]) -> Self {
                     debug_assert![value != 0];
                     Self([<$p$bsize>]::new_unchecked(value))
@@ -323,7 +323,7 @@ macro_rules! define_nonzero_integer_sized {
                 /// This function is safe.
                 #[inline]
                 #[cfg(not(feature = "safe"))]
-                #[cfg_attr(feature = "nightly", doc(cfg(feature = "non-safe")))]
+                #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
                 unsafe fn from_parts_unchecked(value: Self::Parts) -> Self {
                     debug_assert![value != 0];
                     Self([<$p$bsize>]::new_unchecked(value))
