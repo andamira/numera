@@ -3,10 +3,8 @@
 //! Error types.
 //
 
-use core::result;
-
 /// The *numera* common result type.
-pub type NumeraResult<N> = result::Result<N, NumeraError>;
+pub type NumeraResult<N> = core::result::Result<N, NumeraError>;
 
 /// The *numera* common error type.
 #[non_exhaustive]
@@ -96,6 +94,7 @@ pub enum RealError {
 mod core_impls {
     use super::{IntegerError, NumeraError, RationalError, RealError};
     use core::{
+        convert::Infallible,
         fmt::{self, Debug},
         num::{IntErrorKind, TryFromIntError},
     };
@@ -205,6 +204,12 @@ mod core_impls {
     impl From<TryFromIntError> for NumeraError {
         fn from(_err: TryFromIntError) -> Self {
             IntegerError::Overflow.into()
+        }
+    }
+
+    impl From<Infallible> for NumeraError {
+        fn from(_err: Infallible) -> Self {
+            NumeraError::Conversion
         }
     }
 }
