@@ -506,6 +506,41 @@ macro_rules! try_from_integer {
             }
         }
     };
+
+    // ALWAYS RETURNS ERROR
+    (error
+     for: $for:ident + $p:ident + $for_size:expr,
+     from: $from:ident + $( $from_size:expr ),+) => {
+        $(
+            try_from_integer![@error for: $for + $p + $for_size, from: $from + $from_size];
+        )+
+    };
+    (@error
+     for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $from_size:expr) => {
+        paste::paste! {
+            impl TryFrom<[<$from$from_size>]> for [<$for$for_size>] {
+                type Error = $crate::error::NumeraError;
+                fn try_from(_from: [<$from$from_size>])
+                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
+                    return Err($crate::error::NumeraError::Conversion)
+                }
+            }
+            impl TryFrom<&[<$from$from_size>]> for [<$for$for_size>] {
+                type Error = $crate::error::NumeraError;
+                fn try_from(_from: &[<$from$from_size>])
+                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
+                    return Err($crate::error::NumeraError::Conversion)
+                }
+            }
+            impl TryFrom<&mut [<$from$from_size>]> for [<$for$for_size>] {
+                type Error = $crate::error::NumeraError;
+                fn try_from(_from: &mut [<$from$from_size>])
+                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
+                    return Err($crate::error::NumeraError::Conversion)
+                }
+            }
+        }
+    };
 }
 pub(crate) use try_from_integer;
 
@@ -579,6 +614,41 @@ macro_rules! try_from_primitive {
                     #[cfg(not(feature = "safe"))]
                     // SAFETY: all ok results of try_from should be valid
                     return Ok(unsafe { Self::from_parts_unchecked(from.get().try_into()?) });
+                }
+            }
+        }
+    };
+
+    // ALWAYS RETURNS ERROR
+    (error
+     for: $for:ident + $for_size:expr,
+     from: $from:ident + $( $from_size:expr ),+) => {
+        $(
+            try_from_primitive![@error for: $for + $for_size, from: $from + $from_size];
+        )+
+    };
+    (@error
+     for: $for:ident + $for_size:expr, from: $from:ident + $from_size:expr) => {
+        paste::paste! {
+            impl TryFrom<[<$from$from_size>]> for [<$for$for_size>] {
+                type Error = $crate::error::NumeraError;
+                fn try_from(_from: [<$from$from_size>])
+                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
+                    return Err($crate::error::NumeraError::Conversion)
+                }
+            }
+            impl TryFrom<&[<$from$from_size>]> for [<$for$for_size>] {
+                type Error = $crate::error::NumeraError;
+                fn try_from(_from: &[<$from$from_size>])
+                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
+                    return Err($crate::error::NumeraError::Conversion)
+                }
+            }
+            impl TryFrom<&mut [<$from$from_size>]> for [<$for$for_size>] {
+                type Error = $crate::error::NumeraError;
+                fn try_from(_from: &mut [<$from$from_size>])
+                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
+                    return Err($crate::error::NumeraError::Conversion)
                 }
             }
         }

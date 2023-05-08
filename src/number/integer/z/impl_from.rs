@@ -2,15 +2,10 @@
 //
 //!
 //
-// TOC
-// - complementary primitive conversions
-// - complementary integer conversions
 
 use crate::number::{
     integer::{
-        macros::{
-            from_integer, from_primitive, try_from_integer, try_from_primitive,
-        },
+        macros::{from_integer, from_primitive, try_from_integer, try_from_primitive},
         *,
     },
     traits::Number,
