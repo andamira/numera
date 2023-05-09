@@ -21,6 +21,7 @@ use crate::{
     },
 };
 use core::{fmt, ops::Neg};
+use devela::compile;
 
 /* macro */
 
@@ -51,15 +52,25 @@ macro_rules! define_rational_sized {
     // defines multiple integer types, with an inner primitive.
     (multi $name:ident, $p:ident,
      $doc_num:literal, $doc_type:literal, // $doc_new:literal,
-     $sign:literal, $lower:expr, $upper:expr,
+     $doc_sign:literal, $doc_lower:expr, $doc_upper:expr,
      $num:ident, $den:ident,
-     $(($doc_det:literal,$bsize:expr)),+) => {
+        $(
+            (
+             $doc_det:literal, $bsize:expr,
+             larger: $larger:literal, $larger_bsize:literal,
+             smaller: $smaller:literal, $smaller_bsize:literal
+            )
+        ),+
+     ) => {
         $(
             define_rational_sized![single $name, $p,
                $doc_num, $doc_type, // $doc_new,
-               $sign, $lower, $upper,
+               $doc_sign, $doc_lower, $doc_upper,
                $num, $den,
-               ($doc_det,$bsize)];
+               ($doc_det, $bsize,
+                larger: $larger, $larger_bsize,
+                smaller: $smaller, $smaller_bsize
+               )];
         )+
     };
     // defines a single integer type, with an inner primitive.
@@ -67,7 +78,12 @@ macro_rules! define_rational_sized {
      $doc_num:literal, $doc_type:literal, // $doc_new:literal,
      $doc_sign:literal, $doc_lower:expr, $doc_upper:expr,
      $num:ident, $den:ident,
-     ($doc_det:literal,$bsize:expr)) => {
+     (
+      $doc_det:literal, $bsize:expr,
+      larger: $larger:literal, $larger_bsize:literal,
+      smaller: $smaller:literal, $smaller_bsize:literal
+      )
+    ) => {
 
         paste::paste! {
             #[doc = $doc_det " "$bsize "-bit " $doc_num $doc_type]
@@ -129,6 +145,18 @@ macro_rules! define_rational_sized {
                         num: [<$num$bsize>]::new(numerator),
                         den: [<$den$bsize>]::new_unchecked(denominator),
                     }
+                }
+
+                /// Returns the current number as the next larger bit-size.
+                #[compile($larger)]
+                pub fn as_larger(&self) -> [<$name$larger_bsize>] {
+                    [<$name$larger_bsize>]::from(self)
+                }
+
+                /// Tries to return the current number as the next smaller bit-size.
+                #[compile($smaller)]
+                pub fn as_smaller(&self) -> NumeraResult<[<$name$smaller_bsize>]> {
+                    [<$name$smaller_bsize>]::try_from(self)
                 }
             }
 
@@ -310,7 +338,11 @@ define_rational_sized![multi Rational, i,
     // "",
     "", MIN, MAX,
     Integer, NonZeroInteger,
-    ("A 2×", 8), ("A 2×", 16), ("A 2×", 32), ("A 2×", 64), ("A 2x", 128)
+    ("A 2×", 8, larger: true, 16, smaller: false, 4),
+    ("A 2×", 16, larger: true, 32, smaller: true, 8),
+    ("A 2×", 32, larger: true, 64, smaller: true, 16),
+    ("A 2×", 64, larger: true, 128, smaller: true, 32),
+    ("A 2×", 128, larger: false, 256, smaller: true, 64)
 ];
 
 #[cfg(test)]

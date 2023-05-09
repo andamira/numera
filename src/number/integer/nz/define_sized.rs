@@ -20,6 +20,7 @@ use core::{
     fmt,
     num::{NonZeroU128, NonZeroU16, NonZeroU32, NonZeroU64, NonZeroU8},
 };
+use devela::compile;
 
 /* macro */
 
@@ -47,21 +48,32 @@ macro_rules! define_negative_integer_sized {
      $doc_num:literal, $doc_type:literal, // $doc_new:literal,
      $doc_sign:literal, $doc_lower:expr, $doc_upper:expr,
         $(
-            ($doc_det:literal, $bsize:expr)
+            (
+             $doc_det:literal, $bsize:expr,
+             larger: $larger:literal, $larger_bsize:literal,
+             smaller: $smaller:literal, $smaller_bsize:literal
+            )
         ),+
     ) => {
         $(
             define_negative_integer_sized![single $name, $p,
                $doc_num, $doc_type, // $doc_new,
                $doc_sign, $doc_lower, $doc_upper,
-               ($doc_det, $bsize)];
+               ($doc_det, $bsize,
+                larger: $larger, $larger_bsize,
+                smaller: $smaller, $smaller_bsize
+               )];
         )+
     };
     // defines a single integer type, with an inner primitive.
     (single $name:ident, $p:ident,
      $doc_num:literal, $doc_type:literal, // $doc_new:literal,
      $doc_sign:literal, $doc_lower:expr, $doc_upper:expr,
-     ($doc_det:literal,$bsize:expr)
+     (
+      $doc_det:literal, $bsize:expr,
+      larger: $larger:literal, $larger_bsize:literal,
+      smaller: $smaller:literal, $smaller_bsize:literal
+     )
     ) => {
         paste::paste! {
             #[doc = $doc_det " "$bsize "-bit " $doc_num $doc_type]
@@ -95,6 +107,18 @@ macro_rules! define_negative_integer_sized {
                     } else {
                         Err(NumeraError::Integer(IntegerError::Zero))
                     }
+                }
+
+                /// Returns the current number as the next larger bit-size.
+                #[compile($larger)]
+                pub fn as_larger(&self) -> [<$name$larger_bsize>] {
+                    [<$name$larger_bsize>]::from(self)
+                }
+
+                /// Tries to return the current number as the next smaller bit-size.
+                #[compile($smaller)]
+                pub fn as_smaller(&self) -> NumeraResult<[<$name$smaller_bsize>]> {
+                    [<$name$smaller_bsize>]::try_from(self)
                 }
             }
 
@@ -299,5 +323,9 @@ define_negative_integer_sized![multi NegativeInteger, NonZeroU,
     "integer number", ", from the set $\\Z^-$.",
     // "",
     "-", MAX, 1,
-    ("An", 8), ("A", 16), ("A", 32), ("A", 64), ("A", 128)
+    ("An", 8, larger: true, 16, smaller: false, 4),
+    ("An", 16, larger: true, 32, smaller: true, 8),
+    ("An", 32, larger: true, 64, smaller: true, 16),
+    ("An", 64, larger: true, 128, smaller: true, 32),
+    ("An", 128, larger: false, 256, smaller: true, 64)
 ];

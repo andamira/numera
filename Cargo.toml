@@ -22,32 +22,34 @@ publish = true
 [features]
 default = ["std", "safe"]
 #
-std = ["primal-sieve", "half?/std", "ibig?/std"]
+std = ["devela/std", "half?/std", "ibig?/std", "primal-sieve"]
 #
-safe = []
+safe = ["devela/safe"]
 unsafe = []
 #
 nightly = [] # used only for docs
 
 deps_all = ["twofloat", "half", "ibig"]
 
+
 [dependencies]
 az = "1.2.1"
+devela = { version = "0.2.0", default-features = false }
 paste = "1.0.12"
 
-primal-sieve = { version = "0.3.6", optional = true }
+#* optional *#
 
-# optional external numeric types
-twofloat = { version = "0.6.1", optional = true, default-features = false }
 half = { version = "2.2.1", optional = true, default-features = false  }
 ibig = { version = "0.3.6", optional = true, default-features = false }
+primal-sieve = { version = "0.3.6", optional = true }
+twofloat = { version = "0.6.1", optional = true, default-features = false }
 
 [dev-dependencies]
 static_assertions = "1.1.0"
 
 
 [profile.dev]
-opt-level = 3
+opt-level = 3 # for faster prime testing
 
 
 [package.metadata.docs.rs]
