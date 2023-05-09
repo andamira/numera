@@ -3,18 +3,25 @@
 //!
 //
 // TOC
-// - from_rational! IMPROVE
-// - from_integer!
+//
+// infallible conversions:
+//   - from_rational! IMPROVE
+//   - from_integer!
+//
+// fallible conversions:
+//   - try_from_rational!
+//   - try_from_integer!
 
-/* conversions */
+/* infallible From conversions */
 
-/// Implements From<`$from$from_size`> for `$for$for_size`.
+/// Implements `From`<`$from$from_size`> for `$for$for_size`.
 ///
 /// # Args
 /// - `$for`:       the base name of the target. e.g. `NonZeroRational`.
 /// - `$for_size`:  the bit size of the target. e.g. `16`.
-/// - `$num`:       the full type of the numerator. e.g. `Integer16`.
-/// - `$den`:       the full type of the denominator. e.g. `NonZeroInteger16`.
+/// - `$num`:       the base type of the numerator. e.g. `Integer`.
+/// - `$den`:       the base type of the denominator. e.g. `NonZeroInteger`.
+///
 /// - `$from_p`:    the base name of the origin. e.g. `u`.
 /// - `$from_size`: a list of bit sizes of the origin. e.g. `8, 16`.
 ///
@@ -126,13 +133,14 @@ macro_rules! from_rational {
 }
 pub(crate) use from_rational;
 
-/// Implements From<`$from_p$from_size`> for `$for$for_size`.
+/// Implements `From`<`$from_p$from_size`> for `$for$for_size`.
 ///
 /// # Args
 /// - `$for`:       the base name of the target. e.g. `NonZeroRational`.
 /// - `$for_size`:  the bit size of the target. e.g. `16`.
-/// - `$num`:       the full type of the numerator. e.g. `Integer16`.
-/// - `$den`:       the full type of the denominator. e.g. `NonZeroInteger16`.
+/// - `$num`:       the base type of the numerator. e.g. `Integer`.
+/// - `$den`:       the base type of the denominator. e.g. `NonZeroInteger`.
+///
 /// - `$from_p`:    the base name of the origin. e.g. `u`.
 /// - `$from_size`: a list of bit sizes of the origin. e.g. `8, 16`.
 ///
@@ -143,19 +151,19 @@ pub(crate) use from_rational;
 /// from_integer![integer for:Q+16, num:Z16, den:N0z16, from:Integer + 8, 16];
 /// ```
 macro_rules! from_integer {
-    // from signed & unsigned primitives
-    (prim
+    // from signed & unsigned primitives or integers
+    (primint
      for: $for:ident + $for_size:expr,
      num: $num:ident, den: $den:ident,
      from: $from_p:ident + $( $from_size:expr ),+
     ) => {
         $(
-            from_integer![@prim for: $for + $for_size, num: $num, den: $den,
+            from_integer![@primint for: $for + $for_size, num: $num, den: $den,
             from: $from_p + $from_size];
         )+
     };
 
-    (@prim
+    (@primint
      for: $for:ident + $for_size:expr,
      num: $num:ident, den: $den:ident,
      from: $from_p:ident + $from_size:expr
@@ -165,7 +173,7 @@ macro_rules! from_integer {
                 fn from(from: [<$from_p$from_size>]) -> Self {
                     return Self {
                         num: from.into(),
-                        den: <$den as $crate::all::ConstOne>::ONE,
+                        den: <[<$den$for_size>] as $crate::all::ConstOne>::ONE,
                     };
                 }
             }
@@ -173,7 +181,7 @@ macro_rules! from_integer {
                 fn from(from: &[<$from_p$from_size>]) -> Self {
                     return Self {
                         num: (*from).into(),
-                        den: <$den as $crate::all::ConstOne>::ONE,
+                        den: <[<$den$for_size>] as $crate::all::ConstOne>::ONE,
                     };
                 }
             }
@@ -181,7 +189,7 @@ macro_rules! from_integer {
                 fn from(from: &mut [<$from_p$from_size>]) -> Self {
                     return Self {
                         num: (*from).into(),
-                        den: <$den as $crate::all::ConstOne>::ONE,
+                        den: <[<$den$for_size>] as $crate::all::ConstOne>::ONE,
                     };
                 }
             }
@@ -200,7 +208,6 @@ macro_rules! from_integer {
         )+
     };
 
-    // having to convert from nonzero to core primitive
     (@nonzero
      for: $for:ident + $for_size:expr,
      num: $num:ident, den: $den:ident,
@@ -211,7 +218,7 @@ macro_rules! from_integer {
                 fn from(from: [<$from_p$from_size>]) -> Self {
                     return Self {
                         num: from.get().into(),
-                        den: <$den as $crate::all::ConstOne>::ONE,
+                        den: <[<$den$for_size>] as $crate::all::ConstOne>::ONE,
                     };
                 }
             }
@@ -219,7 +226,7 @@ macro_rules! from_integer {
                 fn from(from: &[<$from_p$from_size>]) -> Self {
                     return Self {
                         num: from.get().into(),
-                        den: <$den as $crate::all::ConstOne>::ONE,
+                        den: <[<$den$for_size>] as $crate::all::ConstOne>::ONE,
                     };
                 }
             }
@@ -227,53 +234,7 @@ macro_rules! from_integer {
                 fn from(from: &mut [<$from_p$from_size>]) -> Self {
                     return Self {
                         num: from.get().into(),
-                        den: <$den as $crate::all::ConstOne>::ONE,
-                    };
-                }
-            }
-        }
-    };
-
-    // from integers
-    (integer
-     for: $for:ident + $for_size:expr,
-     num: $num:ident, den: $den:ident,
-     from: $from_p:ident + $( $from_size:expr ),+
-    ) => {
-        $(
-            from_integer![@integer for: $for + $for_size, num: $num, den: $den,
-            from: $from_p + $from_size];
-        )+
-    };
-
-    // having to convert from nonzero to core primitive
-    (@integer
-     for: $for:ident + $for_size:expr,
-     num: $num:ident, den: $den:ident,
-     from: $from_p:ident + $from_size:expr
-    ) => {
-        paste::paste! {
-            impl From<[<$from_p$from_size>]> for [<$for$for_size>] {
-                fn from(from: [<$from_p$from_size>]) -> Self {
-                    return Self {
-                        num: from.into(),
-                        den: <$den as $crate::all::ConstOne>::ONE,
-                    };
-                }
-            }
-            impl From<&[<$from_p$from_size>]> for [<$for$for_size>] {
-                fn from(from: &[<$from_p$from_size>]) -> Self {
-                    return Self {
-                        num: (*from).into(),
-                        den: <$den as $crate::all::ConstOne>::ONE,
-                    };
-                }
-            }
-            impl From<&mut [<$from_p$from_size>]> for [<$for$for_size>] {
-                fn from(from: &mut [<$from_p$from_size>]) -> Self {
-                    return Self {
-                        num: (*from).into(),
-                        den: <$den as $crate::all::ConstOne>::ONE,
+                        den: <[<$den$for_size>] as $crate::all::ConstOne>::ONE,
                     };
                 }
             }
@@ -281,3 +242,194 @@ macro_rules! from_integer {
     };
 }
 pub(crate) use from_integer;
+
+/// Implements `TryFrom`<`$from$from_size`> for `$for$for_size`.
+///
+/// # Args
+/// - `$for`:       the base name of the target. e.g. `NonZeroRational`.
+/// - `$for_size`:  the bit size of the target. e.g. `16`.
+/// - `$num`:       the base type of the numerator. e.g. `Integer`.
+/// - `$den`:       the base type of the denominator. e.g. `NonZeroInteger`.
+///
+/// - `$from_p`:    the base name of the origin. e.g. `u`.
+/// - `$from_size`: a list of bit sizes of the origin. e.g. `8, 16`.
+///
+/// # Examples
+/// ```ignore
+/// from_rational![signed for:Q+16, num:Z16, den:N0z16, from:Q + 8, 16];
+/// ```
+macro_rules! try_from_rational {
+    // default
+    (
+     for: $for:ident + $for_size:expr,
+     num: $num:ident, den: $den:ident,
+     from: $from_p:ident + $( $from_size:expr ),+
+    ) => {
+        $(
+            try_from_rational![@ for: $for + $for_size, num: $num, den: $den,
+            from: $from_p + $from_size];
+        )+
+    };
+
+    // default
+    (@
+     for: $for:ident + $for_size:expr,
+     num: $num:ident, den: $den:ident,
+     from: $from_p:ident + $from_size:expr
+    ) => {
+        paste::paste! {
+            impl TryFrom<[<$from_p$from_size>]> for [<$for$for_size>] {
+                type Error = $crate::error::NumeraError;
+                fn try_from(from: [<$from_p$from_size>])
+                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
+                    return Ok(Self {
+                        num: from.num.try_into()?,
+                        den: from.den.try_into()?,
+                    });
+                }
+            }
+            impl TryFrom<&[<$from_p$from_size>]> for [<$for$for_size>] {
+                type Error = $crate::error::NumeraError;
+                fn try_from(from: &[<$from_p$from_size>])
+                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
+                    return Ok(Self {
+                        num: from.num.try_into()?,
+                        den: from.den.try_into()?,
+                    });
+                }
+            }
+            impl TryFrom<&mut [<$from_p$from_size>]> for [<$for$for_size>] {
+                type Error = $crate::error::NumeraError;
+                fn try_from(from: &mut [<$from_p$from_size>])
+                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
+                    return Ok(Self {
+                        num: from.num.try_into()?,
+                        den: from.den.try_into()?,
+                    });
+                }
+            }
+        }
+    };
+}
+pub(crate) use try_from_rational;
+
+/// Implements `TryFrom`<`$from_p$from_size`> for `$for$for_size`.
+///
+/// # Args
+/// - `$for`:       the base name of the target. e.g. `NonZeroRational`.
+/// - `$for_size`:  the bit size of the target. e.g. `16`.
+/// - `$num`:       the base type of the numerator. e.g. `Integer`.
+/// - `$den`:       the base type of the denominator. e.g. `NonZeroInteger`.
+
+/// - `$from_p`:    the base name of the origin. e.g. `u`.
+/// - `$from_size`: a list of bit sizes of the origin. e.g. `8, 16`.
+///
+/// # Examples
+/// ```ignore
+/// try_from_integer![prim for:Q+16, num:Z16, den:N0z16, from:i + 8, 16];
+/// ```
+macro_rules! try_from_integer {
+    // from signed & unsigned primitives or integers
+    (primint
+     for: $for:ident + $for_size:expr,
+     num: $num:ident, den: $den:ident,
+     from: $from_p:ident + $( $from_size:expr ),+
+    ) => {
+        $(
+            try_from_integer![@primint for: $for + $for_size, num: $num, den: $den,
+            from: $from_p + $from_size];
+        )+
+    };
+
+    (@primint
+     for: $for:ident + $for_size:expr,
+     num: $num:ident, den: $den:ident,
+     from: $from_p:ident + $from_size:expr
+    ) => {
+        paste::paste! {
+            impl TryFrom<[<$from_p$from_size>]> for [<$for$for_size>] {
+                type Error = $crate::error::NumeraError;
+                fn try_from(from: [<$from_p$from_size>])
+                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
+                    return Ok(Self {
+                        num: from.try_into()?,
+                        den: <[<$den$for_size>] as $crate::all::ConstOne>::ONE,
+                    });
+                }
+            }
+            impl TryFrom<&[<$from_p$from_size>]> for [<$for$for_size>] {
+                type Error = $crate::error::NumeraError;
+                fn try_from(from: &[<$from_p$from_size>])
+                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
+                    return Ok(Self {
+                        num: (*from).try_into()?,
+                        den: <[<$den$for_size>] as $crate::all::ConstOne>::ONE,
+                    });
+                }
+            }
+            impl TryFrom<&mut [<$from_p$from_size>]> for [<$for$for_size>] {
+                type Error = $crate::error::NumeraError;
+                fn try_from(from: &mut [<$from_p$from_size>])
+                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
+                    return Ok(Self {
+                        num: (*from).try_into()?,
+                        den: <[<$den$for_size>] as $crate::all::ConstOne>::ONE,
+                    });
+                }
+            }
+        }
+    };
+
+    // from NonZero* primitives
+    (nonzero
+     for: $for:ident + $for_size:expr,
+     num: $num:ident, den: $den:ident,
+     from: $from_p:ident + $( $from_size:expr ),+
+    ) => {
+        $(
+            try_from_integer![@nonzero for: $for + $for_size, num: $num, den: $den,
+            from: $from_p + $from_size];
+        )+
+    };
+
+    // having to convert from nonzero to core primitive
+    (@nonzero
+     for: $for:ident + $for_size:expr,
+     num: $num:ident, den: $den:ident,
+     from: $from_p:ident + $from_size:expr
+    ) => {
+        paste::paste! {
+            impl TryFrom<[<$from_p$from_size>]> for [<$for$for_size>] {
+                type Error = $crate::error::NumeraError;
+                fn try_from(from: [<$from_p$from_size>])
+                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
+                    return Ok(Self {
+                        num: from.get().try_into()?,
+                        den: <[<$den$for_size>] as $crate::all::ConstOne>::ONE,
+                    });
+                }
+            }
+            impl TryFrom<&[<$from_p$from_size>]> for [<$for$for_size>] {
+                type Error = $crate::error::NumeraError;
+                fn try_from(from: &[<$from_p$from_size>])
+                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
+                    return Ok(Self {
+                        num: from.get().try_into()?,
+                        den: <[<$den$for_size>] as $crate::all::ConstOne>::ONE,
+                    });
+                }
+            }
+            impl TryFrom<&mut [<$from_p$from_size>]> for [<$for$for_size>] {
+                type Error = $crate::error::NumeraError;
+                fn try_from(from: &mut [<$from_p$from_size>])
+                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
+                    return Ok(Self {
+                        num: from.get().try_into()?,
+                        den: <[<$den$for_size>] as $crate::all::ConstOne>::ONE,
+                    });
+                }
+            }
+        }
+    };
+}
+pub(crate) use try_from_integer;
