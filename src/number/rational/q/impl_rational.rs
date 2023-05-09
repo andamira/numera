@@ -5,7 +5,7 @@
 
 use crate::number::{
     integer::{abbr::*, Integer},
-    rational::{abbr::*, Rational},
+    rational::*,
     traits::{ConstOne, ConstZero, Ident},
 };
 
@@ -122,11 +122,11 @@ macro_rules! impl_rational {
 }
 
 impl_rational![
-    many: (Q8, Z8, N0z8),
-    (Q16, Z16, N0z16),
-    (Q32, Z32, N0z32),
-    (Q64, Z64, N0z64),
-    (Q128, Z128, N0z128)
+    many: (Rational8, Z8, N0z8),
+    (Rational16, Z16, N0z16),
+    (Rational32, Z32, N0z32),
+    (Rational64, Z64, N0z64),
+    (Rational128, Z128, N0z128)
 ];
 
 #[cfg(test)]

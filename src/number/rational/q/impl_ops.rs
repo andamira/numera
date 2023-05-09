@@ -3,7 +3,10 @@
 //!
 //
 
-use crate::all::{abbr::*, Ident, Rational};
+use crate::number::{
+    rational::{Rational, *},
+    traits::Ident,
+};
 use core::ops::{Add, Div, Mul, Neg, Rem, Sub};
 
 // impl ops (which panic on overflow)
@@ -141,7 +144,7 @@ macro_rules! impl_rational_ops {
         }
     };
 }
-impl_rational_ops![Q8, Q16, Q32, Q64, Q128];
+impl_rational_ops![Rational8, Rational16, Rational32, Rational64, Rational128];
 
 #[cfg(test)]
 mod tests {
