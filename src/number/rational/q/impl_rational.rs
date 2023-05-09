@@ -131,8 +131,7 @@ impl_rational![
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-    use crate::all::NumeraResult;
+    use crate::all::{abbr::*, NumeraResult, Rational};
 
     #[test]
     fn q_rational() -> NumeraResult<()> {

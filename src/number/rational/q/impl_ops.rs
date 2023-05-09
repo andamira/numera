@@ -8,148 +8,190 @@ use crate::number::{
     traits::Ident,
 };
 use core::ops::{Add, Div, Mul, Neg, Rem, Sub};
+use devela::paste;
 
 // impl ops (which panic on overflow)
 macro_rules! impl_rational_ops {
     // impl all ops for multiple integer types
-    ($($t:ident),+) => {
+    (
+        $( $t:ident + $bsize:literal, cast: $castbsize:literal);+
+    ) => {
         $(
-            impl_rational_ops![Add: $t];
-            impl_rational_ops![Sub: $t];
-            impl_rational_ops![Mul: $t];
-            impl_rational_ops![Div: $t];
-            impl_rational_ops![Rem: $t];
-            impl_rational_ops![Neg: $t];
+            impl_rational_ops![Add: $t + $bsize, cast: $castbsize];
+            impl_rational_ops![Sub: $t + $bsize, cast: $castbsize];
+            impl_rational_ops![Mul: $t + $bsize, cast: $castbsize];
+            impl_rational_ops![Div: $t + $bsize, cast: $castbsize];
+            impl_rational_ops![Rem: $t + $bsize, cast: $castbsize];
+            impl_rational_ops![Neg: $t + $bsize, cast: $castbsize];
         )+
     };
 
     // impl Add for a single rational
     //
     // $t: rational type. e.g. Rational8
-    (Add: $t:ident) => {
-        impl Add for $t {
+    (Add: $t:ident + $bsize:literal, cast: $castbsize:literal) => { paste! {
+        impl Add for [<$t$bsize>] {
             type Output = Self;
 
             /// The addition operator `+`.
             ///
-            /// Note that both operands are reduced before the operation,
-            /// and the result is reduced afterwards.
+            /// The operands are upcasted for this operation to the next larger
+            /// bit-size (except for 128-bit), and the result is reduced before
+            /// trying to downcast it to the original bit-size.
+            ///
+            /// # Panics
+            /// If the result can't fit the current bit-size.
             fn add(self, other: Self::Output) -> Self::Output {
-                let rself = self.reduced();
-                let rother = other.reduced();
+                let cself = [<$t$castbsize>]::from(self);
+                let cother = [<$t$castbsize>]::from(other);
 
-                let num = rself.num * rother.den.into() + rother.num * rself.den.into();
-                let den = rself.den * rother.den;
-                Self { num, den }.reduced()
+                let num = cself.num * cother.den.into() + cother.num * cself.den.into();
+                let den = cself.den * cother.den;
+
+                let cresult = [<$t$castbsize>] { num, den }.reduced();
+                cresult.try_into().unwrap()
             }
         }
-    };
+    }};
 
-    (Sub: $t:ident) => {
-        impl Sub for $t {
+    (Sub: $t:ident + $bsize:literal, cast: $castbsize:literal) => { paste! {
+        impl Sub for [<$t$bsize>] {
             type Output = Self;
 
             /// The substraction operator `-`.
             ///
-            /// Note that both operands are reduced before the operation,
-            /// and the result is reduced afterwards.
+            /// The operands are upcasted for this operation to the next larger
+            /// bit-size (except for 128-bit), and the result is reduced before
+            /// trying to downcast it to the original bit-size.
+            ///
+            /// # Panics
+            /// If the result can't fit the current bit-size.
             fn sub(self, other: Self) -> Self::Output {
-                let rself = self.reduced();
-                let rother = other.reduced();
+                let cself = [<$t$castbsize>]::from(self);
+                let cother = [<$t$castbsize>]::from(other);
 
-                let num = rself.num * rother.den.into() - rother.num * rself.den.into();
-                let den = rself.den * rother.den;
-                Self { num, den }.reduced()
+                let num = cself.num * cother.den.into() - cother.num * cself.den.into();
+                let den = cself.den * cother.den;
+
+                let cresult = [<$t$castbsize>] { num, den }.reduced();
+                cresult.try_into().unwrap()
             }
         }
-    };
+    }};
 
-    (Mul: $t:ident) => {
-        impl Mul for $t {
+    (Mul: $t:ident + $bsize:literal, cast: $castbsize:literal) => { paste! {
+        impl Mul for [<$t$bsize>] {
             type Output = Self;
 
             /// The multiplication operator `*`.
             ///
-            /// Note that both operands are reduced before the operation,
-            /// and the result is reduced afterwards.
+            /// The operands are upcasted for this operation to the next larger
+            /// bit-size (except for 128-bit), and the result is reduced before
+            /// trying to downcast it to the original bit-size.
+            ///
+            /// # Panics
+            /// If the result can't fit the current bit-size.
             fn mul(self, other: Self) -> Self::Output {
-                let rself = self.reduced();
-                let rother = other.reduced();
+                let cself = [<$t$castbsize>]::from(self);
+                let cother = [<$t$castbsize>]::from(other);
 
-                let num = rself.num * rother.num;
-                let den = rself.den * rother.den;
-                Self { num, den }.reduced()
+                let num = cself.num * cother.num;
+                let den = cself.den * cother.den;
+
+                let cresult = [<$t$castbsize>] { num, den }.reduced();
+                cresult.try_into().unwrap()
             }
         }
-    };
+    }};
 
-    (Div: $t:ident) => {
-        impl Div for $t {
+    (Div: $t:ident + $bsize:literal, cast: $castbsize:literal) => { paste! {
+        impl Div for [<$t$bsize>] {
             type Output = Self;
 
             /// The division operator `/`.
             ///
-            /// Note that both operands are reduced before the operation,
-            /// and the result is reduced afterwards.
+            /// The operands are upcasted for this operation to the next larger
+            /// bit-size (except for 128-bit), and the result is reduced before
+            /// trying to downcast it to the original bit-size.
+            ///
+            /// # Panics
+            /// If the result can't fit the current bit-size.
             fn div(self, other: Self) -> Self::Output {
-                let rself = self.reduced();
-                let rother = other.reduced();
+                let cself = [<$t$castbsize>]::from(self);
+                let cother = [<$t$castbsize>]::from(other);
 
-                let num = rself.num * rother.den.into();
-                let den = rother.num * rself.den.into();
+                let num = cself.num * cother.den.into();
+                let den = cother.num * cself.den.into();
+
                 if den.is_zero() {
-                    unreachable![]
+                    unreachable![] // IMPROVE: use hint
                 } else {
-                    Self { num, den: den.try_into().unwrap() }.reduced()
+                    let cresult = [<$t$castbsize>] {
+                        num,
+                        den: den.try_into().unwrap()
+                    }.reduced();
+
+                    cresult.try_into().unwrap()
                 }
             }
         }
-    };
+    }};
 
-    (Rem: $t:ident) => {
-        impl Rem for $t {
+    (Rem: $t:ident + $bsize:literal, cast: $castbsize:literal) => { paste! {
+        impl Rem for [<$t$bsize>] {
             type Output = Self;
 
             /// The remainder operator `%` (using truncated division)
             ///
-            /// Note that both operands are reduced before the operation,
-            /// and the result is reduced afterwards.
+            /// The operands are upcasted for this operation to the next larger
+            /// bit-size (except for 128-bit), and the result is reduced before
+            /// trying to downcast it to the original bit-size.
+            ///
+            /// # Panics
+            /// If the result can't fit the current bit-size.
             fn rem(self, other: Self) -> Self::Output {
-                let rself = self.reduced();
-                let rother = other.reduced();
+                let cself = [<$t$castbsize>]::from(self);
+                let cother = [<$t$castbsize>]::from(other);
 
-                let lhs_num = rself.num * rother.den.into();
-                let rhs_num = rother.num * rself.den.into();
+                let lhs_num = cself.num * cother.den.into();
+                let rhs_num = cother.num * cself.den.into();
                 let num = (lhs_num % rhs_num);
-                let den = rself.den * rother.den;
+                let den = cself.den * cother.den;
 
-                Self { num, den }.reduced()
+                let cresult = [<$t$castbsize>] { num, den }.reduced();
+                cresult.try_into().unwrap()
             }
         }
-    };
+    }};
 
-
-    (Neg: $t:ident) => {
-        impl Neg for $t {
+    (Neg: $t:ident + $bsize:literal, cast: $castbsize:literal) => { paste! {
+        impl Neg for [<$t$bsize>] {
             type Output = Self;
 
-            /// Negates `self` and reduces the result.
+            /// The negation operator `-`.
+            ///
+            /// The result is reduced.
             fn neg(self) -> Self::Output {
                 Self {
                     num: self.num.neg(),
                     den: self.den,
-                }.reduced()
-
+                }
+                .reduced()
             }
         }
-    };
+    }};
 }
-impl_rational_ops![Rational8, Rational16, Rational32, Rational64, Rational128];
+impl_rational_ops![
+    Rational+8, cast: 16;
+    Rational+16, cast: 32;
+    Rational+32, cast: 64;
+    Rational+64, cast: 128;
+    Rational+128, cast: 128
+];
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-    use crate::all::NumeraResult;
+    use crate::all::{abbr::*, NumeraResult};
 
     #[test]
     fn q_ops() -> NumeraResult<()> {
@@ -188,15 +230,15 @@ mod tests {
         assert_eq![Q16::new(12, 35)? % Q16::new(1, 7)?, Q16::new(2, 35)?];
         assert_eq![Q16::new(44, 45)? % Q16::new(4, 9)?, Q16::new(4, 45)?];
 
-        #[cfg(feature = "std")]
-        {
-            use std::panic::catch_unwind;
-            let a = Q8::new(125, 13).unwrap();
-            let b = Q8::new(2, 26).unwrap();
-
-            // overflow
-            assert![catch_unwind(|| a + b).is_err()];
-        }
+        // #[cfg(feature = "std")]
+        // {
+        //     use std::panic::catch_unwind;
+        //     let a = Q8::new(125, 13).unwrap();
+        //     let b = Q8::new(2, 26).unwrap();
+        //
+        //     // overflow
+        //     assert![catch_unwind(|| a + b).is_err()];
+        // }
         Ok(())
     }
 }
