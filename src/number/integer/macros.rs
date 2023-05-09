@@ -44,7 +44,7 @@ macro_rules! from_integer {
     };
     (@int
      for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $from_size:expr) => {
-        paste::paste! {
+        devela::paste! {
             impl From<[<$from$from_size>]> for [<$for$for_size>] {
                 fn from(from: [<$from$from_size>]) -> Self {
                     Self(from.0.into())
@@ -81,7 +81,7 @@ macro_rules! from_integer {
     };
     (@nonzero
      for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $from_size:expr) => {
-        paste::paste! {
+        devela::paste! {
             impl From<[<$from$from_size>]> for [<$for$for_size>] {
                 fn from(from: [<$from$from_size>]) -> Self {
                     #[cfg(feature = "safe")]
@@ -127,7 +127,7 @@ macro_rules! from_integer {
     };
     (@int_neg
      for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $from_size:expr) => {
-        paste::paste! {
+        devela::paste! {
             impl From<[<$from$from_size>]> for [<$for$for_size>] {
                 fn from(from: [<$from$from_size>]) -> Self {
                     Self(Into::<[<$p$for_size>]>::into(from.0).neg())
@@ -160,7 +160,7 @@ macro_rules! from_integer {
     };
     (@nonzero_neg
      for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $from_size:expr) => {
-        paste::paste! {
+        devela::paste! {
             impl From<[<$from$from_size>]> for [<$for$for_size>] {
                 fn from(from: [<$from$from_size>]) -> Self {
                     #[cfg(feature = "safe")]
@@ -235,7 +235,7 @@ macro_rules! from_primitive {
      for: $for:ident + $for_size:expr,
      from: $from_p:ident + $from_size:expr
     ) => {
-        paste::paste! {
+        devela::paste! {
             impl From<[<$from_p$from_size>]> for [<$for$for_size>] {
                 fn from(from: [<$from_p$from_size>]) -> Self {
                     #[cfg(feature = "safe")]
@@ -287,7 +287,7 @@ macro_rules! from_primitive {
      for: $for:ident + $for_size:expr,
      from: $from_p:ident + $from_size:expr
     ) => {
-        paste::paste! {
+        devela::paste! {
             impl From<[<$from_p$from_size>]> for [<$for$for_size>] {
                 fn from(from: [<$from_p$from_size>]) -> Self {
                     #[cfg(feature = "safe")]
@@ -356,7 +356,7 @@ macro_rules! try_from_integer {
     };
     (@int
      for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $from_size:expr) => {
-        paste::paste! {
+        devela::paste! {
             impl TryFrom<[<$from$from_size>]> for [<$for$for_size>] {
                 type Error = $crate::error::NumeraError;
                 fn try_from(from: [<$from$from_size>])
@@ -394,7 +394,7 @@ macro_rules! try_from_integer {
     };
     (@int_new
      for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $from_size:expr) => {
-        paste::paste! {
+        devela::paste! {
             impl TryFrom<[<$from$from_size>]> for [<$for$for_size>] {
                 type Error = $crate::error::NumeraError;
                 fn try_from(from: [<$from$from_size>])
@@ -437,7 +437,7 @@ macro_rules! try_from_integer {
     };
     (@nonzero
      for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $from_size:expr) => {
-        paste::paste! {
+        devela::paste! {
             impl TryFrom<[<$from$from_size>]> for [<$for$for_size>] {
                 type Error = $crate::error::NumeraError;
                 fn try_from(from: [<$from$from_size>])
@@ -496,7 +496,7 @@ macro_rules! try_from_integer {
     };
     (@int_neg
      for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $from_size:expr) => {
-        paste::paste! {
+        devela::paste! {
             impl TryFrom<[<$from$from_size>]> for [<$for$for_size>] {
                 type Error = $crate::error::NumeraError;
                 fn try_from(from: [<$from$from_size>])
@@ -538,7 +538,7 @@ macro_rules! try_from_integer {
     };
     (@nonzero_neg
      for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $from_size:expr) => {
-        paste::paste! {
+        devela::paste! {
             impl TryFrom<[<$from$from_size>]> for [<$for$for_size>] {
                 type Error = $crate::error::NumeraError;
                 fn try_from(from: [<$from$from_size>])
@@ -609,7 +609,7 @@ macro_rules! try_from_integer {
     };
     (@error
      for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $from_size:expr) => {
-        paste::paste! {
+        devela::paste! {
             impl TryFrom<[<$from$from_size>]> for [<$for$for_size>] {
                 type Error = $crate::error::NumeraError;
                 fn try_from(_from: [<$from$from_size>])
@@ -670,7 +670,7 @@ macro_rules! try_from_primitive {
      for: $for:ident + $for_size:expr,
      from: $from:ident + $from_size:expr
     ) => {
-        paste::paste! {
+        devela::paste! {
             impl TryFrom<[<$from$from_size>]> for [<$for$for_size>] {
                 type Error = $crate::error::NumeraError;
                 fn try_from(from: [<$from$from_size>])
@@ -708,7 +708,7 @@ macro_rules! try_from_primitive {
      for: $for:ident + $for_size:expr,
      from: $from:ident + $from_size:expr
     ) => {
-        paste::paste! {
+        devela::paste! {
             impl TryFrom<[<$from$from_size>]> for [<$for$for_size>] {
                 type Error = $crate::error::NumeraError;
                 fn try_from(from: [<$from$from_size>])
@@ -739,7 +739,7 @@ macro_rules! try_from_primitive {
     };
     (@error
      for: $for:ident + $for_size:expr, from: $from:ident + $from_size:expr) => {
-        paste::paste! {
+        devela::paste! {
             impl TryFrom<[<$from$from_size>]> for [<$for$for_size>] {
                 type Error = $crate::error::NumeraError;
                 fn try_from(_from: [<$from$from_size>])

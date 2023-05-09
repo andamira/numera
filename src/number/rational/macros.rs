@@ -48,7 +48,7 @@ macro_rules! from_rational {
      num: $num:ident, den: $den:ident,
      from: $from_p:ident + $from_size:expr
     ) => {
-        paste::paste! {
+        devela::paste! {
             impl From<[<$from_p$from_size>]> for [<$for$for_size>] {
                 fn from(from: [<$from_p$from_size>]) -> Self {
                     return Self {
@@ -84,7 +84,7 @@ macro_rules! from_rational {
     // };
     // (@nonzero
     //  for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $from_size:expr) => {
-    //     paste::paste! {
+    //     devela::paste! {
     //         impl From<[<$from$from_size>]> for [<$for$for_size>] {
     //             fn from(from: [<$from$from_size>]) -> Self {
     //                 // TODO
@@ -102,7 +102,7 @@ macro_rules! from_rational {
     // };
     // (@int_neg
     //  for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $from_size:expr) => {
-    //     paste::paste! {
+    //     devela::paste! {
     //         impl From<[<$from$from_size>]> for [<$for$for_size>] {
     //             fn from(from: [<$from$from_size>]) -> Self {
     //                 // TODO
@@ -121,7 +121,7 @@ macro_rules! from_rational {
     // };
     // (@nonzero_neg
     //  for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $from_size:expr) => {
-    //     paste::paste! {
+    //     devela::paste! {
     //         impl From<[<$from$from_size>]> for [<$for$for_size>] {
     //             fn from(from: [<$from$from_size>]) -> Self {
     //                 // TODO
@@ -168,7 +168,7 @@ macro_rules! from_integer {
      num: $num:ident, den: $den:ident,
      from: $from_p:ident + $from_size:expr
     ) => {
-        paste::paste! {
+        devela::paste! {
             impl From<[<$from_p$from_size>]> for [<$for$for_size>] {
                 fn from(from: [<$from_p$from_size>]) -> Self {
                     return Self {
@@ -213,7 +213,7 @@ macro_rules! from_integer {
      num: $num:ident, den: $den:ident,
      from: $from_p:ident + $from_size:expr
     ) => {
-        paste::paste! {
+        devela::paste! {
             impl From<[<$from_p$from_size>]> for [<$for$for_size>] {
                 fn from(from: [<$from_p$from_size>]) -> Self {
                     return Self {
@@ -277,7 +277,7 @@ macro_rules! try_from_rational {
      num: $num:ident, den: $den:ident,
      from: $from_p:ident + $from_size:expr
     ) => {
-        paste::paste! {
+        devela::paste! {
             impl TryFrom<[<$from_p$from_size>]> for [<$for$for_size>] {
                 type Error = $crate::error::NumeraError;
                 fn try_from(from: [<$from_p$from_size>])
@@ -346,7 +346,7 @@ macro_rules! try_from_integer {
      num: $num:ident, den: $den:ident,
      from: $from_p:ident + $from_size:expr
     ) => {
-        paste::paste! {
+        devela::paste! {
             impl TryFrom<[<$from_p$from_size>]> for [<$for$for_size>] {
                 type Error = $crate::error::NumeraError;
                 fn try_from(from: [<$from_p$from_size>])
@@ -398,7 +398,7 @@ macro_rules! try_from_integer {
      num: $num:ident, den: $den:ident,
      from: $from_p:ident + $from_size:expr
     ) => {
-        paste::paste! {
+        devela::paste! {
             impl TryFrom<[<$from_p$from_size>]> for [<$for$for_size>] {
                 type Error = $crate::error::NumeraError;
                 fn try_from(from: [<$from_p$from_size>])
