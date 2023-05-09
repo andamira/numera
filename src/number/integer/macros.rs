@@ -345,7 +345,6 @@ macro_rules! try_from_integer {
     // Used by:
     // - for: Nnz   from: Z, Nnz, Npz
     // - for: Z     from: Z, Nnz, Npz
-    // - for: N0z   from: Z            TODO:FIX:Z
     // - for: Npz   from: Z, Nnz, Npz
     // - for: Pz    from: Z, N0z       TODO:FIX:Z
     (int
@@ -377,6 +376,44 @@ macro_rules! try_from_integer {
                 fn try_from(from: &mut [<$from$from_size>])
                     -> $crate::error::NumeraResult<[<$for$for_size>]> {
                     return Ok(Self(from.0.try_into()?));
+                }
+            }
+        }
+    };
+
+    // when `from` has an inner integer primitive, and we have to use the `for`::new constructor,
+    //
+    // Used by:
+    // - for: N0z   from: Z, Nnz, Npz  TODO:FIX:CHECK:Npz
+    (int_new
+     for: $for:ident + $p:ident + $for_size:expr,
+     from: $from:ident + $( $from_size:expr ),+) => {
+        $(
+            try_from_integer![@int_new for: $for + $p + $for_size, from: $from + $from_size];
+        )+
+    };
+    (@int_new
+     for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $from_size:expr) => {
+        paste::paste! {
+            impl TryFrom<[<$from$from_size>]> for [<$for$for_size>] {
+                type Error = $crate::error::NumeraError;
+                fn try_from(from: [<$from$from_size>])
+                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
+                    return Self::new(from.0.try_into()?);
+                }
+            }
+            impl TryFrom<&[<$from$from_size>]> for [<$for$for_size>] {
+                type Error = $crate::error::NumeraError;
+                fn try_from(from: &[<$from$from_size>])
+                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
+                    return Self::new(from.0.try_into()?);
+                }
+            }
+            impl TryFrom<&mut [<$from$from_size>]> for [<$for$for_size>] {
+                type Error = $crate::error::NumeraError;
+                fn try_from(from: &mut [<$from$from_size>])
+                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
+                    return Self::new(from.0.try_into()?);
                 }
             }
         }
