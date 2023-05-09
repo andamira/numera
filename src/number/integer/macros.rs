@@ -29,7 +29,12 @@
 /// from_integer![int for: Integer + i + 32, from: Integer + 8, 16];
 /// ```
 macro_rules! from_integer {
-    // having an inner integer primitive
+    // when `from` has an inner integer primitive
+    //
+    // Used by:
+    // - for: Z     from: Z, Nnz, Npz
+    // - for: Nnz   from: Nnz
+    // - for: Npz   from: Npz
     (int
      for: $for:ident + $p:ident + $for_size:expr,
      from: $from:ident + $( $from_size:expr ),+) => {
@@ -58,7 +63,15 @@ macro_rules! from_integer {
         }
     };
 
-    // having an inner NonZero*
+    // when `from` has an inner NonZero*
+    //
+    // Used by:
+    // - for: Z     from: N0z, Pz
+    // - for: N0z   from: N0z, Pz
+    // - for: Nnz   from: Pz
+    // - for: Pz    from: Pz
+    // - for: Npz   from: Nz        (negative to negative is OK)
+    // - for: Nz    from: Nz        (negative to negative is OK)
     (nonzero
      for: $for:ident + $p:ident + $for_size:expr,
      from: $from:ident + $( $from_size:expr ),+) => {
@@ -102,7 +115,10 @@ macro_rules! from_integer {
         }
     };
 
-    // having an unsigned inner primitive, representing only negative values.
+    // when `from` has an unsigned inner primitive that represents only negative values,
+    // which has to be negated in the conversion
+    //
+    // - for: Z     from: Npz
     (int_neg
      for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $( $from_size:expr ),+) => {
         $(
@@ -130,7 +146,11 @@ macro_rules! from_integer {
         }
     };
 
-    // having an unsigned inner NonZero*, representing only negative values.
+    // when `from` has an unsigned inner NonZero* primitive that represents only negative values,
+    // which has to be negated in the conversion
+    //
+    // - for: Z     from: Nz
+    // - for: N0z   from: Nz
     (nonzero_neg
      for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $( $from_size:expr ),+) => {
         $(
@@ -199,7 +219,10 @@ pub(crate) use from_integer;
 /// from_primitive![many for: Integer + 16, from: i + 8, 16];
 /// ```
 macro_rules! from_primitive {
-    // having the same inner integer primitive
+    // when `from` is the same integer primitive than the inner part of `for`
+    //
+    // - for: Z     from: u, i
+    // - for: Nnz   from: u
     (int
      for: $for:ident + $for_size:expr,
      from: $from_p:ident + $( $from_size:expr ),+
@@ -208,7 +231,6 @@ macro_rules! from_primitive {
             from_primitive![@int for: $for + $for_size, from: $from_p + $from_size];
         )+
     };
-
     (@int
      for: $for:ident + $for_size:expr,
      from: $from_p:ident + $from_size:expr
@@ -247,6 +269,12 @@ macro_rules! from_primitive {
         }
     };
 
+    // when `from` is a NonZero* primitive which has to be converted to primitive
+    //
+    // - for: Z     from: NonZeroU, NonZeroI
+    // - for: N0z   from: NonZeroU, NonZeroI
+    // - for: Pz    from: NonZeroU
+    // - for: Nnz   from: NonZeroU
     (nonzero
      for: $for:ident + $for_size:expr,
      from: $from_p:ident + $( $from_size:expr ),+
@@ -255,8 +283,6 @@ macro_rules! from_primitive {
             from_primitive![@nonzero for: $for + $for_size, from: $from_p + $from_size];
         )+
     };
-
-    // having to convert from nonzero to core primitive
     (@nonzero
      for: $for:ident + $for_size:expr,
      from: $from_p:ident + $from_size:expr
@@ -314,7 +340,14 @@ pub(crate) use from_primitive;
 /// try_from_integer![int for: Integer + i + 8, from: Integer + 8, 16];
 /// ```
 macro_rules! try_from_integer {
-    // having an inner integer primitive
+    // when `from` has an inner integer primitive
+    //
+    // Used by:
+    // - for: Nnz   from: Z, Nnz, Npz
+    // - for: Z     from: Z, Nnz, Npz
+    // - for: N0z   from: Z            TODO:FIX:Z
+    // - for: Npz   from: Z, Nnz, Npz
+    // - for: Pz    from: Z, N0z       TODO:FIX:Z
     (int
      for: $for:ident + $p:ident + $for_size:expr,
      from: $from:ident + $( $from_size:expr ),+) => {
@@ -349,7 +382,15 @@ macro_rules! try_from_integer {
         }
     };
 
-    // having an inner NonZero*
+    // when `from` has an inner NonZero*
+    //
+    // Used by:
+    // - for: Nnz   from: N0z, Pz
+    // - for: Z     from: N0z, Pz
+    // - for: Npz   from: N0z, Nz   TODO:CHECK:N0z
+    // - for: N0z   from: N0z, Pz
+    // - for: Pz    from: Pz
+    // - for: Nz    from: Nz
     (nonzero
      for: $for:ident + $p:ident + $for_size:expr,
      from: $from:ident + $( $from_size:expr ),+) => {
@@ -364,7 +405,7 @@ macro_rules! try_from_integer {
                 type Error = $crate::error::NumeraError;
                 fn try_from(from: [<$from$from_size>])
                     -> $crate::error::NumeraResult<[<$for$for_size>]> {
-                    // return Ok(Self(from.0.get().try_into()?)); // TODO CHECK (I don't think'll work with n0z)
+                    // return Ok(Self(from.0.get().try_into()?)); // TODO CHECK
 
                     #[cfg(feature = "safe")]
                     return Self::from_parts(from.0.get().try_into()?);
@@ -405,7 +446,11 @@ macro_rules! try_from_integer {
         }
     };
 
-    // having an unsigned inner primitive, representing only negative values.
+    // when `from` has an unsigned inner primitive representing only negative values,
+    // which has to be negatied in the conversion.
+    //
+    // Used by:
+    // - for: Z     from: Npz
     (int_neg
      for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $( $from_size:expr ),+) => {
         $(
@@ -442,7 +487,11 @@ macro_rules! try_from_integer {
         }
     };
 
-    // having an unsigned inner NonZero*, representing only negative values.
+    // when `from` has an unsigned inner NonZero* representing only negative values,
+    // which has to be negated in the conversion.
+    //
+    // - for: Z     from: Nz
+    // - for: N0z   from: Nz
     (nonzero_neg
      for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $( $from_size:expr ),+) => {
         $(
@@ -507,7 +556,13 @@ macro_rules! try_from_integer {
         }
     };
 
-    // ALWAYS RETURNS ERROR
+    // when the conversion must always fail
+    //
+    // Used by:
+    // - for: Pz    from: Nz, Npz
+    // - for: Nz    from: Nnz, Pz
+    // - for: Nnz   from: Nz
+    // - for: Npz   from: Pz
     (error
      for: $for:ident + $p:ident + $for_size:expr,
      from: $from:ident + $( $from_size:expr ),+) => {
@@ -557,7 +612,15 @@ pub(crate) use try_from_integer;
 /// try_from_primitive![many for: Integer + 8, from: u + 8, 16, 32, 64, 128];
 /// ```
 macro_rules! try_from_primitive {
-    // having the same inner integer primitive
+    // when `from` is an integer primitive
+    //
+    // Used by:
+    // - for: Z     from: u, i
+    // - for: Nnz   from: u, i
+    // - for: Npz   from: u, i
+    // - for: Nz    from: i
+    // - for: N0z   from: u, i
+    // - for: Pz    from: u, i
     (int
      for: $for:ident + $for_size:expr,
      from: $from:ident + $( $from_size:expr ),+
@@ -566,7 +629,6 @@ macro_rules! try_from_primitive {
             try_from_primitive![@int for: $for + $for_size, from: $from + $from_size];
         )+
     };
-
     (@int
      for: $for:ident + $for_size:expr,
      from: $from:ident + $from_size:expr
@@ -588,6 +650,15 @@ macro_rules! try_from_primitive {
         }
     };
 
+    // when `from` is a non-zero integer primitive
+    //
+    // Used by:
+    // - for: Z     from: NonZeroU, NonZeroI
+    // - for: Pz    from: NonZeroU, NonZeroI
+    // - for: N0z   from: NonZeroU, NonZeroI
+    // - for: Nnz   from: NonZeroU, NonZeroI
+    // - for: Npz   from: NonZeroI
+    // - for: Nz    from: NonZeroI
     (nonzero
      for: $for:ident + $for_size:expr,
      from: $from:ident + $( $from_size:expr ),+
@@ -596,8 +667,6 @@ macro_rules! try_from_primitive {
             try_from_primitive![@nonzero for: $for + $for_size, from: $from + $from_size];
         )+
     };
-
-    // having to convert from nonzero to core primitive
     (@nonzero
      for: $for:ident + $for_size:expr,
      from: $from:ident + $from_size:expr
@@ -619,7 +688,11 @@ macro_rules! try_from_primitive {
         }
     };
 
-    // ALWAYS RETURNS ERROR
+    // when the conversion must always fail
+    //
+    // Used by:
+    // - for: Nz    from: NonZeroU, u
+    // - for: Npz   from: NonZeroU
     (error
      for: $for:ident + $for_size:expr,
      from: $from:ident + $( $from_size:expr ),+) => {
