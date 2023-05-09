@@ -5,7 +5,7 @@
 
 use super::{NumeraError, NumeraResult, Prime16, Prime32, Prime8, Primes};
 use crate::all::{IntegerError, Number};
-use az::CheckedAs;
+use devela::az::CheckedAs;
 
 /* conversions between primes */
 

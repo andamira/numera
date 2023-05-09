@@ -33,7 +33,6 @@ deps_all = ["twofloat", "half", "ibig"]
 
 
 [dependencies]
-az = "1.2.1"
 devela = { version = "0.3.0", default-features = false }
 
 #* optional *#

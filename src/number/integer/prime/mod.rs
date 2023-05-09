@@ -10,7 +10,7 @@ use crate::all::{IntegerError, NumeraError, NumeraResult};
 use core::fmt;
 
 #[cfg(all(debug_assertions, feature = "std"))]
-use az::CheckedAs;
+use devela::az::CheckedAs;
 
 mod consts;
 mod family;

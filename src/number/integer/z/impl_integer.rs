@@ -4,7 +4,7 @@
 //
 
 use crate::number::integer::{z::*, Integer};
-use az::CheckedAs;
+use devela::az::CheckedAs;
 
 #[cfg(not(feature = "std"))]
 use crate::all::is_prime_brute;
