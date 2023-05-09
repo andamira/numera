@@ -3,7 +3,7 @@
 //!
 //
 
-use crate::all::{abbr::*, Rational};
+use crate::all::{abbr::*, Ident, Rational};
 use core::ops::{Add, Div, Mul, Neg, Rem, Sub};
 
 // impl ops (which panic on overflow)
@@ -14,7 +14,8 @@ macro_rules! impl_rational_ops {
             impl_rational_ops![Add: $t];
             impl_rational_ops![Sub: $t];
             impl_rational_ops![Mul: $t];
-            // impl_rational_ops![Div: $t]; // TODO FIX
+            impl_rational_ops![Div: $t];
+            impl_rational_ops![Rem: $t];
             impl_rational_ops![Neg: $t];
         )+
     };
@@ -94,14 +95,36 @@ macro_rules! impl_rational_ops {
                 let num = rself.num * rother.den.into();
                 let den = rother.num * rself.den.into();
                 if den.is_zero() {
-                    panic![]
+                    unreachable![]
                 } else {
-                    // TODO FIX try_into
                     Self { num, den: den.try_into().unwrap() }.reduced()
                 }
             }
         }
     };
+
+    (Rem: $t:ident) => {
+        impl Rem for $t {
+            type Output = Self;
+
+            /// The remainder operator `%` (using truncated division)
+            ///
+            /// Note that both operands are reduced before the operation,
+            /// and the result is reduced afterwards.
+            fn rem(self, other: Self) -> Self::Output {
+                let rself = self.reduced();
+                let rother = other.reduced();
+
+                let lhs_num = rself.num * rother.den.into();
+                let rhs_num = rother.num * rself.den.into();
+                let num = (lhs_num % rhs_num);
+                let den = rself.den * rother.den;
+
+                Self { num, den }.reduced()
+            }
+        }
+    };
+
 
     (Neg: $t:ident) => {
         impl Neg for $t {
@@ -153,7 +176,14 @@ mod tests {
         assert_eq![Q16::new(11, 5)? * Q16::new(4, 9)?, Q16::new(44, 45)?];
 
         // Div
-        // TODO
+        assert_eq![Q8::new(84, 1)? / Q8::new(7, 1)?, Q8::new(12, 1)?];
+        assert_eq![Q16::new(3, 28)? / Q16::new(3, 8)?, Q16::new(2, 7)?];
+        assert_eq![Q16::new(44, 45)? / Q16::new(4, 9)?, Q16::new(11, 5)?];
+
+        // Rem
+        assert_eq![Q8::new(12, 1)? % Q8::new(7, 1)?, Q8::new(5, 1)?];
+        assert_eq![Q16::new(12, 35)? % Q16::new(1, 7)?, Q16::new(2, 35)?];
+        assert_eq![Q16::new(44, 45)? % Q16::new(4, 9)?, Q16::new(4, 45)?];
 
         #[cfg(feature = "std")]
         {
