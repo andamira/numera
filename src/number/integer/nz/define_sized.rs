@@ -114,11 +114,28 @@ macro_rules! define_negative_integer_sized {
                 pub fn as_larger(&self) -> [<$name$larger_bsize>] {
                     [<$name$larger_bsize>]::from(self)
                 }
+                /// Returns the current number with the same bit-size, because
+                /// there's no larger option available.
+                #[must_use]
+                #[compile(not($larger))]
+                pub fn as_larger(&self) -> [<$name$bsize>] {
+                    *self
+                }
 
                 /// Tries to return the current number as the next smaller bit-size.
+                /// # Errors
+                /// If the value can't fit in the smaller bit-size.
                 #[compile($smaller)]
                 pub fn as_smaller(&self) -> NumeraResult<[<$name$smaller_bsize>]> {
                     [<$name$smaller_bsize>]::try_from(self)
+                }
+                /// Returns the current name with the same bit-size, because
+                /// there's no smaller option available.
+                /// # Errors
+                /// Always succeeds.
+                #[compile(not($smaller))]
+                pub fn as_smaller(&self) -> NumeraResult<[<$name$bsize>]> {
+                    Ok(*self)
                 }
             }
 
@@ -323,9 +340,9 @@ define_negative_integer_sized![multi NegativeInteger, NonZeroU,
     "integer number", ", from the set $\\Z^-$.",
     // "",
     "-", MAX, 1,
-    ("An", 8, larger: true, 16, smaller: false, 4),
-    ("An", 16, larger: true, 32, smaller: true, 8),
-    ("An", 32, larger: true, 64, smaller: true, 16),
-    ("An", 64, larger: true, 128, smaller: true, 32),
-    ("An", 128, larger: false, 256, smaller: true, 64)
+    ("An", 8, larger: true, 16, smaller: false, 8),
+    ("A", 16, larger: true, 32, smaller: true, 8),
+    ("A", 32, larger: true, 64, smaller: true, 16),
+    ("A", 64, larger: true, 128, smaller: true, 32),
+    ("A", 128, larger: false, 128, smaller: true, 64)
 ];
