@@ -11,13 +11,17 @@
 
 use crate::{
     error::{IntegerError, NumeraResult},
-    number::traits::{
-        Bound, ConstLowerBounded, ConstNegOne, ConstOne, ConstUpperBounded, ConstZero, Count,
-        Countable, Ident, LowerBounded, NegOne, Number, One, Sign, Signed, UpperBounded, Zero,
+    number::{
+        integer::Integers,
+        macros::impl_larger_smaller,
+        traits::{
+            Bound, ConstLowerBounded, ConstNegOne, ConstOne, ConstUpperBounded, ConstZero, Count,
+            Countable, Ident, LowerBounded, NegOne, Number, One, Sign, Signed, UpperBounded, Zero,
+        },
     },
 };
 use core::fmt;
-use devela::{compile, paste};
+use devela::paste;
 
 /* macro */
 
@@ -87,40 +91,18 @@ macro_rules! define_integer_sized {
             }
         }
 
+        /// # Constructors
         impl [<$name$bsize>]  {
             #[doc = "Returns a new `" [<$name$bsize>] "`."]
             #[inline]
             pub const fn new(value: [<$p$bsize>]) -> Self { Self(value) }
-
-            /// Returns the current number as the next larger bit-size.
-            #[compile($larger)]
-            pub fn as_larger(&self) -> [<$name$larger_bsize>] {
-                [<$name$larger_bsize>]::from(self)
-            }
-            /// Returns the current number with the same bit-size, because
-            /// there's no larger option available.
-            #[must_use]
-            #[compile(not($larger))]
-            pub fn as_larger(&self) -> [<$name$bsize>] {
-                *self
-            }
-
-            /// Tries to return the current number as the next smaller bit-size.
-            /// # Errors
-            /// If the value can't fit in the smaller bit-size.
-            #[compile($smaller)]
-            pub fn as_smaller(&self) -> NumeraResult<[<$name$smaller_bsize>]> {
-                [<$name$smaller_bsize>]::try_from(self)
-            }
-            /// Returns the current name with the same bit-size, because
-            /// there's no smaller option available.
-            /// # Errors
-            /// Always succeeds.
-            #[compile(not($smaller))]
-            pub fn as_smaller(&self) -> NumeraResult<[<$name$bsize>]> {
-                Ok(*self)
-            }
         }
+
+        /* resizing */
+
+        impl_larger_smaller![$name, $bsize, Integers,
+            larger: $larger, $larger_bsize, smaller: $smaller, $smaller_bsize
+        ];
 
         /* sign */
 
@@ -254,3 +236,50 @@ define_integer_sized![multi Integer, i,
     ("A", 64, larger: true, 128, smaller: true, 32),
     ("A", 128, larger: false, 128, smaller: true, 64)
 ];
+
+#[cfg(test)]
+mod tests {
+    use crate::all::{abbr::*, *};
+
+    #[test]
+    fn z_define_sized() -> NumeraResult<()> {
+        // Display
+        #[cfg(feature = "std")]
+        assert_eq![Z8::new(17).to_string(), "17"];
+
+        /* as_larger */
+
+        // min
+        assert_eq![Z8::new(100).as_larger_or_same(), Z16::new(100)];
+        assert_eq![Z8::new(100).try_as_larger(), Ok(Z16::new(100))];
+
+        // max
+        assert_eq![Z128::new(100).as_larger_or_same(), Z128::new(100)];
+        assert![Z128::new(100).try_as_larger().is_err()];
+
+        /* as_smaller */
+
+        // min
+        assert_eq![
+            Z8::new(100).as_smaller_or_same(),
+            Integers::Integer8(Z8::new(100))
+        ];
+        assert![Z8::new(100).try_as_smaller().is_err()];
+
+        // can't fit
+        assert_eq![
+            Z16::new(3_000).as_smaller_or_same(),
+            Integers::Integer16(Z16::new(3_000))
+        ];
+        assert![Z16::new(3_000).try_as_smaller().is_err()];
+
+        // max
+        assert_eq![
+            Z128::new(100).as_smaller_or_same(),
+            Integers::Integer64(Z64::new(100))
+        ];
+        assert_eq![Z128::new(100).try_as_smaller(), Ok(Z64::new(100))];
+
+        Ok(())
+    }
+}

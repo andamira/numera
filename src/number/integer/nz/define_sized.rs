@@ -11,16 +11,20 @@
 
 use crate::{
     error::{IntegerError, NumeraError, NumeraResult},
-    number::traits::{
-        Bound, ConstLowerBounded, ConstNegOne, ConstUpperBounded, Count, Countable, Ident,
-        LowerBounded, NegOne, NegSigned, NonOne, NonZero, Number, Sign, UpperBounded,
+    number::{
+        integer::NegativeIntegers,
+        macros::impl_larger_smaller,
+        traits::{
+            Bound, ConstLowerBounded, ConstNegOne, ConstUpperBounded, Count, Countable, Ident,
+            LowerBounded, NegOne, NegSigned, NonOne, NonZero, Number, Sign, UpperBounded,
+        },
     },
 };
 use core::{
     fmt,
     num::{NonZeroU128, NonZeroU16, NonZeroU32, NonZeroU64, NonZeroU8},
 };
-use devela::{compile, paste};
+use devela::paste;
 
 /* macro */
 
@@ -107,36 +111,13 @@ macro_rules! define_negative_integer_sized {
                     Err(NumeraError::Integer(IntegerError::Zero))
                 }
             }
-
-            /// Returns the current number as the next larger bit-size.
-            #[compile($larger)]
-            pub fn as_larger(&self) -> [<$name$larger_bsize>] {
-                [<$name$larger_bsize>]::from(self)
-            }
-            /// Returns the current number with the same bit-size, because
-            /// there's no larger option available.
-            #[must_use]
-            #[compile(not($larger))]
-            pub fn as_larger(&self) -> [<$name$bsize>] {
-                *self
-            }
-
-            /// Tries to return the current number as the next smaller bit-size.
-            /// # Errors
-            /// If the value can't fit in the smaller bit-size.
-            #[compile($smaller)]
-            pub fn as_smaller(&self) -> NumeraResult<[<$name$smaller_bsize>]> {
-                [<$name$smaller_bsize>]::try_from(self)
-            }
-            /// Returns the current name with the same bit-size, because
-            /// there's no smaller option available.
-            /// # Errors
-            /// Always succeeds.
-            #[compile(not($smaller))]
-            pub fn as_smaller(&self) -> NumeraResult<[<$name$bsize>]> {
-                Ok(*self)
-            }
         }
+
+        /* resizing */
+
+        impl_larger_smaller![$name, $bsize, NegativeIntegers,
+            larger: $larger, $larger_bsize, smaller: $smaller, $smaller_bsize
+        ];
 
         /* sign */
 

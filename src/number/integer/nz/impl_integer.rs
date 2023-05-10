@@ -13,7 +13,7 @@ macro_rules! impl_nonzero_integer {
         $( impl_nonzero_integer![$t, $inner]; )+
     };
     ($t:ident, $inner:ident) => {
-        /// # Methods for all integers.
+        /// # Methods for all integers
         impl $t {
             /// Returns `true` if this integer is even.
             #[inline]

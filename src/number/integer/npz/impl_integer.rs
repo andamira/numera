@@ -11,7 +11,7 @@ macro_rules! impl_integer {
         $( impl_integer![$t]; )+
     };
     ($t:ident) => {
-        /// # Methods for all integers.
+        /// # Methods for all integers
         impl $t {
             /// Returns `true` if this integer is even.
             #[inline]

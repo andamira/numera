@@ -16,7 +16,7 @@ macro_rules! impl_integer {
         $( impl_integer![$t]; )+
     };
     ($t:ident) => {
-        /// # Methods for all integers.
+        /// # Methods for all integers
         impl $t {
             /// Returns `true` if this integer is even.
             #[inline]
@@ -41,7 +41,7 @@ macro_rules! impl_integer {
             }
         }
 
-        /// # Methods for non-negative integers.
+        /// # Methods for non-negative integers
         impl $t {
             /// Returns `Some(true)` if this integer is prime, `Some(false)` if it's not
             /// prime, or `None` if it can not be determined.

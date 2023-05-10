@@ -11,13 +11,17 @@
 
 use crate::{
     error::{IntegerError, NumeraResult},
-    number::traits::{
-        Bound, ConstLowerBounded, ConstOne, ConstUpperBounded, ConstZero, Count, Countable, Ident,
-        LowerBounded, NonNegOne, Number, One, Sign, Unsigned, UpperBounded, Zero,
+    number::{
+        integer::NonNegativeIntegers,
+        macros::impl_larger_smaller,
+        traits::{
+            Bound, ConstLowerBounded, ConstOne, ConstUpperBounded, ConstZero, Count, Countable,
+            Ident, LowerBounded, NonNegOne, Number, One, Sign, Unsigned, UpperBounded, Zero,
+        },
     },
 };
 use core::fmt;
-use devela::{compile, paste};
+use devela::paste;
 
 /* macro */
 
@@ -93,36 +97,13 @@ macro_rules! define_nonnegative_integer_sized {
             pub const fn new(value: [<$p$bsize>]) -> Self {
                 Self(value)
             }
-
-            /// Returns the current number as the next larger bit-size.
-            #[compile($larger)]
-            pub fn as_larger(&self) -> [<$name$larger_bsize>] {
-                [<$name$larger_bsize>]::from(self)
-            }
-            /// Returns the current number with the same bit-size, because
-            /// there's no larger option available.
-            #[must_use]
-            #[compile(not($larger))]
-            pub fn as_larger(&self) -> [<$name$bsize>] {
-                *self
-            }
-
-            /// Tries to return the current number as the next smaller bit-size.
-            /// # Errors
-            /// If the value can't fit in the smaller bit-size.
-            #[compile($smaller)]
-            pub fn as_smaller(&self) -> NumeraResult<[<$name$smaller_bsize>]> {
-                [<$name$smaller_bsize>]::try_from(self)
-            }
-            /// Returns the current name with the same bit-size, because
-            /// there's no smaller option available.
-            /// # Errors
-            /// Always succeeds.
-            #[compile(not($smaller))]
-            pub fn as_smaller(&self) -> NumeraResult<[<$name$bsize>]> {
-                Ok(*self)
-            }
         }
+
+        /* resizing */
+
+        impl_larger_smaller![$name, $bsize, NonNegativeIntegers,
+            larger: $larger, $larger_bsize, smaller: $smaller, $smaller_bsize
+        ];
 
         /* sign */
 

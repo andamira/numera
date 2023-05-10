@@ -12,8 +12,9 @@
 use crate::{
     error::{NumeraError, NumeraResult, RationalError},
     number::{
-        integer::n0z::*,
-        integer::z::*,
+        integer::*,
+        rational::{Rational, Rationals},
+        macros::impl_larger_smaller,
         traits::{
             Bound, ConstLowerBounded, ConstNegOne, ConstOne, ConstUpperBounded, ConstZero, Count,
             Countable, Ident, LowerBounded, NegOne, Number, One, Sign, Signed, UpperBounded, Zero,
@@ -21,7 +22,7 @@ use crate::{
     },
 };
 use core::{fmt, ops::Neg};
-use devela::{compile, paste};
+use devela::paste;
 
 /* macro */
 
@@ -95,6 +96,7 @@ macro_rules! define_rational_sized {
             pub(crate) den: [<$den$bsize>],
         }
 
+        /// Returns $0/1$.
         impl Default for [<$name$bsize>] {
             fn default() -> Self {
                 Self {
@@ -144,19 +146,13 @@ macro_rules! define_rational_sized {
                     den: [<$den$bsize>]::new_unchecked(denominator),
                 }
             }
-
-            /// Returns the current number as the next larger bit-size.
-            #[compile($larger)]
-            pub fn as_larger(&self) -> [<$name$larger_bsize>] {
-                [<$name$larger_bsize>]::from(self)
-            }
-
-            /// Tries to return the current number as the next smaller bit-size.
-            #[compile($smaller)]
-            pub fn as_smaller(&self) -> NumeraResult<[<$name$smaller_bsize>]> {
-                [<$name$smaller_bsize>]::try_from(self)
-            }
         }
+
+        /* resizing */
+
+        impl_larger_smaller![$name, $bsize, Rationals,
+            larger: $larger, $larger_bsize, smaller: $smaller, $smaller_bsize
+        ];
 
         /* sign */
 

@@ -23,7 +23,7 @@ pub use define_sized::{
 };
 pub use family::NegativeIntegers;
 
-/// Abbreviations for negative integers.
+/// Abbreviations for negative integers
 pub mod abbr {
     use super::*;
     use crate::number::macros::define_abbreviations;
