@@ -13,15 +13,15 @@ use crate::{
     error::{NumeraError, NumeraResult, RationalError},
     number::{
         integer::*,
-        rational::{Rational, Rationals},
         macros::impl_larger_smaller,
+        rational::Rationals,
         traits::{
             Bound, ConstLowerBounded, ConstNegOne, ConstOne, ConstUpperBounded, ConstZero, Count,
             Countable, Ident, LowerBounded, NegOne, Number, One, Sign, Signed, UpperBounded, Zero,
         },
     },
 };
-use core::{fmt, ops::Neg};
+use core::{cmp::Ordering, fmt, ops::Neg};
 use devela::paste;
 
 /* macro */
@@ -90,7 +90,7 @@ macro_rules! define_rational_sized {
         $doc_sign "$[`" $p$bsize "::" $doc_lower "`] $\\dots$ [`"
         $p$bsize "::" $doc_upper "`]$\\rbrack$."]
 
-        #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
+        #[derive(Clone, Copy, Debug)]
         pub struct [<$name$bsize>] {
             pub(crate) num: [<$num$bsize>],
             pub(crate) den: [<$den$bsize>],
@@ -103,6 +103,44 @@ macro_rules! define_rational_sized {
                     num: [<$num$bsize>]::ZERO,
                     den: [<$den$bsize>]::ONE,
                 }
+            }
+        }
+
+        impl PartialEq for [<$name$bsize>] {
+            fn eq(&self, other: &Self) -> bool {
+                // upcast first
+                let uself = self.as_larger_or_same();
+                let uother = other.as_larger_or_same();
+
+                // compare by cross-multiplying
+                uself.num * uother.den.into() == uother.num * uself.den.into()
+
+                // IMPROVE: if it overflows try reducing
+                // let rself = uself.reduced();
+                // let rother = uother.reduced();
+                // rself.num == rother.num && rself.den == rother.den
+            }
+        }
+        impl Eq for [<$name$bsize>] {}
+
+        impl PartialOrd for [<$name$bsize>] {
+            fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+                // upcast first
+                let uself = self.as_larger_or_same();
+                let uother = other.as_larger_or_same();
+
+                // compare by cross-multiplying
+                let lhs = uself.num * uother.den.into();
+                let rhs = uother.num * uself.den.into();
+
+                // IMPROVE: if it overflows try reducing
+
+                lhs.partial_cmp(&rhs)
+            }
+        }
+        impl Ord for [<$name$bsize>] {
+            fn cmp(&self, other: &Self) -> Ordering {
+                self.partial_cmp(&other).unwrap()
             }
         }
 
@@ -340,7 +378,7 @@ define_rational_sized![multi Rational, i,
 
 #[cfg(test)]
 mod tests {
-    use crate::all::*;
+    use crate::all::{abbr::*, *};
 
     #[test]
     fn q_define_sized() -> NumeraResult<()> {
@@ -354,6 +392,15 @@ mod tests {
         // Display
         #[cfg(feature = "std")]
         assert_eq![_q5.to_string(), "5/1"];
+
+        // PartialEq
+        assert![Q8::new(4, 2)? == Q8::new(4, 2)?]; // eq non-reduced
+        assert![Q8::new(4, 2)? == Q8::new(2, 1)?]; // eq reduced
+        assert![Q8::new(4, 2)? != Q8::new(3, 1)?]; // ne
+
+        // PartialOrd
+        assert![Q8::new(3, 2)? < Q8::new(4, 2)?];
+        assert![Q8::new(3, 2)? > Q8::new(3, 5)?];
 
         // Bound
         // Count
