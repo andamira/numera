@@ -11,6 +11,7 @@
 // fallible conversions:
 //   - try_from_integer!
 //   - try_from_primitive!
+//   - try_from_any!
 
 /* infallible From conversions */
 
@@ -36,26 +37,29 @@ macro_rules! from_integer {
     // - for: Nnz   from: Nnz
     // - for: Npz   from: Npz
     (int
-     for: $for:ident + $p:ident + $for_size:expr,
+     for: $for:ident + $for_size:expr,
      from: $from:ident + $( $from_size:expr ),+) => {
         $(
-            from_integer![@int for: $for + $p + $for_size, from: $from + $from_size];
+            from_integer![@int for: $for + $for_size, from: $from + $from_size];
         )+
     };
     (@int
-     for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $from_size:expr) => {
+     for: $for:ident + $for_size:expr, from: $from:ident + $from_size:expr) => {
         devela::paste! {
             impl From<[<$from$from_size>]> for [<$for$for_size>] {
+                #[inline]
                 fn from(from: [<$from$from_size>]) -> Self {
                     Self(from.0.into())
                 }
             }
             impl From<&[<$from$from_size>]> for [<$for$for_size>] {
+                #[inline]
                 fn from(from: &[<$from$from_size>]) -> Self {
                     Self(from.0.into())
                 }
             }
             impl From<&mut [<$from$from_size>]> for [<$for$for_size>] {
+                #[inline]
                 fn from(from: &mut [<$from$from_size>]) -> Self {
                     Self(from.0.into())
                 }
@@ -73,16 +77,17 @@ macro_rules! from_integer {
     // - for: Npz   from: Nz        (negative to negative is OK)
     // - for: Nz    from: Nz        (negative to negative is OK)
     (nonzero
-     for: $for:ident + $p:ident + $for_size:expr,
+     for: $for:ident + $for_size:expr,
      from: $from:ident + $( $from_size:expr ),+) => {
         $(
-            from_integer![@nonzero for: $for + $p + $for_size, from: $from + $from_size];
+            from_integer![@nonzero for: $for + $for_size, from: $from + $from_size];
         )+
     };
     (@nonzero
-     for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $from_size:expr) => {
+     for: $for:ident + $for_size:expr, from: $from:ident + $from_size:expr) => {
         devela::paste! {
             impl From<[<$from$from_size>]> for [<$for$for_size>] {
+                #[inline]
                 fn from(from: [<$from$from_size>]) -> Self {
                     #[cfg(feature = "safe")]
                     return Self::from_parts(from.0.get().into()).unwrap();
@@ -93,6 +98,7 @@ macro_rules! from_integer {
                 }
             }
             impl From<&[<$from$from_size>]> for [<$for$for_size>] {
+                #[inline]
                 fn from(from: &[<$from$from_size>]) -> Self {
                     #[cfg(feature = "safe")]
                     return Self::from_parts(from.0.get().into()).unwrap();
@@ -103,6 +109,7 @@ macro_rules! from_integer {
                 }
             }
             impl From<&mut [<$from$from_size>]> for [<$for$for_size>] {
+                #[inline]
                 fn from(from: &mut [<$from$from_size>]) -> Self {
                     #[cfg(feature = "safe")]
                     return Self::from_parts(from.0.get().into()).unwrap();
@@ -129,16 +136,19 @@ macro_rules! from_integer {
      for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $from_size:expr) => {
         devela::paste! {
             impl From<[<$from$from_size>]> for [<$for$for_size>] {
+                #[inline]
                 fn from(from: [<$from$from_size>]) -> Self {
                     Self(Into::<[<$p$for_size>]>::into(from.0).neg())
                 }
             }
             impl From<&[<$from$from_size>]> for [<$for$for_size>] {
+                #[inline]
                 fn from(from: &[<$from$from_size>]) -> Self {
                     Self(Into::<[<$p$for_size>]>::into(from.0).neg())
                 }
             }
             impl From<&mut [<$from$from_size>]> for [<$for$for_size>] {
+                #[inline]
                 fn from(from: &mut [<$from$from_size>]) -> Self {
                     Self(Into::<[<$p$for_size>]>::into(from.0).neg())
                 }
@@ -162,6 +172,7 @@ macro_rules! from_integer {
      for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $from_size:expr) => {
         devela::paste! {
             impl From<[<$from$from_size>]> for [<$for$for_size>] {
+                #[inline]
                 fn from(from: [<$from$from_size>]) -> Self {
                     #[cfg(feature = "safe")]
                     return
@@ -175,6 +186,7 @@ macro_rules! from_integer {
                 }
             }
             impl From<&[<$from$from_size>]> for [<$for$for_size>] {
+                #[inline]
                 fn from(from: &[<$from$from_size>]) -> Self {
                     #[cfg(feature = "safe")]
                     return
@@ -188,6 +200,7 @@ macro_rules! from_integer {
                 }
             }
             impl From<&mut [<$from$from_size>]> for [<$for$for_size>] {
+                #[inline]
                 fn from(from: &mut [<$from$from_size>]) -> Self {
                     #[cfg(feature = "safe")]
                     return
@@ -219,7 +232,7 @@ pub(crate) use from_integer;
 /// from_primitive![many for: Integer + 16, from: i + 8, 16];
 /// ```
 macro_rules! from_primitive {
-    // when `from` is the same integer primitive than the inner part of `for`
+    // when `from` is the same integer primitive than the inner part of `for`.
     //
     // - for: Z     from: u, i
     // - for: Nnz   from: u
@@ -237,6 +250,7 @@ macro_rules! from_primitive {
     ) => {
         devela::paste! {
             impl From<[<$from_p$from_size>]> for [<$for$for_size>] {
+                #[inline]
                 fn from(from: [<$from_p$from_size>]) -> Self {
                     #[cfg(feature = "safe")]
                     return Self::from_parts(from.into()).unwrap();
@@ -247,6 +261,7 @@ macro_rules! from_primitive {
                 }
             }
             impl From<&[<$from_p$from_size>]> for [<$for$for_size>] {
+                #[inline]
                 fn from(from: &[<$from_p$from_size>]) -> Self {
                     #[cfg(feature = "safe")]
                     return Self::from_parts((*from).into()).unwrap();
@@ -257,6 +272,7 @@ macro_rules! from_primitive {
                 }
             }
             impl From<&mut [<$from_p$from_size>]> for [<$for$for_size>] {
+                #[inline]
                 fn from(from: &mut [<$from_p$from_size>]) -> Self {
                     #[cfg(feature = "safe")]
                     return Self::from_parts((*from).into()).unwrap();
@@ -269,7 +285,7 @@ macro_rules! from_primitive {
         }
     };
 
-    // when `from` is a NonZero* primitive which has to be converted to primitive
+    // when `from` is a NonZero* primitive which has to be converted to primitive.
     //
     // - for: Z     from: NonZeroU, NonZeroI
     // - for: N0z   from: NonZeroU, NonZeroI
@@ -289,6 +305,7 @@ macro_rules! from_primitive {
     ) => {
         devela::paste! {
             impl From<[<$from_p$from_size>]> for [<$for$for_size>] {
+                #[inline]
                 fn from(from: [<$from_p$from_size>]) -> Self {
                     #[cfg(feature = "safe")]
                     return Self::from_parts(from.get().into()).unwrap();
@@ -299,6 +316,7 @@ macro_rules! from_primitive {
                 }
             }
             impl From<&[<$from_p$from_size>]> for [<$for$for_size>] {
+                #[inline]
                 fn from(from: &[<$from_p$from_size>]) -> Self {
                     #[cfg(feature = "safe")]
                     return Self::from_parts((*from).get().into()).unwrap();
@@ -309,6 +327,7 @@ macro_rules! from_primitive {
                 }
             }
             impl From<&mut [<$from_p$from_size>]> for [<$for$for_size>] {
+                #[inline]
                 fn from(from: &mut [<$from_p$from_size>]) -> Self {
                     #[cfg(feature = "safe")]
                     return Self::from_parts((*from).get().into()).unwrap();
@@ -340,151 +359,52 @@ pub(crate) use from_primitive;
 /// try_from_integer![int for: Integer + i + 8, from: Integer + 8, 16];
 /// ```
 macro_rules! try_from_integer {
-    // when `from` has an inner integer primitive
+    // when `from` has an inner integer primitive.
     //
     // Used by:
-    // - for: Nnz   from: Z, Nnz, Npz
+    // - for: Nnz   from: Z, Nnz,
     // - for: Z     from: Z, Nnz, Npz
-    // - for: Npz   from: Z, Nnz, Npz
-    // - for: Pz    from: Z, N0z       TODO:FIX:Z
+    // - for: Npz   from: Z, Npz
+    // - for: Pz    from: N0z
     (int
-     for: $for:ident + $p:ident + $for_size:expr,
+     for: $for:ident + $for_size:expr,
      from: $from:ident + $( $from_size:expr ),+) => {
         $(
-            try_from_integer![@int for: $for + $p + $for_size, from: $from + $from_size];
+            try_from_integer![@int for: $for + $for_size, from: $from + $from_size];
         )+
     };
     (@int
-     for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $from_size:expr) => {
+     for: $for:ident + $for_size:expr, from: $from:ident + $from_size:expr) => {
         devela::paste! {
             impl TryFrom<[<$from$from_size>]> for [<$for$for_size>] {
                 type Error = $crate::error::NumeraError;
+                #[inline]
                 fn try_from(from: [<$from$from_size>])
                     -> $crate::error::NumeraResult<[<$for$for_size>]> {
-                    return Ok(Self(from.0.try_into()?));
+                    Ok(Self(from.0.try_into()?))
                 }
             }
             impl TryFrom<&[<$from$from_size>]> for [<$for$for_size>] {
                 type Error = $crate::error::NumeraError;
+                #[inline]
                 fn try_from(from: &[<$from$from_size>])
                     -> $crate::error::NumeraResult<[<$for$for_size>]> {
-                    return Ok(Self(from.0.try_into()?));
+                    Ok(Self(from.0.try_into()?))
                 }
             }
             impl TryFrom<&mut [<$from$from_size>]> for [<$for$for_size>] {
                 type Error = $crate::error::NumeraError;
+                #[inline]
                 fn try_from(from: &mut [<$from$from_size>])
                     -> $crate::error::NumeraResult<[<$for$for_size>]> {
-                    return Ok(Self(from.0.try_into()?));
-                }
-            }
-        }
-    };
-
-    // when `from` has an inner integer primitive, and we have to use the `for`::new constructor,
-    //
-    // Used by:
-    // - for: N0z   from: Z, Nnz, Npz  TODO:FIX:CHECK:Npz
-    (int_new
-     for: $for:ident + $p:ident + $for_size:expr,
-     from: $from:ident + $( $from_size:expr ),+) => {
-        $(
-            try_from_integer![@int_new for: $for + $p + $for_size, from: $from + $from_size];
-        )+
-    };
-    (@int_new
-     for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $from_size:expr) => {
-        devela::paste! {
-            impl TryFrom<[<$from$from_size>]> for [<$for$for_size>] {
-                type Error = $crate::error::NumeraError;
-                fn try_from(from: [<$from$from_size>])
-                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
-                    return Self::new(from.0.try_into()?);
-                }
-            }
-            impl TryFrom<&[<$from$from_size>]> for [<$for$for_size>] {
-                type Error = $crate::error::NumeraError;
-                fn try_from(from: &[<$from$from_size>])
-                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
-                    return Self::new(from.0.try_into()?);
-                }
-            }
-            impl TryFrom<&mut [<$from$from_size>]> for [<$for$for_size>] {
-                type Error = $crate::error::NumeraError;
-                fn try_from(from: &mut [<$from$from_size>])
-                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
-                    return Self::new(from.0.try_into()?);
-                }
-            }
-        }
-    };
-
-    // when `from` has an inner NonZero*
-    //
-    // Used by:
-    // - for: Nnz   from: N0z, Pz
-    // - for: Z     from: N0z, Pz
-    // - for: Npz   from: N0z, Nz   TODO:CHECK:N0z
-    // - for: N0z   from: N0z, Pz
-    // - for: Pz    from: Pz
-    // - for: Nz    from: Nz
-    (nonzero
-     for: $for:ident + $p:ident + $for_size:expr,
-     from: $from:ident + $( $from_size:expr ),+) => {
-        $(
-            try_from_integer![@nonzero for: $for + $p + $for_size, from: $from + $from_size];
-        )+
-    };
-    (@nonzero
-     for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $from_size:expr) => {
-        devela::paste! {
-            impl TryFrom<[<$from$from_size>]> for [<$for$for_size>] {
-                type Error = $crate::error::NumeraError;
-                fn try_from(from: [<$from$from_size>])
-                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
-                    // return Ok(Self(from.0.get().try_into()?)); // TODO CHECK
-
-                    #[cfg(feature = "safe")]
-                    return Self::from_parts(from.0.get().try_into()?);
-
-                    #[cfg(not(feature = "safe"))]
-                    // SAFETY: all ok results of try_from should be valid
-                    return Ok(unsafe { Self::from_parts_unchecked(from.0.get().try_into()?) });
-                }
-            }
-            impl TryFrom<&[<$from$from_size>]> for [<$for$for_size>] {
-                type Error = $crate::error::NumeraError;
-                fn try_from(from: &[<$from$from_size>])
-                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
-                    // return Ok(Self(from.0.get().try_into()?)); // CHECK
-
-                    #[cfg(feature = "safe")]
-                    return Self::from_parts(from.0.get().try_into()?);
-
-                    #[cfg(not(feature = "safe"))]
-                    // SAFETY: all ok results of try_from should be valid
-                    return Ok(unsafe { Self::from_parts_unchecked(from.0.get().try_into()?) });
-                }
-            }
-            impl TryFrom<&mut [<$from$from_size>]> for [<$for$for_size>] {
-                type Error = $crate::error::NumeraError;
-                fn try_from(from: &mut [<$from$from_size>])
-                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
-                    // return Ok(Self(from.0.get().try_into()?)); // CHECK
-
-                    #[cfg(feature = "safe")]
-                    return Self::from_parts(from.0.get().try_into()?);
-
-                    #[cfg(not(feature = "safe"))]
-                    // SAFETY: all ok results of try_from should be valid
-                    return Ok(unsafe { Self::from_parts_unchecked(from.0.get().try_into()?) });
+                    Ok(Self(from.0.try_into()?))
                 }
             }
         }
     };
 
     // when `from` has an unsigned inner primitive representing only negative values,
-    // which has to be negatied in the conversion.
+    // which has to be negated in the conversion.
     //
     // Used by:
     // - for: Z     from: Npz
@@ -499,26 +419,172 @@ macro_rules! try_from_integer {
         devela::paste! {
             impl TryFrom<[<$from$from_size>]> for [<$for$for_size>] {
                 type Error = $crate::error::NumeraError;
+                #[inline]
                 fn try_from(from: [<$from$from_size>])
                     -> $crate::error::NumeraResult<[<$for$for_size>]> {
-
                     Ok(Self(TryInto::<[<$p$for_size>]>::try_into(from.0)?.neg()))
                 }
             }
             impl TryFrom<&[<$from$from_size>]> for [<$for$for_size>] {
                 type Error = $crate::error::NumeraError;
+                #[inline]
                 fn try_from(from: &[<$from$from_size>])
                     -> $crate::error::NumeraResult<[<$for$for_size>]> {
-
                     Ok(Self(TryInto::<[<$p$for_size>]>::try_into(from.0)?.neg()))
                 }
             }
             impl TryFrom<&mut [<$from$from_size>]> for [<$for$for_size>] {
                 type Error = $crate::error::NumeraError;
+                #[inline]
                 fn try_from(from: &mut [<$from$from_size>])
                     -> $crate::error::NumeraResult<[<$for$for_size>]> {
-
                     Ok(Self(TryInto::<[<$p$for_size>]>::try_into(from.0)?.neg()))
+                }
+            }
+        }
+    };
+
+    // when `from` has an inner integer primitive,
+    // and we have to use the `for`::new constructor.
+    //
+    // Used by:
+    // - for: N0z   from: Z, Nnz
+    // - for: Pz    from: Z
+    (int_new
+     for: $for:ident + $for_size:expr,
+     from: $from:ident + $( $from_size:expr ),+) => {
+        $(
+            try_from_integer![@int_new for: $for + $for_size, from: $from + $from_size];
+        )+
+    };
+    (@int_new
+     for: $for:ident + $for_size:expr, from: $from:ident + $from_size:expr) => {
+        devela::paste! {
+            impl TryFrom<[<$from$from_size>]> for [<$for$for_size>] {
+                type Error = $crate::error::NumeraError;
+                #[inline]
+                fn try_from(from: [<$from$from_size>])
+                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
+                    Self::new(from.0.try_into()?)
+                }
+            }
+            impl TryFrom<&[<$from$from_size>]> for [<$for$for_size>] {
+                type Error = $crate::error::NumeraError;
+                #[inline]
+                fn try_from(from: &[<$from$from_size>])
+                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
+                    Self::new(from.0.try_into()?)
+                }
+            }
+            impl TryFrom<&mut [<$from$from_size>]> for [<$for$for_size>] {
+                type Error = $crate::error::NumeraError;
+                #[inline]
+                fn try_from(from: &mut [<$from$from_size>])
+                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
+                    Self::new(from.0.try_into()?)
+                }
+            }
+        }
+    };
+
+    // when `from` has an unsigned inner primitive representing only negative values,
+    // and we have to use the `for`::new constructor.
+    //
+    // Used by:
+    // - for: N0z   from: Npz
+    (int_new_neg
+     for: $for:ident + $for_size:expr,
+     from: $from:ident + $( $from_size:expr ),+) => {
+        $(
+            try_from_integer![@int_new_neg for: $for + $for_size, from: $from + $from_size];
+        )+
+    };
+    (@int_new_neg
+     for: $for:ident + $for_size:expr, from: $from:ident + $from_size:expr) => {
+        devela::paste! {
+            impl TryFrom<[<$from$from_size>]> for [<$for$for_size>] {
+                type Error = $crate::error::NumeraError;
+                #[inline]
+                fn try_from(from: [<$from$from_size>])
+                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
+                    Ok(Self::new(from.0.try_into()?)?.neg())
+                }
+            }
+            impl TryFrom<&[<$from$from_size>]> for [<$for$for_size>] {
+                type Error = $crate::error::NumeraError;
+                #[inline]
+                fn try_from(from: &[<$from$from_size>])
+                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
+                    Ok(Self::new(from.0.try_into()?)?.neg())
+                }
+            }
+            impl TryFrom<&mut [<$from$from_size>]> for [<$for$for_size>] {
+                type Error = $crate::error::NumeraError;
+                #[inline]
+                fn try_from(from: &mut [<$from$from_size>])
+                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
+                    Ok(Self::new(from.0.try_into()?)?.neg())
+                }
+            }
+        }
+    };
+
+    // when `from` has an inner NonZero*.
+    //
+    // Used by:
+    // - for: Nnz   from: N0z, Pz
+    // - for: Z     from: N0z, Pz
+    // - for: Npz   from: N0z, Nz   TODO:CHECK:N0z
+    // - for: N0z   from: N0z, Pz
+    // - for: Pz    from: Pz
+    // - for: Nz    from: Nz
+    (nonzero
+     for: $for:ident + $for_size:expr,
+     from: $from:ident + $( $from_size:expr ),+) => {
+        $(
+            try_from_integer![@nonzero for: $for + $for_size, from: $from + $from_size];
+        )+
+    };
+    (@nonzero
+     for: $for:ident + $for_size:expr, from: $from:ident + $from_size:expr) => {
+        devela::paste! {
+            impl TryFrom<[<$from$from_size>]> for [<$for$for_size>] {
+                type Error = $crate::error::NumeraError;
+                #[inline]
+                fn try_from(from: [<$from$from_size>])
+                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
+                    #[cfg(feature = "safe")]
+                    return Self::from_parts(from.0.get().try_into()?);
+
+                    #[cfg(not(feature = "safe"))]
+                    // SAFETY: all ok results of try_from should be valid
+                    return Ok(unsafe { Self::from_parts_unchecked(from.0.get().try_into()?) });
+                }
+            }
+            impl TryFrom<&[<$from$from_size>]> for [<$for$for_size>] {
+                type Error = $crate::error::NumeraError;
+                #[inline]
+                fn try_from(from: &[<$from$from_size>])
+                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
+                    #[cfg(feature = "safe")]
+                    return Self::from_parts(from.0.get().try_into()?);
+
+                    #[cfg(not(feature = "safe"))]
+                    // SAFETY: all ok results of try_from should be valid
+                    return Ok(unsafe { Self::from_parts_unchecked(from.0.get().try_into()?) });
+                }
+            }
+            impl TryFrom<&mut [<$from$from_size>]> for [<$for$for_size>] {
+                type Error = $crate::error::NumeraError;
+                #[inline]
+                fn try_from(from: &mut [<$from$from_size>])
+                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
+                    #[cfg(feature = "safe")]
+                    return Self::from_parts(from.0.get().try_into()?);
+
+                    #[cfg(not(feature = "safe"))]
+                    // SAFETY: all ok results of try_from should be valid
+                    return Ok(unsafe { Self::from_parts_unchecked(from.0.get().try_into()?) });
                 }
             }
         }
@@ -541,6 +607,7 @@ macro_rules! try_from_integer {
         devela::paste! {
             impl TryFrom<[<$from$from_size>]> for [<$for$for_size>] {
                 type Error = $crate::error::NumeraError;
+                #[inline]
                 fn try_from(from: [<$from$from_size>])
                     -> $crate::error::NumeraResult<[<$for$for_size>]> {
                     #[cfg(feature = "safe")]
@@ -558,6 +625,7 @@ macro_rules! try_from_integer {
             }
             impl TryFrom<&[<$from$from_size>]> for [<$for$for_size>] {
                 type Error = $crate::error::NumeraError;
+                #[inline]
                 fn try_from(from: &[<$from$from_size>])
                     -> $crate::error::NumeraResult<[<$for$for_size>]> {
                     #[cfg(feature = "safe")]
@@ -575,6 +643,7 @@ macro_rules! try_from_integer {
             }
             impl TryFrom<&mut [<$from$from_size>]> for [<$for$for_size>] {
                 type Error = $crate::error::NumeraError;
+                #[inline]
                 fn try_from(from: &mut [<$from$from_size>])
                     -> $crate::error::NumeraResult<[<$for$for_size>]> {
                     #[cfg(feature = "safe")]
@@ -588,47 +657,6 @@ macro_rules! try_from_integer {
                                 TryInto::<[<$p$for_size>]>::try_into(from.0.get())?.neg()
                         ))
                     };
-                }
-            }
-        }
-    };
-
-    // when the conversion must always fail
-    //
-    // Used by:
-    // - for: Pz    from: Nz, Npz
-    // - for: Nz    from: Nnz, Pz
-    // - for: Nnz   from: Nz
-    // - for: Npz   from: Pz
-    (error
-     for: $for:ident + $p:ident + $for_size:expr,
-     from: $from:ident + $( $from_size:expr ),+) => {
-        $(
-            try_from_integer![@error for: $for + $p + $for_size, from: $from + $from_size];
-        )+
-    };
-    (@error
-     for: $for:ident + $p:ident + $for_size:expr, from: $from:ident + $from_size:expr) => {
-        devela::paste! {
-            impl TryFrom<[<$from$from_size>]> for [<$for$for_size>] {
-                type Error = $crate::error::NumeraError;
-                fn try_from(_from: [<$from$from_size>])
-                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
-                    return Err($crate::error::NumeraError::Conversion)
-                }
-            }
-            impl TryFrom<&[<$from$from_size>]> for [<$for$for_size>] {
-                type Error = $crate::error::NumeraError;
-                fn try_from(_from: &[<$from$from_size>])
-                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
-                    return Err($crate::error::NumeraError::Conversion)
-                }
-            }
-            impl TryFrom<&mut [<$from$from_size>]> for [<$for$for_size>] {
-                type Error = $crate::error::NumeraError;
-                fn try_from(_from: &mut [<$from$from_size>])
-                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
-                    return Err($crate::error::NumeraError::Conversion)
                 }
             }
         }
@@ -649,12 +677,12 @@ pub(crate) use try_from_integer;
 /// try_from_primitive![many for: Integer + 8, from: u + 8, 16, 32, 64, 128];
 /// ```
 macro_rules! try_from_primitive {
-    // when `from` is an integer primitive
+    // when `from` is an integer primitive.
     //
     // Used by:
     // - for: Z     from: u, i
     // - for: Nnz   from: u, i
-    // - for: Npz   from: u, i
+    // - for: Npz   from: i     // TODO:FIX: i
     // - for: Nz    from: i
     // - for: N0z   from: u, i
     // - for: Pz    from: u, i
@@ -673,21 +701,32 @@ macro_rules! try_from_primitive {
         devela::paste! {
             impl TryFrom<[<$from$from_size>]> for [<$for$for_size>] {
                 type Error = $crate::error::NumeraError;
+                #[inline]
                 fn try_from(from: [<$from$from_size>])
                     -> $crate::error::NumeraResult<[<$for$for_size>]> {
-
-                    #[cfg(feature = "safe")]
-                    return Self::from_parts(from.try_into()?);
-
-                    #[cfg(not(feature = "safe"))]
-                    // SAFETY: all ok results of try_from should be valid
-                    return Ok(unsafe { Self::from_parts_unchecked(from.try_into()?) });
+                    Self::from_parts(from.try_into()?)
+                }
+            }
+            impl TryFrom<&[<$from$from_size>]> for [<$for$for_size>] {
+                type Error = $crate::error::NumeraError;
+                #[inline]
+                fn try_from(from: &[<$from$from_size>])
+                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
+                    Self::from_parts((*from).try_into()?)
+                }
+            }
+            impl TryFrom<&mut [<$from$from_size>]> for [<$for$for_size>] {
+                type Error = $crate::error::NumeraError;
+                #[inline]
+                fn try_from(from: &mut [<$from$from_size>])
+                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
+                    Self::from_parts((*from).try_into()?)
                 }
             }
         }
     };
 
-    // when `from` is a non-zero integer primitive
+    // when `from` is a non-zero integer primitive.
     //
     // Used by:
     // - for: Z     from: NonZeroU, NonZeroI
@@ -711,9 +750,35 @@ macro_rules! try_from_primitive {
         devela::paste! {
             impl TryFrom<[<$from$from_size>]> for [<$for$for_size>] {
                 type Error = $crate::error::NumeraError;
+                #[inline]
                 fn try_from(from: [<$from$from_size>])
                     -> $crate::error::NumeraResult<[<$for$for_size>]> {
+                    #[cfg(feature = "safe")]
+                    return Self::from_parts(from.get().try_into()?);
 
+                    #[cfg(not(feature = "safe"))]
+                    // SAFETY: all ok results of try_from should be valid
+                    return Ok(unsafe { Self::from_parts_unchecked(from.get().try_into()?) });
+                }
+            }
+            impl TryFrom<&[<$from$from_size>]> for [<$for$for_size>] {
+                type Error = $crate::error::NumeraError;
+                #[inline]
+                fn try_from(from: &[<$from$from_size>])
+                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
+                    #[cfg(feature = "safe")]
+                    return Self::from_parts(from.get().try_into()?);
+
+                    #[cfg(not(feature = "safe"))]
+                    // SAFETY: all ok results of try_from should be valid
+                    return Ok(unsafe { Self::from_parts_unchecked(from.get().try_into()?) });
+                }
+            }
+            impl TryFrom<&mut [<$from$from_size>]> for [<$for$for_size>] {
+                type Error = $crate::error::NumeraError;
+                #[inline]
+                fn try_from(from: &mut [<$from$from_size>])
+                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
                     #[cfg(feature = "safe")]
                     return Self::from_parts(from.get().try_into()?);
 
@@ -724,17 +789,88 @@ macro_rules! try_from_primitive {
             }
         }
     };
+}
+pub(crate) use try_from_primitive;
 
-    // when the conversion must always fail
+/// Implements `TryFrom`<`$from$from_size`> for `$for$for_size`.
+///
+/// # Args
+/// - `$for`:       the base name of the target. e.g. `NonZeroInteger`.
+/// - `$for_size`:  the bit size of the target. e.g. `16`.
+/// - `$from`:    the base name of the origin. e.g. `u`.
+/// - `$from_size`: a list of bit sizes of the origin. e.g. `8, 16`.
+///
+/// # Examples
+/// ```ignore
+/// try_from_any![zero for: NonPositiveInteger + 8, from: u + 8, 16, 32, 64, 128];
+/// ```
+macro_rules! try_from_any {
+    // when the conversion is only valid when the `from` value is `zero`.
     //
     // Used by:
-    // - for: Nz    from: NonZeroU, u
-    // - for: Npz   from: NonZeroU
+    // - for: Nnz   from: Npz
+    // - for: Npz   from: Nnz, u
+    (zero
+     for: $for:ident + $for_size:expr,
+     from: $from:ident + $( $from_size:expr ),+) => {
+        $(
+            try_from_any![@zero for: $for + $for_size, from: $from + $from_size];
+        )+
+    };
+    (@zero
+     for: $for:ident + $for_size:expr, from: $from:ident + $from_size:expr) => {
+        devela::paste! {
+            impl TryFrom<[<$from$from_size>]> for [<$for$for_size>] {
+                type Error = $crate::error::NumeraError;
+                #[inline]
+                fn try_from(from: [<$from$from_size>])
+                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
+                    if from.is_zero() {
+                        Ok([<$for$for_size>]::ZERO)
+                    } else {
+                        Err($crate::error::NumeraError::Conversion)
+                    }
+                }
+            }
+            impl TryFrom<&[<$from$from_size>]> for [<$for$for_size>] {
+                type Error = $crate::error::NumeraError;
+                #[inline]
+                fn try_from(from: &[<$from$from_size>])
+                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
+                    if from.is_zero() {
+                        Ok([<$for$for_size>]::ZERO)
+                    } else {
+                        Err($crate::error::NumeraError::Conversion)
+                    }
+                }
+            }
+            impl TryFrom<&mut [<$from$from_size>]> for [<$for$for_size>] {
+                type Error = $crate::error::NumeraError;
+                #[inline]
+                fn try_from(from: &mut [<$from$from_size>])
+                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
+                    if from.is_zero() {
+                        Ok([<$for$for_size>]::ZERO)
+                    } else {
+                        Err($crate::error::NumeraError::Conversion)
+                    }
+                }
+            }
+        }
+    };
+
+    // when the conversion attempt must always error.
+    //
+    // Used by:
+    // - for: Pz    from: Nz, Npz
+    // - for: Nz    from: Nnz, Pz
+    // - for: Nnz   from: Nz
+    // - for: Npz   from: Pz
     (error
      for: $for:ident + $for_size:expr,
      from: $from:ident + $( $from_size:expr ),+) => {
         $(
-            try_from_primitive![@error for: $for + $for_size, from: $from + $from_size];
+            try_from_any![@error for: $for + $for_size, from: $from + $from_size];
         )+
     };
     (@error
@@ -742,26 +878,29 @@ macro_rules! try_from_primitive {
         devela::paste! {
             impl TryFrom<[<$from$from_size>]> for [<$for$for_size>] {
                 type Error = $crate::error::NumeraError;
+                #[inline]
                 fn try_from(_from: [<$from$from_size>])
                     -> $crate::error::NumeraResult<[<$for$for_size>]> {
-                    return Err($crate::error::NumeraError::Conversion)
+                    Err($crate::error::NumeraError::Conversion)
                 }
             }
             impl TryFrom<&[<$from$from_size>]> for [<$for$for_size>] {
                 type Error = $crate::error::NumeraError;
+                #[inline]
                 fn try_from(_from: &[<$from$from_size>])
                     -> $crate::error::NumeraResult<[<$for$for_size>]> {
-                    return Err($crate::error::NumeraError::Conversion)
+                    Err($crate::error::NumeraError::Conversion)
                 }
             }
             impl TryFrom<&mut [<$from$from_size>]> for [<$for$for_size>] {
                 type Error = $crate::error::NumeraError;
+                #[inline]
                 fn try_from(_from: &mut [<$from$from_size>])
                     -> $crate::error::NumeraResult<[<$for$for_size>]> {
-                    return Err($crate::error::NumeraError::Conversion)
+                    Err($crate::error::NumeraError::Conversion)
                 }
             }
         }
     };
 }
-pub(crate) use try_from_primitive;
+pub(crate) use try_from_any;

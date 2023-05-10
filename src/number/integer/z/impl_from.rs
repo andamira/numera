@@ -70,52 +70,52 @@ try_from_primitive![nonzero for:Integer+64, from:NonZeroI+128];
 
 /* complementary Integer conversions */
 
-// from smaller or equal sized Integer (Self)
-from_integer![int for:Integer+i+16, from:Integer+8];
-from_integer![int for:Integer+i+32, from:Integer+8,16];
-from_integer![int for:Integer+i+64, from:Integer+8,16,32];
-from_integer![int for:Integer+i+128, from:Integer+8,16,32,64];
+// from smaller Integer (Self)
+from_integer![int for:Integer+16, from:Integer+8];
+from_integer![int for:Integer+32, from:Integer+8,16];
+from_integer![int for:Integer+64, from:Integer+8,16,32];
+from_integer![int for:Integer+128, from:Integer+8,16,32,64];
 // try_from bigger Integer (Self)
-try_from_integer![int for:Integer+i+8, from:Integer+16,32,64,128];
-try_from_integer![int for:Integer+i+16, from:Integer+32,64,128];
-try_from_integer![int for:Integer+i+32, from:Integer+64,128];
-try_from_integer![int for:Integer+i+64, from:Integer+128];
+try_from_integer![int for:Integer+8, from:Integer+16,32,64,128];
+try_from_integer![int for:Integer+16, from:Integer+32,64,128];
+try_from_integer![int for:Integer+32, from:Integer+64,128];
+try_from_integer![int for:Integer+64, from:Integer+128];
 
 // from smaller or equal sized NonZeroInteger
-from_integer![nonzero for:Integer+i+8, from:NonZeroInteger+8];
-from_integer![nonzero for:Integer+i+16, from:NonZeroInteger+8,16];
-from_integer![nonzero for:Integer+i+32, from:NonZeroInteger+8,16,32];
-from_integer![nonzero for:Integer+i+64, from:NonZeroInteger+8,16,32,64];
-from_integer![nonzero for:Integer+i+128, from:NonZeroInteger+8,16,32,64,128];
+from_integer![nonzero for:Integer+8, from:NonZeroInteger+8];
+from_integer![nonzero for:Integer+16, from:NonZeroInteger+8,16];
+from_integer![nonzero for:Integer+32, from:NonZeroInteger+8,16,32];
+from_integer![nonzero for:Integer+64, from:NonZeroInteger+8,16,32,64];
+from_integer![nonzero for:Integer+128, from:NonZeroInteger+8,16,32,64,128];
 // try_from bigger NonZeroInteger
-try_from_integer![nonzero for:Integer+i+8, from:NonZeroInteger+16,32,64,128];
-try_from_integer![nonzero for:Integer+i+16, from:NonZeroInteger+32,64,128];
-try_from_integer![nonzero for:Integer+i+32, from:NonZeroInteger+64,128];
-try_from_integer![nonzero for:Integer+i+64, from:NonZeroInteger+128];
+try_from_integer![nonzero for:Integer+8, from:NonZeroInteger+16,32,64,128];
+try_from_integer![nonzero for:Integer+16, from:NonZeroInteger+32,64,128];
+try_from_integer![nonzero for:Integer+32, from:NonZeroInteger+64,128];
+try_from_integer![nonzero for:Integer+64, from:NonZeroInteger+128];
 
 // from smaller NonNegativeInteger
-from_integer![int for:Integer+i+16, from:NonNegativeInteger+8];
-from_integer![int for:Integer+i+32, from:NonNegativeInteger+8,16];
-from_integer![int for:Integer+i+64, from:NonNegativeInteger+8,16,32];
-from_integer![int for:Integer+i+128, from:NonNegativeInteger+8,16,32,64];
+from_integer![int for:Integer+16, from:NonNegativeInteger+8];
+from_integer![int for:Integer+32, from:NonNegativeInteger+8,16];
+from_integer![int for:Integer+64, from:NonNegativeInteger+8,16,32];
+from_integer![int for:Integer+128, from:NonNegativeInteger+8,16,32,64];
 // from bigger or equal sized NonNegativeInteger
-try_from_integer![int for:Integer+i+8, from:NonNegativeInteger+8,16,32,64,128];
-try_from_integer![int for:Integer+i+16, from:NonNegativeInteger+16,32,64,128];
-try_from_integer![int for:Integer+i+32, from:NonNegativeInteger+32,64,128];
-try_from_integer![int for:Integer+i+64, from:NonNegativeInteger+64,128];
-try_from_integer![int for:Integer+i+128, from:NonNegativeInteger+128];
+try_from_integer![int for:Integer+8, from:NonNegativeInteger+8,16,32,64,128];
+try_from_integer![int for:Integer+16, from:NonNegativeInteger+16,32,64,128];
+try_from_integer![int for:Integer+32, from:NonNegativeInteger+32,64,128];
+try_from_integer![int for:Integer+64, from:NonNegativeInteger+64,128];
+try_from_integer![int for:Integer+128, from:NonNegativeInteger+128];
 
 // from smaller PositiveInteger
-from_integer![nonzero for:Integer+i+16, from:PositiveInteger+8];
-from_integer![nonzero for:Integer+i+32, from:PositiveInteger+8,16];
-from_integer![nonzero for:Integer+i+64, from:PositiveInteger+8,16,32];
-from_integer![nonzero for:Integer+i+128, from:PositiveInteger+8,16,32,64];
+from_integer![nonzero for:Integer+16, from:PositiveInteger+8];
+from_integer![nonzero for:Integer+32, from:PositiveInteger+8,16];
+from_integer![nonzero for:Integer+64, from:PositiveInteger+8,16,32];
+from_integer![nonzero for:Integer+128, from:PositiveInteger+8,16,32,64];
 // from bigger or equal sized PositiveInteger
-try_from_integer![nonzero for:Integer+i+8, from:PositiveInteger+8,16,32,64,128];
-try_from_integer![nonzero for:Integer+i+16, from:PositiveInteger+16,32,64,128];
-try_from_integer![nonzero for:Integer+i+32, from:PositiveInteger+32,64,128];
-try_from_integer![nonzero for:Integer+i+64, from:PositiveInteger+64,128];
-try_from_integer![nonzero for:Integer+i+128, from:PositiveInteger+128];
+try_from_integer![nonzero for:Integer+8, from:PositiveInteger+8,16,32,64,128];
+try_from_integer![nonzero for:Integer+16, from:PositiveInteger+16,32,64,128];
+try_from_integer![nonzero for:Integer+32, from:PositiveInteger+32,64,128];
+try_from_integer![nonzero for:Integer+64, from:PositiveInteger+64,128];
+try_from_integer![nonzero for:Integer+128, from:PositiveInteger+128];
 
 // from smaller NonPositiveInteger
 from_integer![int_neg for:Integer+i+16, from:NonPositiveInteger+8];
@@ -143,41 +143,88 @@ try_from_integer![nonzero_neg for:Integer+i+128, from:NegativeInteger+128];
 
 #[cfg(test)]
 mod tests {
-    use crate::all::{abbr::*, NegSigned, NumeraResult};
+    use crate::all::{abbr::*, NumeraResult};
+    use core::num::{NonZeroI16, NonZeroI8, NonZeroU16, NonZeroU8};
 
     #[test]
     fn z_from() -> NumeraResult<()> {
-        let _5 = Z8::new(5);
+        // NOTE: 3 different ways of casting:
+        assert_eq![Z8::new(5), 5.into()];
+        assert_eq![Into::<Z8>::into(5), Z8::new(5)];
+        assert_eq![<i8 as Into<Z8>>::into(5), Z8::new(5)];
 
-        // 3 ways:
-        assert_eq![<i8 as Into<Z8>>::into(5), _5];
-        assert_eq![Into::<Z8>::into(5), _5];
-        assert_eq![_5, 5.into()];
+        /* complementary primitive conversions */
 
-        // from u,i
+        // from smaller u
         assert_eq![Z16::new(100), 100_u8.into()];
-        assert_eq![Z16::new(100), 100_i16.into()];
+        // try_from bigger or equal sized u
+        assert_eq![Z8::new(100), 100_u8.try_into()?];
+        assert_eq![Z8::new(100), 100_u16.try_into()?];
+        assert![TryInto::<Z8>::try_into(200_u16).is_err()];
 
-        // from smaller Integer
+        // from smaller or equal sized i
+        assert_eq![Z8::new(100), 100_i8.into()];
+        assert_eq![Z16::new(100), 100_i8.into()];
+        // try_from bigger i
+        assert_eq![Z8::new(100), 100_i16.try_into()?];
+        assert![TryInto::<Z8>::try_into(200i16).is_err()];
+
+        // from smaller NonZeroU
+        assert_eq![Z16::new(100), NonZeroU8::new(100).unwrap().into()];
+        // try_from bigger or equal sized NonZeroU
+        assert_eq![Z8::new(100), NonZeroU8::new(100).unwrap().try_into()?];
+        assert_eq![Z8::new(100), NonZeroU16::new(100).unwrap().try_into()?];
+        assert![TryInto::<Z8>::try_into(NonZeroU16::new(200).unwrap()).is_err()];
+
+        // from smaller or equal sized NonZeroI
+        assert_eq![Z8::new(100), NonZeroI8::new(100).unwrap().into()];
+        assert_eq![Z16::new(100), NonZeroI8::new(100).unwrap().into()];
+        // try_from bigger NonZeroI
+        assert_eq![Z8::new(100), NonZeroI16::new(100).unwrap().try_into()?];
+        assert![TryInto::<Z8>::try_into(NonZeroI16::new(200).unwrap()).is_err()];
+
+        /* complementary Integer conversions */
+
+        // from smaller Integer (Self)
         assert_eq![Z16::new(100), Z8::new(100).into()];
-        assert_eq![Z32::new(100), Z8::new(100).into()];
-        assert_eq![Z32::new(100), Z16::new(100).into()];
-        // ...
-        assert_eq![Z128::new(100), Z8::new(100).into()];
-        assert_eq![Z128::new(100), Z64::new(100).into()];
+        // try_from bigger Integer (Self)
+        assert_eq![Z8::new(100), Z16::new(100).try_into()?];
+        assert![TryInto::<Z8>::try_into(Z16::new(200)).is_err()];
 
         // from smaller or equal sized NonZeroInteger
         assert_eq![Z16::new(100), N0z8::new(100)?.into()];
-        assert_eq![Z16::new(100), N0z16::new(100)?.into()];
-        assert_eq![Z128::new(100), N0z128::new(100)?.into()];
+        assert_eq![Z8::new(100), N0z8::new(100)?.into()];
+        // try_from bigger NonZeroInteger
+        assert_eq![Z8::new(100), N0z16::new(100)?.try_into()?];
+        assert![TryInto::<Z8>::try_into(N0z16::new(200)?).is_err()];
 
         // from smaller NonNegativeInteger
         assert_eq![Z16::new(100), Nnz8::new(100).into()];
-        assert_eq![Z128::new(100), Nnz64::new(100).into()];
+        // from bigger or equal sized NonNegativeInteger
+        assert_eq![Z8::new(100), Nnz16::new(100).try_into()?];
+        assert_eq![Z8::new(100), Nnz8::new(100).try_into()?];
+        assert![TryInto::<Z8>::try_into(Nnz16::new(200)).is_err()];
+
+        // from smaller PositiveInteger
+        assert_eq![Z16::new(100), Pz8::new(100)?.into()];
+        // from bigger or equal sized PositiveInteger
+        assert_eq![Z8::new(100), Pz16::new(100)?.try_into()?];
+        assert_eq![Z8::new(100), Pz8::new(100)?.try_into()?];
+        assert![TryInto::<Z8>::try_into(Pz16::new(200)?).is_err()];
 
         // from smaller NonPositiveInteger
-        assert_eq![Z16::new(-100), Npz8::new_neg(100)?.into()];
-        assert_eq![Z128::new(-100), Npz64::new_neg(100)?.into()];
+        assert_eq![Z16::new(-100), Npz8::new(100).into()];
+        // from bigger or equal sized NonPositiveInteger
+        assert_eq![Z8::new(-100), Npz16::new(100).try_into()?];
+        assert_eq![Z8::new(-100), Npz8::new(100).try_into()?];
+        assert![TryInto::<Z8>::try_into(Npz16::new(200)).is_err()];
+
+        // from smaller NegativeInteger
+        assert_eq![Z16::new(-100), Nz8::new(100)?.into()];
+        // from bigger or equal sized NegativeInteger
+        assert_eq![Z8::new(-100), Nz16::new(100)?.try_into()?];
+        assert_eq![Z8::new(-100), Nz8::new(100)?.try_into()?];
+        assert![TryInto::<Z8>::try_into(Nz16::new(200)?).is_err()];
 
         Ok(())
     }
