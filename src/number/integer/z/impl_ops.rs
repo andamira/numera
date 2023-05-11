@@ -42,13 +42,16 @@ macro_rules! impl_integer_ops {
     // $op: operation. e.g. Add
     // $fn: operation fn. e.g. add
     (bin_op: $t:ident, $op:ident, $fn:ident) => {
-        impl $op for $t {
+        impl $op<$t> for $t {
             type Output = $t;
-
-            fn $fn(self, rhs: Self::Output) -> Self::Output {
+            fn $fn(self, rhs: $t) -> Self::Output {
                 $t(self.0.$fn(rhs.0))
             }
         }
+        // NOTE: It's not a good idea to impl for refs in case of copy types:
+        // impl $op<&$t> for $t { /*...*/ } // ← this one complicates inferences
+        // impl $op<$t> for &$t { /*...*/ }
+        // impl $op<&$t> for &$t { /*...*/ }
     };
 
     // impl a unary op for a single integer type
@@ -59,7 +62,6 @@ macro_rules! impl_integer_ops {
     (un_op: $t:ident, $op:ident, $fn:ident) => {
         impl $op for $t {
             type Output = $t;
-
             fn $fn(self) -> Self::Output {
                 $t(self.0.$fn())
             }
@@ -70,19 +72,19 @@ impl_integer_ops![Integer8, Integer16, Integer32, Integer64, Integer128];
 
 #[cfg(test)]
 mod tests {
-    use crate::all::*;
+    use crate::all::{abbr::*, *};
 
     #[test]
     fn z_ops() -> NumeraResult<()> {
-        let _5 = Integer8::from_parts(5)?;
-        let _7 = Integer8::from_parts(7)?;
-        assert_eq![_7 + _5, Integer8::from_parts(12)?];
-        assert_eq![_7 - _5, Integer8::from_parts(2)?];
-        assert_eq![_5 - _7, Integer8::from_parts(-2)?];
-        assert_eq![_7 * _5, Integer8::from_parts(35)?];
-        assert_eq![_7 / _5, Integer8::from_parts(1)?];
-        assert_eq![_5 / _7, Integer8::from_parts(0)?];
-        assert_eq![-_7, Integer8::from_parts(-7)?];
+        let _5 = Z8::new(5);
+        let _7 = Z8::new(7);
+        assert_eq![_7 + _5, Z8::new(12)];
+        assert_eq![_7 - _5, Z8::new(2)];
+        assert_eq![_5 - _7, Z8::new(-2)];
+        assert_eq![_7 * _5, Z8::new(35)];
+        assert_eq![_7 / _5, Z8::new(1)];
+        assert_eq![_5 / _7, Z8::new(0)];
+        assert_eq![-_7, Z8::new(-7)];
 
         #[cfg(feature = "std")]
         {
@@ -90,7 +92,7 @@ mod tests {
             // overflow
             assert![catch_unwind(|| _7 * _7 * _7).is_err()];
             // underflow
-            assert![catch_unwind(|| Integer8::MIN - _5).is_err()];
+            assert![catch_unwind(|| Z8::MIN - _5).is_err()];
         }
         Ok(())
     }
