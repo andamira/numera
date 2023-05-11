@@ -148,16 +148,18 @@ mod tests {
         // try_from u (only the non-zero values)
         assert_eq![N0z8::new(100)?, 100_u8.try_into()?];
         assert_eq![N0z8::new(100)?, 100_u16.try_into()?];
-        assert_eq![N0z16::new(100)?, 100_u8.try_into()?];
+        assert_eq![N0z16::new(200)?, 200_u8.try_into()?];
         assert![TryInto::<N0z8>::try_into(0_u8).is_err()];
         assert![TryInto::<N0z8>::try_into(200_u16).is_err()];
 
         // try_from i (only the non-zero values)
         assert_eq![N0z8::new(100)?, 100_i8.try_into()?];
+        assert_eq![N0z8::new(-100)?, (-100_i8).try_into()?];
         assert_eq![N0z8::new(100)?, 100_i16.try_into()?];
         assert_eq![N0z16::new(100)?, 100_i8.try_into()?];
         assert![TryInto::<N0z8>::try_into(0_i16).is_err()];
         assert![TryInto::<N0z8>::try_into(200_i16).is_err()];
+        assert![TryInto::<N0z8>::try_into(-200_i16).is_err()];
 
         /* complementary Integer conversions */
 
@@ -165,7 +167,9 @@ mod tests {
         assert_eq![N0z16::new(100)?, N0z8::new(100)?.into()];
         // try_from bigger NonZeroInteger
         assert_eq![N0z8::new(100)?, N0z16::new(100)?.try_into()?];
+        assert_eq![N0z8::new(-100)?, N0z16::new(-100)?.try_into()?];
         assert![TryInto::<N0z8>::try_into(N0z16::new(200)?).is_err()];
+        assert![TryInto::<N0z8>::try_into(N0z16::new(-200)?).is_err()];
 
         // from smaller PositiveInteger
         assert_eq![N0z16::new(100)?, Pz8::new(100)?.into()];
@@ -185,6 +189,7 @@ mod tests {
 
         // try_from Integer
         assert_eq![N0z8::new(100)?, Z8::new(100).try_into()?];
+        assert_eq![N0z8::new(-100)?, Z8::new(-100).try_into()?];
         assert_eq![N0z8::new(100)?, Z16::new(100).try_into()?];
         assert_eq![N0z16::new(100)?, Z8::new(100).try_into()?];
         assert![TryInto::<N0z8>::try_into(Z16::new(200)).is_err()];

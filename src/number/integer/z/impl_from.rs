@@ -156,6 +156,7 @@ mod tests {
         /* complementary primitive conversions */
 
         // from smaller u
+        assert_eq![Z16::new(0), 0_u8.into()];
         assert_eq![Z16::new(100), 100_u8.into()];
         // try_from bigger or equal sized u
         assert_eq![Z8::new(100), 100_u8.try_into()?];
@@ -163,7 +164,9 @@ mod tests {
         assert![TryInto::<Z8>::try_into(200_u16).is_err()];
 
         // from smaller or equal sized i
+        assert_eq![Z8::new(0), 0_i8.into()];
         assert_eq![Z8::new(100), 100_i8.into()];
+        assert_eq![Z8::new(-100), (-100_i8).into()];
         assert_eq![Z16::new(100), 100_i8.into()];
         // try_from bigger i
         assert_eq![Z8::new(100), 100_i16.try_into()?];
@@ -178,6 +181,7 @@ mod tests {
 
         // from smaller or equal sized NonZeroI
         assert_eq![Z8::new(100), NonZeroI8::new(100).unwrap().into()];
+        assert_eq![Z8::new(-100), NonZeroI8::new(-100).unwrap().into()];
         assert_eq![Z16::new(100), NonZeroI8::new(100).unwrap().into()];
         // try_from bigger NonZeroI
         assert_eq![Z8::new(100), NonZeroI16::new(100).unwrap().try_into()?];
@@ -193,6 +197,7 @@ mod tests {
 
         // from smaller or equal sized NonZeroInteger
         assert_eq![Z16::new(100), N0z8::new(100)?.into()];
+        assert_eq![Z16::new(-100), N0z8::new(-100)?.into()];
         assert_eq![Z8::new(100), N0z8::new(100)?.into()];
         // try_from bigger NonZeroInteger
         assert_eq![Z8::new(100), N0z16::new(100)?.try_into()?];
