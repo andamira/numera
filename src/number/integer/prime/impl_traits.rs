@@ -70,7 +70,7 @@ impl Countable for Prime8 {
     /// ```
     #[inline]
     fn next(&self) -> NumeraResult<Self> {
-        let nth = self.nth();
+        let nth = self.pi();
         match nth {
             54 => Err(IntegerError::Overflow.into()),
             _ => Ok(Prime8(PRIMES_U8[nth])),
@@ -90,7 +90,7 @@ impl Countable for Prime8 {
     /// ```
     #[inline]
     fn previous(&self) -> NumeraResult<Self> {
-        let nth = self.nth();
+        let nth = self.pi();
         match nth {
             1 => Err(IntegerError::Underflow.into()),
             _ => Ok(Prime8(PRIMES_U8[nth - 2])),
@@ -205,7 +205,7 @@ impl Countable for Prime16 {
     /// ```
     #[inline]
     fn next(&self) -> NumeraResult<Self> {
-        let nth = self.nth();
+        let nth = self.pi();
         match nth {
             // can't be 0
             1..=53 => Ok(Prime16(u16::from(PRIMES_U8[nth]))),
@@ -239,7 +239,7 @@ impl Countable for Prime16 {
     /// ```
     #[inline]
     fn previous(&self) -> NumeraResult<Self> {
-        let nth = self.nth();
+        let nth = self.pi();
         match nth {
             2..=55 => Ok(Prime16(u16::from(PRIMES_U8[nth - 2]))),
             56..=6_542 => Ok(Prime16(PRIMES_U16[nth - 54 - 2])),

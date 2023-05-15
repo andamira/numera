@@ -1,16 +1,13 @@
 // numera::number::integer::prime
 //
-//! Prime numbers.
+//! Prime numbers, from the set $\Bbb{P}$.
 //
-
-#[cfg(feature = "std")]
-use primal_sieve::Sieve;
 
 use crate::all::{IntegerError, NumeraError, NumeraResult};
 use core::fmt;
 
-#[cfg(all(feature = "std"))]
-use devela::az::CheckedAs;
+#[cfg(feature = "std")]
+use {devela::az::CheckedAs, primal_sieve::Sieve};
 
 mod consts;
 mod family;
@@ -25,7 +22,7 @@ pub(crate) mod all {
     pub use super::{
         consts::{PRIMES_BELL, PRIMES_U16, PRIMES_U8},
         family::Primes,
-        fns::{is_prime_brute, nth_prime_brute},
+        fns::{is_prime_brute, nth_prime_brute, prime_pi_brute},
         trait_prime::Prime,
     };
 
@@ -34,19 +31,28 @@ pub(crate) mod all {
     pub use super::fns::{is_prime_sieve, nth_prime_sieve};
 }
 
-/// An 8-bit prime number that can represent the first 54 prime numbers.
+use crate::number::macros::define_abbreviations;
+define_abbreviations![many P, Prime, 8, 16, 32];
+
+/// An 8-bit prime number, from the set $\Bbb{P}$.
+///
+/// Can represent the first 54 prime numbers.
 ///
 // pub struct Prime8(PositiveInteger8);
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Prime8(u8);
 
-/// A 16-bit prime number that can represent the first 6,542 prime numbers.
+/// A 16-bit prime number, from the set $\Bbb{P}$.
+///
+/// Can represent the first 6,542 prime numbers.
 ///
 // pub struct Prime16(PositiveInteger16);
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Prime16(u16);
 
-/// A 32-bit prime number that can represent the first 203,280,219 prime numbers.
+/// A 32-bit prime number, from the set $\Bbb{P}$.
+///
+/// Can represent the first 203,280,219 prime numbers.
 ///
 // pub struct Prime32(PositiveInteger32);
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
@@ -79,6 +85,18 @@ impl Prime8 {
             Ok(Prime8(value))
         } else {
             Err(IntegerError::NotPrime.into())
+        }
+    }
+
+    /// Returns the `nth` prime number.
+    ///
+    /// # Errors
+    /// If `nth` is 0 or greater than 54.
+    #[inline]
+    pub const fn new_nth(nth: u8) -> NumeraResult<Self> {
+        match nth {
+            1..=54 => Ok(Self(PRIMES_U8[(nth - 1) as usize])),
+            _ => Err(NumeraError::Integer(IntegerError::Overflow)),
         }
     }
 
@@ -116,11 +134,18 @@ impl Prime8 {
     /// use numera::all::{Number, Prime8};
     ///
     /// # fn main() -> numera::error::NumeraResult<()> {
-    /// assert_eq![1, Prime8::from_parts(2)?.nth()];
-    /// assert_eq![54, Prime8::from_parts(251)?.nth()];
+    /// assert_eq![1, Prime8::new(2)?.pi()];
+    /// assert_eq![54, Prime8::new(251)?.pi()];
     /// # Ok(()) }
     /// ```
-    pub fn nth(&self) -> usize {
+    ///
+    /// # Notation
+    /// $\pi(x)$
+    ///
+    /// # Links
+    /// - <https://mathworld.wolfram.com/PrimeCountingFunction.html>.
+    /// - <https://en.wikipedia.org/wiki/Prime-counting_function>.
+    pub fn pi(&self) -> usize {
         for (i, &p) in PRIMES_U8.iter().enumerate() {
             if p == self.0 {
                 return i + 1;
@@ -141,6 +166,20 @@ impl Prime16 {
             Ok(Prime16(value))
         } else {
             Err(IntegerError::NotPrime.into())
+        }
+    }
+
+    /// Returns the `nth` prime number.
+    ///
+    /// # Errors
+    /// If `nth` is 0 or greater than 6,542.
+    #[inline]
+    pub const fn new_nth(nth: u16) -> NumeraResult<Self> {
+        match nth {
+            #[allow(clippy::cast_possible_truncation)]
+            1..=54 => Ok(Self(PRIMES_U8[(nth as u8 - 1) as usize] as u16)),
+            55..=6542 => Ok(Self(PRIMES_U16[(nth + 54) as usize])),
+            _ => Err(NumeraError::Integer(IntegerError::Overflow)),
         }
     }
 
@@ -178,13 +217,19 @@ impl Prime16 {
     /// use numera::all::{Number, Prime16};
     ///
     /// # fn main() -> numera::error::NumeraResult<()> {
-    /// assert_eq![1, Prime16::from_parts(2)?.nth()];
-    /// assert_eq![54, Prime16::from_parts(251)?.nth()];
-    /// assert_eq![55, Prime16::from_parts(257)?.nth()];
-    /// assert_eq![6_542, Prime16::from_parts(65_521)?.nth()];
+    /// assert_eq![1, Prime16::new(2)?.pi()];
+    /// assert_eq![54, Prime16::new(251)?.pi()];
+    /// assert_eq![55, Prime16::new(257)?.pi()];
+    /// assert_eq![6_542, Prime16::new(65_521)?.pi()];
     /// # Ok(()) }
     /// ```
-    pub fn nth(&self) -> usize {
+    /// # Notation
+    /// $\pi(x)$
+    ///
+    /// # Links
+    /// - <https://mathworld.wolfram.com/PrimeCountingFunction.html>.
+    /// - <https://en.wikipedia.org/wiki/Prime-counting_function>.
+    pub fn pi(&self) -> usize {
         // A) CHECK BENCH
         // for (i, &p) in PRIMES_U8.iter().enumerate() {
         //     if p == core::cmp::min(u8::MAX as u16, self.0) as u8 {
@@ -242,6 +287,41 @@ impl Prime32 {
         }
     }
 
+    /// Returns the `nth` prime number.
+    ///
+    /// # Errors
+    /// If `nth` is 0 or greater than 203,280,219.
+    #[inline]
+    #[allow(clippy::missing_panics_doc)] // NonZeroUsize can't be zero
+    pub fn new_nth(nth: u32) -> NumeraResult<Self> {
+        match nth {
+            #[allow(clippy::cast_possible_truncation)]
+            1..=54 => Ok(Self(u32::from(PRIMES_U8[(nth as u8 - 1) as usize]))),
+            #[allow(clippy::cast_possible_truncation)]
+            55..=6_542 => Ok(Self(u32::from(PRIMES_U16[(nth as u16 + 54) as usize]))),
+            6_543..=203_280_219 => {
+                #[cfg(feature = "std")]
+                {
+                    use core::num::NonZeroUsize;
+
+                    #[allow(clippy::cast_possible_truncation)]
+                    return Ok(Self(
+                        nth_prime_sieve(NonZeroUsize::new(nth as usize).unwrap()) as u32,
+                    ));
+                }
+
+                #[cfg(not(feature = "std"))]
+                {
+                    use core::num::NonZeroU32;
+
+                    // Ok(Self(nth_prime_brute(nth)))
+                    Ok(Self(nth_prime_brute(NonZeroU32::new(nth).unwrap())))
+                }
+            }
+            _ => Err(NumeraError::Integer(IntegerError::Overflow)),
+        }
+    }
+
     // NOTE: the next 2 functions are mostly a duplication, because calling
     // `is_prime_brute` doesn't allow the function to be `const`.
 
@@ -273,24 +353,31 @@ impl Prime32 {
     /// Returns the number of primes upto and including the current one.
     ///
     /// Note that this operation can be slow for big 32-bit numbers,
-    /// specially in no-std context.
+    /// specially in a no-std context.
     ///
-    /// # Example
+    /// # Examples
     /// ```
     /// use numera::all::{Number, Prime32};
     ///
     /// # fn main() -> numera::error::NumeraResult<()> {
-    /// assert_eq![1, Prime32::from_parts(2)?.nth()];
-    /// assert_eq![54, Prime32::from_parts(251)?.nth()];
-    /// assert_eq![55, Prime32::from_parts(257)?.nth()];
-    /// assert_eq![6_542, Prime32::from_parts(65_521)?.nth()];
-    /// assert_eq![6_543, Prime32::from_parts(65_537)?.nth()];
-    /// assert_eq![40_000_000, Prime32::from_parts(776_531_401)?.nth()];
+    /// assert_eq![1, Prime32::new(2)?.pi()];
+    /// assert_eq![54, Prime32::new(251)?.pi()];
+    /// assert_eq![55, Prime32::new(257)?.pi()];
+    /// assert_eq![6_542, Prime32::new(65_521)?.pi()];
+    /// assert_eq![6_543, Prime32::new(65_537)?.pi()];
+    /// assert_eq![40_000_000, Prime32::new(776_531_401)?.pi()];
     /// # Ok(()) }
     /// ```
+    ///
+    /// # Notation
+    /// $\pi(x)$
+    ///
+    /// # Links
+    /// - <https://mathworld.wolfram.com/PrimeCountingFunction.html>.
+    /// - <https://en.wikipedia.org/wiki/Prime-counting_function>.
     #[cfg(feature = "std")]
     #[cfg_attr(feature = "nightly", doc(cfg(feature = "std")))]
-    pub fn nth(&self) -> usize {
+    pub fn pi(&self) -> usize {
         if self.0 < u32::from(u8::MAX) {
             for (i, &p) in PRIMES_U8.iter().enumerate() {
                 if u32::from(p) == self.0 {
@@ -313,7 +400,7 @@ impl Prime32 {
             // this can be VERY slow for high 32-bit numbers:
             #[cfg(not(feature = "std"))]
             {
-                todo![] // TODO
+                nth_prime_brute(core::num::NonZeroU32::new(self.0).unwrap())
             }
         }
         return 203_280_221;

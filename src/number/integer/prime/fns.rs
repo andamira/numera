@@ -3,6 +3,7 @@
 //! Alternative implementations for finding primes.
 //
 
+use core::num::NonZeroU32;
 #[cfg(feature = "std")]
 use {core::num::NonZeroUsize, primal_sieve::Sieve};
 
@@ -20,9 +21,10 @@ pub fn is_prime_brute(number: u32) -> bool {
 }
 
 /// Finds the `nth` prime number using [`is_prime_brute`].
-pub fn nth_prime_brute(nth: u32) -> u32 {
+pub fn nth_prime_brute(nth: NonZeroU32) -> u32 {
     let mut count = 0;
     let mut i = 2;
+    let nth = nth.get();
     loop {
         if is_prime_brute(i) {
             count += 1;
@@ -32,6 +34,25 @@ pub fn nth_prime_brute(nth: u32) -> u32 {
         }
         i += 1;
     }
+}
+
+/// Counts the number of primes upto and including `n`.
+///
+/// # Notation
+/// $\pi(x)$
+///
+/// # Links
+/// - <https://mathworld.wolfram.com/PrimeCountingFunction.html>.
+/// - <https://en.wikipedia.org/wiki/Prime-counting_function>.
+pub fn prime_pi_brute(n: NonZeroU32) -> usize {
+    let n = n.get();
+    let mut prime_count = 0;
+    for i in 1..=n {
+        if is_prime_brute(i) {
+            prime_count += 1;
+        }
+    }
+    prime_count
 }
 
 /// Checks wheter a `number` is prime, using an optimized [`Sieve`].
