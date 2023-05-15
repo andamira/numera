@@ -3,8 +3,7 @@
 //!
 //
 
-use super::*;
-use crate::number::integer::Integer;
+use crate::number::integer::*;
 
 macro_rules! impl_nonzero_integer {
     // $t:

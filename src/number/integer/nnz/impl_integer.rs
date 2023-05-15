@@ -3,7 +3,10 @@
 //!
 //
 
-use crate::number::integer::{nnz::*, Integer};
+use crate::number::{
+    integer::{nnz::*, Integer},
+    traits::ConstOne,
+};
 use devela::az::CheckedAs;
 
 #[cfg(not(feature = "std"))]
@@ -54,6 +57,16 @@ macro_rules! impl_integer {
                 return Some(is_prime_sieve((self.0).checked_as::<usize>()?));
                 #[cfg(not(feature = "std"))]
                 return Some(is_prime_brute((self.0).checked_as::<u32>()?));
+            }
+
+            /// Returns `true` if `self` and `other` are relative primes,
+            /// which means they have only 1 as their only common divisor.
+            ///
+            /// # Notation
+            /// $a \perp b$.
+            #[inline]
+            pub const fn is_coprime(&self, other: &Self) -> bool {
+                self.gcd(other).0 == Self::ONE.0
             }
 
             /// Calculates the *Greatest Common Divisor* of this integer and `other`.

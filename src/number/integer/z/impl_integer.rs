@@ -3,7 +3,10 @@
 //!
 //
 
-use crate::number::integer::{z::*, Integer};
+use crate::number::{
+    integer::{z::*, Integer},
+    traits::ConstOne,
+};
 use devela::az::CheckedAs;
 
 #[cfg(not(feature = "std"))]
@@ -56,6 +59,16 @@ macro_rules! impl_integer {
                 return Some(is_prime_brute((self.0).checked_as::<u32>()?));
             }
 
+            /// Returns `true` if `self` and `other` are relative primes,
+            /// which means they have only 1 as their only common divisor.
+            ///
+            /// # Notation
+            /// $a \perp b$.
+            #[inline]
+            pub const fn is_coprime(&self, other: &Self) -> bool {
+                self.gcd(other).0 == Self::ONE.0
+            }
+
             /// Calculates the *Greatest Common Divisor* of this integer and `other`.
             #[inline]
             #[must_use]
@@ -106,14 +119,47 @@ impl_integer![many: Integer8, Integer16, Integer32, Integer64, Integer128];
 
 #[cfg(test)]
 mod tests {
-    use crate::number::integer::*;
+    use crate::all::*;
 
     #[test]
-    fn z_lcm_gcd() {
-        let z10 = Z32::new(10);
-        let z15 = Z32::new(15);
+    fn z_impl_integer() -> NumeraResult<()> {
+        /* parity */
 
-        assert_eq![Z32::new(30), z10.lcm(&z15)];
-        assert_eq![Z32::new(5), z10.gcd(&z15)];
+        assert_eq![true, Z8::new(5).is_odd()];
+        assert_eq![true, Z8::new(-1).is_odd()];
+        assert_eq![true, Z8::new(6).is_even()];
+        assert_eq![true, Z8::new(0).is_even()];
+
+        /* factors */
+
+        assert_eq![true, Z8::new(10).is_multiple_of(&Z8::new(10))];
+        assert_eq![true, Z8::new(10).is_multiple_of(&Z8::new(5))];
+        assert_eq![true, Z8::new(10).is_multiple_of(&Z8::new(2))];
+        assert_eq![true, Z8::new(10).is_multiple_of(&Z8::new(1))];
+        assert_eq![false, Z8::new(10).is_multiple_of(&Z8::new(3))];
+
+        assert_eq![true, Z8::new(1).is_divisor_of(&Z8::new(10))];
+        assert_eq![true, Z8::new(2).is_divisor_of(&Z8::new(10))];
+        assert_eq![true, Z8::new(5).is_divisor_of(&Z8::new(10))];
+        assert_eq![true, Z8::new(10).is_divisor_of(&Z8::new(10))];
+        assert_eq![false, Z8::new(3).is_divisor_of(&Z8::new(10))];
+
+        /* primality */
+
+        // absolute primality
+        assert_eq![Some(true), Z8::new(5).is_prime()];
+        assert_eq![Some(false), Z8::new(6).is_prime()];
+        assert_eq![None, Z128::MAX.is_prime()];
+
+        // relative primality
+        assert_eq![true, Z8::new(5).is_coprime(&Z8::new(11))];
+        assert_eq![false, Z8::new(5).is_coprime(&Z8::new(10))];
+
+        /* LCM, GCD */
+
+        assert_eq![Z32::new(30), Z32::new(10).lcm(&Z32::new(15))];
+        assert_eq![Z32::new(5), Z32::new(10).gcd(&Z32::new(15))];
+
+        Ok(())
     }
 }
