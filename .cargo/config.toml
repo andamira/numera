@@ -3,6 +3,16 @@
 [alias]
 
 # CHECK
+c = "check" # std, safe
+cr = "check --release" # std, safe
+# fast compilation without costly features
+cF = "check --no-default-features --features=std,safe" # std, safe
+cFn = "check --no-default-features --features=safe" # no-std, safe
+cFu = "check --no-default-features --features=std" # std, unsafe
+cFnu = "check --no-default-features" # no-std, unsafe
+cFun = "cFnu"
+
+# CLIPPY
 cl = "clippy" # std, safe
 clr = "clippy --release" # std, safe
 #
@@ -18,7 +28,11 @@ clrn = "clippy --release --no-default-features --features=safe" # no-std, safe
 clrau = "clippy --release --no-default-features --features=std,deps_all" # std, unsafe, all deps
 clrnu = "clippy --release --no-default-features" # no-std, unsafe
 # fast compilation (no `try_from`)
-clF = "clippy --no-default-features --features=std,safe"
+clF = "clippy --no-default-features --features=std,safe" # std, safe
+clFu = "clippy --no-default-features --features=std" # std, unsafe
+clFn = "clippy --no-default-features --features=safe" # no-std, safe
+clFnu = "clippy --no-default-features" # no-std, unsafe
+clFun = "clFnu"
 
 # CLEAN PACKAGE
 cp = "clean --package"
@@ -38,7 +52,10 @@ don = "doc --no-deps --open --no-default-features"
 # +nightly; document everything, unsafe
 nd = "doc --no-deps --no-default-features --features=nightly,std,try_from,deps_all"
 ndo = "doc --no-deps --no-default-features --open --features=nightly,std,try_from,deps_all"
-#
+# fast
+ndF = "doc --no-deps --no-default-features --features=nightly,std,deps_all"
+ndFo = "doc --no-deps --no-default-features --open --features=nightly,std,deps_all"
+# safe
 nds = "doc --no-deps --features=nightly,deps_all"
 ndso = "doc --no-deps --open --features=nightly,deps_all"
 
