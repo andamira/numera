@@ -9,7 +9,7 @@ use primal_sieve::Sieve;
 use crate::all::{IntegerError, NumeraError, NumeraResult};
 use core::fmt;
 
-#[cfg(all(debug_assertions, feature = "std"))]
+#[cfg(all(feature = "std"))]
 use devela::az::CheckedAs;
 
 mod consts;
