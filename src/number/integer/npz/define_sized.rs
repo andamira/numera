@@ -10,10 +10,11 @@
 //   - NonPositiveInteger[8|16|32|64|128]
 //
 
+#[cfg(feature = "try_from")]
+use crate::number::integer::NonPositiveIntegers;
 use crate::{
     error::{IntegerError, NumeraResult},
     number::{
-        integer::NonPositiveIntegers,
         macros::impl_larger_smaller,
         traits::{
             Bound, ConstLowerBounded, ConstNegOne, ConstUpperBounded, ConstZero, Count, Countable,

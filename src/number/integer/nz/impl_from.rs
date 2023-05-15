@@ -10,6 +10,7 @@ use crate::number::{
     },
     traits::Number,
 };
+#[cfg(feature = "try_from")]
 use core::num::{
     NonZeroI128, NonZeroI16, NonZeroI32, NonZeroI64, NonZeroI8, NonZeroU128, NonZeroU16,
     NonZeroU32, NonZeroU64, NonZeroU8,
@@ -94,10 +95,22 @@ try_from_any![error for: NegativeInteger+128, from: PositiveInteger+8,16,32,64,1
 #[cfg(test)]
 mod tests {
     use crate::all::*;
-    use core::num::{NonZeroI16, NonZeroI8, NonZeroU16, NonZeroU8};
 
     #[test]
     fn nz_from() -> NumeraResult<()> {
+        /* complementary Integer conversions */
+
+        // from smaller NegativeInteger (Self)
+        assert_eq![Nz16::new(200)?, Nz8::new(200)?.into()];
+
+        Ok(())
+    }
+
+    #[test]
+    #[cfg(feature = "try_from")]
+    fn nz_try_from() -> NumeraResult<()> {
+        use core::num::{NonZeroI16, NonZeroI8, NonZeroU8};
+
         /* fallible primitive conversions */
 
         // try_from i (only the negative values)
@@ -125,8 +138,6 @@ mod tests {
 
         /* complementary Integer conversions */
 
-        // from smaller NegativeInteger (Self)
-        assert_eq![Nz16::new(200)?, Nz8::new(200)?.into()];
         // try_from bigger NegativeInteger (Self)
         assert_eq![Nz8::new(200)?, Nz16::new(200)?.try_into()?];
         assert_eq![Nz8::new(200)?, Nz8::new(200)?.try_into()?];

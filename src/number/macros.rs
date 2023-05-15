@@ -101,6 +101,8 @@ macro_rules! impl_larger_smaller {
                 /// or the same if the value can't fit in the smaller bit-size,
                 /// or if there's no smaller bit-size available.
                 #[devela::compile($smaller)]
+                #[cfg(feature = "try_from")]
+                #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
                 pub fn as_smaller_or_same(&self) -> $family {
                     if let Ok(smaller) = [<$name $smaller_bsize>]::try_from(self) {
                         $family::[<$name $smaller_bsize>](smaller)
@@ -112,6 +114,8 @@ macro_rules! impl_larger_smaller {
                 /// or the same if the value can't fit in the smaller bit-size,
                 /// or if there's no smaller bit-size available.
                 #[devela::compile(not($smaller))]
+                #[cfg(feature = "try_from")]
+                #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
                 pub fn as_smaller_or_same(&self) -> $family {
                     $family::[<$name $bsize>](*self)
                 }
@@ -121,6 +125,8 @@ macro_rules! impl_larger_smaller {
                 /// If the value can't fit in the smaller bit-size,
                 /// or if there's no smaller bit-size available.
                 #[devela::compile($smaller)]
+                #[cfg(feature = "try_from")]
+                #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
                 pub fn try_as_smaller(&self) -> NumeraResult<[<$name $smaller_bsize>]> {
                     [<$name $smaller_bsize>]::try_from(self)
                 }
@@ -129,6 +135,8 @@ macro_rules! impl_larger_smaller {
                 /// If the value can't fit in the smaller bit-size,
                 /// or if there's no smaller bit-size available.
                 #[devela::compile(not($smaller))]
+                #[cfg(feature = "try_from")]
+                #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
                 pub fn try_as_smaller(&self) -> NumeraResult<[<$name $bsize>]> {
                     Err($crate::error::NumeraError::Conversion)
                 }

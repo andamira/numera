@@ -12,10 +12,9 @@ use crate::number::{
     },
     traits::Number,
 };
-use core::num::{
-    NonZeroI128, NonZeroI16, NonZeroI32, NonZeroI64, NonZeroI8, NonZeroU128, NonZeroU16,
-    NonZeroU32, NonZeroU64, NonZeroU8,
-};
+#[cfg(feature = "try_from")]
+use core::num::{NonZeroI128, NonZeroI16, NonZeroI32, NonZeroI64, NonZeroI8};
+use core::num::{NonZeroU128, NonZeroU16, NonZeroU32, NonZeroU64, NonZeroU8};
 
 /* complementary primitive conversions */
 
@@ -102,15 +101,32 @@ try_from_any![error for: PositiveInteger+128, from: NonPositiveInteger+8,16,32,6
 #[cfg(test)]
 mod tests {
     use crate::all::*;
-    use core::num::{NonZeroI16, NonZeroI8, NonZeroU16, NonZeroU8};
 
     #[test]
     fn pz_from() -> NumeraResult<()> {
+        use core::num::NonZeroU8;
+
         /* complementary primitive conversions */
 
         // from smaller or equal sized NonZeroU
         assert_eq![Pz8::new(100)?, NonZeroU8::new(100).unwrap().into()];
         assert_eq![Pz16::new(100)?, NonZeroU8::new(100).unwrap().into()];
+
+        /* complementary Integer conversions */
+
+        // from smaller PositiveInteger (Self)
+        assert_eq![Pz16::new(200)?, Pz8::new(200)?.into()];
+
+        Ok(())
+    }
+
+    #[test]
+    #[cfg(feature = "try_from")]
+    fn pz_try_from() -> NumeraResult<()> {
+        use core::num::{NonZeroI16, NonZeroI8, NonZeroU16};
+
+        /* complementary primitive conversions */
+
         // try_from bigger NonZeroU
         assert_eq![Pz8::new(100)?, NonZeroU16::new(100).unwrap().try_into()?];
         assert![TryInto::<Pz8>::try_into(NonZeroU16::new(500).unwrap()).is_err()];
@@ -141,8 +157,6 @@ mod tests {
 
         /* complementary Integer conversions */
 
-        // from smaller PositiveInteger (Self)
-        assert_eq![Pz16::new(200)?, Pz8::new(200)?.into()];
         // try_from bigger PositiveInteger (Self)
         assert_eq![Pz8::new(200)?, Pz16::new(200)?.try_into()?];
         assert![TryInto::<Pz8>::try_into(Pz16::new(500)?).is_err()];

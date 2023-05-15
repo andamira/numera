@@ -45,8 +45,16 @@ macro_rules! impl_rational_ops {
                 let num = cself.num * cother.den.into() + cother.num * cself.den.into();
                 let den = cself.den * cother.den;
 
-                let cresult = [<$t$castbsize>] { num, den }.reduced();
-                cresult.try_into().unwrap()
+                let creduced = [<$t$castbsize>] { num, den }.reduced();
+
+                #[cfg(feature = "try_from")]
+                return creduced.try_into().unwrap();
+
+                #[cfg(not(feature = "try_from"))]
+                return [<$t$bsize>]::new(
+                    creduced.num.0.try_into().unwrap(),
+                    creduced.den.0.get().try_into().unwrap()
+                ).unwrap();
             }
         }
     }};
@@ -70,8 +78,16 @@ macro_rules! impl_rational_ops {
                 let num = cself.num * cother.den.into() - cother.num * cself.den.into();
                 let den = cself.den * cother.den;
 
-                let cresult = [<$t$castbsize>] { num, den }.reduced();
-                cresult.try_into().unwrap()
+                let creduced = [<$t$castbsize>] { num, den }.reduced();
+
+                #[cfg(feature = "try_from")]
+                return creduced.try_into().unwrap();
+
+                #[cfg(not(feature = "try_from"))]
+                return [<$t$bsize>]::new(
+                    creduced.num.0.try_into().unwrap(),
+                    creduced.den.0.get().try_into().unwrap()
+                ).unwrap();
             }
         }
     }};
@@ -95,8 +111,16 @@ macro_rules! impl_rational_ops {
                 let num = cself.num * cother.num;
                 let den = cself.den * cother.den;
 
-                let cresult = [<$t$castbsize>] { num, den }.reduced();
-                cresult.try_into().unwrap()
+                let creduced = [<$t$castbsize>] { num, den }.reduced();
+
+                #[cfg(feature = "try_from")]
+                return creduced.try_into().unwrap();
+
+                #[cfg(not(feature = "try_from"))]
+                return [<$t$bsize>]::new(
+                    creduced.num.0.try_into().unwrap(),
+                    creduced.den.0.get().try_into().unwrap()
+                ).unwrap();
             }
         }
     }};
@@ -123,12 +147,22 @@ macro_rules! impl_rational_ops {
                 if den.is_zero() {
                     unreachable![] // IMPROVE: use hint
                 } else {
-                    let cresult = [<$t$castbsize>] {
-                        num,
-                        den: den.try_into().unwrap()
-                    }.reduced();
+                    #[cfg(feature = "try_from")]
+                    let den = den.try_into().unwrap();
 
-                    cresult.try_into().unwrap()
+                    #[cfg(not(feature = "try_from"))]
+                    let den = core::num::[<NonZeroI$castbsize>]::new(den.0).unwrap().into();
+
+                    let creduced = [<$t$castbsize>] { num, den }.reduced();
+
+                    #[cfg(feature = "try_from")]
+                    return creduced.try_into().unwrap();
+
+                    #[cfg(not(feature = "try_from"))]
+                    return [<$t$bsize>]::new(
+                        creduced.num.0.try_into().unwrap(),
+                        creduced.den.0.get().try_into().unwrap()
+                    ).unwrap();
                 }
             }
         }
@@ -155,8 +189,14 @@ macro_rules! impl_rational_ops {
                 let num = (lhs_num % rhs_num);
                 let den = cself.den * cother.den;
 
-                let cresult = [<$t$castbsize>] { num, den }.reduced();
-                cresult.try_into().unwrap()
+                #[cfg(feature = "try_from")]
+                return [<$t$castbsize>] { num, den }.reduced().try_into().unwrap();
+
+                #[cfg(not(feature = "try_from"))]
+                return [<$t$bsize>]::new(
+                    num.0.try_into().unwrap(),
+                    den.0.get().try_into().unwrap()
+                ).unwrap().reduced();
             }
         }
     }};

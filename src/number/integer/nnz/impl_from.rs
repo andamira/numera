@@ -3,6 +3,8 @@
 //!
 //
 
+#[cfg(feature = "try_from")]
+use crate::number::traits::{ConstZero, Ident};
 use crate::number::{
     integer::{
         macros::{
@@ -10,12 +12,11 @@ use crate::number::{
         },
         *,
     },
-    traits::{ConstZero, Ident, Number},
+    traits::Number,
 };
-use core::num::{
-    NonZeroI128, NonZeroI16, NonZeroI32, NonZeroI64, NonZeroI8, NonZeroU128, NonZeroU16,
-    NonZeroU32, NonZeroU64, NonZeroU8,
-};
+#[cfg(feature = "try_from")]
+use core::num::{NonZeroI128, NonZeroI16, NonZeroI32, NonZeroI64, NonZeroI8};
+use core::num::{NonZeroU128, NonZeroU16, NonZeroU32, NonZeroU64, NonZeroU8};
 
 /* complementary primitive conversions */
 
@@ -119,7 +120,7 @@ try_from_any![error for: NonNegativeInteger+128, from: NegativeInteger+8,16,32,6
 #[cfg(test)]
 mod tests {
     use crate::all::*;
-    use core::num::{NonZeroI16, NonZeroI8, NonZeroU16, NonZeroU8};
+    use core::num::NonZeroU8;
 
     #[test]
     fn nnz_from() -> NumeraResult<()> {
@@ -128,13 +129,34 @@ mod tests {
         // from smaller or equal sized u
         assert_eq![Nnz8::new(200), 200_u8.into()];
         assert_eq![Nnz16::new(200), 200_u8.into()];
-        assert_eq![Nnz8::new(200), 200_u16.try_into()?];
-        // try_from bigger u
-        assert![TryInto::<Nnz8>::try_into(500u16).is_err()];
 
         // from smaller or equal sized NonZeroU
         assert_eq![Nnz8::new(200), NonZeroU8::new(200).unwrap().into()];
         assert_eq![Nnz16::new(200), NonZeroU8::new(200).unwrap().into()];
+
+        /* complementary Integer conversions */
+
+        // from smaller NonNegativeInteger (Self)
+        assert_eq![Nnz16::new(200), Nnz8::new(200).into()];
+
+        // from smaller or equal sized PositiveInteger
+        assert_eq![Nnz16::new(200), Pz8::new(200)?.into()];
+        assert_eq![Nnz8::new(200), Pz8::new(200)?.into()];
+
+        Ok(())
+    }
+
+    #[test]
+    #[cfg(feature = "try_from")]
+    fn nnz_try_from() -> NumeraResult<()> {
+        use core::num::{NonZeroI16, NonZeroI8, NonZeroU16};
+
+        /* complementary primitive conversions */
+
+        // try_from bigger u
+        assert_eq![Nnz8::new(200), 200_u16.try_into()?];
+        assert![TryInto::<Nnz8>::try_into(500u16).is_err()];
+
         // try_from bigger NonZeroU
         assert_eq![Nnz8::new(200), NonZeroU16::new(200).unwrap().try_into()?];
         assert![TryInto::<Nnz8>::try_into(NonZeroU16::new(500).unwrap()).is_err()];
@@ -158,16 +180,11 @@ mod tests {
 
         /* complementary Integer conversions */
 
-        // from smaller NonNegativeInteger (Self)
-        assert_eq![Nnz16::new(200), Nnz8::new(200).into()];
         // try_from bigger NonNegativeInteger (Self)
         assert_eq![Nnz8::new(200), Nnz16::new(200).try_into()?];
         assert_eq![Nnz8::new(200), Nnz8::new(200).try_into()?];
         assert![TryInto::<Nnz8>::try_into(Nnz16::new(500)).is_err()];
 
-        // from smaller or equal sized PositiveInteger
-        assert_eq![Nnz16::new(200), Pz8::new(200)?.into()];
-        assert_eq![Nnz8::new(200), Pz8::new(200)?.into()];
         // try_from bigger PositiveInteger
         assert_eq![Nnz8::new(200), Pz16::new(200)?.try_into()?];
         assert![TryInto::<Nnz8>::try_into(Pz16::new(500)?).is_err()];

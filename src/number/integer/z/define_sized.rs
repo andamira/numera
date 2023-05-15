@@ -9,10 +9,11 @@
 // - definitions
 //   - Integer[8|16|32|64|128]
 
+#[cfg(feature = "try_from")]
+use crate::number::integer::Integers;
 use crate::{
     error::{IntegerError, NumeraResult},
     number::{
-        integer::Integers,
         macros::impl_larger_smaller,
         traits::{
             Bound, ConstLowerBounded, ConstNegOne, ConstOne, ConstUpperBounded, ConstZero, Count,
@@ -247,8 +248,11 @@ mod tests {
         #[cfg(feature = "std")]
         assert_eq![Z8::new(17).to_string(), "17"];
 
-        /* as_larger */
+        Ok(())
+    }
 
+    #[test]
+    fn z_define_sized_larger() -> NumeraResult<()> {
         // min
         assert_eq![Z8::new(100).as_larger_or_same(), Z16::new(100)];
         assert_eq![Z8::new(100).try_as_larger(), Ok(Z16::new(100))];
@@ -257,8 +261,12 @@ mod tests {
         assert_eq![Z128::new(100).as_larger_or_same(), Z128::new(100)];
         assert![Z128::new(100).try_as_larger().is_err()];
 
-        /* as_smaller */
+        Ok(())
+    }
 
+    #[test]
+    #[cfg(feature = "try_from")]
+    fn z_define_sized_smaller() -> NumeraResult<()> {
         // min
         assert_eq![
             Z8::new(100).as_smaller_or_same(),

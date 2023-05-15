@@ -258,6 +258,7 @@ pub(crate) use from_integer;
 /// ```ignore
 /// from_rational![signed for:Q+16, num:Z16, den:N0z16, from:Q + 8, 16];
 /// ```
+#[cfg(feature = "try_from")]
 macro_rules! try_from_rational {
     // default
     (
@@ -278,6 +279,7 @@ macro_rules! try_from_rational {
      from: $from_p:ident + $from_size:expr
     ) => {
         devela::paste! {
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
             impl TryFrom<[<$from_p$from_size>]> for [<$for$for_size>] {
                 type Error = $crate::error::NumeraError;
                 fn try_from(from: [<$from_p$from_size>])
@@ -288,6 +290,7 @@ macro_rules! try_from_rational {
                     });
                 }
             }
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
             impl TryFrom<&[<$from_p$from_size>]> for [<$for$for_size>] {
                 type Error = $crate::error::NumeraError;
                 fn try_from(from: &[<$from_p$from_size>])
@@ -298,6 +301,7 @@ macro_rules! try_from_rational {
                     });
                 }
             }
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
             impl TryFrom<&mut [<$from_p$from_size>]> for [<$for$for_size>] {
                 type Error = $crate::error::NumeraError;
                 fn try_from(from: &mut [<$from_p$from_size>])
@@ -310,6 +314,11 @@ macro_rules! try_from_rational {
             }
         }
     };
+}
+/// No-op alternative for disabling `TryFrom` impls.
+#[cfg(not(feature = "try_from"))]
+macro_rules! try_from_rational {
+    ($($tt:tt)*) => {};
 }
 pub(crate) use try_from_rational;
 
@@ -328,6 +337,7 @@ pub(crate) use try_from_rational;
 /// ```ignore
 /// try_from_integer![prim for:Q+16, num:Z16, den:N0z16, from:i + 8, 16];
 /// ```
+#[cfg(feature = "try_from")]
 macro_rules! try_from_integer {
     // from signed & unsigned primitives or integers
     (primint
@@ -347,6 +357,7 @@ macro_rules! try_from_integer {
      from: $from_p:ident + $from_size:expr
     ) => {
         devela::paste! {
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
             impl TryFrom<[<$from_p$from_size>]> for [<$for$for_size>] {
                 type Error = $crate::error::NumeraError;
                 fn try_from(from: [<$from_p$from_size>])
@@ -357,6 +368,7 @@ macro_rules! try_from_integer {
                     });
                 }
             }
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
             impl TryFrom<&[<$from_p$from_size>]> for [<$for$for_size>] {
                 type Error = $crate::error::NumeraError;
                 fn try_from(from: &[<$from_p$from_size>])
@@ -367,6 +379,7 @@ macro_rules! try_from_integer {
                     });
                 }
             }
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
             impl TryFrom<&mut [<$from_p$from_size>]> for [<$for$for_size>] {
                 type Error = $crate::error::NumeraError;
                 fn try_from(from: &mut [<$from_p$from_size>])
@@ -399,6 +412,7 @@ macro_rules! try_from_integer {
      from: $from_p:ident + $from_size:expr
     ) => {
         devela::paste! {
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
             impl TryFrom<[<$from_p$from_size>]> for [<$for$for_size>] {
                 type Error = $crate::error::NumeraError;
                 fn try_from(from: [<$from_p$from_size>])
@@ -409,6 +423,7 @@ macro_rules! try_from_integer {
                     });
                 }
             }
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
             impl TryFrom<&[<$from_p$from_size>]> for [<$for$for_size>] {
                 type Error = $crate::error::NumeraError;
                 fn try_from(from: &[<$from_p$from_size>])
@@ -419,6 +434,7 @@ macro_rules! try_from_integer {
                     });
                 }
             }
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
             impl TryFrom<&mut [<$from_p$from_size>]> for [<$for$for_size>] {
                 type Error = $crate::error::NumeraError;
                 fn try_from(from: &mut [<$from_p$from_size>])
@@ -431,5 +447,10 @@ macro_rules! try_from_integer {
             }
         }
     };
+}
+/// No-op alternative for disabling `TryFrom` impls.
+#[cfg(not(feature = "try_from"))]
+macro_rules! try_from_integer {
+    ($($tt:tt)*) => {};
 }
 pub(crate) use try_from_integer;

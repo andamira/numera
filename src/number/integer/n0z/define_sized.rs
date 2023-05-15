@@ -9,10 +9,11 @@
 // - definitions
 //   - NonZeroInteger[8|16|32|64|128]
 
+#[cfg(feature = "try_from")]
+use crate::number::integer::NonZeroIntegers;
 use crate::{
     error::{IntegerError, NumeraError, NumeraResult},
     number::{
-        integer::NonZeroIntegers,
         macros::impl_larger_smaller,
         traits::{
             Bound, ConstLowerBounded, ConstNegOne, ConstOne, ConstUpperBounded, Count, Countable,

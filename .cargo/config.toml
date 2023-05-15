@@ -1,3 +1,5 @@
+# TODO:simplify a bit
+
 [alias]
 
 # CHECK
@@ -15,6 +17,8 @@ clru = "clippy --release --no-default-features --features=std" # std, unsafe
 clrn = "clippy --release --no-default-features --features=safe" # no-std, safe
 clrau = "clippy --release --no-default-features --features=std,deps_all" # std, unsafe, all deps
 clrnu = "clippy --release --no-default-features" # no-std, unsafe
+# fast compilation (no `try_from`)
+clF = "clippy --no-default-features --features=std,safe"
 
 # CLEAN PACKAGE
 cp = "clean --package"
@@ -32,8 +36,8 @@ doa = "doc --no-deps --open --features=deps_all"
 dn = "doc --no-deps --no-default-features"
 don = "doc --no-deps --open --no-default-features"
 # +nightly; document everything, unsafe
-nd = "doc --no-deps --no-default-features --features=nightly,std,deps_all"
-ndo = "doc --no-deps --no-default-features --open --features=nightly,std,deps_all"
+nd = "doc --no-deps --no-default-features --features=nightly,std,try_from,deps_all"
+ndo = "doc --no-deps --no-default-features --open --features=nightly,std,try_from,deps_all"
 #
 nds = "doc --no-deps --features=nightly,deps_all"
 ndso = "doc --no-deps --open --features=nightly,deps_all"

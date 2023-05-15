@@ -20,14 +20,17 @@ keywords = ["math", "mathematics", "number", "numeral", "numeric"]
 publish = true
 
 [features]
-default = ["std", "safe"]
-#
+default = ["std", "safe", "try_from"]
+
 std = ["devela/std", "half?/std", "ibig?/std", "primal-sieve"]
-#
 safe = ["devela/safe"]
 unsafe = []
-#
 nightly = [] # used only for docs
+
+#* extras *#
+
+# Enables all the `TryFrom` impls, (+3s compilation time in my system).
+try_from = []
 
 deps_all = ["twofloat", "half", "ibig"]
 
@@ -52,7 +55,7 @@ opt-level = 3 # for faster prime testing
 
 [package.metadata.docs.rs]
 no-default-features = true
-features = ["nightly", "std", "deps_all"]
+features = ["nightly", "std", "try_from", "deps_all"]
 rustdoc-args = [ "--html-in-header", "./res/rustdoc-header.html" ]
 
 [badges]

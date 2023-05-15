@@ -9,12 +9,13 @@
 // - definitions
 //   - Rational[8|16|32|64|128]
 
+#[cfg(feature = "try_from")]
+use crate::number::rational::Rationals;
 use crate::{
     error::{NumeraError, NumeraResult, RationalError},
     number::{
         integer::*,
         macros::impl_larger_smaller,
-        rational::Rationals,
         traits::{
             Bound, ConstLowerBounded, ConstNegOne, ConstOne, ConstUpperBounded, ConstZero, Count,
             Countable, Ident, LowerBounded, NegOne, Number, One, Sign, Signed, UpperBounded, Zero,
