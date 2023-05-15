@@ -22,13 +22,13 @@ pub(crate) mod all {
     pub use super::{
         consts::{PRIMES_BELL, PRIMES_U16, PRIMES_U8},
         family::Primes,
-        fns::{is_prime_brute, nth_prime_brute, prime_pi_brute},
+        fns::{is_prime, nth_prime, prime_pi},
         trait_prime::Prime,
     };
 
     #[doc(inline)]
     #[cfg(feature = "std")]
-    pub use super::fns::{is_prime_sieve, nth_prime_sieve};
+    pub use super::fns::{is_prime_sieve, nth_prime_sieve, prime_pi_sieve};
 }
 
 use crate::number::macros::define_abbreviations;
@@ -81,7 +81,7 @@ impl Prime8 {
     /// If the `value` provided is not a prime number.
     #[inline]
     pub fn new(value: u8) -> NumeraResult<Self> {
-        if is_prime_brute(value.into()) {
+        if is_prime(value.into()) {
             Ok(Prime8(value))
         } else {
             Err(IntegerError::NotPrime.into())
@@ -101,7 +101,7 @@ impl Prime8 {
     }
 
     // NOTE: the following 2 functions are duplicated because calling
-    // is_prime_brute makes it non-const.
+    // is_prime makes it non-const.
 
     /// Returns a new `Prime8`.
     ///
@@ -113,7 +113,7 @@ impl Prime8 {
     #[cfg(all(debug_assertions, not(feature = "safe")))]
     #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
     pub unsafe fn new_unchecked(value: u8) -> Self {
-        debug_assert![is_prime_brute(value.into())];
+        debug_assert![is_prime(value.into())];
         Self(value)
     }
     /// Returns a new `Prime8`.
@@ -162,7 +162,7 @@ impl Prime16 {
     /// If the `value` provided is not a prime number.
     #[inline]
     pub fn new(value: u16) -> NumeraResult<Self> {
-        if is_prime_brute(value.into()) {
+        if is_prime(value.into()) {
             Ok(Prime16(value))
         } else {
             Err(IntegerError::NotPrime.into())
@@ -184,7 +184,7 @@ impl Prime16 {
     }
 
     // NOTE: the following 2 functions are duplicated because calling
-    // is_prime_brute makes it non-const.
+    // is_prime makes it non-const.
 
     /// Returns a new `Prime16`.
     ///
@@ -196,7 +196,7 @@ impl Prime16 {
     #[cfg(all(debug_assertions, not(feature = "safe")))]
     #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
     pub unsafe fn new_unchecked(value: u16) -> Self {
-        debug_assert![is_prime_brute(value.into())];
+        debug_assert![is_prime(value.into())];
         Self(value)
     }
     /// Returns a new `Prime16`.
@@ -257,14 +257,14 @@ impl Prime32 {
     /// Returns a new `Prime32`.
     ///
     /// This can be very slow for big numbers, specially with the `no-std`
-    /// implementation that calls [`is_prime_brute`].
+    /// implementation that calls [`is_prime`].
     ///
     /// # Errors
     /// If the `value` provided is not a prime number.
     #[inline]
     #[cfg(not(feature = "std"))]
     pub fn new(value: u32) -> NumeraResult<Self> {
-        if is_prime_brute(value) {
+        if is_prime(value) {
             Ok(Prime32(value))
         } else {
             Err(IntegerError::NotPrime.into())
@@ -273,7 +273,7 @@ impl Prime32 {
     /// Returns a new `Prime32`.
     ///
     /// This can be very slow for big numbers, specially with the `no-std`
-    /// implementation that calls [`is_prime_brute`].
+    /// implementation that calls [`is_prime`].
     ///
     /// # Errors
     /// If the `value` provided is not a prime number or can't fit in a `usize`.
@@ -314,8 +314,8 @@ impl Prime32 {
                 {
                     use core::num::NonZeroU32;
 
-                    // Ok(Self(nth_prime_brute(nth)))
-                    Ok(Self(nth_prime_brute(NonZeroU32::new(nth).unwrap())))
+                    // Ok(Self(nth_prime(nth)))
+                    Ok(Self(nth_prime(NonZeroU32::new(nth).unwrap())))
                 }
             }
             _ => Err(NumeraError::Integer(IntegerError::Overflow)),
@@ -323,7 +323,7 @@ impl Prime32 {
     }
 
     // NOTE: the next 2 functions are mostly a duplication, because calling
-    // `is_prime_brute` doesn't allow the function to be `const`.
+    // `is_prime` doesn't allow the function to be `const`.
 
     /// Returns a new `Prime32`.
     ///
@@ -400,7 +400,7 @@ impl Prime32 {
             // this can be VERY slow for high 32-bit numbers:
             #[cfg(not(feature = "std"))]
             {
-                nth_prime_brute(core::num::NonZeroU32::new(self.0).unwrap())
+                nth_prime(core::num::NonZeroU32::new(self.0).unwrap())
             }
         }
         return 203_280_221;

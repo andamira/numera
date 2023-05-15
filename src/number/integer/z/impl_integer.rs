@@ -10,7 +10,7 @@ use crate::number::{
 use devela::az::CheckedAs;
 
 #[cfg(not(feature = "std"))]
-use crate::all::is_prime_brute;
+use crate::all::is_prime;
 #[cfg(feature = "std")]
 use crate::all::is_prime_sieve;
 
@@ -56,7 +56,7 @@ macro_rules! impl_integer {
                 #[cfg(feature = "std")]
                 return Some(is_prime_sieve((self.0).checked_as::<usize>()?));
                 #[cfg(not(feature = "std"))]
-                return Some(is_prime_brute((self.0).checked_as::<u32>()?));
+                return Some(is_prime((self.0).checked_as::<u32>()?));
             }
 
             /// Returns `true` if `self` and `other` are relative primes,

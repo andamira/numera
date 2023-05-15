@@ -2,9 +2,9 @@
 //
 //!
 //
-// NOTE: chosen the is_prime_brute for Prime8 & Prime16 because it's faster.
+// NOTE: chosen the is_prime for Prime8 & Prime16 because it's faster.
 
-use super::{is_prime_brute, Prime16, Prime32, Prime8, PRIMES_U16, PRIMES_U8};
+use super::{is_prime, Prime16, Prime32, Prime8, PRIMES_U16, PRIMES_U8};
 use crate::{
     error::{IntegerError, NumeraResult},
     number::traits::{
@@ -135,7 +135,7 @@ impl Number for Prime8 {
 
     #[inline]
     fn from_parts(value: Self::Parts) -> NumeraResult<Self> {
-        if is_prime_brute(value.into()) {
+        if is_prime(value.into()) {
             Ok(Prime8(value))
         } else {
             Err(IntegerError::NotPrime.into())
@@ -294,7 +294,7 @@ impl Number for Prime16 {
 
     #[inline]
     fn from_parts(value: Self::Parts) -> NumeraResult<Self> {
-        if is_prime_brute(value.into()) {
+        if is_prime(value.into()) {
             Ok(Prime16(value))
         } else {
             Err(IntegerError::NotPrime.into())
@@ -453,7 +453,7 @@ impl Number for Prime32 {
     #[inline]
     #[cfg(not(feature = "std"))]
     fn from_parts(value: Self::Parts) -> NumeraResult<Self> {
-        if is_prime_brute(value) {
+        if is_prime(value) {
             Ok(Prime32(value))
         } else {
             Err(IntegerError::NotPrime.into())

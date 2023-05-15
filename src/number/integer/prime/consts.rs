@@ -14,9 +14,9 @@ pub const PRIMES_U8: [u8; 54] = [
     197, 199, 211, 223, 227, 229, 233, 239, 241, 251,
 ];
 
-/// The list of all the primes that fit in a [`u16`], minus the first 54.
+/// The list of the 6,542 primes that fit in a [`u16`], minus the first 54.
 ///
-/// This array's size is `12_976` bytes.
+/// This array occupies 12,976 bytes.
 pub const PRIMES_U16: [u16; 6_488] = [
     257, 263, 269, 271, 277, 281, 283, 293, 307, 311, 313, 317, 331, 337, 347, 349, 353, 359, 367,
     373, 379, 383, 389, 397, 401, 409, 419, 421, 431, 433, 439, 443, 449, 457, 461, 463, 467, 479,
