@@ -11,8 +11,6 @@
 //! [o0]: https://oeis.org/wiki/Nonzero_integers
 //
 
-use crate::number::macros::define_abbreviations;
-
 mod define_sized;
 mod family;
 mod impl_from;
@@ -24,4 +22,5 @@ pub use define_sized::{
 };
 pub use family::NonZeroIntegers;
 
+use crate::number::macros::define_abbreviations;
 define_abbreviations![many N0z, NonZeroInteger, 8, 16, 32, 64, 128];

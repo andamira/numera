@@ -79,8 +79,13 @@ macro_rules! define_nonnegative_integer_sized {
     ) => { paste! {
         #[doc = $doc_det " "$bsize "-bit " $doc_num $doc_type]
         #[doc = "\n\nThe range of valid numeric values is $\\lbrack"
-        $doc_sign $doc_lower " \\dots$ [`"
+        $doc_sign 0 " \\dots$ [`"
         $p$bsize "::" $doc_upper "`]$\\rbrack$."]
+        ///
+        /// Also known as a [*natural number*][m0], you can also use the alias
+        #[doc = "[`Natural" $bsize "`][super::Natural" $bsize "]."]
+        ///
+        /// [m0]: https://mathworld.wolfram.com/NaturalNumber.html
 
         #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, PartialOrd, Ord)]
         pub struct [<$name$bsize>](pub(crate) [<$p$bsize>]);

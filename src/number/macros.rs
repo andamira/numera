@@ -27,6 +27,26 @@ macro_rules! define_abbreviations {
 }
 pub(crate) use define_abbreviations;
 
+/// Creates type aliases.
+///
+/// # Args
+/// - `$a`: the alias of the type.
+/// - `$name`: the name of the type.
+/// - `$bsize`: the size in bits.
+macro_rules! define_aliases {
+    (many $a:ident, $name:ident, $( $bsize:expr ),+) => {
+        $( define_aliases![$a, $name, $bsize]; )+
+    };
+
+    ($a:ident, $name:ident, $bsize:expr) => {
+        devela::paste!{
+            #[doc = "Alias of [`" $name $bsize "`]." ]
+            pub type [<$a$bsize>] = [<$name $bsize>];
+        }
+    };
+}
+pub(crate) use define_aliases;
+
 /// Implements upcasting and downcasting methods.
 macro_rules! impl_larger_smaller {
     (

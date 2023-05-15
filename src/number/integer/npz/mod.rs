@@ -8,8 +8,6 @@
 //! [0m]: https://mathworld.wolfram.com/NonpositiveInteger.html
 //
 
-use crate::number::macros::define_abbreviations;
-
 mod define_sized;
 mod family;
 mod impl_from;
@@ -22,4 +20,5 @@ pub use define_sized::{
 };
 pub use family::NonPositiveIntegers;
 
+use crate::number::macros::define_abbreviations;
 define_abbreviations![many Npz, NonPositiveInteger, 8, 16, 32, 64, 128];

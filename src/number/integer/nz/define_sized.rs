@@ -316,7 +316,7 @@ macro_rules! define_negative_integer_sized {
 /* definitions */
 
 define_negative_integer_sized![multi NegativeInteger, NonZeroU,
-    "integer number", ", from the set $\\Z^-$.",
+    "negative integer number", ", from the set $\\Z^-$.",
     // "",
     "-", MAX, 1,
     ("An", 8, larger: true, 16, smaller: false, 8),

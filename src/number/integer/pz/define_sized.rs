@@ -83,6 +83,11 @@ macro_rules! define_positive_integer_sized {
         #[doc = "\n\nThe range of valid numeric values is $\\lbrack" $doc_sign
         "1 \\dots$ [`" u$bsize
         "::" $doc_upper "`]$\\rbrack$."]
+        ///
+        /// Also known as a [*counting number*][m0], you can also use the alias
+        #[doc = "[`Counting" $bsize "`][super::Counting" $bsize "]."]
+        ///
+        /// [m0]: https://mathworld.wolfram.com/CountingNumber.html
 
         #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
         pub struct [<$name$bsize>](pub(crate) [<$p$bsize>]);
@@ -320,7 +325,7 @@ macro_rules! define_positive_integer_sized {
 /* definitions */
 
 define_positive_integer_sized![multi PositiveInteger, NonZeroU,
-    "integer number", ", from the set $\\Z^+$ ($\\N _1$).",
+    "positive integer number", ", from the set $\\Z^+$ ($\\N _1$).",
     // "",
     "", MIN, MAX,
     ("An", 8, larger: true, 16, smaller: false, 8),

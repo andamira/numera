@@ -356,7 +356,7 @@ macro_rules! define_nonzero_integer_sized {
 /* definitions */
 
 define_nonzero_integer_sized![multi NonZeroInteger, NonZeroI,
-    "integer number", ", from the set $\\Z \\setminus 0$.",
+    "non-zero integer number", ", from the set $\\Z \\setminus 0$.",
     // "",
     "", MIN, MAX,
     ("A", 8, larger: true, 16, smaller: false, 8),
