@@ -1,6 +1,6 @@
-// numera::rational
+// numera::number::rational
 //
-//! All kinds of rationals, subsets of $\Bbb{Q}$.
+//! Rational numbers, subsets of $\Bbb{Q}$.
 //!
 //! A *rational* ([w][0w]/[m][0m]) is a number that can be expressed as a
 //! fraction $\frac{a}{b}$ where a and b are integers and $ b \ne 0 $.

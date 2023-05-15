@@ -1,6 +1,6 @@
-// numera::integer
+// numera::number::integer
 //
-//! All kinds of integers, subsets of $\Z$.
+//! Integer numbers, subsets of $\Z$.
 //!
 //! An *integer* ([w][0w]/[m][0m]) is a number that can be written
 //! without a fractional component.

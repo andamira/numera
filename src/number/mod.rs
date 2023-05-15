@@ -13,6 +13,7 @@ pub(crate) mod macros;
 
 pub mod integer;
 pub mod rational;
+pub mod real;
 pub mod traits;
 
 mod family;
@@ -29,6 +30,7 @@ pub(crate) mod all {
         family::{AnyNumbers, Numbers},
         integer::all::*,
         rational::all::*,
+        real::all::*,
         traits::all::*,
     };
 }
