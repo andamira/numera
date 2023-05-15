@@ -2,12 +2,19 @@
 
 # CHECK
 cl = "clippy" # std, safe
+clr = "clippy --release" # std, safe
 #
 cla = "clippy --features=deps_all" # std, safe, all deps
 clu = "clippy --no-default-features --features=std" # std, unsafe
 cln = "clippy --no-default-features --features=safe" # no-std, safe
 clau = "clippy --no-default-features --features=std,deps_all" # std, unsafe, all deps
 clnu = "clippy --no-default-features" # no-std, unsafe
+#
+clra = "clippy --release --features=deps_all" # std, safe, all deps
+clru = "clippy --release --no-default-features --features=std" # std, unsafe
+clrn = "clippy --release --no-default-features --features=safe" # no-std, safe
+clrau = "clippy --release --no-default-features --features=std,deps_all" # std, unsafe, all deps
+clrnu = "clippy --release --no-default-features" # no-std, unsafe
 
 # CLEAN PACKAGE
 cp = "clean --package"
