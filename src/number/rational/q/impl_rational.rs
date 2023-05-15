@@ -4,7 +4,7 @@
 //
 
 use crate::number::{
-    integer::{abbr::*, Integer},
+    integer::*,
     rational::*,
     traits::{ConstOne, ConstZero, Ident},
 };
@@ -131,7 +131,7 @@ impl_rational![
 
 #[cfg(test)]
 mod tests {
-    use crate::all::{abbr::*, NumeraResult, Rational};
+    use crate::all::*;
 
     #[test]
     fn q_rational() -> NumeraResult<()> {

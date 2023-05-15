@@ -8,6 +8,8 @@
 //! [0m]: https://mathworld.wolfram.com/RationalNumber.html
 //
 
+use crate::number::macros::define_abbreviations;
+
 mod define_sized;
 mod family;
 mod impl_from;
@@ -17,10 +19,4 @@ mod impl_rational;
 pub use define_sized::{Rational128, Rational16, Rational32, Rational64, Rational8};
 pub use family::Rationals;
 
-/// Abbreviations for rationals.
-pub mod abbr {
-    use super::*;
-    use crate::number::macros::define_abbreviations;
-
-    define_abbreviations![many Q, Rational, 8, 16, 32, 64, 128];
-}
+define_abbreviations![many Q, Rational, 8, 16, 32, 64, 128];

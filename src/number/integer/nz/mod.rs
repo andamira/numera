@@ -12,6 +12,9 @@
 //! An only *positive* integer number ([m][0m]), from the set $\Z^+$ (`> 0`).
 //!
 //
+
+use crate::number::macros::define_abbreviations;
+
 mod define_sized;
 mod family;
 mod impl_from;
@@ -23,10 +26,4 @@ pub use define_sized::{
 };
 pub use family::NegativeIntegers;
 
-/// Abbreviations for negative integers
-pub mod abbr {
-    use super::*;
-    use crate::number::macros::define_abbreviations;
-
-    define_abbreviations![many Nz, NegativeInteger, 8, 16, 32, 64, 128];
-}
+define_abbreviations![many Nz, NegativeInteger, 8, 16, 32, 64, 128];

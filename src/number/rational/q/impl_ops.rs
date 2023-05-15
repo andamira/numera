@@ -3,10 +3,7 @@
 //!
 //
 
-use crate::number::{
-    rational::{Rational, *},
-    traits::Ident,
-};
+use crate::number::{rational::*, traits::Ident};
 use core::ops::{Add, Div, Mul, Neg, Rem, Sub};
 use devela::paste;
 
@@ -191,7 +188,7 @@ impl_rational_ops![
 
 #[cfg(test)]
 mod tests {
-    use crate::all::{abbr::*, NumeraResult};
+    use crate::all::*;
 
     #[test]
     fn q_ops() -> NumeraResult<()> {

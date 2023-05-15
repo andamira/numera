@@ -4,7 +4,7 @@
 //
 
 use crate::number::{
-    integer::{abbr::*, *},
+    integer::*,
     rational::{
         macros::{from_integer, from_rational, try_from_integer, try_from_rational},
         *,
@@ -208,7 +208,7 @@ try_from_rational![for:Rational+64,num:Z,den:N0z, from:Rational+128];
 
 #[cfg(test)]
 mod tests {
-    use crate::all::{abbr::*, NumeraResult};
+    use crate::all::*;
     use core::num::{NonZeroI16, NonZeroI8, NonZeroU16, NonZeroU8};
 
     #[test]

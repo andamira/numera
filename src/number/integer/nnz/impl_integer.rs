@@ -113,7 +113,7 @@ impl_integer![
 #[cfg(test)]
 mod tests {
     // use crate::error::NumeraResult;
-    use crate::number::integer::nnz::abbr::*;
+    use crate::number::integer::nnz::*;
 
     #[test]
     fn nnz_lcm_gcd() {

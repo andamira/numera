@@ -239,7 +239,7 @@ define_integer_sized![multi Integer, i,
 
 #[cfg(test)]
 mod tests {
-    use crate::all::{abbr::*, *};
+    use crate::all::*;
 
     #[test]
     fn z_define_sized() -> NumeraResult<()> {

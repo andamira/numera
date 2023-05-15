@@ -14,6 +14,9 @@
 //! [0m]: https://mathworld.wolfram.com/PositiveInteger.html
 //! [1w]: https://en.wikipedia.org/wiki/Natural_number
 //
+
+use crate::number::macros::define_abbreviations;
+
 mod define_sized;
 mod family;
 mod impl_from;
@@ -25,10 +28,4 @@ pub use define_sized::{
 };
 pub use family::PositiveIntegers;
 
-/// Abbreviations for positive integers.
-pub mod abbr {
-    use super::*;
-    use crate::number::macros::define_abbreviations;
-
-    define_abbreviations![many Pz, PositiveInteger, 8, 16, 32, 64, 128];
-}
+define_abbreviations![many Pz, PositiveInteger, 8, 16, 32, 64, 128];

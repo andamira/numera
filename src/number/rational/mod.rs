@@ -24,13 +24,6 @@ mod trait_rational;
 // pub mod pq;
 pub mod q;
 
-/// Abbreviations for all rationals.
-pub mod abbr {
-    // n0q::abbr::*, nnq::abbr::*, npq::abbr::*, nq::abbr::*, pq::abbr::*, q::abbr::*,
-    #[doc(inline)]
-    pub use super::q::abbr::*;
-}
-
 pub use all::*;
 pub(crate) mod all {
     #[doc(inline)]

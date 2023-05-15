@@ -101,7 +101,7 @@ try_from_any![error for: PositiveInteger+128, from: NonPositiveInteger+8,16,32,6
 
 #[cfg(test)]
 mod tests {
-    use crate::all::{abbr::*, NumeraResult};
+    use crate::all::*;
     use core::num::{NonZeroI16, NonZeroI8, NonZeroU16, NonZeroU8};
 
     #[test]

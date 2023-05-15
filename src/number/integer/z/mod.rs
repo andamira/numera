@@ -26,6 +26,8 @@
 //! [to]: https://en.wikipedia.org/wiki/Total_order
 //
 
+use crate::number::macros::define_abbreviations;
+
 mod define_sized;
 mod family;
 mod impl_from;
@@ -42,15 +44,9 @@ pub use family::Integers;
 #[cfg_attr(feature = "nightly", doc(cfg(feature = "ibig")))]
 pub use define_big::IntegerBig;
 
-/// Abbreviations for integers.
-pub mod abbr {
-    use super::*;
-    use crate::number::macros::define_abbreviations;
+define_abbreviations![many Z, Integer, 8, 16, 32, 64, 128];
 
-    define_abbreviations![many Z, Integer, 8, 16, 32, 64, 128];
-
-    /// Abbreviation of [`IntegerBig`].
-    #[cfg(feature = "ibig")]
-    #[cfg_attr(feature = "nightly", doc(cfg(feature = "ibig")))]
-    pub type ZBig = IntegerBig;
-}
+/// Abbreviation of [`IntegerBig`].
+#[cfg(feature = "ibig")]
+#[cfg_attr(feature = "nightly", doc(cfg(feature = "ibig")))]
+pub type ZBig = IntegerBig;

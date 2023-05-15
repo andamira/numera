@@ -106,7 +106,7 @@ impl_integer![many: Integer8, Integer16, Integer32, Integer64, Integer128];
 
 #[cfg(test)]
 mod tests {
-    use crate::number::integer::abbr::*;
+    use crate::number::integer::*;
 
     #[test]
     fn z_lcm_gcd() {

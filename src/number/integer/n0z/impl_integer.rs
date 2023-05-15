@@ -138,7 +138,7 @@ impl_nonzero_integer![
 #[cfg(test)]
 mod tests {
     use crate::error::NumeraResult;
-    use crate::number::integer::n0z::abbr::*;
+    use crate::number::integer::n0z::*;
 
     #[test]
     fn n0z_lcm_gcd() -> NumeraResult<()> {

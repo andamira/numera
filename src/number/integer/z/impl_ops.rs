@@ -72,7 +72,7 @@ impl_integer_ops![Integer8, Integer16, Integer32, Integer64, Integer128];
 
 #[cfg(test)]
 mod tests {
-    use crate::all::{abbr::*, *};
+    use crate::all::*;
 
     #[test]
     fn z_ops() -> NumeraResult<()> {

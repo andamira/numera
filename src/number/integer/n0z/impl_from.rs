@@ -122,7 +122,7 @@ try_from_integer![int_new_neg for:NonZeroInteger+128, from:NonPositiveInteger+8,
 
 #[cfg(test)]
 mod tests {
-    use crate::all::{abbr::*, NumeraResult};
+    use crate::all::*;
     use core::num::{NonZeroI16, NonZeroI8, NonZeroU16, NonZeroU8};
 
     #[test]

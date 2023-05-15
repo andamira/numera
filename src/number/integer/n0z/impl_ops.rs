@@ -85,7 +85,7 @@ impl_integer_ops![
 
 #[cfg(test)]
 mod tests {
-    use crate::all::{abbr::*, *};
+    use crate::all::*;
 
     #[test]
     fn n0z_ops() -> NumeraResult<()> {

@@ -25,42 +25,38 @@ pub mod nz;
 pub mod pz;
 pub mod z;
 
-/// Abbreviations for all integers.
-pub mod abbr {
-    #[doc(inline)]
-    pub use super::{
-        n0z::abbr::*, nnz::abbr::*, npz::abbr::*, nz::abbr::*, pz::abbr::*, z::abbr::*,
-    };
-}
-
 pub use all::*;
 pub(crate) mod all {
     #[doc(inline)]
     pub use super::{
         family::AnyIntegers,
         n0z::{
-            NonZeroInteger128, NonZeroInteger16, NonZeroInteger32, NonZeroInteger64,
-            NonZeroInteger8, NonZeroIntegers,
+            N0z128, N0z16, N0z32, N0z64, N0z8, NonZeroInteger128, NonZeroInteger16,
+            NonZeroInteger32, NonZeroInteger64, NonZeroInteger8, NonZeroIntegers,
         },
         nnz::{
-            NonNegativeInteger128, NonNegativeInteger16, NonNegativeInteger32,
-            NonNegativeInteger64, NonNegativeInteger8, NonNegativeIntegers,
+            Nnz128, Nnz16, Nnz32, Nnz64, Nnz8, NonNegativeInteger128, NonNegativeInteger16,
+            NonNegativeInteger32, NonNegativeInteger64, NonNegativeInteger8, NonNegativeIntegers,
         },
         npz::{
             NonPositiveInteger128, NonPositiveInteger16, NonPositiveInteger32,
-            NonPositiveInteger64, NonPositiveInteger8, NonPositiveIntegers,
+            NonPositiveInteger64, NonPositiveInteger8, NonPositiveIntegers, Npz128, Npz16, Npz32,
+            Npz64, Npz8,
         },
         nz::{
             NegativeInteger128, NegativeInteger16, NegativeInteger32, NegativeInteger64,
-            NegativeInteger8, NegativeIntegers,
+            NegativeInteger8, NegativeIntegers, Nz128, Nz16, Nz32, Nz64, Nz8,
         },
         prime::*,
         pz::{
             PositiveInteger128, PositiveInteger16, PositiveInteger32, PositiveInteger64,
-            PositiveInteger8, PositiveIntegers,
+            PositiveInteger8, PositiveIntegers, Pz128, Pz16, Pz32, Pz64, Pz8,
         },
         trait_integer::Integer,
-        z::{Integer128, Integer16, Integer32, Integer64, Integer8, Integers},
+        z::{
+            Integer128, Integer16, Integer32, Integer64, Integer8, Integers, Z128, Z16, Z32, Z64,
+            Z8,
+        },
     };
 
     #[doc(inline)]

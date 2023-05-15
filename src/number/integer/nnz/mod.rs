@@ -16,6 +16,8 @@
 //! [1w]: https://en.wikipedia.org/wiki/Natural_number
 //
 
+use crate::number::macros::define_abbreviations;
+
 mod define_sized;
 mod family;
 mod impl_from;
@@ -28,10 +30,4 @@ pub use define_sized::{
 };
 pub use family::NonNegativeIntegers;
 
-/// Abbreviations for non-negative integers.
-pub mod abbr {
-    use super::*;
-    use crate::number::macros::define_abbreviations;
-
-    define_abbreviations![many Nnz, NonNegativeInteger, 8, 16, 32, 64, 128];
-}
+define_abbreviations![many Nnz, NonNegativeInteger, 8, 16, 32, 64, 128];

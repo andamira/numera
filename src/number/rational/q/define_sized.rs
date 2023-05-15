@@ -171,7 +171,7 @@ macro_rules! define_rational_sized {
             /// # Safety
             /// The `denominator` must not be 0.
             ///
-            /// # Panic
+            /// # Panics
             /// Panics in debug if the `denominator` is 0.
             #[inline]
             #[cfg(not(feature = "safe"))]
@@ -378,7 +378,7 @@ define_rational_sized![multi Rational, i,
 
 #[cfg(test)]
 mod tests {
-    use crate::all::{abbr::*, *};
+    use crate::all::*;
 
     #[test]
     fn q_define_sized() -> NumeraResult<()> {
