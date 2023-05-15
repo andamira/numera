@@ -44,6 +44,16 @@ macro_rules! impl_nonzero_integer {
             pub const fn is_divisor_of(&self, other: &Self) -> bool {
                 other.is_multiple_of(self)
             }
+
+            /// Returns `true` if `self` and `other` are relative primes,
+            /// which means they have only 1 as their only common divisor.
+            ///
+            /// # Notation
+            /// $a \perp b$.
+            #[inline]
+            pub const fn is_coprime(&self, other: &Self) -> bool {
+                self.gcd(other).0.get() == Self::ONE.0.get()
+            }
         }
 
         /// Methods for non-negative integers
@@ -59,16 +69,6 @@ macro_rules! impl_nonzero_integer {
                 return Some(is_prime_sieve((self.0.get()).checked_as::<usize>()?));
                 #[cfg(not(feature = "std"))]
                 return Some(is_prime((self.0.get()).checked_as::<u32>()?));
-            }
-
-            /// Returns `true` if `self` and `other` are relative primes,
-            /// which means they have only 1 as their only common divisor.
-            ///
-            /// # Notation
-            /// $a \perp b$.
-            #[inline]
-            pub const fn is_coprime(&self, other: &Self) -> bool {
-                self.gcd(other).0.get() == Self::ONE.0.get()
             }
 
             /// Calculates the *Greatest Common Divisor* of this integer and `other`.
