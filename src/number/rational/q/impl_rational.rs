@@ -46,8 +46,7 @@ macro_rules! impl_rational {
             fn reduce(&mut self) {
                 let gcd_value = self.num.integer_gcd(&Into::<$num>::into(self.den)).unwrap();
 
-                // self.num /= gcd_value; // IMPROVE: impl DivAssign
-                self.num = self.num / gcd_value;
+                self.num /= gcd_value;
 
                 // RETHINK safe/unsafe
                 // #[cfg(feature = "safe")]
