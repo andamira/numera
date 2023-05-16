@@ -136,6 +136,9 @@ impl Prime8 {
 
     /// Returns the number of primes upto and including the current one.
     ///
+    /// # Notation
+    /// $\pi(x)$
+    ///
     /// # Example
     /// ```
     /// use numera::all::{Number, Prime8};
@@ -145,9 +148,6 @@ impl Prime8 {
     /// assert_eq![54, Prime8::new(251)?.pi()];
     /// # Ok(()) }
     /// ```
-    ///
-    /// # Notation
-    /// $\pi(x)$
     ///
     /// # Links
     /// - <https://mathworld.wolfram.com/PrimeCountingFunction.html>.
@@ -219,6 +219,9 @@ impl Prime16 {
 
     /// Returns the number of primes upto and including the current one.
     ///
+    /// # Notation
+    /// $\pi(x)$
+    ///
     /// # Example
     /// ```
     /// use numera::all::{Number, Prime16};
@@ -230,8 +233,6 @@ impl Prime16 {
     /// assert_eq![6_542, Prime16::new(65_521)?.pi()];
     /// # Ok(()) }
     /// ```
-    /// # Notation
-    /// $\pi(x)$
     ///
     /// # Links
     /// - <https://mathworld.wolfram.com/PrimeCountingFunction.html>.
@@ -362,6 +363,9 @@ impl Prime32 {
     /// Note that this operation can be slow for big 32-bit numbers,
     /// specially in a no-std context.
     ///
+    /// # Notation
+    /// $\pi(x)$
+    ///
     /// # Examples
     /// ```
     /// use numera::all::{Number, Prime32};
@@ -375,9 +379,6 @@ impl Prime32 {
     /// assert_eq![40_000_000, Prime32::new(776_531_401)?.pi()];
     /// # Ok(()) }
     /// ```
-    ///
-    /// # Notation
-    /// $\pi(x)$
     ///
     /// # Links
     /// - <https://mathworld.wolfram.com/PrimeCountingFunction.html>.
