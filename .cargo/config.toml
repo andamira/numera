@@ -7,10 +7,9 @@ c = "check" # std, safe
 cr = "check --release" # std, safe
 # fast compilation without costly features
 cF = "check --no-default-features --features=std,safe" # std, safe
-cFn = "check --no-default-features --features=safe" # no-std, safe
-cFu = "check --no-default-features --features=std" # std, unsafe
-cFnu = "check --no-default-features" # no-std, unsafe
-cFun = "cFnu"
+cnF = "check --no-default-features --features=safe" # no-std, safe
+cuF = "check --no-default-features --features=std" # std, unsafe
+cnuF = "check --no-default-features" # no-std, unsafe
 
 # CLIPPY
 cl = "clippy" # std, safe
@@ -29,10 +28,9 @@ clrau = "clippy --release --no-default-features --features=std,deps_all" # std, 
 clrnu = "clippy --release --no-default-features" # no-std, unsafe
 # fast compilation (no `try_from`)
 clF = "clippy --no-default-features --features=std,safe" # std, safe
-clFu = "clippy --no-default-features --features=std" # std, unsafe
-clFn = "clippy --no-default-features --features=safe" # no-std, safe
-clFnu = "clippy --no-default-features" # no-std, unsafe
-clFun = "clFnu"
+cluF = "clippy --no-default-features --features=std" # std, unsafe
+clnF = "clippy --no-default-features --features=safe" # no-std, safe
+clnuF = "clippy --no-default-features" # no-std, unsafe
 
 # CLEAN PACKAGE
 cp = "clean --package"
@@ -54,7 +52,7 @@ nd = "doc --no-deps --no-default-features --features=nightly,std,try_from,deps_a
 ndo = "doc --no-deps --no-default-features --open --features=nightly,std,try_from,deps_all"
 # fast
 ndF = "doc --no-deps --no-default-features --features=nightly,std,deps_all"
-ndFo = "doc --no-deps --no-default-features --open --features=nightly,std,deps_all"
+ndoF = "doc --no-deps --no-default-features --open --features=nightly,std,deps_all"
 # safe
 nds = "doc --no-deps --features=nightly,deps_all"
 ndso = "doc --no-deps --open --features=nightly,deps_all"
@@ -70,10 +68,15 @@ bre = "build --release --example"
 # RUN
 r = "run"
 rb = "run --bin"
-re = "run --example"
 rr = "run --release"
 rrb = "run --release --bin"
 rre = "run --release --example"
+# examples
+re = "run --example"
+rrue = "run --release --example --no-default-features --features=std,try_from" # unsafe
+# examples, Fast compilation
+reF = "run --no-default-features --features=std,safe --example"
+rreF = "run --release --example --no-default-features --features=std,safe"
 
 # TEST
 # std, safe
@@ -96,6 +99,9 @@ tn = "test --no-default-features"
 tdn = "test --no-default-features --doc"
 tn_ = "test --no-default-features -- --nocapture"
 tn_1 = "test --no-default-features -- --test-threads 1 --nocapture"
+# Fast
+tF = "test --no-default-features --features=std,safe"
+tdF = "test --doc --no-default-features --features=std,safe"
 
 # PUBLISH
 p = "publish --dry-run"
