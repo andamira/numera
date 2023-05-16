@@ -11,23 +11,23 @@ use devela::paste;
 macro_rules! impl_rational_ops {
     // impl all ops for multiple integer types
     (
-        $( $t:ident + $bsize:literal, cast: $castbsize:literal);+
+        $( $t:ident + $b:literal, cast: $bcast:literal);+
     ) => {
         $(
-            impl_rational_ops![Add: $t + $bsize, cast: $castbsize];
-            impl_rational_ops![Sub: $t + $bsize, cast: $castbsize];
-            impl_rational_ops![Mul: $t + $bsize, cast: $castbsize];
-            impl_rational_ops![Div: $t + $bsize, cast: $castbsize];
-            impl_rational_ops![Rem: $t + $bsize, cast: $castbsize];
-            impl_rational_ops![Neg: $t + $bsize, cast: $castbsize];
+            impl_rational_ops![Add: $t + $b, cast: $bcast];
+            impl_rational_ops![Sub: $t + $b, cast: $bcast];
+            impl_rational_ops![Mul: $t + $b, cast: $bcast];
+            impl_rational_ops![Div: $t + $b, cast: $bcast];
+            impl_rational_ops![Rem: $t + $b, cast: $bcast];
+            impl_rational_ops![Neg: $t + $b, cast: $bcast];
         )+
     };
 
     // impl Add for a single rational
     //
     // $t: rational type. e.g. Rational8
-    (Add: $t:ident + $bsize:literal, cast: $castbsize:literal) => { paste! {
-        impl Add for [<$t$bsize>] {
+    (Add: $t:ident + $b:literal, cast: $bcast:literal) => { paste! {
+        impl Add for [<$t$b>] {
             type Output = Self;
 
             /// The addition operator `+`.
@@ -39,19 +39,19 @@ macro_rules! impl_rational_ops {
             /// # Panics
             /// If the result can't fit the current bit-size.
             fn add(self, other: Self::Output) -> Self::Output {
-                let cself = [<$t$castbsize>]::from(self);
-                let cother = [<$t$castbsize>]::from(other);
+                let cself = [<$t$bcast>]::from(self);
+                let cother = [<$t$bcast>]::from(other);
 
                 let num = cself.num * cother.den.into() + cother.num * cself.den.into();
                 let den = cself.den * cother.den;
 
-                let creduced = [<$t$castbsize>] { num, den }.reduced();
+                let creduced = [<$t$bcast>] { num, den }.reduced();
 
                 #[cfg(feature = "try_from")]
                 return creduced.try_into().unwrap();
 
                 #[cfg(not(feature = "try_from"))]
-                return [<$t$bsize>]::new(
+                return [<$t$b>]::new(
                     creduced.num.0.try_into().unwrap(),
                     creduced.den.0.get().try_into().unwrap()
                 ).unwrap();
@@ -59,8 +59,8 @@ macro_rules! impl_rational_ops {
         }
     }};
 
-    (Sub: $t:ident + $bsize:literal, cast: $castbsize:literal) => { paste! {
-        impl Sub for [<$t$bsize>] {
+    (Sub: $t:ident + $b:literal, cast: $bcast:literal) => { paste! {
+        impl Sub for [<$t$b>] {
             type Output = Self;
 
             /// The substraction operator `-`.
@@ -72,19 +72,19 @@ macro_rules! impl_rational_ops {
             /// # Panics
             /// If the result can't fit the current bit-size.
             fn sub(self, other: Self) -> Self::Output {
-                let cself = [<$t$castbsize>]::from(self);
-                let cother = [<$t$castbsize>]::from(other);
+                let cself = [<$t$bcast>]::from(self);
+                let cother = [<$t$bcast>]::from(other);
 
                 let num = cself.num * cother.den.into() - cother.num * cself.den.into();
                 let den = cself.den * cother.den;
 
-                let creduced = [<$t$castbsize>] { num, den }.reduced();
+                let creduced = [<$t$bcast>] { num, den }.reduced();
 
                 #[cfg(feature = "try_from")]
                 return creduced.try_into().unwrap();
 
                 #[cfg(not(feature = "try_from"))]
-                return [<$t$bsize>]::new(
+                return [<$t$b>]::new(
                     creduced.num.0.try_into().unwrap(),
                     creduced.den.0.get().try_into().unwrap()
                 ).unwrap();
@@ -92,8 +92,8 @@ macro_rules! impl_rational_ops {
         }
     }};
 
-    (Mul: $t:ident + $bsize:literal, cast: $castbsize:literal) => { paste! {
-        impl Mul for [<$t$bsize>] {
+    (Mul: $t:ident + $b:literal, cast: $bcast:literal) => { paste! {
+        impl Mul for [<$t$b>] {
             type Output = Self;
 
             /// The multiplication operator `*`.
@@ -105,19 +105,19 @@ macro_rules! impl_rational_ops {
             /// # Panics
             /// If the result can't fit the current bit-size.
             fn mul(self, other: Self) -> Self::Output {
-                let cself = [<$t$castbsize>]::from(self);
-                let cother = [<$t$castbsize>]::from(other);
+                let cself = [<$t$bcast>]::from(self);
+                let cother = [<$t$bcast>]::from(other);
 
                 let num = cself.num * cother.num;
                 let den = cself.den * cother.den;
 
-                let creduced = [<$t$castbsize>] { num, den }.reduced();
+                let creduced = [<$t$bcast>] { num, den }.reduced();
 
                 #[cfg(feature = "try_from")]
                 return creduced.try_into().unwrap();
 
                 #[cfg(not(feature = "try_from"))]
-                return [<$t$bsize>]::new(
+                return [<$t$b>]::new(
                     creduced.num.0.try_into().unwrap(),
                     creduced.den.0.get().try_into().unwrap()
                 ).unwrap();
@@ -125,8 +125,8 @@ macro_rules! impl_rational_ops {
         }
     }};
 
-    (Div: $t:ident + $bsize:literal, cast: $castbsize:literal) => { paste! {
-        impl Div for [<$t$bsize>] {
+    (Div: $t:ident + $b:literal, cast: $bcast:literal) => { paste! {
+        impl Div for [<$t$b>] {
             type Output = Self;
 
             /// The division operator `/`.
@@ -138,8 +138,8 @@ macro_rules! impl_rational_ops {
             /// # Panics
             /// If the result can't fit the current bit-size.
             fn div(self, other: Self) -> Self::Output {
-                let cself = [<$t$castbsize>]::from(self);
-                let cother = [<$t$castbsize>]::from(other);
+                let cself = [<$t$bcast>]::from(self);
+                let cother = [<$t$bcast>]::from(other);
 
                 let num = cself.num * cother.den.into();
                 let den = cother.num * cself.den.into();
@@ -151,15 +151,15 @@ macro_rules! impl_rational_ops {
                     let den = den.try_into().unwrap();
 
                     #[cfg(not(feature = "try_from"))]
-                    let den = core::num::[<NonZeroI$castbsize>]::new(den.0).unwrap().into();
+                    let den = core::num::[<NonZeroI$bcast>]::new(den.0).unwrap().into();
 
-                    let creduced = [<$t$castbsize>] { num, den }.reduced();
+                    let creduced = [<$t$bcast>] { num, den }.reduced();
 
                     #[cfg(feature = "try_from")]
                     return creduced.try_into().unwrap();
 
                     #[cfg(not(feature = "try_from"))]
-                    return [<$t$bsize>]::new(
+                    return [<$t$b>]::new(
                         creduced.num.0.try_into().unwrap(),
                         creduced.den.0.get().try_into().unwrap()
                     ).unwrap();
@@ -168,8 +168,8 @@ macro_rules! impl_rational_ops {
         }
     }};
 
-    (Rem: $t:ident + $bsize:literal, cast: $castbsize:literal) => { paste! {
-        impl Rem for [<$t$bsize>] {
+    (Rem: $t:ident + $b:literal, cast: $bcast:literal) => { paste! {
+        impl Rem for [<$t$b>] {
             type Output = Self;
 
             /// The remainder operator `%` (using truncated division)
@@ -181,8 +181,8 @@ macro_rules! impl_rational_ops {
             /// # Panics
             /// If the result can't fit the current bit-size.
             fn rem(self, other: Self) -> Self::Output {
-                let cself = [<$t$castbsize>]::from(self);
-                let cother = [<$t$castbsize>]::from(other);
+                let cself = [<$t$bcast>]::from(self);
+                let cother = [<$t$bcast>]::from(other);
 
                 let lhs_num = cself.num * cother.den.into();
                 let rhs_num = cother.num * cself.den.into();
@@ -190,10 +190,10 @@ macro_rules! impl_rational_ops {
                 let den = cself.den * cother.den;
 
                 #[cfg(feature = "try_from")]
-                return [<$t$castbsize>] { num, den }.reduced().try_into().unwrap();
+                return [<$t$bcast>] { num, den }.reduced().try_into().unwrap();
 
                 #[cfg(not(feature = "try_from"))]
-                return [<$t$bsize>]::new(
+                return [<$t$b>]::new(
                     num.0.try_into().unwrap(),
                     den.0.get().try_into().unwrap()
                 ).unwrap().reduced();
@@ -201,8 +201,8 @@ macro_rules! impl_rational_ops {
         }
     }};
 
-    (Neg: $t:ident + $bsize:literal, cast: $castbsize:literal) => { paste! {
-        impl Neg for [<$t$bsize>] {
+    (Neg: $t:ident + $b:literal, cast: $bcast:literal) => { paste! {
+        impl Neg for [<$t$b>] {
             type Output = Self;
 
             /// The negation operator `-`.
