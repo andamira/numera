@@ -701,7 +701,7 @@ macro_rules! impl_integer_ops {
             // TODO:BENCH using intermediate floating-point
             // NOTE: this can't be const
             // pub fn div_half_even(self, rhs: [<$t$b>]) -> [<$t$b>] {
-            //     Self(crate::all::half_even64(self.0 as f64 / rhs.0 as f64) as [<$p$b>])
+            //     Self(crate::all::round_half_even64(self.0 as f64 / rhs.0 as f64) as [<$p$b>])
             // }
 
             /// Checked rounded division half to even.
