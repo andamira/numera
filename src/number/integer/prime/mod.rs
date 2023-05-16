@@ -1,6 +1,13 @@
 // numera::number::integer::prime
 //
-//! Prime numbers, from the set $\Bbb{P}$.
+//! Prime numbers ([w][0w]/[m][0m]/[o][0o]), from the set $\Bbb{P}$.
+//!
+//! $ \Bbb{P} = \lbrace 2, 3, 5, 7, 11, 13, 17, 19, 23, … \rbrace $ ([oeis])
+//!
+//! [0w]: https://en.wikipedia.org/wiki/Prime_number
+//! [0m]: https://mathworld.wolfram.com/PrimeNumber.html
+//! [0o]: https://oeis.org/wiki/Prime_numbers
+//! [oeis]: https://oeis.org/A000040
 //
 
 use crate::all::{IntegerError, NumeraError, NumeraResult};

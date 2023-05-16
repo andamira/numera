@@ -1,29 +1,14 @@
 // numera::number::integer::z
 //
-//! Integer numbers ([w][w0]/[m][m0]), from the set $\Z$.
+//! Integer numbers ([w][0w]/[m][0m]/[o][0o]), from the set $\Z$.
 //!
 //! $ \Z = \lbrace …, -2, -1, 0, 1, 2, … \rbrace $
 //!
-//! This type corresponds with the signed primitives ([`i8`]…[`i128`]).
+//! This type corresponds with the *signed* primitives ([`i8`]…[`i128`]).
 //!
-//! [w0]: https://en.wikipedia.org/wiki/Integer
-//! [m0]: https://mathworld.wolfram.com/Integer.html
-//!
-//! # Homogeneous relations
-//! - [*Symmetric*][s] + [*Transitive*][t] (== [`Partial Equivalence`][pe]),
-//!   + [*Reflexive*][r] (== [`Equivalence`][e]).
-//! - [*Transitive*][t] + [*Antisymmetric*][as] ([`Partial Order`][po])
-//!   + [*Reflexive*][r] + [*Strongly Connected*][sc] (== [`Total Order`][to]).
-//!
-//! [pe]: https://en.wikipedia.org/wiki/Partial_equivalence_relation
-//! [e]: https://en.wikipedia.org/wiki/Equivalence_relation
-//! [s]: https://en.wikipedia.org/wiki/Symmetric_relation
-//! [t]: https://en.wikipedia.org/wiki/Transitive_relation
-//! [r]: https://en.wikipedia.org/wiki/Reflexive_relation
-//! [as]: https://en.wikipedia.org/wiki/Antisymmetric_relation
-//! [sc]: https://en.wikipedia.org/wiki/Connected_relation
-//! [po]: https://en.wikipedia.org/wiki/Partially_ordered_set#Partial_order
-//! [to]: https://en.wikipedia.org/wiki/Total_order
+//! [0w]: https://en.wikipedia.org/wiki/Integer
+//! [0m]: https://mathworld.wolfram.com/Integer.html
+//! [0m]: https://oeis.org/wiki/Integers
 //
 
 mod define_sized;

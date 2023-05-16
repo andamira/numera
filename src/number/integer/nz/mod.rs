@@ -3,14 +3,13 @@
 //! *Negative* integer numbers ([m][0m]/[o][0o]), from the set $\Z^-$
 //! (`< 0`).
 //!
-//! $ \Z^- = \lbrace …, -2, -1 \rbrace $
+//! $ \Z^- = \lbrace …, -2, -1 \rbrace $ ([oeis])
 //!
 //! Doesn't include 0.
 //!
 //! [0m]: https://mathworld.wolfram.com/NegativeInteger.html
-//! [0o]: http://oeis.org/A001478
-//! An only *positive* integer number ([m][0m]), from the set $\Z^+$ (`> 0`).
-//!
+//! [0o]: https://oeis.org/wiki/Negative_integers
+//! [oeis]: http://oeis.org/A001478
 //
 
 mod define_sized;

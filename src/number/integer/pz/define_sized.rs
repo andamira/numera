@@ -85,10 +85,10 @@ macro_rules! define_positive_integer_sized {
         "1 \\dots$ [`" u$bsize
         "::" $doc_upper "`]$\\rbrack$."]
         ///
-        /// Also known as a [*counting number*][m0], you can also use the alias
+        /// Also known as a [*counting number*][0m], you can also use the alias
         #[doc = "[`Counting" $bsize "`][super::Counting" $bsize "]."]
         ///
-        /// [m0]: https://mathworld.wolfram.com/CountingNumber.html
+        /// [0m]: https://mathworld.wolfram.com/CountingNumber.html
 
         #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
         pub struct [<$name$bsize>](pub(crate) [<$p$bsize>]);

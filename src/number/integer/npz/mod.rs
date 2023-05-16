@@ -3,9 +3,10 @@
 //! *Non-positive* integer numbers ([m][0m]), from the set $\Z^- \cup {0}$
 //! (`<= 0`).
 //!
-//! $ {0} \cup Z^- = \lbrace …, -2, -1, 0 \rbrace $
+//! $ {0} \cup Z^- = \lbrace …, -2, -1, 0 \rbrace $ ([oeis])
 //!
 //! [0m]: https://mathworld.wolfram.com/NonpositiveInteger.html
+//! [oeis]: https://oeis.org/A001489
 //
 
 mod define_sized;
