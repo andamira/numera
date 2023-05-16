@@ -359,6 +359,8 @@ macro_rules! impl_integer_ops {
         impl [<$t$b>] {
             /// Truncated division.
             ///
+            /// Rounds the quotient towards zero, or away from infinity.
+            ///
             /// # Panics
             /// If `rhs` is 0 or if division results in overflow.
             ///
@@ -378,6 +380,8 @@ macro_rules! impl_integer_ops {
             }
 
             /// Checked truncated division.
+            ///
+            /// Rounds the quotient towards zero, or away from infinity.
             #[inline]
             #[must_use]
             pub const fn checked_div_trunc(self, rhs: [<$t$b>]) -> Option<[<$t$b>]> {
@@ -390,6 +394,9 @@ macro_rules! impl_integer_ops {
 
             /// Euclidean division.
             ///
+            /// Ensures that the remainder is always non-negative and smaller
+            /// than the divisor.
+            ///
             /// # Panics
             /// If `rhs` is 0 or if division results in overflow.
             ///
@@ -397,10 +404,10 @@ macro_rules! impl_integer_ops {
             /// ```
             /// use numera::all::Z8;
             ///
-            /// assert_eq![Z8::new(7).div_trunc(Z8::new(3)), Z8::new(2)];
-            /// assert_eq![Z8::new(7).div_trunc(Z8::new(-3)), Z8::new(-2)];
-            /// assert_eq![Z8::new(-7).div_trunc(Z8::new(3)), Z8::new(-2)];
-            /// assert_eq![Z8::new(-7).div_trunc(Z8::new(-3)), Z8::new(2)];
+            /// assert_eq![Z8::new(7).div_euclid(Z8::new(3)), Z8::new(2)];
+            /// assert_eq![Z8::new(7).div_euclid(Z8::new(-3)), Z8::new(-2)];
+            /// assert_eq![Z8::new(-7).div_euclid(Z8::new(3)), Z8::new(-3)];
+            /// assert_eq![Z8::new(-7).div_euclid(Z8::new(-3)), Z8::new(3)];
             /// ```
             #[inline]
             #[must_use]
@@ -409,6 +416,9 @@ macro_rules! impl_integer_ops {
             }
 
             /// Checked euclidean division.
+            ///
+            /// Ensures that the remainder is always non-negative and smaller
+            /// than the divisor.
             #[inline]
             #[must_use]
             pub const fn checked_div_euclid(self, rhs: [<$t$b>]) -> Option<[<$t$b>]> {
@@ -420,6 +430,11 @@ macro_rules! impl_integer_ops {
             }
 
             /// Ceiled division.
+            ///
+            /// Rounds the quotient towards positive infinity.
+            ///
+            /// # Notation
+            /// $ \lceil x / y \rceil $
             ///
             /// # Examples
             /// ```
@@ -443,6 +458,11 @@ macro_rules! impl_integer_ops {
             }
 
             /// Checked ceiled division.
+            ///
+            /// Rounds the quotient towards positive infinity.
+            ///
+            /// # Notation
+            /// $ \lceil x / y \rceil $
             ///
             /// # Examples
             /// ```
@@ -469,8 +489,13 @@ macro_rules! impl_integer_ops {
 
             /// Floored division
             ///
+            /// Rounds the quotient towards negative infinity.
+            ///
             /// # Panics
             /// If `rhs` is 0 or if the division results in overflow.
+            ///
+            /// # Notation
+            /// $ \lfloor x / y \rfloor $
             ///
             /// # Examples
             /// ```
@@ -503,6 +528,11 @@ macro_rules! impl_integer_ops {
 
             /// Checked floored division.
             ///
+            /// Rounds the quotient towards negative infinity.
+            ///
+            /// # Notation
+            /// $ \lfloor x / y \rfloor $
+            ///
             /// # Examples
             /// ```
             /// # use numera::all::*;
@@ -532,6 +562,9 @@ macro_rules! impl_integer_ops {
             /// # Panics
             /// If `rhs` is 0 or if the division results in overflow.
             ///
+            /// # Notation
+            /// $ \lfloor x / y \rceil $
+            ///
             /// # Examples
             /// ```
             /// use numera::all::Z8;
@@ -559,6 +592,11 @@ macro_rules! impl_integer_ops {
             }
 
             /// Checked rounded division.
+            ///
+            /// Rounds the quotient to the nearest integer.
+            ///
+            /// # Notation
+            /// $ \lfloor x / y \rceil $
             ///
             /// # Examples
             /// ```
@@ -628,17 +666,6 @@ macro_rules! impl_integer_ops {
             }
         }
         /// # Integer remainder
-        ///
-        /// In the context of modular arithmetic, Euclidean division is often
-        /// more appropriate for mathematicians because it guarantees a
-        /// non-negative remainder, ensuring a unique representative for the
-        /// modulo operation reddit.com. This property is essential in various
-        /// mathematical and physical applications.
-        ///
-        /// On the other hand, truncated division might be more intuitive in
-        /// some situations, such as expressing negative durations or
-        /// timestamps, where the remainder should have the same sign as the
-        /// dividend reddit.com.
         impl [<$t$b>] {
             /// Truncated remained operation.
             ///
@@ -646,6 +673,9 @@ macro_rules! impl_integer_ops {
             ///
             /// It is based on truncated division, rounding the quotient towards
             /// zero, meaning the remainder has the same sign as the dividend.
+            ///
+            /// # Notation
+            /// $ x \mod n $
             ///
             /// # Examples
             /// ```

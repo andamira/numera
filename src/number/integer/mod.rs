@@ -2,14 +2,11 @@
 //
 //! Integer numbers, subsets of $\Z$.
 //!
-//! An *integer* ([w][0w]/[m][0m]) is a number that can be written
+//! An *integer* ([m][0m]/[w][0w]) is a number that can be written
 //! without a fractional component.
 //!
-//! For example, $ 21 , 4 , 0 , −2048 $ are integers,
-//! while $9.75, \dfrac{1}{2} , \sqrt{2} $ are not.
-//!
-//! [0w]: https://en.wikipedia.org/wiki/Integer
 //! [0m]: https://mathworld.wolfram.com/Integer.html
+//! [0w]: https://en.wikipedia.org/wiki/Integer
 //
 
 pub(crate) mod macros;

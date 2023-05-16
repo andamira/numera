@@ -1,6 +1,6 @@
 // numera::number::integer::z
 //
-//! Integer numbers ([w][0w]/[m][0m]/[o][0o]), from the set $\Z$.
+//! Integer numbers ([m][0m]/[o][0o]/[w][0w]), from the set $\Z$.
 //!
 //! $ \Z = \lbrace …, -2, -1, 0, 1, 2, … \rbrace $
 //!
@@ -8,7 +8,7 @@
 //!
 //! [0w]: https://en.wikipedia.org/wiki/Integer
 //! [0m]: https://mathworld.wolfram.com/Integer.html
-//! [0m]: https://oeis.org/wiki/Integers
+//! [0o]: https://oeis.org/wiki/Integers
 //
 
 mod define_sized;

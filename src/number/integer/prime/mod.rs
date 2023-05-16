@@ -1,6 +1,6 @@
 // numera::number::integer::prime
 //
-//! Prime numbers ([w][0w]/[m][0m]/[o][0o]), from the set $\Bbb{P}$.
+//! Prime numbers ([[m][0m]/[o][0o]/w][0w]), from the set $\Bbb{P}$.
 //!
 //! $ \Bbb{P} = \lbrace 2, 3, 5, 7, 11, 13, 17, 19, 23, … \rbrace $ ([oeis])
 //!
