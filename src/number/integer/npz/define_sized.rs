@@ -134,21 +134,17 @@ macro_rules! define_nonpositive_integer_sized {
             #[inline]
             fn is_upper_bounded(&self) -> bool { true }
             #[inline]
-            fn lower_bound(&self) -> Option<Self> where Self: Sized {
-                Some(Self([<$p$bsize>]::MAX))
-            }
+            fn lower_bound(&self) -> Option<Self> where Self: Sized { Some([<$name$bsize>]::MIN) }
             #[inline]
-            fn upper_bound(&self) -> Option<Self> where Self: Sized {
-                Some(Self(0))
-            }
+            fn upper_bound(&self) -> Option<Self> where Self: Sized { Some([<$name$bsize>]::MAX) }
         }
         impl LowerBounded for [<$name$bsize>] {
             #[inline]
-            fn new_min() -> Self { <Self as ConstLowerBounded>::MIN }
+            fn new_min() -> Self { [<$name$bsize>]::MIN }
         }
         impl UpperBounded for [<$name$bsize>] {
             #[inline]
-            fn new_max() -> Self { <Self as ConstUpperBounded>::MAX } // 0
+            fn new_max() -> Self { [<$name$bsize>]::MAX }
         }
         impl ConstLowerBounded for [<$name$bsize>] {
             const MIN: Self = Self([<$p$bsize>]::MAX);

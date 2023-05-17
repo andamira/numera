@@ -159,37 +159,17 @@ macro_rules! define_positive_integer_sized {
             #[inline]
             fn is_upper_bounded(&self) -> bool { true }
             #[inline]
-            fn lower_bound(&self) -> Option<Self> where Self: Sized {
-                // IMPROVE WAIT for https://github.com/rust-lang/rust/pull/106633 1.70
-                // Some(Self([<$p$bsize>]::MIN))
-
-                #[cfg(feature = "safe")]
-                return Some(Self([<$p$bsize>]::new([<u$bsize>]::MIN).unwrap()));
-
-                #[cfg(not(feature = "safe"))]
-                // SAFETY: constant value
-                return Some(Self(unsafe {[<$p$bsize>]::new_unchecked([<u$bsize>]::MIN) }));
-            }
+            fn lower_bound(&self) -> Option<Self> where Self: Sized { Some([<$name$bsize>]::MIN) }
             #[inline]
-            fn upper_bound(&self) -> Option<Self> where Self: Sized {
-                // IMPROVE WAIT for https://github.com/rust-lang/rust/pull/106633 1.70
-                // Some(Self([<$p$bsize>]::MAX))
-
-                #[cfg(feature = "safe")]
-                return Some(Self([<$p$bsize>]::new([<u$bsize>]::MAX).unwrap()));
-
-                #[cfg(not(feature = "safe"))]
-                // SAFETY: constant value
-                return Some(Self(unsafe {[<$p$bsize>]::new_unchecked([<u$bsize>]::MAX) }));
-            }
+            fn upper_bound(&self) -> Option<Self> where Self: Sized { Some([<$name$bsize>]::MAX) }
         }
         impl LowerBounded for [<$name$bsize>] {
             #[inline]
-            fn new_min() -> Self { <Self as ConstLowerBounded>::MIN }
+            fn new_min() -> Self { [<$name$bsize>]::MIN }
         }
         impl UpperBounded for [<$name$bsize>] {
             #[inline]
-            fn new_max() -> Self { <Self as ConstUpperBounded>::MAX }
+            fn new_max() -> Self { [<$name$bsize>]::MAX }
         }
         impl ConstLowerBounded for [<$name$bsize>] {
             // IMPROVE WAIT for https://github.com/rust-lang/rust/pull/106633 1.70
