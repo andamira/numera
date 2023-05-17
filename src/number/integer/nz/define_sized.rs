@@ -145,8 +145,8 @@ macro_rules! define_negative_integer_sized {
         impl Bound for [<$name$bsize>] {
             fn is_lower_bounded(&self) -> bool { true }
             fn is_upper_bounded(&self) -> bool { true }
-            fn lower_bound(&self) -> Option<Self> where Self: Sized { Some([<$name$bsize>]::MIN) }
-            fn upper_bound(&self) -> Option<Self> where Self: Sized { Some([<$name$bsize>]::MAX) }
+            fn lower_bound(&self) -> Option<Self> { Some([<$name$bsize>]::MIN) }
+            fn upper_bound(&self) -> Option<Self> { Some([<$name$bsize>]::MAX) }
         }
         impl LowerBounded for [<$name$bsize>] {
             #[inline]
@@ -266,6 +266,8 @@ macro_rules! define_negative_integer_sized {
         impl Number for [<$name$bsize>] {
             type Parts = [<u$bsize>];
 
+            #[doc = "Returns a new `" [<$name$bsize>] "` from the constituent parts."]
+            ///
             /// Please note that the `value` provided will be interpreted as negative.
             ///
             /// # Errors
@@ -282,7 +284,16 @@ macro_rules! define_negative_integer_sized {
                 // ALTERNATIVE:
                 // Err(IntegerError::ZeroOrMore.into())
             }
+
+            #[doc = "Returns a new `" [<$name$bsize>] "` from the constituent parts."]
+            ///
             /// Please note that the `value` provided will interpreted as negative.
+            ///
+            /// # Panics
+            /// In debug if the value is `0`.
+            ///
+            /// # Safety
+            /// The `value` provided must not be `0`.
             #[inline]
             #[cfg(not(feature = "safe"))]
             #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]

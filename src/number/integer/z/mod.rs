@@ -6,9 +6,9 @@
 //!
 //! This type corresponds with the *signed* primitives ([`i8`]…[`i128`]).
 //!
-//! [0w]: https://en.wikipedia.org/wiki/Integer
 //! [0m]: https://mathworld.wolfram.com/Integer.html
 //! [0o]: https://oeis.org/wiki/Integers
+//! [0w]: https://en.wikipedia.org/wiki/Integer
 //
 
 mod define_sized;

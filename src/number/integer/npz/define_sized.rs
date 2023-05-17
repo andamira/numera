@@ -134,9 +134,9 @@ macro_rules! define_nonpositive_integer_sized {
             #[inline]
             fn is_upper_bounded(&self) -> bool { true }
             #[inline]
-            fn lower_bound(&self) -> Option<Self> where Self: Sized { Some([<$name$bsize>]::MIN) }
+            fn lower_bound(&self) -> Option<Self> { Some([<$name$bsize>]::MIN) }
             #[inline]
-            fn upper_bound(&self) -> Option<Self> where Self: Sized { Some([<$name$bsize>]::MAX) }
+            fn upper_bound(&self) -> Option<Self> { Some([<$name$bsize>]::MAX) }
         }
         impl LowerBounded for [<$name$bsize>] {
             #[inline]
@@ -205,7 +205,7 @@ macro_rules! define_nonpositive_integer_sized {
         impl Number for [<$name$bsize>] {
             type Parts = [<$p$bsize>];
 
-            #[doc = "Returns a new `" [<$name$bsize>] " from the constituent parts`."]
+            #[doc = "Returns a new `" [<$name$bsize>] "` from the constituent parts."]
             ///
             /// Please note that the `value` provided will interpreted as negative.
             ///
@@ -228,7 +228,7 @@ macro_rules! define_nonpositive_integer_sized {
                 //     Err(IntegerError::MoreThanZero.into())
                 // }
             }
-            #[doc = "Returns a new `" [<$name$bsize>] " from the constituent parts`."]
+            #[doc = "Returns a new `" [<$name$bsize>] "` from the constituent parts."]
             ///
             /// Please note that the `value` provided will interpreted as negative.
             ///

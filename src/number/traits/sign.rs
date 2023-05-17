@@ -46,10 +46,10 @@ pub trait Sign {
     /// Returns `true` if the type can represent negative numbers.
     fn can_negative(&self) -> bool;
 
-    /// Returns `true` if the value is positive ($> 0$).
+    /// Returns `true` if the value is positive (`> 0`).
     fn is_positive(&self) -> bool;
 
-    /// The value is negative ($< 0$).
+    /// Returns `true` if the value is negative (`< 0`).
     fn is_negative(&self) -> bool;
 }
 

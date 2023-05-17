@@ -154,9 +154,9 @@ macro_rules! define_nonzero_integer_sized {
             #[inline]
             fn is_upper_bounded(&self) -> bool { true }
             #[inline]
-            fn lower_bound(&self) -> Option<Self> where Self: Sized { Some([<$name$bsize>]::MIN) }
+            fn lower_bound(&self) -> Option<Self> { Some([<$name$bsize>]::MIN) }
             #[inline]
-            fn upper_bound(&self) -> Option<Self> where Self: Sized { Some([<$name$bsize>]::MAX) }
+            fn upper_bound(&self) -> Option<Self> { Some([<$name$bsize>]::MAX) }
         }
         impl LowerBounded for [<$name$bsize>] {
             #[inline]
@@ -310,19 +310,22 @@ macro_rules! define_nonzero_integer_sized {
         impl Number for [<$name$bsize>] {
             type Parts = [<i$bsize>];
 
-            #[doc = "Returns a new `" [<$name$bsize>] " from the constituent parts`."]
+            #[doc = "Returns a new `" [<$name$bsize>] "` from the constituent parts."]
             ///
             /// # Errors
-            /// This function can't fail.
+            /// If the `value` provided is `0`.
             #[inline]
             fn from_parts(value: Self::Parts) -> NumeraResult<Self> {
                 Ok(Self([<$p$bsize>]::new(value).ok_or(IntegerError::Zero)?))
             }
 
-            #[doc = "Returns a new `" [<$name$bsize>] " from the constituent parts`."]
+            #[doc = "Returns a new `" [<$name$bsize>] "` from the constituent parts."]
+            ///
+            /// # Panics
+            /// In debug if the `value` is `0`.
             ///
             /// # Safety
-            /// This function is safe.
+            /// The `value` provided must not be `0`.
             #[inline]
             #[cfg(not(feature = "safe"))]
             #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
