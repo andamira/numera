@@ -1,5 +1,3 @@
-# TODO:simplify a bit
-
 [alias]
 
 # CHECK
@@ -7,9 +5,14 @@ c = "check" # std, safe
 cr = "check --release" # std, safe
 # fast compilation without costly features
 cF = "check --no-default-features --features=std,safe" # std, safe
+caF = "check --no-default-features --features=std,safe,deps_all" # std, safe, all deps
+cauF = "check --no-default-features --features=std,deps_all" # std, unsafe, all deps
+craF = "check --release --no-default-features --features=std,safe,deps_all" # std, safe, all deps
 cnF = "check --no-default-features --features=safe" # no-std, safe
 cuF = "check --no-default-features --features=std" # std, unsafe
 cnuF = "check --no-default-features" # no-std, unsafe
+cNF = "check --target thumbv7m-none-eabi --no-default-features --features=safe" # no-std, no-alloc, safe
+cNuF = "check --target thumbv7m-none-eabi --no-default-features" # no-std, no-alloc, unsafe
 
 # CLIPPY
 cl = "clippy" # std, safe
@@ -82,7 +85,7 @@ rreF = "run --release --example --no-default-features --features=std,safe"
 # std, safe
 t = "test"
 td = "test --doc"
-t_ = "test  -- --nocapture"
+t_ = "test -- --nocapture"
 t_1 = "test -- --test-threads 1 --nocapture"
 # std, safe, all dependencies
 ta = "test --features=deps_all"
@@ -99,9 +102,11 @@ tn = "test --no-default-features"
 tdn = "test --no-default-features --doc"
 tn_ = "test --no-default-features -- --nocapture"
 tn_1 = "test --no-default-features -- --test-threads 1 --nocapture"
-# Fast
-tF = "test --no-default-features --features=std,safe"
-tdF = "test --doc --no-default-features --features=std,safe"
+# Fast:
+tF = "test --no-default-features --features=std,safe" # std,safe
+tnF = "test --no-default-features --features=safe" # no-std, safe
+tdF = "test --doc --no-default-features --features=std,safe" # std, safe, docs
+t_F = "test --no-default-features --features=std,safe -- --nocapture"
 
 # PUBLISH
 p = "publish --dry-run"
