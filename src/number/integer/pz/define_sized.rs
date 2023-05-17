@@ -85,6 +85,8 @@ macro_rules! define_positive_integer_sized {
         "1 \\dots$ [`" u$bsize
         "::" $doc_upper "`]$\\rbrack$."]
         ///
+        #[doc = "It is equivalent to the [`" [<NonZeroU$bsize>] "`] primitive."]
+        ///
         /// Also known as a [*counting number*][0m], you can also use the alias
         #[doc = "[`Counting" $bsize "`][super::Counting" $bsize "]."]
         ///

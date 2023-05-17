@@ -79,6 +79,8 @@ macro_rules! define_float_sized {
         #[doc = "\n\nThe range of valid numeric values is $\\lbrack"
         $doc_sign "$[`" $p$bsize "::" $doc_lower "`] $\\dots$ [`"
         $p$bsize "::" $doc_upper "`]$\\rbrack$."]
+        ///
+        #[doc = "It is equivalent to the [`" [<f$bsize>] "`] primitive."]
         #[derive(Clone, Copy, Debug, Default, PartialEq, PartialOrd)]
         pub struct [<$name$bsize>](pub(crate) [<$p$bsize>]);
 

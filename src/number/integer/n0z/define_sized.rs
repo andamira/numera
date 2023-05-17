@@ -84,7 +84,8 @@ macro_rules! define_nonzero_integer_sized {
         #[doc = "\n\nThe range of valid numeric values is $\\lbrack" $doc_sign
         "$[`" i$bsize "::" $doc_lower "`] $\\dots -1, 1 \\dots$ [`" i$bsize
         "::" $doc_upper "`]$\\rbrack$."]
-
+        ///
+        #[doc = "It is equivalent to the [`" [<NonZeroI$bsize>] "`] primitive."]
         #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
         pub struct [<$name$bsize>](pub(crate) [<$p$bsize>]);
 

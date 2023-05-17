@@ -83,6 +83,8 @@ macro_rules! define_nonnegative_integer_sized {
         $doc_sign 0 " \\dots$ [`"
         $p$bsize "::" $doc_upper "`]$\\rbrack$."]
         ///
+        #[doc = "It is equivalent to the [`" [<u$bsize>] "`] primitive."]
+        ///
         /// Also known as a [*natural number*][m0], you can also use the alias
         #[doc = "[`Natural" $bsize "`][super::Natural" $bsize "]."]
         ///
