@@ -4,6 +4,8 @@
 //! They are not as efficient or precise, but they are no-std compatible.
 //
 
+#![allow(dead_code)]
+
 /// Calculates the absolute value of `n`.
 #[inline]
 #[must_use]

@@ -8,5 +8,6 @@
 
 mod define_sized;
 // mod family;
+pub(crate) mod fns;
 
 pub use define_sized::{Float32, Float64};

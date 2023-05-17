@@ -3,7 +3,7 @@
 //! Alternative implementations for finding primes.
 //
 
-use crate::number::real::sqrt_fisr64;
+use crate::number::real::float::fns::sqrt_fisr64;
 use core::num::NonZeroU32;
 #[cfg(feature = "std")]
 use {core::num::NonZeroUsize, primal_sieve::Sieve};

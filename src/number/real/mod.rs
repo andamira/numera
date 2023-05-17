@@ -3,8 +3,6 @@
 //! Real numbers, subsets of $\R$.
 //
 
-mod fns;
-
 pub mod float;
 
 pub use all::*;
