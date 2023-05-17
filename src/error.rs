@@ -88,7 +88,10 @@ pub enum RationalError {
 #[non_exhaustive]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum RealError {
-    Other,
+    /// Invalid value Nan.
+    NaN,
+
+    Other, // TEMP
 }
 
 mod core_impls {
@@ -141,7 +144,11 @@ mod core_impls {
     }
     impl fmt::Display for RealError {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            write!(f, "RealError")
+            use RealError::*;
+            match self {
+                NaN => write!(f, "Nan"),
+                _ => write!(f, "Other"),
+            }
         }
     }
 
