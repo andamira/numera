@@ -221,6 +221,29 @@ mod core_impls {
     }
 }
 
+#[cfg(feature = "ibig")]
+mod ibig {
+    use ibig::error::{OutOfBoundsError, ParseError};
+    use super::{IntegerError, NumeraError};
+
+    impl From<OutOfBoundsError> for IntegerError {
+        fn from(_err: OutOfBoundsError) -> Self {
+            IntegerError::Overflow
+        }
+    }
+    impl From<OutOfBoundsError> for NumeraError {
+        fn from(_err: OutOfBoundsError) -> Self {
+            IntegerError::Overflow.into()
+        }
+    }
+    // ParseError { NoDigits, InvalidDigit }
+    impl From<ParseError> for NumeraError {
+        fn from(_err: ParseError) -> Self {
+            NumeraError::Conversion
+        }
+    }
+}
+
 #[cfg(feature = "std")]
 #[cfg_attr(feature = "nightly", doc(cfg(feature = "std")))]
 mod std_impls {

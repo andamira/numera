@@ -13,19 +13,64 @@
 //   - Number
 
 use crate::{
-    error::NumeraResult,
+    error::{NumeraError, NumeraResult},
     number::traits::{
         Bound, Count, Countable, Ident, NegOne, NonLowerBounded, NonUpperBounded, Number, One,
         Sign, Signed, Zero,
     },
 };
+use core::str::FromStr;
 use ibig::IBig;
 
 /* definition */
 
 /// A big integer number, from the set $\\Z$.
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
-pub struct IntegerBig(pub(crate) IBig);
+pub struct IntegerBig(pub IBig);
+
+impl IntegerBig {
+    /// Returns a new `IntegerBig`.
+    #[inline]
+    #[must_use]
+    pub fn new(value: i128) -> IntegerBig {
+        Self(IBig::from(value))
+    }
+
+    /// Returns a new `IntegerBig` from a string in base 10.
+    ///
+    /// # Errors
+    /// If the number is unparseable.
+    #[inline]
+    pub fn from_string(value: &str) -> NumeraResult<IntegerBig> {
+        Ok(Self(IBig::from_str_radix(value, 10)?))
+    }
+
+    /// Returns a new `IntegerBig` from a string in the provided `base`,
+    /// which must be between 2 and 36, inclusive.
+    ///
+    /// `value` may contain an optional `+` prefix.
+    /// Digits 10-35 are represented by `a-z` or `A-Z`.
+    ///
+    ///
+    /// # Panics
+    /// If base is <2 or >36.
+    // FIXME: make this an error.
+    ///
+    /// # Errors
+    /// If the number is unparseable.
+    #[inline]
+    pub fn from_str_with_base(value: &str, base: u32) -> NumeraResult<IntegerBig> {
+        Ok(Self(IBig::from_str_radix(value, base)?))
+    }
+}
+
+impl FromStr for IntegerBig {
+    type Err = NumeraError;
+
+    fn from_str(s: &str) -> NumeraResult<IntegerBig> {
+        Self::from_string(s)
+    }
+}
 
 /* sign */
 
@@ -120,11 +165,19 @@ impl NegOne for IntegerBig {
 impl Number for IntegerBig {
     type Parts = IBig;
 
+    /// Returns a new `IntegerBig` from the constituent parts.
+    ///
+    /// # Errors
+    /// This function can't fail.
     #[inline]
     fn from_parts(value: Self::Parts) -> NumeraResult<Self> {
         Ok(Self(value))
     }
 
+    /// Returns a new `IntegerBig` from the constituent parts.
+    ///
+    /// # Safety
+    /// This function is safe.
     #[inline]
     #[cfg(not(feature = "safe"))]
     #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]

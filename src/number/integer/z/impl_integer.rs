@@ -128,8 +128,121 @@ macro_rules! impl_integer {
         }
     };
 }
-
 impl_integer![many: Integer8, Integer16, Integer32, Integer64, Integer128];
+
+#[cfg(feature = "ibig")]
+mod ibig {
+    use crate::number::{
+        integer::{is_prime_sieve, z::IntegerBig, Integer},
+        traits::{One, Zero},
+    };
+
+    /// # Methods for all integers
+    impl IntegerBig {
+        /// Returns `true` if this integer is even.
+        #[inline]
+        #[must_use]
+        pub fn is_even(&self) -> bool {
+            &self.0 & IntegerBig::new_one().0 == IntegerBig::new_zero().0
+        }
+        /// Returns `true` if this integer is odd.
+        #[inline]
+        #[must_use]
+        pub fn is_odd(&self) -> bool {
+            !self.is_even()
+        }
+
+        /// Returns `true` if this integer is a multiple of the `other`.
+        #[inline]
+        #[must_use]
+        pub fn is_multiple_of(&self, other: &Self) -> bool {
+            &self.0 % &other.0 == IntegerBig::new_zero().0
+        }
+        /// Returns `true` if this integer is a divisor of the `other`.
+        #[inline]
+        #[must_use]
+        pub fn is_divisor_of(&self, other: &Self) -> bool {
+            other.is_multiple_of(self)
+        }
+
+        /// Returns `true` if `self` and `other` are relative primes,
+        /// which means they have only 1 as their only common divisor.
+        ///
+        /// # Notation
+        /// $a \perp b$.
+        #[inline]
+        #[must_use]
+        pub fn is_coprime(&self, other: &Self) -> bool {
+            self.0.gcd(&other.0) == IntegerBig::new_one().0
+        }
+
+        /// Returns the number of digits in base 10.
+        #[inline]
+        #[must_use]
+        pub fn digits(&self) -> u32 {
+            if let Ok(n) = u32::try_from(self.0.to_string().len()) {
+                n
+            } else {
+                unreachable!["a number with U32::MAX digits? really?"];
+            }
+        }
+    }
+
+    /// # Methods for non-negative integers
+    impl IntegerBig {
+        /// Returns `Some(true)` if this integer is prime, `Some(false)` if it's not
+        /// prime, or `None` if it can not be determined.
+        ///
+        /// Returns `None` if this integer can't be represented as a [`usize`].
+        //
+        // IMPROVE: use an algorithm for big numbers.
+        #[inline]
+        pub fn is_prime(&self) -> Option<bool> {
+            Some(is_prime_sieve(usize::try_from(&self.0).ok()?))
+        }
+
+        /// Calculates the *Greatest Common Divisor* of this integer and `other`.
+        #[inline]
+        #[must_use]
+        pub fn gcd(&self, other: &Self) -> Self {
+            Self(self.0.gcd(&other.0))
+        }
+
+        /// Calculates the *Lowest Common Multiple* of this integer and `other`.
+        #[inline]
+        #[must_use]
+        pub fn lcm(&self, other: &Self) -> Self {
+            IntegerBig(&self.0 * &other.0 / self.gcd(other).0)
+        }
+    }
+
+    impl Integer for IntegerBig {
+        #[inline]
+        fn integer_is_even(&self) -> bool {
+            self.is_even()
+        }
+        #[inline]
+        fn integer_is_multiple_of(&self, other: &Self) -> bool {
+            self.is_multiple_of(other)
+        }
+        #[inline]
+        fn integer_is_prime(&self) -> Option<bool> {
+            self.is_prime()
+        }
+        #[inline]
+        fn integer_gcd(&self, other: &Self) -> Option<Self> {
+            Some(self.gcd(other))
+        }
+        #[inline]
+        fn integer_lcm(&self, other: &Self) -> Option<Self> {
+            Some(self.lcm(other))
+        }
+        #[inline]
+        fn integer_digits(&self) -> u32 {
+            self.digits()
+        }
+    }
+}
 
 #[cfg(test)]
 mod tests {
