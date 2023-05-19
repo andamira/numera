@@ -34,6 +34,16 @@ macro_rules! impl_integer {
             pub const fn is_divisor_of(&self, other: &Self) -> bool {
                 other.is_multiple_of(self)
             }
+
+            /// Returns the number of digits in base 10.
+            #[inline]
+            pub const fn digits(&self) -> u32 {
+                if let Some(n) = self.0.checked_ilog10() {
+                     n + 1
+                } else {
+                    1
+                }
+            }
         }
 
         impl Integer for $t {
@@ -60,6 +70,10 @@ macro_rules! impl_integer {
             #[inline]
             fn integer_lcm(&self, _other: &Self) -> Option<Self> {
                 None
+            }
+            #[inline]
+            fn integer_digits(&self) -> u32 {
+                self.digits()
             }
         }
     };

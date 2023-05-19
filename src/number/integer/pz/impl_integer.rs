@@ -54,6 +54,12 @@ macro_rules! impl_nonzero_integer {
             pub const fn is_coprime(&self, other: &Self) -> bool {
                 self.gcd(other).0.get() == Self::ONE.0.get()
             }
+
+            /// Returns the number of digits in base 10.
+            #[inline]
+            pub const fn digits(&self) -> u32 {
+                self.0.ilog10() + 1
+            }
         }
 
         /// Methods for non-negative integers
@@ -130,6 +136,10 @@ macro_rules! impl_nonzero_integer {
             #[inline]
             fn integer_lcm(&self, other: &Self) -> Option<Self> {
                 Some(self.lcm(other))
+            }
+            #[inline]
+            fn integer_digits(&self) -> u32 {
+                self.digits()
             }
         }
     };

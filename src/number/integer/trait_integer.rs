@@ -60,6 +60,10 @@ pub trait Integer: Number {
 
     // /// Calculates the Greatest Common Divisor of `self` and `other`.
     // fn gcd_lcm(&self, other: &Self) -> Result<(Self, Self)> where Self: Sized;
+
+    /// Returns the number of digits in base 10, without the sign.
+    #[must_use]
+    fn integer_digits(&self) -> u32;
 }
 
 /// Implements `Integer` for integer primitives.
@@ -101,6 +105,10 @@ macro_rules! impl_integer {
             fn integer_lcm(&self, other: &Self) -> Option<Self> {
                 Some(*self * *other / self.integer_gcd(other).unwrap())
             }
+
+            fn integer_digits(&self) -> u32 {
+                self.checked_ilog10().unwrap_or(0)
+            }
         }
     };
 
@@ -137,6 +145,10 @@ macro_rules! impl_integer {
                 Some($t::new(
                     self.get() * other.get() / self.get().integer_gcd(&other.get()).unwrap()
                 ).unwrap())
+            }
+
+            fn integer_digits(&self) -> u32 {
+                self.get().ilog10()
             }
         }
     };
