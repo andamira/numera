@@ -87,7 +87,7 @@ macro_rules! define_nonzero_integer_sized {
         ///
         #[doc = "It is equivalent to the [`" [<NonZeroI$bsize>] "`] primitive."]
         #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
-        pub struct [<$name$bsize>](pub(crate) [<$p$bsize>]);
+        pub struct [<$name$bsize>](pub [<$p$bsize>]);
 
         impl fmt::Display for [<$name$bsize>]  {
             fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {

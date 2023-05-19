@@ -83,9 +83,9 @@ macro_rules! define_nonpositive_integer_sized {
         #[doc = "\n\nThe range of valid numeric values is $\\lbrack$"
         "$" $doc_sign "$[`" $p$bsize "::" $doc_lower "`]"
         " $\\dots"  $doc_upper  "\\rbrack$."]
-
+        /// Please note that the `value` will be interpreted as negative.
         #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, PartialOrd, Ord)]
-        pub struct [<$name$bsize>](pub(crate) [<$p$bsize>]);
+        pub struct [<$name$bsize>](pub [<$p$bsize>]);
 
         impl fmt::Display for [<$name$bsize>]  {
             fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -97,6 +97,8 @@ macro_rules! define_nonpositive_integer_sized {
         impl [<$name$bsize>]  {
             #[inline]
             #[doc = "Returns a new `" [<$name$bsize>] "`."]
+            ///
+            /// Please note that the `value` will be interpreted as negative.
             pub const fn new(value: [<$p$bsize>]) -> Self { Self(value) }
         }
 
@@ -207,7 +209,7 @@ macro_rules! define_nonpositive_integer_sized {
 
             #[doc = "Returns a new `" [<$name$bsize>] "` from the constituent parts."]
             ///
-            /// Please note that the `value` provided will interpreted as negative.
+            /// Please note that the `value` will be interpreted as negative.
             ///
             /// # Errors
             /// This function can't fail.
@@ -230,7 +232,7 @@ macro_rules! define_nonpositive_integer_sized {
             }
             #[doc = "Returns a new `" [<$name$bsize>] "` from the constituent parts."]
             ///
-            /// Please note that the `value` provided will interpreted as negative.
+            /// Please note that the `value` will be interpreted as negative.
             ///
             /// # Safety
             /// This function is safe.

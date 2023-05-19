@@ -84,10 +84,8 @@ macro_rules! define_negative_integer_sized {
         #[doc = "\n\nThe range of valid numeric values is $\\lbrack$"
         "$" $doc_sign "$[`" $p$bsize "::" $doc_lower "`]"
         " $\\dots"  $doc_sign $doc_upper  "\\rbrack$."]
-
         #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
-        pub struct [<$name$bsize>](pub(crate) [<$p$bsize>]);
-
+        pub struct [<$name$bsize>](pub [<$p$bsize>]);
         impl fmt::Display for [<$name$bsize>]  {
             fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
                 // notice the negation
@@ -98,7 +96,7 @@ macro_rules! define_negative_integer_sized {
         impl [<$name$bsize>]  {
             #[doc = "Returns a new `" [<$name$bsize>] "`."]
             ///
-            /// Please note that the `value` provided will interpreted as negative.
+            /// Please note that the `value` will be interpreted as negative.
             ///
             /// # Errors
             /// If the `value` provided is `0`.

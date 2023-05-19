@@ -89,9 +89,8 @@ macro_rules! define_nonnegative_integer_sized {
         #[doc = "[`Natural" $bsize "`][super::Natural" $bsize "]."]
         ///
         /// [m0]: https://mathworld.wolfram.com/NaturalNumber.html
-
         #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, PartialOrd, Ord)]
-        pub struct [<$name$bsize>](pub(crate) [<$p$bsize>]);
+        pub struct [<$name$bsize>](pub [<$p$bsize>]);
 
         impl fmt::Display for [<$name$bsize>]  {
             fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {

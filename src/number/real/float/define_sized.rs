@@ -82,7 +82,7 @@ macro_rules! define_float_sized {
         ///
         #[doc = "It is equivalent to the [`" [<f$bsize>] "`] primitive."]
         #[derive(Clone, Copy, Debug, Default, PartialEq, PartialOrd)]
-        pub struct [<$name$bsize>](pub(crate) [<$p$bsize>]);
+        pub struct [<$name$bsize>](pub [<$p$bsize>]);
 
         impl fmt::Display for [<$name$bsize>]  {
             fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {

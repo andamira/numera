@@ -93,8 +93,8 @@ macro_rules! define_rational_sized {
 
         #[derive(Clone, Copy, Debug)]
         pub struct [<$name$bsize>] {
-            pub(crate) num: [<$num$bsize>],
-            pub(crate) den: [<$den$bsize>],
+            pub num: [<$num$bsize>],
+            pub den: [<$den$bsize>],
         }
 
         /// Returns $0/1$.

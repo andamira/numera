@@ -91,9 +91,8 @@ macro_rules! define_positive_integer_sized {
         #[doc = "[`Counting" $bsize "`][super::Counting" $bsize "]."]
         ///
         /// [0m]: https://mathworld.wolfram.com/CountingNumber.html
-
         #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
-        pub struct [<$name$bsize>](pub(crate) [<$p$bsize>]);
+        pub struct [<$name$bsize>](pub [<$p$bsize>]);
 
         impl fmt::Display for [<$name$bsize>]  {
             fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
