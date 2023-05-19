@@ -104,7 +104,7 @@ macro_rules! define_positive_integer_sized {
             #[doc = "Returns a new `" [<$name$bsize>] "`."]
             ///
             /// # Errors
-            /// If the `value` provided is `0`.
+            /// If the given `value` is `0`.
             //
             // NOTE: accepting u* for converting to NonZeroU
             #[inline]
@@ -119,7 +119,7 @@ macro_rules! define_positive_integer_sized {
             #[doc = "Returns a new `" [<$name$bsize>] "`."]
             ///
             /// # Safety
-            /// The provided `value` must not be 0.
+            /// The given `value` must not be 0.
             ///
             /// # Panics
             /// Panics in debug if the `value` is 0.
@@ -291,7 +291,7 @@ macro_rules! define_positive_integer_sized {
             #[doc = "Returns a new `" [<$name$bsize>] "` from the constituent parts."]
             ///
             /// # Errors
-            /// If the `value` provided is `0`.
+            /// If the given `value` is `0`.
             #[inline]
             fn from_parts(value: Self::Parts) -> NumeraResult<Self> {
                 Ok(Self([<$p$bsize>]::new(value).ok_or(IntegerError::Zero)?))
@@ -300,10 +300,10 @@ macro_rules! define_positive_integer_sized {
             #[doc = "Returns a new `" [<$name$bsize>] "` from the constituent parts."]
             ///
             /// # Panics
-            /// In debug if the `value` is `0`.
+            /// In debug if the given `value` is `0`.
             ///
             /// # Safety
-            /// The `value` provided must not be `0`.
+            /// The given `value` must not be `0`.
             #[inline]
             #[cfg(not(feature = "safe"))]
             #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]

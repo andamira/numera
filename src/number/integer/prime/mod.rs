@@ -85,7 +85,7 @@ impl Prime8 {
     /// Returns a new `Prime8`.
     ///
     /// # Errors
-    /// If the `value` provided is not a prime number.
+    /// If the given `value` is not a prime number.
     #[inline]
     pub fn new(value: u8) -> NumeraResult<Self> {
         if is_prime(value.into()) {
@@ -113,9 +113,9 @@ impl Prime8 {
     /// Returns a new `Prime8`.
     ///
     /// # Safety
-    /// The provided `value` must be a prime number.
+    /// The given `value` must be a prime number.
     /// # Panics
-    /// Panics in debug if `value` is not a prime number.
+    /// Panics in debug if the given `value` is not a prime number.
     #[inline]
     #[cfg(all(debug_assertions, not(feature = "safe")))]
     #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
@@ -126,7 +126,7 @@ impl Prime8 {
     /// Returns a new `Prime8`.
     ///
     /// # Safety
-    /// The provided `value` must be a prime number.
+    /// The given `value` must be a prime number.
     #[inline]
     #[cfg(all(not(debug_assertions), not(feature = "safe")))]
     #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
@@ -166,7 +166,7 @@ impl Prime16 {
     /// Returns a new `Prime16`.
     ///
     /// # Errors
-    /// If the `value` provided is not a prime number.
+    /// If the given `value` is not a prime number.
     #[inline]
     pub fn new(value: u16) -> NumeraResult<Self> {
         if is_prime(value.into()) {
@@ -196,9 +196,9 @@ impl Prime16 {
     /// Returns a new `Prime16`.
     ///
     /// # Safety
-    /// The provided `value` must be a prime number.
+    /// The given `value` must be a prime number.
     /// # Panics
-    /// Panics in debug if `value` is not a prime number.
+    /// Panics in debug if the given `value` is not a prime number.
     #[inline]
     #[cfg(all(debug_assertions, not(feature = "safe")))]
     #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
@@ -209,7 +209,7 @@ impl Prime16 {
     /// Returns a new `Prime16`.
     ///
     /// # Safety
-    /// The provided `value` must be a prime number.
+    /// The given `value` must be a prime number.
     #[inline]
     #[cfg(all(not(debug_assertions), not(feature = "safe")))]
     #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
@@ -268,7 +268,7 @@ impl Prime32 {
     /// implementation that calls [`is_prime`].
     ///
     /// # Errors
-    /// If the `value` provided is not a prime number.
+    /// If the given `value` is not a prime number.
     #[inline]
     #[cfg(not(feature = "std"))]
     pub fn new(value: u32) -> NumeraResult<Self> {
@@ -284,7 +284,7 @@ impl Prime32 {
     /// implementation that calls [`is_prime`].
     ///
     /// # Errors
-    /// If the `value` provided is not a prime number or can't fit in a `usize`.
+    /// If the given `value` is not a prime number or it can't fit in a `usize`.
     #[inline]
     #[cfg(feature = "std")]
     pub fn new(value: u32) -> NumeraResult<Self> {
@@ -336,10 +336,10 @@ impl Prime32 {
     /// Returns a new `Prime32`.
     ///
     /// # Safety
-    /// The provided `value` must be a prime number.
+    /// The given `value` must be a prime number.
     /// # Panics
-    /// Panics in debug if `value` is not a prime number, or if can't fit in
-    /// a `usize`.
+    /// Panics in debug if the given `value` is not a prime number, or if it
+    /// can't fit in a `usize`.
     #[inline]
     #[cfg(all(debug_assertions, not(feature = "safe"), feature = "std"))]
     #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
@@ -350,7 +350,7 @@ impl Prime32 {
     /// Returns a new `Prime32`.
     ///
     /// # Safety
-    /// The provided `value` must be a prime number.
+    /// The given `value` must be a prime number.
     #[inline]
     #[cfg(all(not(debug_assertions), not(feature = "safe")))]
     #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]

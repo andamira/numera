@@ -15,28 +15,33 @@ macro_rules! impl_integer {
         impl $t {
             /// Returns `true` if this integer is even.
             #[inline]
+            #[must_use]
             pub const fn is_even(&self) -> bool {
                 self.0 & 1 == 0
             }
             /// Returns `true` if this integer is odd.
             #[inline]
+            #[must_use]
             pub const fn is_odd(&self) -> bool {
                 !self.is_even()
             }
 
             /// Returns `true` if this integer is a multiple of the `other`.
             #[inline]
+            #[must_use]
             pub const fn is_multiple_of(&self, other: &Self) -> bool {
                 self.0 % other.0 == 0
             }
             /// Returns `true` if this integer is a divisor of the `other`.
             #[inline]
+            #[must_use]
             pub const fn is_divisor_of(&self, other: &Self) -> bool {
                 other.is_multiple_of(self)
             }
 
             /// Returns the number of digits in base 10.
             #[inline]
+            #[must_use]
             pub const fn digits(&self) -> u32 {
                 if let Some(n) = self.0.checked_ilog10() {
                      n + 1

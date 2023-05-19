@@ -96,10 +96,10 @@ macro_rules! define_negative_integer_sized {
         impl [<$name$bsize>]  {
             #[doc = "Returns a new `" [<$name$bsize>] "`."]
             ///
-            /// Please note that the `value` will be interpreted as negative.
+            /// Please note that the given `value` will be interpreted as negative.
             ///
             /// # Errors
-            /// If the `value` provided is `0`.
+            /// If the given `value` is `0`.
             //
             // NOTE: accepting u* for converting to NonZeroU
             #[inline]
@@ -266,10 +266,10 @@ macro_rules! define_negative_integer_sized {
 
             #[doc = "Returns a new `" [<$name$bsize>] "` from the constituent parts."]
             ///
-            /// Please note that the `value` provided will be interpreted as negative.
+            /// Please note that the given `value` will be interpreted as negative.
             ///
             /// # Errors
-            /// If the `value` provided is `0`.
+            /// If the given `value` is `0`.
             //
             // ALTERNATIVE:
             // This constructur always return an error. Please use the
@@ -285,13 +285,13 @@ macro_rules! define_negative_integer_sized {
 
             #[doc = "Returns a new `" [<$name$bsize>] "` from the constituent parts."]
             ///
-            /// Please note that the `value` provided will interpreted as negative.
+            /// Please note that the given `value` will interpreted as negative.
             ///
             /// # Panics
-            /// In debug if the value is `0`.
+            /// In debug if the given value is `0`.
             ///
             /// # Safety
-            /// The `value` provided must not be `0`.
+            /// The given `value` must not be `0`.
             #[inline]
             #[cfg(not(feature = "safe"))]
             #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]

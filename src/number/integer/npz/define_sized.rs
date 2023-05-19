@@ -83,7 +83,7 @@ macro_rules! define_nonpositive_integer_sized {
         #[doc = "\n\nThe range of valid numeric values is $\\lbrack$"
         "$" $doc_sign "$[`" $p$bsize "::" $doc_lower "`]"
         " $\\dots"  $doc_upper  "\\rbrack$."]
-        /// Please note that the `value` will be interpreted as negative.
+        /// Please note that the given `value` will be interpreted as negative.
         #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, PartialOrd, Ord)]
         pub struct [<$name$bsize>](pub [<$p$bsize>]);
 
@@ -209,7 +209,7 @@ macro_rules! define_nonpositive_integer_sized {
 
             #[doc = "Returns a new `" [<$name$bsize>] "` from the constituent parts."]
             ///
-            /// Please note that the `value` will be interpreted as negative.
+            /// Please note that the given `value` will be interpreted as negative.
             ///
             /// # Errors
             /// This function can't fail.
@@ -232,7 +232,7 @@ macro_rules! define_nonpositive_integer_sized {
             }
             #[doc = "Returns a new `" [<$name$bsize>] "` from the constituent parts."]
             ///
-            /// Please note that the `value` will be interpreted as negative.
+            /// Please note that the given `value` will be interpreted as negative.
             ///
             /// # Safety
             /// This function is safe.

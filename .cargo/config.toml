@@ -5,9 +5,9 @@ c = "check" # std, safe
 cr = "check --release" # std, safe
 # fast compilation without costly features
 cF = "check --no-default-features --features=std,safe" # std, safe
-caF = "check --no-default-features --features=std,safe,deps_all" # std, safe, all deps
-cauF = "check --no-default-features --features=std,deps_all" # std, unsafe, all deps
-craF = "check --release --no-default-features --features=std,safe,deps_all" # std, safe, all deps
+caF = "check --no-default-features --features=std,safe,deps_all" # std, safe, all
+cauF = "check --no-default-features --features=std,deps_all" # std, unsafe, all
+craF = "check --release --no-default-features --features=std,safe,deps_all" # std, safe, all
 cnF = "check --no-default-features --features=safe" # no-std, safe
 cuF = "check --no-default-features --features=std" # std, unsafe
 cnuF = "check --no-default-features" # no-std, unsafe
@@ -18,19 +18,20 @@ cNuF = "check --target thumbv7m-none-eabi --no-default-features" # no-std, no-al
 cl = "clippy" # std, safe
 clr = "clippy --release" # std, safe
 #
-cla = "clippy --features=deps_all" # std, safe, all deps
+cla = "clippy --features=deps_all" # std, safe, all
 clu = "clippy --no-default-features --features=std" # std, unsafe
 cln = "clippy --no-default-features --features=safe" # no-std, safe
-clau = "clippy --no-default-features --features=std,deps_all" # std, unsafe, all deps
+clau = "clippy --no-default-features --features=std,deps_all" # std, unsafe, all
 clnu = "clippy --no-default-features" # no-std, unsafe
 #
-clra = "clippy --release --features=deps_all" # std, safe, all deps
+clra = "clippy --release --features=deps_all" # std, safe, all
 clru = "clippy --release --no-default-features --features=std" # std, unsafe
 clrn = "clippy --release --no-default-features --features=safe" # no-std, safe
-clrau = "clippy --release --no-default-features --features=std,deps_all" # std, unsafe, all deps
+clrau = "clippy --release --no-default-features --features=std,deps_all" # std, unsafe, all
 clrnu = "clippy --release --no-default-features" # no-std, unsafe
 # fast compilation (no `try_from`)
 clF = "clippy --no-default-features --features=std,safe" # std, safe
+claF = "clippy --no-default-features --features=std,safe,deps_all" # std, safe, all
 cluF = "clippy --no-default-features --features=std" # std, unsafe
 clnF = "clippy --no-default-features --features=safe" # no-std, safe
 clnuF = "clippy --no-default-features" # no-std, unsafe
@@ -76,9 +77,11 @@ rrb = "run --release --bin"
 rre = "run --release --example"
 # examples
 re = "run --example"
+rea = "run --example --features=deps_all" # all
 rrue = "run --release --example --no-default-features --features=std,try_from" # unsafe
 # examples, Fast compilation
 reF = "run --no-default-features --features=std,safe --example"
+reaF = "run --no-default-features --features=std,safe,deps_all --example"
 rreF = "run --release --example --no-default-features --features=std,safe"
 
 # TEST

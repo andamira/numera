@@ -75,7 +75,7 @@ pub trait NegSigned: Sign {
     /// This allows using an unsigned type value to store only negative numbers.
     ///
     /// # Errors
-    /// If the provided `value` doesn't maintain the expected invariances for
+    /// If the given `value` doesn't maintain the expected invariances for
     /// the concrete type.
     fn new_neg(value: Self::Parts) -> NumeraResult<Self>
     where

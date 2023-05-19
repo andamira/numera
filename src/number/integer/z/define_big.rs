@@ -45,7 +45,7 @@ impl IntegerBig {
         Ok(Self(IBig::from_str_radix(value, 10)?))
     }
 
-    /// Returns a new `IntegerBig` from a string in the provided `base`,
+    /// Returns a new `IntegerBig` from a string in the given `base`,
     /// which must be between 2 and 36, inclusive.
     ///
     /// `value` may contain an optional `+` prefix.
