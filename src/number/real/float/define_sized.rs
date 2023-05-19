@@ -162,7 +162,7 @@ macro_rules! define_float_sized {
             return (a - b).abs() <= epsilon;
 
             #[cfg(not(feature = "std"))]
-            return super::super::[<abs$bsize>](a - b) <= epsilon;
+            return super::fns::[<abs$bsize>](a - b) <= epsilon;
         }
 
         impl Ident for [<$name$bsize>] {
