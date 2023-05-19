@@ -223,8 +223,8 @@ mod core_impls {
 
 #[cfg(feature = "ibig")]
 mod ibig {
-    use ibig::error::{OutOfBoundsError, ParseError};
     use super::{IntegerError, NumeraError};
+    use ibig::error::{OutOfBoundsError, ParseError};
 
     impl From<OutOfBoundsError> for IntegerError {
         fn from(_err: OutOfBoundsError) -> Self {

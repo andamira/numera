@@ -56,8 +56,8 @@ macro_rules! impl_nonzero_integer {
             /// Returns the number of digits in base 10.
             #[inline]
             #[must_use]
-            pub const fn digits(&self) -> u32 {
-                self.0.ilog10() + 1
+            pub const fn digits(&self) -> usize {
+                self.0.ilog10() as usize + 1
             }
         }
 
@@ -108,7 +108,7 @@ macro_rules! impl_nonzero_integer {
             }
 
             #[inline]
-            fn integer_digits(&self) -> u32 {
+            fn integer_digits(&self) -> usize {
                 self.digits()
             }
         }

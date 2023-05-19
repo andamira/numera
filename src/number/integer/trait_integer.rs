@@ -63,7 +63,7 @@ pub trait Integer: Number {
 
     /// Returns the number of digits in base 10, without the sign.
     #[must_use]
-    fn integer_digits(&self) -> u32;
+    fn integer_digits(&self) -> usize;
 }
 
 /// Implements `Integer` for integer primitives.
@@ -106,8 +106,8 @@ macro_rules! impl_integer {
                 Some(*self * *other / self.integer_gcd(other).unwrap())
             }
 
-            fn integer_digits(&self) -> u32 {
-                self.checked_ilog10().unwrap_or(0)
+            fn integer_digits(&self) -> usize {
+                self.checked_ilog10().unwrap_or(0) as usize
             }
         }
     };
@@ -147,8 +147,8 @@ macro_rules! impl_integer {
                 ).unwrap())
             }
 
-            fn integer_digits(&self) -> u32 {
-                self.get().ilog10()
+            fn integer_digits(&self) -> usize {
+                self.get().ilog10().try_into().expect("more than usize::MAX digits")
             }
         }
     };

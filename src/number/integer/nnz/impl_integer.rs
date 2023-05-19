@@ -55,9 +55,9 @@ macro_rules! impl_integer {
 
             /// Returns the number of digits in base 10.
             #[inline]
-            pub const fn digits(&self) -> u32 {
+            pub const fn digits(&self) -> usize {
                 if let Some(n) = self.0.checked_ilog10() {
-                     n + 1
+                     n as usize + 1
                 } else {
                     1
                 }
@@ -122,7 +122,7 @@ macro_rules! impl_integer {
                 Some(self.lcm(other))
             }
             #[inline]
-            fn integer_digits(&self) -> u32 {
+            fn integer_digits(&self) -> usize {
                 self.digits()
             }
         }

@@ -61,9 +61,9 @@ macro_rules! impl_integer {
             /// Returns the number of digits in base 10.
             #[inline]
             #[must_use]
-            pub const fn digits(&self) -> u32 {
+            pub const fn digits(&self) -> usize {
                 if let Some(n) = self.0.checked_ilog10() {
-                     n + 1
+                     n as usize + 1
                 } else {
                     1
                 }
@@ -128,7 +128,7 @@ macro_rules! impl_integer {
                 Some(self.lcm(other))
             }
             #[inline]
-            fn integer_digits(&self) -> u32 {
+            fn integer_digits(&self) -> usize {
                 self.digits()
             }
         }
@@ -185,12 +185,8 @@ mod ibig {
         /// Returns the number of digits in base 10.
         #[inline]
         #[must_use]
-        pub fn digits(&self) -> u32 {
-            if let Ok(n) = u32::try_from(self.0.to_string().len()) {
-                n
-            } else {
-                unreachable!["a number with U32::MAX digits? really?"];
-            }
+        pub fn digits(&self) -> usize {
+            self.0.to_string().len()
         }
     }
 
@@ -244,7 +240,7 @@ mod ibig {
             Some(self.lcm(other))
         }
         #[inline]
-        fn integer_digits(&self) -> u32 {
+        fn integer_digits(&self) -> usize {
             self.digits()
         }
     }
