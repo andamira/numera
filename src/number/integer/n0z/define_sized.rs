@@ -34,7 +34,8 @@ use devela::paste;
 /// - implements Number: Bound + Count + Ident + Sign
 ///
 /// # Args
-/// - `$name`: the base name of the integer e.g. `Integer`.
+/// - `$name`: the base name of the integer. E.g. `NonZeroInteger`.
+/// - `$abbr`: the base abbreviated name, E.g. `N0z`.
 /// - `$p`: the primitive prefix (i or u).
 ///
 /// - `$doc_num`: the type of number.
@@ -49,7 +50,7 @@ use devela::paste;
 /// - `$bsize`: the size in bits of the primitive used.
 macro_rules! define_nonzero_integer_sized {
     // defines multiple integer types, with an inner primitive.
-    (multi $name:ident, $p:ident,
+    (multi $name:ident, $abbr:ident, $p:ident,
      $doc_num:literal, $doc_type:literal, // $doc_new:literal,
      $doc_sign:literal, $doc_lower:expr, $doc_upper:expr,
         $(
@@ -61,7 +62,7 @@ macro_rules! define_nonzero_integer_sized {
         ),+
      ) => {
         $(
-            define_nonzero_integer_sized![single $name, $p,
+            define_nonzero_integer_sized![single $name, $abbr, $p,
                $doc_num, $doc_type, // $doc_new,
                $doc_sign, $doc_lower, $doc_upper,
                ($doc_det, $bsize,
@@ -71,7 +72,7 @@ macro_rules! define_nonzero_integer_sized {
         )+
     };
     // defines a single integer type, with an inner primitive.
-    (single $name:ident, $p:ident,
+    (single $name:ident, $abbr:ident, $p:ident,
      $doc_num:literal, $doc_type:literal, // $doc_new:literal,
      $doc_sign:literal, $doc_lower:expr, $doc_upper:expr,
      (
@@ -80,18 +81,23 @@ macro_rules! define_nonzero_integer_sized {
       smaller: $smaller:literal, $smaller_bsize:literal
      )
     ) => { paste! {
-        #[doc = $doc_det " "$bsize "-bit " $doc_num $doc_type]
+        #[doc = $doc_det " "$bsize "-bit " $doc_num $doc_type ","]
+        #[doc = "also known as [`" [<$abbr$bsize>] "`][super::" [<$abbr$bsize>] "]."]
         #[doc = "\n\nThe range of valid numeric values is $\\lbrack" $doc_sign
         "$[`" i$bsize "::" $doc_lower "`] $\\dots -1, 1 \\dots$ [`" i$bsize
         "::" $doc_upper "`]$\\rbrack$."]
-        ///
-        #[doc = "It is equivalent to the [`" [<NonZeroI$bsize>] "`] primitive."]
-        #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
+        #[doc = "\n\nIt is equivalent to the [`" [<NonZeroI$bsize>] "`] primitive."]
+        #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
         pub struct [<$name$bsize>](pub [<$p$bsize>]);
 
         impl fmt::Display for [<$name$bsize>]  {
             fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
                 write!(f, "{}", self.0)
+            }
+        }
+        impl fmt::Debug for [<$name$bsize>]  {
+            fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+                write!(f, "{}({})", stringify!([<$abbr$bsize>]), self.0)
             }
         }
 
@@ -340,8 +346,8 @@ macro_rules! define_nonzero_integer_sized {
 
 /* definitions */
 
-define_nonzero_integer_sized![multi NonZeroInteger, NonZeroI,
-    "non-zero integer number", ", from the set $\\Z \\setminus 0$.",
+define_nonzero_integer_sized![multi NonZeroInteger, N0z, NonZeroI,
+    "non-zero integer number", ", from the set $\\Z \\setminus 0$",
     // "",
     "", MIN, MAX,
     ("A", 8, larger: true, 16, smaller: false, 8),

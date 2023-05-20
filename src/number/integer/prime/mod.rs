@@ -41,28 +41,31 @@ pub(crate) mod all {
 use crate::number::macros::define_abbreviations;
 define_abbreviations![many P, Prime, 8, 16, 32];
 
-/// An 8-bit prime number, from the set $\Bbb{P}$.
+/// An 8-bit prime number, from the set $\Bbb{P}$,
+/// also known as [`P8`].
 ///
 /// Can represent the first 54 prime numbers.
 ///
 // pub struct Prime8(PositiveInteger8);
-#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Prime8(u8);
 
-/// A 16-bit prime number, from the set $\Bbb{P}$.
+/// A 16-bit prime number, from the set $\Bbb{P}$,
+/// also known as [`P16`].
 ///
 /// Can represent the first 6,542 prime numbers.
 ///
 // pub struct Prime16(PositiveInteger16);
-#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Prime16(u16);
 
-/// A 32-bit prime number, from the set $\Bbb{P}$.
+/// A 32-bit prime number, from the set $\Bbb{P}$,
+/// also known as [`P32`].
 ///
 /// Can represent the first 203,280,219 prime numbers.
 ///
 // pub struct Prime32(PositiveInteger32);
-#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Prime32(u32);
 
 impl fmt::Display for Prime8 {
@@ -78,6 +81,21 @@ impl fmt::Display for Prime16 {
 impl fmt::Display for Prime32 {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}", self.0)
+    }
+}
+impl fmt::Debug for Prime8 {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "P8({})", self.0)
+    }
+}
+impl fmt::Debug for Prime16 {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "P16({})", self.0)
+    }
+}
+impl fmt::Debug for Prime32 {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "P32({})", self.0)
     }
 }
 

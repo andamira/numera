@@ -11,3 +11,6 @@ mod define_sized;
 pub(crate) mod fns;
 
 pub use define_sized::{Float32, Float64};
+
+use crate::number::macros::define_abbreviations;
+define_abbreviations![many F, Float, 32, 64];

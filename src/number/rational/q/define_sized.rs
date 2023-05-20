@@ -34,6 +34,7 @@ use devela::paste;
 ///
 /// # Args
 /// - `$name`: the base name of the rational. e.g. `Rational`.
+/// - `$abbr`: the base abbreviated name, E.g. `Q`.
 /// - `$p`: the primitive prefix (i or u).
 ///
 /// - `$doc_num`: the type of number.
@@ -52,7 +53,7 @@ use devela::paste;
 /// - `$bsize`: the size in bits of the primitive used.
 macro_rules! define_rational_sized {
     // defines multiple integer types, with an inner primitive.
-    (multi $name:ident, $p:ident,
+    (multi $name:ident, $abbr:ident, $p:ident,
      $doc_num:literal, $doc_type:literal, // $doc_new:literal,
      $doc_sign:literal, $doc_lower:expr, $doc_upper:expr,
      $num:ident, $den:ident,
@@ -65,7 +66,7 @@ macro_rules! define_rational_sized {
         ),+
      ) => {
         $(
-            define_rational_sized![single $name, $p,
+            define_rational_sized![single $name, $abbr, $p,
                $doc_num, $doc_type, // $doc_new,
                $doc_sign, $doc_lower, $doc_upper,
                $num, $den,
@@ -76,7 +77,7 @@ macro_rules! define_rational_sized {
         )+
     };
     // defines a single integer type, with an inner primitive.
-    (single $name:ident, $p:ident,
+    (single $name:ident, $abbr:ident, $p:ident,
      $doc_num:literal, $doc_type:literal, // $doc_new:literal,
      $doc_sign:literal, $doc_lower:expr, $doc_upper:expr,
      $num:ident, $den:ident,
@@ -86,12 +87,13 @@ macro_rules! define_rational_sized {
       smaller: $smaller:literal, $smaller_bsize:literal
       )
     ) => { paste! {
-        #[doc = $doc_det " "$bsize "-bit " $doc_num $doc_type]
+        #[doc = $doc_det " "$bsize "-bit " $doc_num $doc_type ","]
+        #[doc = "also known as [`" [<$abbr$bsize>] "`][super::" [<$abbr$bsize>] "]."]
         #[doc = "\n\nThe range of valid numeric values is $\\lbrack"
         $doc_sign "$[`" $p$bsize "::" $doc_lower "`] $\\dots$ [`"
         $p$bsize "::" $doc_upper "`]$\\rbrack$."]
 
-        #[derive(Clone, Copy, Debug)]
+        #[derive(Clone, Copy)]
         pub struct [<$name$bsize>] {
             pub num: [<$num$bsize>],
             pub den: [<$den$bsize>],
@@ -148,6 +150,13 @@ macro_rules! define_rational_sized {
         impl fmt::Display for [<$name$bsize>]  {
             fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
                 write!(f, "{}/{}", self.num, self.den)
+            }
+        }
+        impl fmt::Debug for [<$name$bsize>]  {
+            fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+                write!(f, "{}({}/{})", stringify!([<$abbr$bsize>]), self.num, self.den)
+                // MAYBE?
+                // write!(f, "{}({:?}/{:?})", stringify!([<$abbr$bsize>]), self.num, self.den)
             }
         }
 
@@ -365,8 +374,8 @@ macro_rules! define_rational_sized {
 
 /* definitions */
 
-define_rational_sized![multi Rational, i,
-    "rational number", ", from the set $\\Bbb{Q}$.",
+define_rational_sized![multi Rational, Q, i,
+    "rational number", ", from the set $\\Bbb{Q}$",
     // "",
     "", MIN, MAX,
     Integer, NonZeroInteger,

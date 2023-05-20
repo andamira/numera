@@ -32,7 +32,8 @@ use devela::paste;
 /// - implements Default → 0
 ///
 /// # Args
-/// - `$name`: the base name of the integer e.g. `Integer`.
+/// - `$name`: the base name of the integer. E.g. `NonNegaiveInteger`.
+/// - `$abbr`: the base abbreviated name, E.g. `Nnz`.
 /// - `$p`: the primitive prefix (i or u).
 ///
 /// - `$doc_num`: the type of number.
@@ -47,7 +48,7 @@ use devela::paste;
 /// - `$bsize`: the size in bits of the primitive used.
 macro_rules! define_nonnegative_integer_sized {
     // defines multiple integer types, with an inner primitive.
-    (multi $name:ident, $p:ident,
+    (multi $name:ident, $abbr:ident, $p:ident,
      $doc_num:literal, $doc_type:literal, // $doc_new:literal,
      $doc_sign:literal, $doc_lower:expr, $doc_upper:expr,
         $(
@@ -59,7 +60,7 @@ macro_rules! define_nonnegative_integer_sized {
         ),+
      ) => {
         $(
-            define_nonnegative_integer_sized![single $name, $p,
+            define_nonnegative_integer_sized![single $name, $abbr, $p,
                $doc_num, $doc_type, // $doc_new,
                $doc_sign, $doc_lower, $doc_upper,
                ($doc_det, $bsize,
@@ -69,7 +70,7 @@ macro_rules! define_nonnegative_integer_sized {
         )+
     };
     // defines a single integer type, with an inner primitive.
-    (single $name:ident, $p:ident,
+    (single $name:ident, $abbr:ident, $p:ident,
      $doc_num:literal, $doc_type:literal, // $doc_new:literal,
      $doc_sign:literal, $doc_lower:expr, $doc_upper:expr,
      (
@@ -78,23 +79,28 @@ macro_rules! define_nonnegative_integer_sized {
       smaller: $smaller:literal, $smaller_bsize:literal
      )
     ) => { paste! {
-        #[doc = $doc_det " "$bsize "-bit " $doc_num $doc_type]
+        #[doc = $doc_det " "$bsize "-bit " $doc_num $doc_type ","]
+        #[doc = "also known as [`" [<$abbr$bsize>] "`][super::" [<$abbr$bsize>] "]."]
         #[doc = "\n\nThe range of valid numeric values is $\\lbrack"
         $doc_sign 0 " \\dots$ [`"
         $p$bsize "::" $doc_upper "`]$\\rbrack$."]
-        ///
-        #[doc = "It is equivalent to the [`" [<u$bsize>] "`] primitive."]
+        #[doc = "\n\nIt is equivalent to the [`" [<u$bsize>] "`] primitive."]
         ///
         /// Also known as a [*natural number*][m0], you can also use the alias
         #[doc = "[`Natural" $bsize "`][super::Natural" $bsize "]."]
         ///
         /// [m0]: https://mathworld.wolfram.com/NaturalNumber.html
-        #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, PartialOrd, Ord)]
+        #[derive(Clone, Copy, Default, PartialEq, Eq, PartialOrd, Ord)]
         pub struct [<$name$bsize>](pub [<$p$bsize>]);
 
         impl fmt::Display for [<$name$bsize>]  {
             fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
                 write!(f, "{}", self.0)
+            }
+        }
+        impl fmt::Debug for [<$name$bsize>]  {
+            fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+                write!(f, "{}({})", stringify!([<$abbr$bsize>]), self.0)
             }
         }
 
@@ -226,7 +232,7 @@ macro_rules! define_nonnegative_integer_sized {
 
 /* definitions */
 
-define_nonnegative_integer_sized![multi NonNegativeInteger, u,
+define_nonnegative_integer_sized![multi NonNegativeInteger, Nnz, u,
     "non-negative integer number", ", from the set $\\Z^*$ ($\\N _0$)",
     // "",
     "", MIN, MAX,

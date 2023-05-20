@@ -19,14 +19,26 @@ use crate::{
         Sign, Signed, Zero,
     },
 };
-use core::str::FromStr;
+use core::{fmt, str::FromStr};
 use ibig::IBig;
 
 /* definition */
 
-/// A big integer number, from the set $\\Z$.
-#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
+/// A big integer number, from the set $\\Z$,
+/// also known as [`ZBig`][super::ZBig].
+#[derive(Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub struct IntegerBig(pub IBig);
+
+impl fmt::Display for IntegerBig {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.0)
+    }
+}
+impl fmt::Debug for IntegerBig {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "ZBig({})", self.0)
+    }
+}
 
 impl IntegerBig {
     /// Returns a new `IntegerBig`.
