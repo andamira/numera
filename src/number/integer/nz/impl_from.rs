@@ -19,18 +19,18 @@ use core::num::{
 /* fallible primitive conversions */
 
 // try_from i (only the negative values)
-try_from_primitive![new_neg_int for: NegativeInteger+8, from: i+8,16,32,64,128];
-try_from_primitive![new_neg_int for: NegativeInteger+16, from: i+8,16,32,64,128];
-try_from_primitive![new_neg_int for: NegativeInteger+32, from: i+8,16,32,64,128];
-try_from_primitive![new_neg_int for: NegativeInteger+64, from: i+8,16,32,64,128];
-try_from_primitive![new_neg_int for: NegativeInteger+128, from: i+8,16,32,64,128];
+try_from_primitive![negnon0_int for: NegativeInteger+8, from: i+8,16,32,64,128];
+try_from_primitive![negnon0_int for: NegativeInteger+16, from: i+8,16,32,64,128];
+try_from_primitive![negnon0_int for: NegativeInteger+32, from: i+8,16,32,64,128];
+try_from_primitive![negnon0_int for: NegativeInteger+64, from: i+8,16,32,64,128];
+try_from_primitive![negnon0_int for: NegativeInteger+128, from: i+8,16,32,64,128];
 
 // try_from NonZeroI (only the negative values)
-try_from_primitive![new_neg_nonzero for: NegativeInteger+8, from: NonZeroI+8,16,32,64,128];
-try_from_primitive![new_neg_nonzero for: NegativeInteger+16, from: NonZeroI+8,16,32,64,128];
-try_from_primitive![new_neg_nonzero for: NegativeInteger+32, from: NonZeroI+8,16,32,64,128];
-try_from_primitive![new_neg_nonzero for: NegativeInteger+64, from: NonZeroI+8,16,32,64,128];
-try_from_primitive![new_neg_nonzero for: NegativeInteger+128, from: NonZeroI+8,16,32,64,128];
+try_from_primitive![neg_non0 for: NegativeInteger+8, from: NonZeroI+8,16,32,64,128];
+try_from_primitive![neg_non0 for: NegativeInteger+16, from: NonZeroI+8,16,32,64,128];
+try_from_primitive![neg_non0 for: NegativeInteger+32, from: NonZeroI+8,16,32,64,128];
+try_from_primitive![neg_non0 for: NegativeInteger+64, from: NonZeroI+8,16,32,64,128];
+try_from_primitive![neg_non0 for: NegativeInteger+128, from: NonZeroI+8,16,32,64,128];
 
 /* impossible primitive conversions */
 
@@ -51,30 +51,30 @@ try_from_any![error for: NegativeInteger+128, from: NonZeroU+8,16,32,64,128];
 /* complementary Integer conversions */
 
 // from smaller NegativeInteger (Self)
-from_integer![nonzero for: NegativeInteger+16, from: NegativeInteger+8];
-from_integer![nonzero for: NegativeInteger+32, from: NegativeInteger+8,16];
-from_integer![nonzero for: NegativeInteger+64, from: NegativeInteger+8,16,32];
-from_integer![nonzero for: NegativeInteger+128, from: NegativeInteger+8,16,32,64];
+from_integer![non0 for: NegativeInteger+16, from: NegativeInteger+8];
+from_integer![non0 for: NegativeInteger+32, from: NegativeInteger+8,16];
+from_integer![non0 for: NegativeInteger+64, from: NegativeInteger+8,16,32];
+from_integer![non0 for: NegativeInteger+128, from: NegativeInteger+8,16,32,64];
 // try_from bigger NegativeInteger (Self)
-try_from_integer![nonzero for: NegativeInteger+8, from: NegativeInteger+16,32,64,128];
-try_from_integer![nonzero for: NegativeInteger+16, from: NegativeInteger+32,64,128];
-try_from_integer![nonzero for: NegativeInteger+32, from: NegativeInteger+64,128];
-try_from_integer![nonzero for: NegativeInteger+64, from: NegativeInteger+128];
+try_from_integer![non0 for: NegativeInteger+8, from: NegativeInteger+16,32,64,128];
+try_from_integer![non0 for: NegativeInteger+16, from: NegativeInteger+32,64,128];
+try_from_integer![non0 for: NegativeInteger+32, from: NegativeInteger+64,128];
+try_from_integer![non0 for: NegativeInteger+64, from: NegativeInteger+128];
 
 /* fallible Integer conversions */
 
 // try_from Integer (only the negative values)
-try_from_integer![new_neg_int for: NegativeInteger+8, from: Integer+8,16,32,64,128];
-try_from_integer![new_neg_int for: NegativeInteger+16, from: Integer+8,16,32,64,128];
-try_from_integer![new_neg_int for: NegativeInteger+32, from: Integer+8,16,32,64,128];
-try_from_integer![new_neg_int for: NegativeInteger+64, from: Integer+8,16,32,64,128];
-try_from_integer![new_neg_int for: NegativeInteger+128, from: Integer+8,16,32,64,128];
+try_from_integer![negnon0_int for: NegativeInteger+8, from: Integer+8,16,32,64,128];
+try_from_integer![negnon0_int for: NegativeInteger+16, from: Integer+8,16,32,64,128];
+try_from_integer![negnon0_int for: NegativeInteger+32, from: Integer+8,16,32,64,128];
+try_from_integer![negnon0_int for: NegativeInteger+64, from: Integer+8,16,32,64,128];
+try_from_integer![negnon0_int for: NegativeInteger+128, from: Integer+8,16,32,64,128];
 // try_from NonZeroInteger (only the negative values)
-try_from_integer![new_neg_nonzero for:NegativeInteger+8, from: NonZeroInteger+8,16,32,64,128];
-try_from_integer![new_neg_nonzero for:NegativeInteger+16, from: NonZeroInteger+8,16,32,64,128];
-try_from_integer![new_neg_nonzero for:NegativeInteger+32, from: NonZeroInteger+8,16,32,64,128];
-try_from_integer![new_neg_nonzero for:NegativeInteger+64, from: NonZeroInteger+8,16,32,64,128];
-try_from_integer![new_neg_nonzero for:NegativeInteger+128, from: NonZeroInteger+8,16,32,64,128];
+try_from_integer![neg_non0 for:NegativeInteger+8, from: NonZeroInteger+8,16,32,64,128];
+try_from_integer![neg_non0 for:NegativeInteger+16, from: NonZeroInteger+8,16,32,64,128];
+try_from_integer![neg_non0 for:NegativeInteger+32, from: NonZeroInteger+8,16,32,64,128];
+try_from_integer![neg_non0 for:NegativeInteger+64, from: NonZeroInteger+8,16,32,64,128];
+try_from_integer![neg_non0 for:NegativeInteger+128, from: NonZeroInteger+8,16,32,64,128];
 // try_from NonPositiveInteger (only the non-zero values)
 try_from_integer![neg_non0neg for:NegativeInteger+8, from: NonPositiveInteger+8,16,32,64,128];
 try_from_integer![neg_non0neg for:NegativeInteger+16, from: NonPositiveInteger+8,16,32,64,128];

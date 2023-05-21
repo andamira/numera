@@ -19,16 +19,16 @@ use core::num::{NonZeroU128, NonZeroU16, NonZeroU32, NonZeroU64, NonZeroU8};
 /* complementary primitive conversions */
 
 // from smaller or equal sized NonZeroU
-from_primitive![nonzero for: PositiveInteger+8, from: NonZeroU+8];
-from_primitive![nonzero for: PositiveInteger+16, from: NonZeroU+8,16];
-from_primitive![nonzero for: PositiveInteger+32, from: NonZeroU+8,16,32];
-from_primitive![nonzero for: PositiveInteger+64, from: NonZeroU+8,16,32,64];
-from_primitive![nonzero for: PositiveInteger+128, from: NonZeroU+8,16,32,64,128];
+from_primitive![non0 for: PositiveInteger+8, from: NonZeroU+8];
+from_primitive![non0 for: PositiveInteger+16, from: NonZeroU+8,16];
+from_primitive![non0 for: PositiveInteger+32, from: NonZeroU+8,16,32];
+from_primitive![non0 for: PositiveInteger+64, from: NonZeroU+8,16,32,64];
+from_primitive![non0 for: PositiveInteger+128, from: NonZeroU+8,16,32,64,128];
 // try_from bigger NonZeroU
-try_from_primitive![nonzero for: PositiveInteger+8, from: NonZeroU+16,32,64,128];
-try_from_primitive![nonzero for: PositiveInteger+16, from: NonZeroU+32,64,128];
-try_from_primitive![nonzero for: PositiveInteger+32, from: NonZeroU+64,128];
-try_from_primitive![nonzero for: PositiveInteger+64, from: NonZeroU+128];
+try_from_primitive![non0 for: PositiveInteger+8, from: NonZeroU+16,32,64,128];
+try_from_primitive![non0 for: PositiveInteger+16, from: NonZeroU+32,64,128];
+try_from_primitive![non0 for: PositiveInteger+32, from: NonZeroU+64,128];
+try_from_primitive![non0 for: PositiveInteger+64, from: NonZeroU+128];
 
 /* remaining fallible primitive conversions */
 
@@ -47,33 +47,33 @@ try_from_primitive![int for:PositiveInteger+64, from:u+8,16,32,64,128];
 try_from_primitive![int for:PositiveInteger+128, from:u+8,16,32,64,128];
 
 // try_from NonZeroI (only the positive values)
-try_from_primitive![nonzero for: PositiveInteger+8, from: NonZeroI+8,16,32,64,128];
-try_from_primitive![nonzero for: PositiveInteger+16, from: NonZeroI+8,16,32,64,128];
-try_from_primitive![nonzero for: PositiveInteger+32, from: NonZeroI+8,16,32,64,128];
-try_from_primitive![nonzero for: PositiveInteger+64, from: NonZeroI+8,16,32,64,128];
-try_from_primitive![nonzero for: PositiveInteger+128, from: NonZeroI+8,16,32,64,128];
+try_from_primitive![non0 for: PositiveInteger+8, from: NonZeroI+8,16,32,64,128];
+try_from_primitive![non0 for: PositiveInteger+16, from: NonZeroI+8,16,32,64,128];
+try_from_primitive![non0 for: PositiveInteger+32, from: NonZeroI+8,16,32,64,128];
+try_from_primitive![non0 for: PositiveInteger+64, from: NonZeroI+8,16,32,64,128];
+try_from_primitive![non0 for: PositiveInteger+128, from: NonZeroI+8,16,32,64,128];
 
 /* complementary Integer conversions */
 
 // from smaller PositiveInteger (Self)
-from_integer![nonzero for: PositiveInteger+16, from: PositiveInteger+8];
-from_integer![nonzero for: PositiveInteger+32, from: PositiveInteger+8,16];
-from_integer![nonzero for: PositiveInteger+64, from: PositiveInteger+8,16,32];
-from_integer![nonzero for: PositiveInteger+128, from: PositiveInteger+8,16,32,64];
+from_integer![non0 for: PositiveInteger+16, from: PositiveInteger+8];
+from_integer![non0 for: PositiveInteger+32, from: PositiveInteger+8,16];
+from_integer![non0 for: PositiveInteger+64, from: PositiveInteger+8,16,32];
+from_integer![non0 for: PositiveInteger+128, from: PositiveInteger+8,16,32,64];
 // try_from bigger PositiveInteger (Self)
-try_from_integer![nonzero for: PositiveInteger+8, from: PositiveInteger+16,32,64,128];
-try_from_integer![nonzero for: PositiveInteger+16, from: PositiveInteger+32,64,128];
-try_from_integer![nonzero for: PositiveInteger+32, from: PositiveInteger+64,128];
-try_from_integer![nonzero for: PositiveInteger+64, from: PositiveInteger+128];
+try_from_integer![non0 for: PositiveInteger+8, from: PositiveInteger+16,32,64,128];
+try_from_integer![non0 for: PositiveInteger+16, from: PositiveInteger+32,64,128];
+try_from_integer![non0 for: PositiveInteger+32, from: PositiveInteger+64,128];
+try_from_integer![non0 for: PositiveInteger+64, from: PositiveInteger+128];
 
 /* remaining fallible integer conversions */
 
 // try_from Integer (only the positive values)
-try_from_integer![int_new for: PositiveInteger+8, from: Integer+8,16,32,64,128];
-try_from_integer![int_new for: PositiveInteger+16, from: Integer+8,16,32,64,128];
-try_from_integer![int_new for: PositiveInteger+32, from: Integer+8,16,32,64,128];
-try_from_integer![int_new for: PositiveInteger+64, from: Integer+8,16,32,64,128];
-try_from_integer![int_new for: PositiveInteger+128, from: Integer+8,16,32,64,128];
+try_from_integer![non0_int for: PositiveInteger+8, from: Integer+8,16,32,64,128];
+try_from_integer![non0_int for: PositiveInteger+16, from: Integer+8,16,32,64,128];
+try_from_integer![non0_int for: PositiveInteger+32, from: Integer+8,16,32,64,128];
+try_from_integer![non0_int for: PositiveInteger+64, from: Integer+8,16,32,64,128];
+try_from_integer![non0_int for: PositiveInteger+128, from: Integer+8,16,32,64,128];
 
 // try_from NonZeroInteger (only the positive values)
 try_from_integer![int for: PositiveInteger+8, from: NonZeroInteger+8,16,32,64,128];
