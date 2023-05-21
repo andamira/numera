@@ -42,7 +42,7 @@ use devela::paste;
 /// - `$doc_upper`: the upper bound of the number type.
 ///
 /// - `$doc_det`: the determinant before the bit size. e.g. "An" (8-bit) or "A" 16-bit.
-/// - `$bsize`: the size in bits of the primitive used.
+/// - `$b`: the size in bits of the primitive used.
 macro_rules! define_float_sized {
     // defines multiple flot types, with an inner primitive.
     (multi $name:ident, $abbr:ident, $p:ident,
@@ -50,9 +50,9 @@ macro_rules! define_float_sized {
      $doc_sign:literal, $doc_lower:expr, $doc_upper:expr,
         $(
              (
-             $doc_det:literal, $bsize:expr,
-             larger: $larger:literal, $larger_bsize:literal,
-             smaller: $smaller:literal, $smaller_bsize:literal
+             $doc_det:literal, $b:expr,
+             larger: $larger:literal, $larger_b:literal,
+             smaller: $smaller:literal, $smaller_b:literal
             )
         ),+
      ) => {
@@ -60,9 +60,9 @@ macro_rules! define_float_sized {
             define_float_sized![single $name, $abbr, $p,
                $doc_num, $doc_type, // $doc_new,
                $doc_sign, $doc_lower, $doc_upper,
-               ($doc_det, $bsize,
-                larger: $larger, $larger_bsize,
-                smaller: $smaller, $smaller_bsize
+               ($doc_det, $b,
+                larger: $larger, $larger_b,
+                smaller: $smaller, $smaller_b
                )];
         )+
     };
@@ -71,48 +71,48 @@ macro_rules! define_float_sized {
      $doc_num:literal, $doc_type:literal, // $doc_new:literal,
      $doc_sign:literal, $doc_lower:expr, $doc_upper:expr,
      (
-      $doc_det:literal, $bsize:expr,
-      larger: $larger:literal, $larger_bsize:literal,
-      smaller: $smaller:literal, $smaller_bsize:literal
+      $doc_det:literal, $b:expr,
+      larger: $larger:literal, $larger_b:literal,
+      smaller: $smaller:literal, $smaller_b:literal
      )
     ) => { paste! {
-        #[doc = $doc_det " "$bsize "-bit " $doc_num $doc_type ","]
-        #[doc = "also known as [`" [<$abbr$bsize>] "`][super::" [<$abbr$bsize>] "]."]
+        #[doc = $doc_det " "$b "-bit " $doc_num $doc_type ","]
+        #[doc = "also known as [`" [<$abbr$b>] "`][super::" [<$abbr$b>] "]."]
         #[doc = "\n\nThe range of valid numeric values is $\\lbrack"
-        $doc_sign "$[`" $p$bsize "::" $doc_lower "`] $\\dots$ [`"
-        $p$bsize "::" $doc_upper "`]$\\rbrack$."]
-        #[doc = "\n\nIt is equivalent to the [`" [<f$bsize>] "`] primitive."]
+        $doc_sign "$[`" $p$b "::" $doc_lower "`] $\\dots$ [`"
+        $p$b "::" $doc_upper "`]$\\rbrack$."]
+        #[doc = "\n\nIt is equivalent to the [`" [<f$b>] "`] primitive."]
         #[derive(Clone, Copy, Default, PartialEq, PartialOrd)]
-        pub struct [<$name$bsize>](pub [<$p$bsize>]);
+        pub struct [<$name$b>](pub [<$p$b>]);
 
-        impl fmt::Display for [<$name$bsize>]  {
+        impl fmt::Display for [<$name$b>]  {
             fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
                 write!(f, "{}", self.0)
             }
         }
-        impl fmt::Debug for [<$name$bsize>]  {
+        impl fmt::Debug for [<$name$b>]  {
             fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-                write!(f, "{}({})", stringify!([<$abbr$bsize>]), self.0)
+                write!(f, "{}({})", stringify!([<$abbr$b>]), self.0)
             }
         }
 
         /// # Constructors
-        impl [<$name$bsize>]  {
-            #[doc = "Returns a new `" [<$name$bsize>] "`."]
+        impl [<$name$b>]  {
+            #[doc = "Returns a new `" [<$name$b>] "`."]
             #[inline]
-            pub const fn new(value: [<$p$bsize>]) -> Self { Self(value) }
+            pub const fn new(value: [<$p$b>]) -> Self { Self(value) }
         }
 
         /* resizing */
 
         // TODO
-        // impl_larger_smaller![$name, $bsize, Floats,
-        //     larger: $larger, $larger_bsize, smaller: $smaller, $smaller_bsize
+        // impl_larger_smaller![$name, $b, Floats,
+        //     larger: $larger, $larger_b, smaller: $smaller, $smaller_b
         // ];
 
         /* sign */
 
-        impl Sign for [<$name$bsize>] {
+        impl Sign for [<$name$b>] {
             #[inline]
             fn can_negative(&self) -> bool { true }
             #[inline]
@@ -122,38 +122,38 @@ macro_rules! define_float_sized {
             #[inline]
             fn is_positive(&self) -> bool { self.0.is_sign_positive() }
         }
-        impl Signed for [<$name$bsize>] {}
+        impl Signed for [<$name$b>] {}
 
         /* bound */
 
-        impl Bound for [<$name$bsize>] {
+        impl Bound for [<$name$b>] {
             #[inline]
             fn is_lower_bounded(&self) -> bool { true }
             #[inline]
             fn is_upper_bounded(&self) -> bool { true }
             #[inline]
-            fn lower_bound(&self) -> Option<Self> { Some([<$name$bsize>]::MAX) }
+            fn lower_bound(&self) -> Option<Self> { Some([<$name$b>]::MAX) }
             #[inline]
-            fn upper_bound(&self) -> Option<Self> { Some([<$name$bsize>]::MAX) }
+            fn upper_bound(&self) -> Option<Self> { Some([<$name$b>]::MAX) }
         }
-        impl LowerBounded for [<$name$bsize>] {
+        impl LowerBounded for [<$name$b>] {
             #[inline]
-            fn new_min() -> Self { [<$name$bsize>]::MIN }
+            fn new_min() -> Self { [<$name$b>]::MIN }
         }
-        impl UpperBounded for [<$name$bsize>] {
+        impl UpperBounded for [<$name$b>] {
             #[inline]
-            fn new_max() -> Self { [<$name$bsize>]::MAX }
+            fn new_max() -> Self { [<$name$b>]::MAX }
         }
-        impl ConstLowerBounded for [<$name$bsize>] {
-            const MIN: Self = Self([<$p$bsize>]::MIN);
+        impl ConstLowerBounded for [<$name$b>] {
+            const MIN: Self = Self([<$p$b>]::MIN);
         }
-        impl ConstUpperBounded for [<$name$bsize>] {
-            const MAX: Self = Self([<$p$bsize>]::MAX);
+        impl ConstUpperBounded for [<$name$b>] {
+            const MAX: Self = Self([<$p$b>]::MAX);
         }
 
         /* count */
 
-        impl Count for [<$name$bsize>] {
+        impl Count for [<$name$b>] {
             #[inline]
             fn is_countable(&self) -> bool { true }
         }
@@ -163,15 +163,15 @@ macro_rules! define_float_sized {
 
         // Checks whether the inner primitive values are within a certain error margin.
         #[inline]
-        fn [<approx_eq_$bsize>](a: [<$p$bsize>], b: [<$p$bsize>], epsilon: [<$p$bsize>]) -> bool {
+        fn [<approx_eq_$b>](a: [<$p$b>], b: [<$p$b>], epsilon: [<$p$b>]) -> bool {
             #[cfg(feature = "std")]
             return (a - b).abs() <= epsilon;
 
             #[cfg(not(feature = "std"))]
-            return super::fns::[<abs$bsize>](a - b) <= epsilon;
+            return super::fns::[<abs$b>](a - b) <= epsilon;
         }
 
-        impl Ident for [<$name$bsize>] {
+        impl Ident for [<$name$b>] {
             #[inline]
             fn can_zero(&self) -> bool { true }
             #[inline]
@@ -181,46 +181,46 @@ macro_rules! define_float_sized {
 
             #[inline]
             fn is_zero(&self) -> bool {
-                [<approx_eq_$bsize>](self.0, 0.0, [<$p$bsize>]::EPSILON)
+                [<approx_eq_$b>](self.0, 0.0, [<$p$b>]::EPSILON)
             }
             #[inline]
             fn is_one(&self) -> bool {
-                [<approx_eq_$bsize>](self.0, 1.0, [<$p$bsize>]::EPSILON)
+                [<approx_eq_$b>](self.0, 1.0, [<$p$b>]::EPSILON)
             }
             #[inline]
             fn is_neg_one(&self) -> bool {
-                [<approx_eq_$bsize>](self.0, -1.0, [<$p$bsize>]::EPSILON)
+                [<approx_eq_$b>](self.0, -1.0, [<$p$b>]::EPSILON)
             }
         }
-        impl ConstZero for [<$name$bsize>] { const ZERO: Self = Self(0.0); }
-        impl Zero for [<$name$bsize>] {
+        impl ConstZero for [<$name$b>] { const ZERO: Self = Self(0.0); }
+        impl Zero for [<$name$b>] {
             #[inline]
             fn new_zero() -> Self { Self(0.0) }
         }
-        impl ConstOne for [<$name$bsize>] { const ONE: Self = Self(1.0); }
-        impl One for [<$name$bsize>] {
+        impl ConstOne for [<$name$b>] { const ONE: Self = Self(1.0); }
+        impl One for [<$name$b>] {
             #[inline]
             fn new_one() -> Self { Self(1.0) }
         }
-        impl ConstNegOne for [<$name$bsize>] { const NEG_ONE: Self = Self(-1.0); }
-        impl NegOne for [<$name$bsize>] {
+        impl ConstNegOne for [<$name$b>] { const NEG_ONE: Self = Self(-1.0); }
+        impl NegOne for [<$name$b>] {
             #[inline]
             fn new_neg_one() -> Self { Self(-1.0) }
         }
 
         /* number */
 
-        impl Number for [<$name$bsize>] {
-            type Parts = [<$p$bsize>];
+        impl Number for [<$name$b>] {
+            type Parts = [<$p$b>];
 
-            #[doc = "Returns a new `" [<$name$bsize>] " from the constituent parts`."]
+            #[doc = "Returns a new `" [<$name$b>] " from the constituent parts`."]
             ///
             /// # Errors
             /// This function can't fail.
             #[inline]
             fn from_parts(value: Self::Parts) -> NumeraResult<Self> { Ok(Self(value)) }
 
-            #[doc = "Returns a new `" [<$name$bsize>] "` from the constituent parts`."]
+            #[doc = "Returns a new `" [<$name$b>] "` from the constituent parts`."]
             ///
             /// # Safety
             /// This function is safe.

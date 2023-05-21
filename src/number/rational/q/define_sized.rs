@@ -50,7 +50,7 @@ use devela::paste;
 ///
 /// grouped:
 /// - `$doc_det`: the determinant before the bit size. e.g. "An" (8-bit) or "A" 16-bit.
-/// - `$bsize`: the size in bits of the primitive used.
+/// - `$b`: the size in bits of the primitive used.
 macro_rules! define_rational_sized {
     // defines multiple integer types, with an inner primitive.
     (multi $name:ident, $abbr:ident, $p:ident,
@@ -59,9 +59,9 @@ macro_rules! define_rational_sized {
      $num:ident, $den:ident,
         $(
             (
-             $doc_det:literal, $bsize:expr,
-             larger: $larger:literal, $larger_bsize:literal,
-             smaller: $smaller:literal, $smaller_bsize:literal
+             $doc_det:literal, $b:expr,
+             larger: $larger:literal, $larger_b:literal,
+             smaller: $smaller:literal, $smaller_b:literal
             )
         ),+
      ) => {
@@ -70,9 +70,9 @@ macro_rules! define_rational_sized {
                $doc_num, $doc_type, // $doc_new,
                $doc_sign, $doc_lower, $doc_upper,
                $num, $den,
-               ($doc_det, $bsize,
-                larger: $larger, $larger_bsize,
-                smaller: $smaller, $smaller_bsize
+               ($doc_det, $b,
+                larger: $larger, $larger_b,
+                smaller: $smaller, $smaller_b
                )];
         )+
     };
@@ -82,34 +82,34 @@ macro_rules! define_rational_sized {
      $doc_sign:literal, $doc_lower:expr, $doc_upper:expr,
      $num:ident, $den:ident,
      (
-      $doc_det:literal, $bsize:expr,
-      larger: $larger:literal, $larger_bsize:literal,
-      smaller: $smaller:literal, $smaller_bsize:literal
+      $doc_det:literal, $b:expr,
+      larger: $larger:literal, $larger_b:literal,
+      smaller: $smaller:literal, $smaller_b:literal
       )
     ) => { paste! {
-        #[doc = $doc_det " "$bsize "-bit " $doc_num $doc_type ","]
-        #[doc = "also known as [`" [<$abbr$bsize>] "`][super::" [<$abbr$bsize>] "]."]
+        #[doc = $doc_det " "$b "-bit " $doc_num $doc_type ","]
+        #[doc = "also known as [`" [<$abbr$b>] "`][super::" [<$abbr$b>] "]."]
         #[doc = "\n\nThe range of valid numeric values is $\\lbrack"
-        $doc_sign "$[`" $p$bsize "::" $doc_lower "`] $\\dots$ [`"
-        $p$bsize "::" $doc_upper "`]$\\rbrack$."]
+        $doc_sign "$[`" $p$b "::" $doc_lower "`] $\\dots$ [`"
+        $p$b "::" $doc_upper "`]$\\rbrack$."]
 
         #[derive(Clone, Copy)]
-        pub struct [<$name$bsize>] {
-            pub num: [<$num$bsize>],
-            pub den: [<$den$bsize>],
+        pub struct [<$name$b>] {
+            pub num: [<$num$b>],
+            pub den: [<$den$b>],
         }
 
         /// Returns $0/1$.
-        impl Default for [<$name$bsize>] {
+        impl Default for [<$name$b>] {
             fn default() -> Self {
                 Self {
-                    num: [<$num$bsize>]::ZERO,
-                    den: [<$den$bsize>]::ONE,
+                    num: [<$num$b>]::ZERO,
+                    den: [<$den$b>]::ONE,
                 }
             }
         }
 
-        impl PartialEq for [<$name$bsize>] {
+        impl PartialEq for [<$name$b>] {
             fn eq(&self, other: &Self) -> bool {
                 // upcast first
                 let uself = self.as_larger_or_same();
@@ -124,9 +124,9 @@ macro_rules! define_rational_sized {
                 // rself.num == rother.num && rself.den == rother.den
             }
         }
-        impl Eq for [<$name$bsize>] {}
+        impl Eq for [<$name$b>] {}
 
-        impl PartialOrd for [<$name$bsize>] {
+        impl PartialOrd for [<$name$b>] {
             fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
                 // upcast first
                 let uself = self.as_larger_or_same();
@@ -141,42 +141,42 @@ macro_rules! define_rational_sized {
                 lhs.partial_cmp(&rhs)
             }
         }
-        impl Ord for [<$name$bsize>] {
+        impl Ord for [<$name$b>] {
             fn cmp(&self, other: &Self) -> Ordering {
                 self.partial_cmp(&other).unwrap()
             }
         }
 
-        impl fmt::Display for [<$name$bsize>]  {
+        impl fmt::Display for [<$name$b>]  {
             fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
                 write!(f, "{}/{}", self.num, self.den)
             }
         }
-        impl fmt::Debug for [<$name$bsize>]  {
+        impl fmt::Debug for [<$name$b>]  {
             fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-                write!(f, "{}({}/{})", stringify!([<$abbr$bsize>]), self.num, self.den)
+                write!(f, "{}({}/{})", stringify!([<$abbr$b>]), self.num, self.den)
                 // MAYBE?
-                // write!(f, "{}({:?}/{:?})", stringify!([<$abbr$bsize>]), self.num, self.den)
+                // write!(f, "{}({:?}/{:?})", stringify!([<$abbr$b>]), self.num, self.den)
             }
         }
 
-        impl [<$name$bsize>]  {
-            #[doc = "Returns a new `" [<$name$bsize>] "`."]
+        impl [<$name$b>]  {
+            #[doc = "Returns a new `" [<$name$b>] "`."]
             ///
             /// # Errors
             /// If the `denominator` is `0`.
             #[inline]
-            pub const fn new(numerator: [<i$bsize>], denominator: [<i$bsize>])
+            pub const fn new(numerator: [<i$b>], denominator: [<i$b>])
                 -> NumeraResult<Self> {
-                if let Ok(den) = [<$den$bsize>]::new(denominator) {
-                    let num = [<$num$bsize>]::new(numerator);
+                if let Ok(den) = [<$den$b>]::new(denominator) {
+                    let num = [<$num$b>]::new(numerator);
                     Ok(Self{ num, den })
                 } else {
                     Err(NumeraError::Rational(RationalError::ZeroDenominator))
                 }
             }
 
-            #[doc = "Returns a new `" [<$name$bsize>] "`."]
+            #[doc = "Returns a new `" [<$name$b>] "`."]
             ///
             /// # Safety
             /// The `denominator` must not be 0.
@@ -186,25 +186,25 @@ macro_rules! define_rational_sized {
             #[inline]
             #[cfg(not(feature = "safe"))]
             #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
-            pub const unsafe fn new_unchecked(numerator: [<i$bsize>], denominator: [<i$bsize>])
+            pub const unsafe fn new_unchecked(numerator: [<i$b>], denominator: [<i$b>])
                 -> Self {
                 debug_assert![denominator != 0];
                 Self {
-                    num: [<$num$bsize>]::new(numerator),
-                    den: [<$den$bsize>]::new_unchecked(denominator),
+                    num: [<$num$b>]::new(numerator),
+                    den: [<$den$b>]::new_unchecked(denominator),
                 }
             }
         }
 
         /* resizing */
 
-        impl_larger_smaller![$name, $bsize, Rationals,
-            larger: $larger, $larger_bsize, smaller: $smaller, $smaller_bsize
+        impl_larger_smaller![$name, $b, Rationals,
+            larger: $larger, $larger_b, smaller: $smaller, $smaller_b
         ];
 
         /* sign */
 
-        impl Sign for [<$name$bsize>] {
+        impl Sign for [<$name$b>] {
             #[inline]
             fn can_negative(&self) -> bool { true }
             #[inline]
@@ -220,11 +220,11 @@ macro_rules! define_rational_sized {
                 self.num.is_positive() && self.den.is_positive()
             }
         }
-        impl Signed for [<$name$bsize>] {}
+        impl Signed for [<$name$b>] {}
 
         /* bound */
 
-        impl Bound for [<$name$bsize>] {
+        impl Bound for [<$name$b>] {
             #[inline]
             fn is_lower_bounded(&self) -> bool { true }
             #[inline]
@@ -238,35 +238,35 @@ macro_rules! define_rational_sized {
                 Some(<Self as ConstUpperBounded>::MAX)
             }
         }
-        impl LowerBounded for [<$name$bsize>] {
+        impl LowerBounded for [<$name$b>] {
             #[inline]
             fn new_min() -> Self { <Self as ConstLowerBounded>::MIN }
         }
-        impl UpperBounded for [<$name$bsize>] {
+        impl UpperBounded for [<$name$b>] {
             #[inline]
             fn new_max() -> Self { <Self as ConstUpperBounded>::MAX }
         }
-        impl ConstLowerBounded for [<$name$bsize>] {
+        impl ConstLowerBounded for [<$name$b>] {
             const MIN: Self = Self {
-                    num: [<$num$bsize>]::MIN,
-                    den: [<$den$bsize>]::ONE,
+                    num: [<$num$b>]::MIN,
+                    den: [<$den$b>]::ONE,
                 };
         }
-        impl ConstUpperBounded for [<$name$bsize>] {
+        impl ConstUpperBounded for [<$name$b>] {
             const MAX: Self = Self {
-                    num: [<$num$bsize>]::MAX,
-                    den: [<$den$bsize>]::ONE,
+                    num: [<$num$b>]::MAX,
+                    den: [<$den$b>]::ONE,
                 };
         }
 
         /* count */
 
-        impl Count for [<$name$bsize>] {
+        impl Count for [<$name$b>] {
             #[inline]
             fn is_countable(&self) -> bool { true }
         }
 
-        impl Countable for [<$name$bsize>] {
+        impl Countable for [<$name$b>] {
             /// Returns the next rational value by increasing the
             /// numerator, while maintaining the same denominator.
             #[inline]
@@ -291,7 +291,7 @@ macro_rules! define_rational_sized {
 
         /* ident */
 
-        impl Ident for [<$name$bsize>] {
+        impl Ident for [<$name$b>] {
             #[inline]
             fn can_zero(&self) -> bool { true }
             #[inline]
@@ -306,41 +306,41 @@ macro_rules! define_rational_sized {
             #[inline]
             fn is_neg_one(&self) -> bool { self.num.neg() == self.den.into() }
         }
-        impl ConstZero for [<$name$bsize>] {
+        impl ConstZero for [<$name$b>] {
             const ZERO: Self = Self {
-                num: [<$num$bsize>]::ZERO,
-                den: [<$den$bsize>]::ONE,
+                num: [<$num$b>]::ZERO,
+                den: [<$den$b>]::ONE,
             };
         }
-        impl Zero for [<$name$bsize>] {
+        impl Zero for [<$name$b>] {
             #[inline]
             fn new_zero() -> Self { <Self as ConstZero>::ZERO }
         }
-        impl ConstOne for [<$name$bsize>] {
+        impl ConstOne for [<$name$b>] {
             const ONE: Self = Self {
-                num: [<$num$bsize>]::ONE,
-                den: [<$den$bsize>]::ONE,
+                num: [<$num$b>]::ONE,
+                den: [<$den$b>]::ONE,
             };
         }
-        impl One for [<$name$bsize>] {
+        impl One for [<$name$b>] {
             #[inline]
             fn new_one() -> Self { <Self as ConstOne>::ONE }
         }
-        impl ConstNegOne for [<$name$bsize>] {
+        impl ConstNegOne for [<$name$b>] {
             const NEG_ONE: Self = Self {
-                num: [<$num$bsize>]::NEG_ONE,
-                den: [<$den$bsize>]::ONE,
+                num: [<$num$b>]::NEG_ONE,
+                den: [<$den$b>]::ONE,
             };
         }
-        impl NegOne for [<$name$bsize>] {
+        impl NegOne for [<$name$b>] {
             #[inline]
             fn new_neg_one() -> Self { <Self as ConstNegOne>::NEG_ONE }
         }
 
         /* number */
 
-        impl Number for [<$name$bsize>] {
-            type Parts = ([<$p$bsize>], [<$p$bsize>]);
+        impl Number for [<$name$b>] {
+            type Parts = ([<$p$b>], [<$p$b>]);
 
             /// Forms a new rational from a numerator and denominator.
             ///
@@ -350,8 +350,8 @@ macro_rules! define_rational_sized {
             fn from_parts(value: Self::Parts) -> NumeraResult<Self> {
                 Ok(
                     Self {
-                        num: [<$num$bsize>]::from_parts(value.0)?,
-                        den: [<$den$bsize>]::from_parts(value.1)
+                        num: [<$num$b>]::from_parts(value.0)?,
+                        den: [<$den$b>]::from_parts(value.1)
                             .map_err(|_| RationalError::ZeroDenominator)?,
                     }
                 )
@@ -362,10 +362,10 @@ macro_rules! define_rational_sized {
             #[cfg(not(feature = "safe"))]
             #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
             unsafe fn from_parts_unchecked(value: Self::Parts) -> Self {
-                debug_assert![value.1 != [<$p$bsize>]::ZERO];
+                debug_assert![value.1 != [<$p$b>]::ZERO];
                 Self {
-                    num: [<$num$bsize>]::from_parts_unchecked(value.0),
-                    den: [<$den$bsize>]::from_parts_unchecked(value.1),
+                    num: [<$num$b>]::from_parts_unchecked(value.0),
+                    den: [<$den$b>]::from_parts_unchecked(value.1),
                 }
             }
         }

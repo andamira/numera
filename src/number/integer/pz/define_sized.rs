@@ -47,7 +47,7 @@ use devela::paste;
 /// - `$doc_upper`: the upper bound of the number type.
 ///
 /// - `$doc_det`: the determinant before the bit size. e.g. "An" (8-bit) or "A" 16-bit.
-/// - `$bsize`: the size in bits of the primitive used.
+/// - `$b`: the size in bits of the primitive used.
 macro_rules! define_positive_integer_sized {
     // defines multiple integer types, with an inner primitive.
     (multi $name:ident, $abbr:ident, $p:ident,
@@ -55,9 +55,9 @@ macro_rules! define_positive_integer_sized {
      $doc_sign:literal, $doc_lower:expr, $doc_upper:expr,
         $(
             (
-             $doc_det:literal, $bsize:expr,
-             larger: $larger:literal, $larger_bsize:literal,
-             smaller: $smaller:literal, $smaller_bsize:literal
+             $doc_det:literal, $b:expr,
+             larger: $larger:literal, $larger_b:literal,
+             smaller: $smaller:literal, $smaller_b:literal
             )
         ),+
     ) => {
@@ -65,9 +65,9 @@ macro_rules! define_positive_integer_sized {
             define_positive_integer_sized![single $name, $abbr, $p,
                $doc_num, $doc_type, // $doc_new,
                $doc_sign, $doc_lower, $doc_upper,
-               ($doc_det, $bsize,
-                larger: $larger, $larger_bsize,
-                smaller: $smaller, $smaller_bsize
+               ($doc_det, $b,
+                larger: $larger, $larger_b,
+                smaller: $smaller, $smaller_b
                )];
         )+
     };
@@ -76,53 +76,53 @@ macro_rules! define_positive_integer_sized {
      $doc_num:literal, $doc_type:literal, // $doc_new:literal,
      $doc_sign:literal, $doc_lower:expr, $doc_upper:expr,
      (
-      $doc_det:literal, $bsize:expr,
-      larger: $larger:literal, $larger_bsize:literal,
-      smaller: $smaller:literal, $smaller_bsize:literal
+      $doc_det:literal, $b:expr,
+      larger: $larger:literal, $larger_b:literal,
+      smaller: $smaller:literal, $smaller_b:literal
      )
     ) => { paste! {
-        #[doc = $doc_det " "$bsize "-bit " $doc_num $doc_type ","]
-        #[doc = "also known as [`" [<$abbr$bsize>] "`][super::" [<$abbr$bsize>] "]."]
+        #[doc = $doc_det " "$b "-bit " $doc_num $doc_type ","]
+        #[doc = "also known as [`" [<$abbr$b>] "`][super::" [<$abbr$b>] "]."]
         #[doc = "\n\nThe range of valid numeric values is $\\lbrack" $doc_sign
-        "1 \\dots$ [`" u$bsize
+        "1 \\dots$ [`" u$b
         "::" $doc_upper "`]$\\rbrack$."]
-        #[doc = "\n\nIt is equivalent to the [`" [<NonZeroU$bsize>] "`] primitive."]
+        #[doc = "\n\nIt is equivalent to the [`" [<NonZeroU$b>] "`] primitive."]
         ///
         /// Also known as a [*counting number*][0m], you can also use the alias
-        #[doc = "[`Counting" $bsize "`][super::Counting" $bsize "]."]
+        #[doc = "[`Counting" $b "`][super::Counting" $b "]."]
         ///
         /// [0m]: https://mathworld.wolfram.com/CountingNumber.html
         #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
-        pub struct [<$name$bsize>](pub [<$p$bsize>]);
+        pub struct [<$name$b>](pub [<$p$b>]);
 
-        impl fmt::Display for [<$name$bsize>]  {
+        impl fmt::Display for [<$name$b>]  {
             fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
                 write!(f, "{}", self.0)
             }
         }
-        impl fmt::Debug for [<$name$bsize>]  {
+        impl fmt::Debug for [<$name$b>]  {
             fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-                write!(f, "{}({})", stringify!([<$abbr$bsize>]), self.0)
+                write!(f, "{}({})", stringify!([<$abbr$b>]), self.0)
             }
         }
 
-        impl [<$name$bsize>]  {
-            #[doc = "Returns a new `" [<$name$bsize>] "`."]
+        impl [<$name$b>]  {
+            #[doc = "Returns a new `" [<$name$b>] "`."]
             ///
             /// # Errors
             /// If the given `value` is `0`.
             //
             // NOTE: accepting u* for converting to NonZeroU
             #[inline]
-            pub const fn new(value: [<u$bsize>]) -> NumeraResult<Self> {
-                if let Some(n) = [<$p$bsize>]::new(value) {
+            pub const fn new(value: [<u$b>]) -> NumeraResult<Self> {
+                if let Some(n) = [<$p$b>]::new(value) {
                     Ok(Self(n))
                 } else {
                     Err(NumeraError::Integer(IntegerError::Zero))
                 }
             }
 
-            #[doc = "Returns a new `" [<$name$bsize>] "`."]
+            #[doc = "Returns a new `" [<$name$b>] "`."]
             ///
             /// # Safety
             /// The given `value` must not be 0.
@@ -132,21 +132,21 @@ macro_rules! define_positive_integer_sized {
             #[inline]
             #[cfg(not(feature = "safe"))]
             #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
-            pub const unsafe fn new_unchecked(value: [<u$bsize>]) -> Self {
+            pub const unsafe fn new_unchecked(value: [<u$b>]) -> Self {
                 debug_assert![value != 0];
-                Self([<$p$bsize>]::new_unchecked(value))
+                Self([<$p$b>]::new_unchecked(value))
             }
         }
 
         /* resizing */
 
-        impl_larger_smaller![$name, $bsize, PositiveIntegers,
-            larger: $larger, $larger_bsize, smaller: $smaller, $smaller_bsize
+        impl_larger_smaller![$name, $b, PositiveIntegers,
+            larger: $larger, $larger_b, smaller: $smaller, $smaller_b
         ];
 
         /* sign */
 
-        impl Sign for [<$name$bsize>] {
+        impl Sign for [<$name$b>] {
             #[inline]
             fn can_negative(&self) -> bool { false }
             #[inline]
@@ -156,65 +156,65 @@ macro_rules! define_positive_integer_sized {
             #[inline]
             fn is_positive(&self) -> bool { true }
         }
-        impl Signed for [<$name$bsize>] {}
+        impl Signed for [<$name$b>] {}
 
         /* bound */
 
-        impl Bound for [<$name$bsize>] {
+        impl Bound for [<$name$b>] {
             #[inline]
             fn is_lower_bounded(&self) -> bool { true }
             #[inline]
             fn is_upper_bounded(&self) -> bool { true }
             #[inline]
-            fn lower_bound(&self) -> Option<Self> { Some([<$name$bsize>]::MIN) }
+            fn lower_bound(&self) -> Option<Self> { Some([<$name$b>]::MIN) }
             #[inline]
-            fn upper_bound(&self) -> Option<Self> { Some([<$name$bsize>]::MAX) }
+            fn upper_bound(&self) -> Option<Self> { Some([<$name$b>]::MAX) }
         }
-        impl LowerBounded for [<$name$bsize>] {
+        impl LowerBounded for [<$name$b>] {
             #[inline]
-            fn new_min() -> Self { [<$name$bsize>]::MIN }
+            fn new_min() -> Self { [<$name$b>]::MIN }
         }
-        impl UpperBounded for [<$name$bsize>] {
+        impl UpperBounded for [<$name$b>] {
             #[inline]
-            fn new_max() -> Self { [<$name$bsize>]::MAX }
+            fn new_max() -> Self { [<$name$b>]::MAX }
         }
-        impl ConstLowerBounded for [<$name$bsize>] {
+        impl ConstLowerBounded for [<$name$b>] {
             // IMPROVE WAIT for https://github.com/rust-lang/rust/pull/106633 1.70
-            // const MIN: Self = Self([<$p$bsize>]::MIN);
+            // const MIN: Self = Self([<$p$b>]::MIN);
 
             #[cfg(feature = "safe")]
             const MIN: Self = Self(
-                if let Some(n) = [<$p$bsize>]::new(1)
+                if let Some(n) = [<$p$b>]::new(1)
                     { n } else { unreachable!() }
             );
 
             #[cfg(not(feature = "safe"))]
             // SAFETY: constant value
-            const MIN: Self = Self(unsafe { [<$p$bsize>]::new_unchecked(1) });
+            const MIN: Self = Self(unsafe { [<$p$b>]::new_unchecked(1) });
         }
-        impl ConstUpperBounded for [<$name$bsize>] {
+        impl ConstUpperBounded for [<$name$b>] {
             // IMPROVE WAIT for https://github.com/rust-lang/rust/pull/106633 1.70
-            // const MAX: Self = Self([<$p$bsize>]::MAX);
+            // const MAX: Self = Self([<$p$b>]::MAX);
 
             #[cfg(feature = "safe")]
             const MAX: Self = Self(
-                if let Some(n) = [<$p$bsize>]::new([<u$bsize>]::MAX)
+                if let Some(n) = [<$p$b>]::new([<u$b>]::MAX)
                     { n } else { unreachable!() }
             );
 
             #[cfg(not(feature = "safe"))]
             // SAFETY: constant value
-            const MAX: Self = Self(unsafe {[<$p$bsize>]::new_unchecked([<u$bsize>]::MAX) });
+            const MAX: Self = Self(unsafe {[<$p$b>]::new_unchecked([<u$b>]::MAX) });
         }
 
         /* count */
 
-        impl Count for [<$name$bsize>] {
+        impl Count for [<$name$b>] {
             #[inline]
             fn is_countable(&self) -> bool { true }
         }
 
-        impl Countable for [<$name$bsize>] {
+        impl Countable for [<$name$b>] {
             /// Returns the next countable value, skipping 0.
             ///
             /// # Errors
@@ -224,11 +224,11 @@ macro_rules! define_positive_integer_sized {
                 let next = self.0.get().checked_add(1).ok_or(IntegerError::Overflow)?;
 
                 #[cfg(feature = "safe")]
-                return Ok(Self([<$p$bsize>]::new(next).unwrap()));
+                return Ok(Self([<$p$b>]::new(next).unwrap()));
 
                 #[cfg(not(feature = "safe"))]
                 // SAFETY: we've checked the value
-                return Ok(Self(unsafe { [<$p$bsize>]::new_unchecked(next) }));
+                return Ok(Self(unsafe { [<$p$b>]::new_unchecked(next) }));
             }
             /// Returns the previous countable value, skipping 0.
             ///
@@ -239,17 +239,17 @@ macro_rules! define_positive_integer_sized {
                 let prev = self.0.get().checked_sub(1).ok_or(IntegerError::Underflow)?;
 
                 #[cfg(feature = "safe")]
-                return Ok(Self([<$p$bsize>]::new(prev).unwrap()));
+                return Ok(Self([<$p$b>]::new(prev).unwrap()));
 
                 #[cfg(not(feature = "safe"))]
                 // SAFETY: we've checked the value
-                return Ok(Self(unsafe { [<$p$bsize>]::new_unchecked(prev) }));
+                return Ok(Self(unsafe { [<$p$b>]::new_unchecked(prev) }));
             }
         }
 
         /* ident */
 
-        impl Ident for [<$name$bsize>] {
+        impl Ident for [<$name$b>] {
             #[inline]
             fn can_zero(&self) -> bool { false }
             #[inline]
@@ -264,46 +264,46 @@ macro_rules! define_positive_integer_sized {
             #[inline]
             fn is_neg_one(&self) -> bool { false }
         }
-        impl NonZero for [<$name$bsize>] {}
-        impl ConstOne for [<$name$bsize>] {
+        impl NonZero for [<$name$b>] {}
+        impl ConstOne for [<$name$b>] {
             #[cfg(feature = "safe")]
             const ONE: Self = Self(
-                if let Some(n) = [<$p$bsize>]::new(1)
+                if let Some(n) = [<$p$b>]::new(1)
                     { n } else { unreachable!() }
             );
 
             #[cfg(not(feature = "safe"))]
             // SAFETY: constant value
-            const ONE: Self = Self(unsafe { [<$p$bsize>]::new_unchecked(1) });
+            const ONE: Self = Self(unsafe { [<$p$b>]::new_unchecked(1) });
         }
-        impl One for [<$name$bsize>] {
+        impl One for [<$name$b>] {
             #[inline]
             fn new_one() -> Self {
                 #[cfg(feature = "safe")]
-                return Self([<$p$bsize>]::new(1).unwrap());
+                return Self([<$p$b>]::new(1).unwrap());
 
                 #[cfg(not(feature = "safe"))]
                 // SAFETY: constant value
-                return Self(unsafe { [<$p$bsize>]::new_unchecked(1) });
+                return Self(unsafe { [<$p$b>]::new_unchecked(1) });
             }
         }
-        impl NonNegOne for [<$name$bsize>] {}
+        impl NonNegOne for [<$name$b>] {}
 
         /* number */
 
-        impl Number for [<$name$bsize>] {
-            type Parts = [<u$bsize>];
+        impl Number for [<$name$b>] {
+            type Parts = [<u$b>];
 
-            #[doc = "Returns a new `" [<$name$bsize>] "` from the constituent parts."]
+            #[doc = "Returns a new `" [<$name$b>] "` from the constituent parts."]
             ///
             /// # Errors
             /// If the given `value` is `0`.
             #[inline]
             fn from_parts(value: Self::Parts) -> NumeraResult<Self> {
-                Ok(Self([<$p$bsize>]::new(value).ok_or(IntegerError::Zero)?))
+                Ok(Self([<$p$b>]::new(value).ok_or(IntegerError::Zero)?))
             }
 
-            #[doc = "Returns a new `" [<$name$bsize>] "` from the constituent parts."]
+            #[doc = "Returns a new `" [<$name$b>] "` from the constituent parts."]
             ///
             /// # Panics
             /// In debug if the given `value` is `0`.
@@ -315,7 +315,7 @@ macro_rules! define_positive_integer_sized {
             #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
             unsafe fn from_parts_unchecked(value: Self::Parts) -> Self {
                 debug_assert![value != 0];
-                Self([<$p$bsize>]::new_unchecked(value))
+                Self([<$p$b>]::new_unchecked(value))
             }
         }
     }};

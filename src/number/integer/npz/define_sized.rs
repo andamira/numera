@@ -46,7 +46,7 @@ use devela::paste;
 /// - `$doc_upper`: the upper bound of the number type.
 ///
 /// - `$doc_det`: the determinant before the bit size. e.g. "An" (8-bit) or "A" 16-bit.
-/// - `$bsize`: the size in bits of the primitive used.
+/// - `$b`: the size in bits of the primitive used.
 macro_rules! define_nonpositive_integer_sized {
     // defines multiple integer types, with an inner primitive.
     (multi $name:ident, $abbr:ident, $p:ident,
@@ -54,9 +54,9 @@ macro_rules! define_nonpositive_integer_sized {
      $doc_sign:literal, $doc_lower:expr, $doc_upper:expr,
         $(
             (
-             $doc_det:literal, $bsize:expr,
-             larger: $larger:literal, $larger_bsize:literal,
-             smaller: $smaller:literal, $smaller_bsize:literal
+             $doc_det:literal, $b:expr,
+             larger: $larger:literal, $larger_b:literal,
+             smaller: $smaller:literal, $smaller_b:literal
             )
         ),+
     ) => {
@@ -64,9 +64,9 @@ macro_rules! define_nonpositive_integer_sized {
             define_nonpositive_integer_sized![single $name, $abbr, $p,
                $doc_num, $doc_type, // $doc_new,
                $doc_sign, $doc_lower, $doc_upper,
-               ($doc_det, $bsize,
-                larger: $larger, $larger_bsize,
-                smaller: $smaller, $smaller_bsize
+               ($doc_det, $b,
+                larger: $larger, $larger_b,
+                smaller: $smaller, $smaller_b
                )];
         )+
     };
@@ -75,50 +75,50 @@ macro_rules! define_nonpositive_integer_sized {
      $doc_num:literal, $doc_type:literal, // $doc_new:literal,
      $doc_sign:literal, $doc_lower:expr, $doc_upper:expr,
      (
-      $doc_det:literal, $bsize:expr,
-      larger: $larger:literal, $larger_bsize:literal,
-      smaller: $smaller:literal, $smaller_bsize:literal
+      $doc_det:literal, $b:expr,
+      larger: $larger:literal, $larger_b:literal,
+      smaller: $smaller:literal, $smaller_b:literal
      )
     ) => { paste! {
-        #[doc = $doc_det " "$bsize "-bit " $doc_num $doc_type ","]
-        #[doc = "also known as [`" [<$abbr$bsize>] "`][super::" [<$abbr$bsize>] "]."]
+        #[doc = $doc_det " "$b "-bit " $doc_num $doc_type ","]
+        #[doc = "also known as [`" [<$abbr$b>] "`][super::" [<$abbr$b>] "]."]
         #[doc = "\n\nThe range of valid numeric values is $\\lbrack$"
-        "$" $doc_sign "$[`" $p$bsize "::" $doc_lower "`]"
+        "$" $doc_sign "$[`" $p$b "::" $doc_lower "`]"
         " $\\dots"  $doc_upper  "\\rbrack$."]
         ///
         /// Please note that the given `value` will be interpreted as negative.
         #[derive(Clone, Copy, Default, PartialEq, Eq, PartialOrd, Ord)]
-        pub struct [<$name$bsize>](pub [<$p$bsize>]);
+        pub struct [<$name$b>](pub [<$p$b>]);
 
-        impl fmt::Display for [<$name$bsize>]  {
+        impl fmt::Display for [<$name$b>]  {
             fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
                 // notice the negation
                 write!(f, "-{}", self.0)
             }
         }
-        impl fmt::Debug for [<$name$bsize>]  {
+        impl fmt::Debug for [<$name$b>]  {
             fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-                write!(f, "{}({})", stringify!([<$abbr$bsize>]), self.0)
+                write!(f, "{}({})", stringify!([<$abbr$b>]), self.0)
             }
         }
 
-        impl [<$name$bsize>]  {
+        impl [<$name$b>]  {
             #[inline]
-            #[doc = "Returns a new `" [<$name$bsize>] "`."]
+            #[doc = "Returns a new `" [<$name$b>] "`."]
             ///
             /// Please note that the `value` will be interpreted as negative.
-            pub const fn new_neg(value: [<$p$bsize>]) -> Self { Self(value) }
+            pub const fn new_neg(value: [<$p$b>]) -> Self { Self(value) }
         }
 
         /* resizing */
 
-        impl_larger_smaller![$name, $bsize, NonPositiveIntegers,
-            larger: $larger, $larger_bsize, smaller: $smaller, $smaller_bsize
+        impl_larger_smaller![$name, $b, NonPositiveIntegers,
+            larger: $larger, $larger_b, smaller: $smaller, $smaller_b
         ];
 
         /* sign */
 
-        impl Sign for [<$name$bsize>] {
+        impl Sign for [<$name$b>] {
             #[inline]
             fn can_negative(&self) -> bool { true }
             #[inline]
@@ -128,8 +128,8 @@ macro_rules! define_nonpositive_integer_sized {
             #[inline]
             fn is_positive(&self) -> bool { false }
         }
-        impl NegSigned for [<$name$bsize>] {
-            type Parts = [<$p$bsize>];
+        impl NegSigned for [<$name$b>] {
+            type Parts = [<$p$b>];
             #[inline]
             fn new_neg(value: Self::Parts) -> NumeraResult<Self> {
                 Ok(Self(value))
@@ -138,39 +138,39 @@ macro_rules! define_nonpositive_integer_sized {
 
         /* bound */
 
-        impl Bound for [<$name$bsize>] {
+        impl Bound for [<$name$b>] {
             #[inline]
             fn is_lower_bounded(&self) -> bool { true }
             #[inline]
             fn is_upper_bounded(&self) -> bool { true }
             #[inline]
-            fn lower_bound(&self) -> Option<Self> { Some([<$name$bsize>]::MIN) }
+            fn lower_bound(&self) -> Option<Self> { Some([<$name$b>]::MIN) }
             #[inline]
-            fn upper_bound(&self) -> Option<Self> { Some([<$name$bsize>]::MAX) }
+            fn upper_bound(&self) -> Option<Self> { Some([<$name$b>]::MAX) }
         }
-        impl LowerBounded for [<$name$bsize>] {
+        impl LowerBounded for [<$name$b>] {
             #[inline]
-            fn new_min() -> Self { [<$name$bsize>]::MIN }
+            fn new_min() -> Self { [<$name$b>]::MIN }
         }
-        impl UpperBounded for [<$name$bsize>] {
+        impl UpperBounded for [<$name$b>] {
             #[inline]
-            fn new_max() -> Self { [<$name$bsize>]::MAX }
+            fn new_max() -> Self { [<$name$b>]::MAX }
         }
-        impl ConstLowerBounded for [<$name$bsize>] {
-            const MIN: Self = Self([<$p$bsize>]::MAX);
+        impl ConstLowerBounded for [<$name$b>] {
+            const MIN: Self = Self([<$p$b>]::MAX);
         }
-        impl ConstUpperBounded for [<$name$bsize>] {
+        impl ConstUpperBounded for [<$name$b>] {
             const MAX: Self = Self(0);
         }
 
         /* count */
 
-        impl Count for [<$name$bsize>] {
+        impl Count for [<$name$b>] {
             #[inline]
             fn is_countable(&self) -> bool { true }
         }
 
-        impl Countable for [<$name$bsize>] {
+        impl Countable for [<$name$b>] {
             #[inline]
             fn next(&self) -> NumeraResult<Self> {
                 Ok(Self(self.0.checked_sub(1).ok_or(IntegerError::Overflow)?))
@@ -183,7 +183,7 @@ macro_rules! define_nonpositive_integer_sized {
 
         /* ident */
 
-        impl Ident for [<$name$bsize>] {
+        impl Ident for [<$name$b>] {
             #[inline]
             fn can_zero(&self) -> bool { true }
             #[inline]
@@ -198,24 +198,24 @@ macro_rules! define_nonpositive_integer_sized {
             #[inline]
             fn is_neg_one(&self) -> bool { self.0 == 1 }
         }
-        impl ConstZero for [<$name$bsize>] { const ZERO: Self = Self(0); }
-        impl Zero for [<$name$bsize>] {
+        impl ConstZero for [<$name$b>] { const ZERO: Self = Self(0); }
+        impl Zero for [<$name$b>] {
             #[inline]
             fn new_zero() -> Self { Self(0) }
         }
-        impl ConstNegOne for [<$name$bsize>] { const NEG_ONE: Self = Self(1); }
-        impl NegOne for [<$name$bsize>] {
+        impl ConstNegOne for [<$name$b>] { const NEG_ONE: Self = Self(1); }
+        impl NegOne for [<$name$b>] {
             #[inline]
             fn new_neg_one() -> Self { Self(1) }
         }
-        impl NonOne for [<$name$bsize>] {}
+        impl NonOne for [<$name$b>] {}
 
         /* number */
 
-        impl Number for [<$name$bsize>] {
-            type Parts = [<$p$bsize>];
+        impl Number for [<$name$b>] {
+            type Parts = [<$p$b>];
 
-            #[doc = "Returns a new `" [<$name$bsize>] "` from the constituent parts."]
+            #[doc = "Returns a new `" [<$name$b>] "` from the constituent parts."]
             ///
             /// Please note that the given `value` will be interpreted as negative.
             ///
@@ -238,7 +238,7 @@ macro_rules! define_nonpositive_integer_sized {
                 //     Err(IntegerError::MoreThanZero.into())
                 // }
             }
-            #[doc = "Returns a new `" [<$name$bsize>] "` from the constituent parts."]
+            #[doc = "Returns a new `" [<$name$b>] "` from the constituent parts."]
             ///
             /// Please note that the given `value` will be interpreted as negative.
             ///
