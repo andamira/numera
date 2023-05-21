@@ -107,7 +107,7 @@ macro_rules! define_nonpositive_integer_sized {
             #[doc = "Returns a new `" [<$name$bsize>] "`."]
             ///
             /// Please note that the `value` will be interpreted as negative.
-            pub const fn new(value: [<$p$bsize>]) -> Self { Self(value) }
+            pub const fn new_neg(value: [<$p$bsize>]) -> Self { Self(value) }
         }
 
         /* resizing */

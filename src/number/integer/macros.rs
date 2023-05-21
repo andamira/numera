@@ -474,7 +474,7 @@ macro_rules! try_from_integer {
     };
 
     // when `from` has an inner integer primitive,
-    // and we have to use the `for`::new constructor.
+    // and `for` has an inner nonzero primitive
     //
     // Used by:
     // - for: N0z   from: Z, Nnz
@@ -809,7 +809,6 @@ macro_rules! try_from_integer {
     };
 
     // when `for` can not represent negative values,
-    // and we have to use its `new` constructor,
     // and `from` is an Integer.
     //
     // Used by:
@@ -830,7 +829,7 @@ macro_rules! try_from_integer {
                 #[inline]
                 fn try_from(from: [<$from$from_size>])
                     -> $crate::error::NumeraResult<[<$for$for_size>]> {
-                    Self::new((-from.0).try_into()?)
+                    Self::new_neg((-from.0).try_into()?)
                 }
             }
             #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
@@ -839,7 +838,7 @@ macro_rules! try_from_integer {
                 #[inline]
                 fn try_from(from: &[<$from$from_size>])
                     -> $crate::error::NumeraResult<[<$for$for_size>]> {
-                    Self::new((-from.0).try_into()?)
+                    Self::new_neg((-from.0).try_into()?)
                 }
             }
             #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
@@ -848,18 +847,56 @@ macro_rules! try_from_integer {
                 #[inline]
                 fn try_from(from: &mut [<$from$from_size>])
                     -> $crate::error::NumeraResult<[<$for$for_size>]> {
-                    Self::new((-from.0).try_into()?)
+                    Self::new_neg((-from.0).try_into()?)
                 }
             }
         }
     };
 
-    // when `for` can not represent negative values,
-    // and we have to use its `new` constructor,
-    // and `from` is a NonZeroInteger.
+    // when both `for` and `from` are non-positive Integers
     //
     // Used by:
-    // - for: Nz   from: N0z
+    // - for: Nz   from: Npz
+    (neg_non0neg
+     for: $for:ident + $for_size:expr,
+     from: $from:ident + $( $from_size:expr ),+) => {
+        $(
+            try_from_integer![@neg->non0_neg for: $for + $for_size, from: $from + $from_size];
+        )+
+    };
+    (@neg->non0_neg
+     for: $for:ident + $for_size:expr, from: $from:ident + $from_size:expr) => {
+        devela::paste! {
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
+            impl TryFrom<[<$from$from_size>]> for [<$for$for_size>] {
+                type Error = $crate::error::NumeraError;
+                #[inline]
+                fn try_from(from: [<$from$from_size>])
+                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
+                    Self::new_neg((from.0).try_into()?)
+                }
+            }
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
+            impl TryFrom<&[<$from$from_size>]> for [<$for$for_size>] {
+                type Error = $crate::error::NumeraError;
+                #[inline]
+                fn try_from(from: &[<$from$from_size>])
+                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
+                    Self::new_neg((from.0).try_into()?)
+                }
+            }
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
+            impl TryFrom<&mut [<$from$from_size>]> for [<$for$for_size>] {
+                type Error = $crate::error::NumeraError;
+                #[inline]
+                fn try_from(from: &mut [<$from$from_size>])
+                    -> $crate::error::NumeraResult<[<$for$for_size>]> {
+                    Self::new_neg((from.0).try_into()?)
+                }
+            }
+        }
+    };
+
     (new_neg_nonzero
      for: $for:ident + $for_size:expr,
      from: $from:ident + $( $from_size:expr ),+) => {
@@ -876,7 +913,7 @@ macro_rules! try_from_integer {
                 #[inline]
                 fn try_from(from: [<$from$from_size>])
                     -> $crate::error::NumeraResult<[<$for$for_size>]> {
-                    Self::new((-from.0.get()).try_into()?)
+                    Self::new_neg((-from.0.get()).try_into()?)
                 }
             }
             #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
@@ -885,7 +922,7 @@ macro_rules! try_from_integer {
                 #[inline]
                 fn try_from(from: &[<$from$from_size>])
                     -> $crate::error::NumeraResult<[<$for$for_size>]> {
-                    Self::from_parts((-from.0.get()).try_into()?)
+                    Self::new_neg((-from.0.get()).try_into()?)
                 }
             }
             #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
@@ -894,7 +931,7 @@ macro_rules! try_from_integer {
                 #[inline]
                 fn try_from(from: &mut [<$from$from_size>])
                     -> $crate::error::NumeraResult<[<$for$for_size>]> {
-                    Self::new((-from.0.get()).try_into()?)
+                    Self::new_neg((-from.0.get()).try_into()?)
                 }
             }
         }
@@ -1156,7 +1193,6 @@ macro_rules! try_from_primitive {
     };
 
     // when `for` can only represent negative values,
-    // and we have to use its `new` constructor,
     // and `from` is a primitive integer.
     //
     // Used by:
@@ -1180,7 +1216,7 @@ macro_rules! try_from_primitive {
                 #[inline]
                 fn try_from(from: [<$from$from_size>])
                     -> $crate::error::NumeraResult<[<$for$for_size>]> {
-                    Self::new((-from).try_into()?)
+                    Self::new_neg((-from).try_into()?)
                 }
             }
             #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
@@ -1189,7 +1225,7 @@ macro_rules! try_from_primitive {
                 #[inline]
                 fn try_from(from: &[<$from$from_size>])
                     -> $crate::error::NumeraResult<[<$for$for_size>]> {
-                    Self::new((-*from).try_into()?)
+                    Self::new_neg((-*from).try_into()?)
                 }
             }
             #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
@@ -1198,14 +1234,13 @@ macro_rules! try_from_primitive {
                 #[inline]
                 fn try_from(from: &mut [<$from$from_size>])
                     -> $crate::error::NumeraResult<[<$for$for_size>]> {
-                    Self::new((-*from).try_into()?)
+                    Self::new_neg((-*from).try_into()?)
                 }
             }
         }
     };
 
     // when `for` can not represent positive values,
-    // and we have to use its `new` constructor,
     // and `from` is a NonZeroI.
     //
     // Used by:
@@ -1229,7 +1264,7 @@ macro_rules! try_from_primitive {
                 #[inline]
                 fn try_from(from: [<$from$from_size>])
                     -> $crate::error::NumeraResult<[<$for$for_size>]> {
-                    return Self::new((-from.get()).try_into()?);
+                    Self::new_neg((-from.get()).try_into()?)
                 }
             }
             #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
@@ -1238,7 +1273,7 @@ macro_rules! try_from_primitive {
                 #[inline]
                 fn try_from(from: &[<$from$from_size>])
                     -> $crate::error::NumeraResult<[<$for$for_size>]> {
-                    return Self::new((-from.get()).try_into()?);
+                    Self::new_neg((-from.get()).try_into()?)
                 }
             }
             #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
@@ -1247,7 +1282,7 @@ macro_rules! try_from_primitive {
                 #[inline]
                 fn try_from(from: &mut [<$from$from_size>])
                     -> $crate::error::NumeraResult<[<$for$for_size>]> {
-                    return Self::new((-from.get()).try_into()?);
+                    Self::new_neg((-from.get()).try_into()?)
                 }
             }
         }

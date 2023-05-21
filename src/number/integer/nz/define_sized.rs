@@ -110,7 +110,7 @@ macro_rules! define_negative_integer_sized {
             //
             // NOTE: accepting u* for converting to NonZeroU
             #[inline]
-            pub const fn new(value: [<u$bsize>]) -> NumeraResult<Self> {
+            pub const fn new_neg(value: [<u$bsize>]) -> NumeraResult<Self> {
                 if let Some(n) = [<$p$bsize>]::new(value) {
                     Ok(Self(n))
                 } else {

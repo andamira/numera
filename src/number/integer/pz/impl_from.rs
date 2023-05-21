@@ -181,10 +181,10 @@ mod tests {
         /* impossible conversions */
 
         // try_from NegativeInteger (no valid values)
-        assert![TryInto::<Pz8>::try_into(Nz8::new(100)?).is_err()];
+        assert![TryInto::<Pz8>::try_into(Nz8::new_neg(100)?).is_err()];
 
         // try_from NonPositiveInteger (no valid values)
-        assert![TryInto::<Pz8>::try_into(Npz8::new(100)).is_err()];
+        assert![TryInto::<Pz8>::try_into(Npz8::new_neg(100)).is_err()];
 
         Ok(())
     }

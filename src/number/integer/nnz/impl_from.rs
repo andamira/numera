@@ -207,13 +207,13 @@ mod tests {
         assert![TryInto::<Nnz8>::try_into(N0z16::new(500)?).is_err()];
 
         // try_from NonPositiveInteger (only the 0)
-        assert_eq![Nnz8::new(0), Npz8::new(0).try_into()?];
-        assert![TryInto::<Nnz8>::try_into(Npz8::new(100)).is_err()];
+        assert_eq![Nnz8::new(0), Npz8::new_neg(0).try_into()?];
+        assert![TryInto::<Nnz8>::try_into(Npz8::new_neg(100)).is_err()];
 
         /* impossible Integer conversions */
 
         // try_from NegativeInteger (no valid values)
-        assert![TryInto::<Nnz8>::try_into(Nz8::new(100)?).is_err()];
+        assert![TryInto::<Nnz8>::try_into(Nz8::new_neg(100)?).is_err()];
         Ok(())
     }
 }

@@ -147,7 +147,7 @@ mod tests {
         assert_eq![N0z16::new(100)?, Pz8::new(100)?.into()];
 
         // from smaller NegativeInteger
-        assert_eq![N0z16::new(-100)?, Nz8::new(100)?.into()];
+        assert_eq![N0z16::new(-100)?, Nz8::new_neg(100)?.into()];
 
         Ok(())
     }
@@ -200,9 +200,9 @@ mod tests {
         assert![TryInto::<N0z8>::try_into(Pz16::new(200)?).is_err()];
 
         // from bigger or equal sized NegativeInteger
-        assert_eq![N0z8::new(-100)?, Nz16::new(100)?.try_into()?];
-        assert_eq![N0z8::new(-100)?, Nz8::new(100)?.try_into()?];
-        assert![TryInto::<N0z8>::try_into(Nz16::new(200)?).is_err()];
+        assert_eq![N0z8::new(-100)?, Nz16::new_neg(100)?.try_into()?];
+        assert_eq![N0z8::new(-100)?, Nz8::new_neg(100)?.try_into()?];
+        assert![TryInto::<N0z8>::try_into(Nz16::new_neg(200)?).is_err()];
 
         /* remaining fallible integer conversions */
 
@@ -220,10 +220,10 @@ mod tests {
         assert![TryInto::<N0z8>::try_into(Nnz16::new(200)).is_err()];
 
         // try_from NonPositiveInteger
-        assert_eq![N0z8::new(-100)?, Npz8::new(100).try_into()?];
-        assert_eq![N0z8::new(-100)?, Npz16::new(100).try_into()?];
-        assert_eq![N0z16::new(-100)?, Npz8::new(100).try_into()?];
-        assert![TryInto::<N0z8>::try_into(Npz16::new(200)).is_err()];
+        assert_eq![N0z8::new(-100)?, Npz8::new_neg(100).try_into()?];
+        assert_eq![N0z8::new(-100)?, Npz16::new_neg(100).try_into()?];
+        assert_eq![N0z16::new(-100)?, Npz8::new_neg(100).try_into()?];
+        assert![TryInto::<N0z8>::try_into(Npz16::new_neg(200)).is_err()];
 
         Ok(())
     }
