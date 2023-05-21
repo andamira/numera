@@ -85,6 +85,18 @@ try_from_integer![non0 for:NonNegativeInteger+16, from:PositiveInteger+32,64,128
 try_from_integer![non0 for:NonNegativeInteger+32, from:PositiveInteger+64,128];
 try_from_integer![non0 for:NonNegativeInteger+64, from:PositiveInteger+128];
 
+// from smaller or equal sized Prime
+from_integer![int for:NonNegativeInteger+8, from:Prime+8];
+from_integer![int for:NonNegativeInteger+16, from:Prime+8,16];
+from_integer![int for:NonNegativeInteger+32, from:Prime+8,16,32];
+from_integer![int for:NonNegativeInteger+64, from:Prime+8,16,32,64];
+from_integer![int for:NonNegativeInteger+128, from:Prime+8,16,32,64,128];
+// try_from bigger Prime
+try_from_integer![int for:NonNegativeInteger+8, from:Prime+16,32,64,128];
+try_from_integer![int for:NonNegativeInteger+16, from:Prime+32,64,128];
+try_from_integer![int for:NonNegativeInteger+32, from:Prime+64,128];
+try_from_integer![int for:NonNegativeInteger+64, from:Prime+128];
+
 /* remaining fallible integer conversions */
 
 // try_from Integer (only the non-negative values)
@@ -143,6 +155,10 @@ mod tests {
         assert_eq![Nnz16::new(200), Pz8::new(200)?.into()];
         assert_eq![Nnz8::new(200), Pz8::new(200)?.into()];
 
+        // from smaller or equal sized PRime
+        assert_eq![Nnz16::new(251), P8::new(251)?.into()];
+        assert_eq![Nnz8::new(251), P8::new(251)?.into()];
+
         Ok(())
     }
 
@@ -188,6 +204,10 @@ mod tests {
         // try_from bigger PositiveInteger
         assert_eq![Nnz8::new(200), Pz16::new(200)?.try_into()?];
         assert![TryInto::<Nnz8>::try_into(Pz16::new(500)?).is_err()];
+
+        // try_from bigger Prime
+        assert_eq![Nnz8::new(251), Pz16::new(251)?.try_into()?];
+        assert![TryInto::<Nnz8>::try_into(Pz16::new(521)?).is_err()];
 
         /* remaining fallible integer conversions */
 

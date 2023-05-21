@@ -4,7 +4,7 @@
 //
 // NOTE: chosen the is_prime for Prime8 & Prime16 because it's faster.
 
-use super::{is_prime, Prime16, Prime32, Prime8, PRIMES_U16, PRIMES_U8};
+use super::{is_prime, Prime128, Prime16, Prime32, Prime64, Prime8, PRIMES_U16, PRIMES_U8};
 use crate::{
     error::{IntegerError, NumeraResult},
     number::traits::{
@@ -25,26 +25,27 @@ impl Bound for Prime8 {
     #[inline]
     fn is_upper_bounded(&self) -> bool { true }
     #[inline]
-    fn lower_bound(&self) -> Option<Self> { Some(Prime8(2)) }
+    fn lower_bound(&self) -> Option<Self> { Some(Prime8::MIN) }
     #[inline]
-    fn upper_bound(&self) -> Option<Self> { Some(Prime8(251)) }
+    fn upper_bound(&self) -> Option<Self> { Some(Prime8::MAX) }
 }
 impl LowerBounded for Prime8 {
     #[inline]
     fn new_min() -> Self {
-        Prime8(2)
+        Prime8::MIN
     }
 }
 impl UpperBounded for Prime8 {
     #[inline]
     fn new_max() -> Self {
-        Prime8(251)
+        Prime8::MAX
     }
 }
 impl ConstLowerBounded for Prime8 {
     const MIN: Self = Prime8(2);
 }
 impl ConstUpperBounded for Prime8 {
+    /// The largest 8-bit prime equals [`u8::MAX`] - 4.
     const MAX: Self = Prime8(251);
 }
 
@@ -159,26 +160,27 @@ impl Bound for Prime16 {
     #[inline]
     fn is_upper_bounded(&self) -> bool { true }
     #[inline]
-    fn lower_bound(&self) -> Option<Self> { Some(Prime16(2)) }
+    fn lower_bound(&self) -> Option<Self> { Some(Prime16::MIN) }
     #[inline]
-    fn upper_bound(&self) -> Option<Self> { Some(Prime16(65_521)) }
+    fn upper_bound(&self) -> Option<Self> { Some(Prime16::MAX) }
 }
 impl LowerBounded for Prime16 {
     #[inline]
     fn new_min() -> Self {
-        Prime16(2)
+        Prime16::MIN
     }
 }
 impl UpperBounded for Prime16 {
     #[inline]
     fn new_max() -> Self {
-        Prime16(65_512)
+        Prime16::MAX
     }
 }
 impl ConstLowerBounded for Prime16 {
     const MIN: Self = Prime16(2);
 }
 impl ConstUpperBounded for Prime16 {
+    /// The largest 16-bit prime equals [`u16::MAX`] - 14.
     const MAX: Self = Prime16(65_521);
 }
 
@@ -318,26 +320,27 @@ impl Bound for Prime32 {
     #[inline]
     fn is_upper_bounded(&self) -> bool { true }
     #[inline]
-    fn lower_bound(&self) -> Option<Self> { Some(Prime32(2)) }
+    fn lower_bound(&self) -> Option<Self> { Some(Prime32::MIN) }
     #[inline]
-    fn upper_bound(&self) -> Option<Self> { Some(Prime32(4_294_967_291)) }
+    fn upper_bound(&self) -> Option<Self> { Some(Prime32::MAX) }
 }
 impl LowerBounded for Prime32 {
     #[inline]
     fn new_min() -> Self {
-        Prime32(2)
+        Prime32::MIN
     }
 }
 impl UpperBounded for Prime32 {
     #[inline]
     fn new_max() -> Self {
-        Prime32(4_294_967_291)
+        Prime32::MAX
     }
 }
 impl ConstLowerBounded for Prime32 {
     const MIN: Self = Prime32(2);
 }
 impl ConstUpperBounded for Prime32 {
+    /// The largest 32-bit prime equals [`u32::MAX`] - 4.
     const MAX: Self = Prime32(4_294_967_291);
 }
 
@@ -464,6 +467,230 @@ impl Number for Prime32 {
     fn from_parts(value: Self::Parts) -> NumeraResult<Self> {
         if is_prime_sieve(value.checked_as::<usize>().ok_or(IntegerError::Overflow)?) {
             Ok(Prime32(value))
+        } else {
+            Err(IntegerError::NotPrime.into())
+        }
+    }
+
+    #[inline]
+    #[cfg(not(feature = "safe"))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+    unsafe fn from_parts_unchecked(value: Self::Parts) -> Self {
+        Self(value)
+    }
+}
+
+/* Prime64 */
+
+#[rustfmt::skip]
+impl Bound for Prime64 {
+    #[inline]
+    fn is_lower_bounded(&self) -> bool { true }
+    #[inline]
+    fn is_upper_bounded(&self) -> bool { true }
+    #[inline]
+    fn lower_bound(&self) -> Option<Self> { Some(Prime64::MIN) }
+    #[inline]
+    fn upper_bound(&self) -> Option<Self> { Some(Prime64::MAX) }
+}
+impl LowerBounded for Prime64 {
+    #[inline]
+    fn new_min() -> Self {
+        Prime64::MIN
+    }
+}
+impl UpperBounded for Prime64 {
+    #[inline]
+    fn new_max() -> Self {
+        Prime64::MAX
+    }
+}
+impl ConstLowerBounded for Prime64 {
+    const MIN: Self = Prime64(2);
+}
+impl ConstUpperBounded for Prime64 {
+    /// The largest 64-bit prime equals [`u64::MAX`] - 58.
+    const MAX: Self = Prime64(18_446_744_073_709_551_557);
+}
+
+impl Count for Prime64 {
+    #[inline]
+    fn is_countable(&self) -> bool {
+        true
+    }
+}
+
+// // TODO
+// #[rustfmt::skip]
+// #[cfg(not(feature = "std"))]
+// impl Countable for Prime64 {
+// }
+// #[cfg(feature = "std")]
+// #[cfg_attr(feature = "nightly", doc(cfg(feature = "std")))]
+// impl Countable for Prime64 {
+// }
+
+#[rustfmt::skip]
+impl Ident for Prime64 {
+    #[inline]
+    fn can_zero(&self) -> bool { false }
+    #[inline]
+    fn can_one(&self) -> bool { false }
+    #[inline]
+    fn can_neg_one(&self) -> bool { false }
+    #[inline]
+    fn is_zero(&self) -> bool { false }
+    #[inline]
+    fn is_one(&self) -> bool { false }
+    #[inline]
+    fn is_neg_one(&self) -> bool { false }
+}
+impl NonZero for Prime64 {}
+impl NonOne for Prime64 {}
+impl NonNegOne for Prime64 {}
+
+#[rustfmt::skip]
+impl Sign for Prime64 {
+    #[inline]
+    fn can_positive(&self) -> bool { true }
+    #[inline]
+    fn can_negative(&self) -> bool { false }
+    #[inline]
+    fn is_positive(&self) -> bool { true }
+    #[inline]
+    fn is_negative(&self) -> bool { false }
+}
+impl Unsigned for Prime64 {}
+
+impl Number for Prime64 {
+    type Parts = u64;
+    #[inline]
+    #[cfg(not(feature = "std"))]
+    fn from_parts(value: Self::Parts) -> NumeraResult<Self> {
+        // IMPROVE
+        if is_prime(value.try_into()?) {
+            Ok(Prime64(value))
+        } else {
+            Err(IntegerError::NotPrime.into())
+        }
+    }
+    #[inline]
+    #[cfg(feature = "std")]
+    fn from_parts(value: Self::Parts) -> NumeraResult<Self> {
+        if is_prime_sieve(value.checked_as::<usize>().ok_or(IntegerError::Overflow)?) {
+            Ok(Prime64(value))
+        } else {
+            Err(IntegerError::NotPrime.into())
+        }
+    }
+
+    #[inline]
+    #[cfg(not(feature = "safe"))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+    unsafe fn from_parts_unchecked(value: Self::Parts) -> Self {
+        Self(value)
+    }
+}
+
+/* Prime128 */
+
+#[rustfmt::skip]
+impl Bound for Prime128 {
+    #[inline]
+    fn is_lower_bounded(&self) -> bool { true }
+    #[inline]
+    fn is_upper_bounded(&self) -> bool { true }
+    #[inline]
+    fn lower_bound(&self) -> Option<Self> { Some(Prime128::MIN) }
+    #[inline]
+    fn upper_bound(&self) -> Option<Self> { Some(Prime128::MAX) }
+}
+impl LowerBounded for Prime128 {
+    #[inline]
+    fn new_min() -> Self {
+        Prime128::MIN
+    }
+}
+impl UpperBounded for Prime128 {
+    #[inline]
+    fn new_max() -> Self {
+        Prime128::MAX
+    }
+}
+impl ConstLowerBounded for Prime128 {
+    const MIN: Self = Prime128(2);
+}
+impl ConstUpperBounded for Prime128 {
+    /// The largest 128-bit prime equals [`u128::MAX`] - 158.
+    const MAX: Self = Prime128(340_282_366_920_938_463_463_374_607_431_768_211_297);
+}
+
+impl Count for Prime128 {
+    #[inline]
+    fn is_countable(&self) -> bool {
+        true
+    }
+}
+
+// // TODO
+// #[rustfmt::skip]
+// #[cfg(not(feature = "std"))]
+// impl Countable for Prime128 {
+// }
+// #[cfg(feature = "std")]
+// #[cfg_attr(feature = "nightly", doc(cfg(feature = "std")))]
+// impl Countable for Prime128 {
+// }
+
+#[rustfmt::skip]
+impl Ident for Prime128 {
+    #[inline]
+    fn can_zero(&self) -> bool { false }
+    #[inline]
+    fn can_one(&self) -> bool { false }
+    #[inline]
+    fn can_neg_one(&self) -> bool { false }
+    #[inline]
+    fn is_zero(&self) -> bool { false }
+    #[inline]
+    fn is_one(&self) -> bool { false }
+    #[inline]
+    fn is_neg_one(&self) -> bool { false }
+}
+impl NonZero for Prime128 {}
+impl NonOne for Prime128 {}
+impl NonNegOne for Prime128 {}
+
+#[rustfmt::skip]
+impl Sign for Prime128 {
+    #[inline]
+    fn can_positive(&self) -> bool { true }
+    #[inline]
+    fn can_negative(&self) -> bool { false }
+    #[inline]
+    fn is_positive(&self) -> bool { true }
+    #[inline]
+    fn is_negative(&self) -> bool { false }
+}
+impl Unsigned for Prime128 {}
+
+impl Number for Prime128 {
+    type Parts = u128;
+    #[inline]
+    #[cfg(not(feature = "std"))]
+    fn from_parts(value: Self::Parts) -> NumeraResult<Self> {
+        // IMPROVE
+        if is_prime(value.try_into()?) {
+            Ok(Prime128(value))
+        } else {
+            Err(IntegerError::NotPrime.into())
+        }
+    }
+    #[inline]
+    #[cfg(feature = "std")]
+    fn from_parts(value: Self::Parts) -> NumeraResult<Self> {
+        if is_prime_sieve(value.checked_as::<usize>().ok_or(IntegerError::Overflow)?) {
+            Ok(Prime128(value))
         } else {
             Err(IntegerError::NotPrime.into())
         }

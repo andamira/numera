@@ -8,6 +8,27 @@ use core::num::NonZeroU32;
 #[cfg(feature = "std")]
 use {core::num::NonZeroUsize, primal_sieve::Sieve};
 
+/// The prime number theorem ([m][0m]/[w][0w]) formula.
+///
+/// $ \pi(x) \sim \frac{x}{\ln(x)} $
+///
+/// Returns the approximate count of primes less than the given `n`.
+///
+/// [0m]: https://mathworld.wolfram.com/PrimeNumberTheorem.html
+/// [0w]: https://en.wikipedia.org/wiki/Prime_number_theorem
+//
+// IMPROVE: use big int and big float.
+// IMPROVE: make a no-std version
+#[cfg(feature = "std")]
+#[cfg_attr(feature = "nightly", doc(cfg(feature = "std")))]
+pub fn prime_number_theorem(n: u128) -> u128 {
+    #[allow(clippy::cast_precision_loss)]
+    let float_n = n as f64;
+    let ln_n = float_n.ln();
+    #[allow(clippy::cast_sign_loss, clippy::cast_possible_truncation)]
+    return (float_n / ln_n).round() as u128;
+}
+
 // /// Checks whether a `number` is prime, using basic trial division.
 // ///
 // /// This naive approach checks all numbers from 2 to number/2.

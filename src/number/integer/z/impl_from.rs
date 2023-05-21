@@ -143,6 +143,18 @@ try_from_integer![negnon0_signed for:Integer+i+32, from:NegativeInteger+32,64,12
 try_from_integer![negnon0_signed for:Integer+i+64, from:NegativeInteger+64,128];
 try_from_integer![negnon0_signed for:Integer+i+128, from:NegativeInteger+128];
 
+// from smaller Prime
+from_integer![int for:Integer+16, from:Prime+8];
+from_integer![int for:Integer+32, from:Prime+8,16];
+from_integer![int for:Integer+64, from:Prime+8,16,32];
+from_integer![int for:Integer+128, from:Prime+8,16,32,64];
+// from bigger or equal sized Prime
+try_from_integer![int for:Integer+8, from:Prime+8,16,32,64,128];
+try_from_integer![int for:Integer+16, from:Prime+16,32,64,128];
+try_from_integer![int for:Integer+32, from:Prime+32,64,128];
+try_from_integer![int for:Integer+64, from:Prime+64,128];
+try_from_integer![int for:Integer+128, from:Prime+128];
+
 #[cfg(test)]
 mod tests {
     use crate::all::*;
@@ -196,6 +208,9 @@ mod tests {
 
         // from smaller NegativeInteger
         assert_eq![Z16::new(-100), Nz8::new_neg(100)?.into()];
+
+        // from smaller Prime
+        assert_eq![Z16::new(101), P8::new(101)?.into()];
 
         Ok(())
     }
@@ -254,6 +269,11 @@ mod tests {
         assert_eq![Z8::new(-100), Nz16::new_neg(100)?.try_into()?];
         assert_eq![Z8::new(-100), Nz8::new_neg(100)?.try_into()?];
         assert![TryInto::<Z8>::try_into(Nz16::new_neg(200)?).is_err()];
+
+        // from bigger or equal sized Prime
+        assert_eq![Z8::new(101), P16::new(101)?.try_into()?];
+        assert_eq![Z8::new(101), P8::new(101)?.try_into()?];
+        assert![TryInto::<Z8>::try_into(P16::new(251)?).is_err()];
 
         Ok(())
     }

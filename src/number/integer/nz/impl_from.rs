@@ -98,6 +98,13 @@ try_from_any![error for: NegativeInteger+32, from: PositiveInteger+8,16,32,64,12
 try_from_any![error for: NegativeInteger+64, from: PositiveInteger+8,16,32,64,128];
 try_from_any![error for: NegativeInteger+128, from: PositiveInteger+8,16,32,64,128];
 
+// try_from Prime (no valid values)
+try_from_any![error for: NegativeInteger+8, from: Prime+8,16,32,64,128];
+try_from_any![error for: NegativeInteger+16, from: Prime+8,16,32,64,128];
+try_from_any![error for: NegativeInteger+32, from: Prime+8,16,32,64,128];
+try_from_any![error for: NegativeInteger+64, from: Prime+8,16,32,64,128];
+try_from_any![error for: NegativeInteger+128, from: Prime+8,16,32,64,128];
+
 #[cfg(test)]
 mod tests {
     use crate::all::*;
@@ -128,9 +135,18 @@ mod tests {
         assert![TryInto::<Nz8>::try_into(-500_i16).is_err()];
 
         // try_from NonZeroI (only the negative values)
-        assert_eq![Nz8::new_neg(100)?, NonZeroI8::new(-100).unwrap().try_into()?];
-        assert_eq![Nz8::new_neg(200)?, NonZeroI16::new(-200).unwrap().try_into()?];
-        assert_eq![Nz16::new_neg(100)?, NonZeroI8::new(-100).unwrap().try_into()?];
+        assert_eq![
+            Nz8::new_neg(100)?,
+            NonZeroI8::new(-100).unwrap().try_into()?
+        ];
+        assert_eq![
+            Nz8::new_neg(200)?,
+            NonZeroI16::new(-200).unwrap().try_into()?
+        ];
+        assert_eq![
+            Nz16::new_neg(100)?,
+            NonZeroI8::new(-100).unwrap().try_into()?
+        ];
         assert![TryInto::<Nz8>::try_into(NonZeroI8::new(100).unwrap()).is_err()];
         assert![TryInto::<Nz8>::try_into(NonZeroI16::new(-500).unwrap()).is_err()];
 
@@ -181,6 +197,9 @@ mod tests {
 
         // try_from PositiveInteger (no valid values)
         assert![TryInto::<Nz8>::try_into(Pz8::new(100)?).is_err()];
+
+        // try_from Prime (no valid values)
+        assert![TryInto::<Nz8>::try_into(P8::new(101)?).is_err()];
 
         Ok(())
     }
