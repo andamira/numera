@@ -1,17 +1,14 @@
-// numera::number::integer::z::impl_ops
+// numera::number::integer::z::impl_ops::div_rem
 //
-//!
+//! Implement the division and remainder operations.
 //
 
-use super::*;
-use core::ops::{
-    Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Rem, RemAssign, Sub, SubAssign,
-};
+use crate::number::integer::*;
+use core::ops::{Div, DivAssign, Rem, RemAssign};
 use devela::paste;
 
-// impl ops (which panic on overflow)
-macro_rules! impl_integer_ops {
-    // impl all ops for multiple integer types
+macro_rules! impl_integer_div_rem {
+    // impl Div and Rem ops for multiple integer types
     //
     // # Args
     // $t: integer base name. e.g. Integer
@@ -19,286 +16,12 @@ macro_rules! impl_integer_ops {
     // $b: integer and primitive bitsize. e.g. 8
     ( $($t:ident + $p:ident + $b:literal, cast: $bcast:literal);+ ) => {
         $(
-            impl_integer_ops![ops: $t + $p + $b, cast:$bcast];
+            impl_integer_div_rem![div: $t + $p + $b, cast:$bcast];
+            impl_integer_div_rem![rem: $t + $p + $b];
+            impl_integer_div_rem![div_rem: $t + $p + $b];
         )+
     };
 
-    // impl all ops for a single integer type
-    //
-    // # Args
-    // $t: integer base name. e.g. Integer
-    // $p: inner primitive base name. e.g. i
-    // $b: integer and primitive bitsize. e.g. 8
-    (ops: $t:ident + $p:ident + $b:literal, cast: $bcast:literal) => {
-        impl_integer_ops![op_add: $t + $p + $b];
-        impl_integer_ops![op_sub: $t + $p + $b];
-        impl_integer_ops![op_mul: $t + $p + $b];
-        impl_integer_ops![op_div: $t + $p + $b, cast:$bcast];
-        impl_integer_ops![op_rem: $t + $p + $b];
-        impl_integer_ops![op_div_rem: $t + $p + $b];
-        impl_integer_ops![op_neg: $t + $p + $b];
-    };
-
-    // addition operations
-    //
-    // impl variants:
-    // - basic
-    // - checked
-    // - saturating
-    // - wrapping
-    // - overflowing
-    // - modular TODO TEST
-    // - modular_counting TODO TEST
-    (op_add: $t:ident + $p:ident + $b:literal) => { paste! {
-        impl Add<[<$t$b>]> for [<$t$b>] {
-            type Output = [<$t$b>];
-            /// Performs the `+` operation.
-            #[inline]
-            fn add(self, rhs: [<$t$b>]) -> Self::Output {
-                self.basic_add(rhs)
-            }
-        }
-        impl AddAssign for [<$t$b>] {
-            /// Performs the `+=` operation.
-            #[inline]
-            fn add_assign(&mut self, rhs: [<$t$b>]) {
-                self.0 += rhs.0
-            }
-        }
-        /// # Integer addition
-        impl [<$t$b>] {
-            /// Integer addition.
-            ///
-            /// # Panics
-            /// If the addition results in overflow.
-            #[inline]
-            #[must_use]
-            pub const fn basic_add(self, rhs: [<$t$b>]) -> [<$t$b>] {
-                Self(self.0 + rhs.0)
-            }
-
-            /// Checked addition.
-            #[inline]
-            #[must_use]
-            pub const fn checked_add(self, rhs: [<$t$b>]) -> Option<[<$t$b>]> {
-                if let Some(result) = self.0.checked_add(rhs.0) {
-                    Some(Self(result))
-                } else {
-                    None
-                }
-            }
-
-            /// Saturating addition.
-            /// Computes `self + rhs`, saturating at the numeric bounds instead of overflowing.
-            #[inline]
-            #[must_use]
-            pub const fn saturating_add(self, rhs: [<$t$b>]) -> [<$t$b>] {
-                Self(self.0.saturating_add(rhs.0))
-            }
-
-            /// Wrapping (modular) addition.
-            /// Computes `self + rhs`, wrapping around at the boundary of the type.
-            #[inline]
-            #[must_use]
-            pub const fn wrapping_add(self, rhs: [<$t$b>]) -> [<$t$b>] {
-                Self(self.0.wrapping_add(rhs.0))
-            }
-
-            /// Overflowing addition.
-            ///
-            /// Returns a tuple of the addition along with a boolean indicating
-            /// whether an arithmetic overflow would occur. If an overflow would
-            /// have occurred then the wrapped value is returned.
-            #[inline]
-            #[must_use]
-            pub const fn overflowing_add(self, rhs: [<$t$b>]) -> ([<$t$b>], bool) {
-                let (result, overflown) = self.0.overflowing_add(rhs.0);
-                (Self(result), overflown)
-            }
-
-            // /// Modular addition with a custom `modulo`.
-            // #[inline]
-            // #[must_use]
-            // pub const fn modular_add(self, rhs: [<$t$b>], modulo: [<$t$b>]) -> [<$t$b>] {
-            //     // self.wrapping_add(rhs).op_rem(modulo) // CHECK wrapping
-            //
-            //     // use core::num::Wrapping; // MAYBE?
-            //     // let wrapped_sum = Wrapping(self.0).wrapping_add(Wrapping(rhs.0));
-            //
-            //     // let wrapped_sum = self.0.wrapping_add(rhs.0);
-            //     // Self((wrapped_sum % modulo.0 + modulo.0) % modulo.0)
-            //
-            //     // TEST
-            //     Self(self.0.wrapping_add(rhs.0) % modulo.0)
-            // }
-
-            // TEST
-            // /// Addition with a custom `modulo`, and counting of the number of wraps.
-            // ///
-            // /// Returns the wrapped result and the number of times the modulo has wrapped around.
-            // #[inline]
-            // #[must_use]
-            // pub fn modular_counting_add(&self, other: [<$t$b>], modulo: [<$t$b>]) -> ([<$t$b>], [<$t$b>]) {
-            //     let modulo_abs = modulo.0.abs();
-            //     let mut result = self.0 + other.0;
-            //     if result < 0 {
-            //         result += modulo_abs;
-            //     }
-            //     let count = result / modulo_abs;
-            //     (Self(result), Self(count))
-            // }
-        }
-    }};
-
-    // substraction operations
-    //
-    // impl variants:
-    // - basic
-    // - checked
-    // - saturating TODO
-    // - wrapping TODO
-    // - overflowing TODO
-    // - modular TEST
-    // - modular_counting TODO
-    (op_sub: $t:ident + $p:ident + $b:literal) => { paste! {
-        impl Sub<[<$t$b>]> for [<$t$b>] {
-            type Output = [<$t$b>];
-            /// Performs the `-` operation.
-            #[inline]
-            fn sub(self, rhs: [<$t$b>]) -> Self::Output {
-                self.basic_sub(rhs)
-            }
-        }
-        impl SubAssign for [<$t$b>] {
-            /// Performs the `-=` operation.
-            #[inline]
-            fn sub_assign(&mut self, rhs: [<$t$b>]) {
-                self.0 -= rhs.0
-            }
-        }
-        /// # Integer substraction
-        impl [<$t$b>] {
-            /// Integer substraction.
-            ///
-            /// # Panics
-            /// If the substraction results in overflow.
-            #[inline]
-            #[must_use]
-            pub const fn basic_sub(self, rhs: [<$t$b>]) -> [<$t$b>] {
-                Self(self.0 - rhs.0)
-            }
-
-            /// Checked substraction.
-            #[inline]
-            #[must_use]
-            pub const fn checked_sub(self, rhs: [<$t$b>]) -> Option<[<$t$b>]> {
-                if let Some(result) = self.0.checked_sub(rhs.0) {
-                    Some(Self(result))
-                } else {
-                    None
-                }
-            }
-
-            /// Saturating substraction.
-            /// Computes `self + rhs`, saturating at the numeric bounds instead of overflowing.
-            #[inline]
-            #[must_use]
-            pub const fn saturating_sub(self, rhs: [<$t$b>]) -> [<$t$b>] {
-                Self(self.0.saturating_sub(rhs.0))
-            }
-
-            /// Wrapping (modular) substraction.
-            /// Computes `self + rhs`, wrapping around at the boundary of the type.
-            #[inline]
-            #[must_use]
-            pub const fn wrapping_sub(self, rhs: [<$t$b>]) -> [<$t$b>] {
-                Self(self.0.wrapping_sub(rhs.0))
-            }
-
-            /// Overflowing substraction.
-            ///
-            /// Returns a tuple of the substraction along with a boolean indicating
-            /// whether an arithmetic overflow would occur. If an overflow would
-            /// have occurred then the wrapped value is returned.
-            #[inline]
-            #[must_use]
-            pub const fn overflowing_sub(self, rhs: [<$t$b>]) -> ([<$t$b>], bool) {
-                let (result, overflown) = self.0.overflowing_sub(rhs.0);
-                (Self(result), overflown)
-            }
-
-            // /// Modular subtraction with a custom `modulo`.
-            // #[inline]
-            // #[must_use]
-            // pub const fn modular_sub(self, rhs: [<$t$b>], modulo: [<$t$b>]) -> [<$t$b>] {
-            //     self.basic_sub(rhs).rem_euclid(modulo)
-            //
-            // }
-        }
-    }};
-
-    // multiplication operations
-    //
-    // impl variants:
-    // - basic_mul
-    // - checked_mul
-    // - saturating_mul TODO
-    // - wrapping_mul TODO
-    // - overflowing_mul TODO
-    // - modular_mul TEST
-    // - modular_counting_mul TODO
-    (op_mul: $t:ident + $p:ident + $b:literal) => { paste! {
-        impl Mul<[<$t$b>]> for [<$t$b>] {
-            /// Performs the `*` operation.
-            type Output = [<$t$b>];
-            #[inline]
-            fn mul(self, rhs: [<$t$b>]) -> Self::Output {
-                self.basic_mul(rhs)
-            }
-        }
-        impl MulAssign for [<$t$b>] {
-            /// Performs the `*=` operation.
-            #[inline]
-            fn mul_assign(&mut self, rhs: [<$t$b>]) {
-                self.0 *= rhs.0
-            }
-        }
-        /// # Integer multiplication
-        impl [<$t$b>] {
-            /// Integer multiplication.
-            ///
-            /// # Panics
-            /// If the multiplication results in overflow.
-            #[inline]
-            #[must_use]
-            pub const fn basic_mul(self, rhs: [<$t$b>]) -> [<$t$b>] {
-                Self(self.0 * rhs.0)
-            }
-
-            /// Checked integer multiplication.
-            #[inline]
-            #[must_use]
-            pub const fn checked_mul(self, rhs: [<$t$b>]) -> Option<[<$t$b>]> {
-                if let Some(result) = self.0.checked_mul(rhs.0) {
-                    Some(Self(result))
-                } else {
-                    None
-                }
-            }
-
-            // /// Modular multiplication with a custom `modulo`.
-            // #[inline]
-            // #[must_use]
-            // // TEST
-            // pub const fn modular_mul(self, rhs: [<$t$b>], modulo: [<$t$b>]) -> [<$t$b>] {
-            //     self.basic_mul(rhs).rem_euclid(modulo)
-            //
-            // }
-        }
-    }};
-
-    // implement the division operations
-    //
     // impl variants:
     // - div_trunc
     // - div_euclid
@@ -335,10 +58,15 @@ macro_rules! impl_integer_ops {
     // - …
     // - modular_counting_div_trunc TODO
     // - …
-    (op_div: $t:ident + $p:ident + $b:literal, cast: $bcast:literal) => { paste! {
+    (div: $t:ident + $p:ident + $b:literal, cast: $bcast:literal) => { paste! {
         impl Div<[<$t$b>]> for [<$t$b>] {
             type Output = [<$t$b>];
             /// Performs the `/` operation, using truncated division.
+            ///
+            /// # Panics
+            /// In debug, on overflow.
+            ///
+            /// In release, it performs two's complement wrapping.
             #[inline]
             fn div(self, rhs: [<$t$b>]) -> Self::Output {
                 self.div_trunc(rhs)
@@ -346,6 +74,11 @@ macro_rules! impl_integer_ops {
         }
         impl DivAssign for [<$t$b>] {
             /// Performs the `/=` operation.
+            ///
+            /// # Panics
+            /// In debug, on overflow.
+            ///
+            /// In release, it performs two's complement wrapping.
             #[inline]
             fn div_assign(&mut self, rhs: [<$t$b>]) {
                 self.0 /= rhs.0
@@ -354,8 +87,9 @@ macro_rules! impl_integer_ops {
 
         /// # Integer division
         ///
-        /// # Comparison of division functions
+        /// ## Comparison of division functions
         ///
+        /// ### Only the quotient:
         /// dividend|divisor||*float*||[trunc]|[euclid]|[floor]|[ceil]||[away]|[even]|
         /// :------:|:-----:||:-----:||:-----:|:------:|:----:|:-----:||:----:|:----:|
         ///     7   |    3  || 2.33… ||   2   |   2    |   2  |    3  ||   2  |   2  |
@@ -366,6 +100,18 @@ macro_rules! impl_integer_ops {
         ///     8   |    5  || 1.6   ||   1   |   1    |   1  |    2  ||   2  |   2  |
         ///     6   |    4  || 1.5   ||   1   |   1    |   1  |    2  ||   2  |   2  |
         ///     7   |    5  || 1.25  ||   1   |   1    |   1  |    2  ||   1  |   2  |
+        ///
+        /// ### Showing the quotient and the remainder:
+        /// dividend|divisor||*float*||[trunc]|[euclid]|[floor]|[ceil]||[away]|[even]|
+        /// :------:|:-----:||:-----:||:-----:|:------:|:----:|:-----:||:----:|:----:|
+        ///     7   |    3  || 2.33… ||(2, ) | (2, )  | ( 2, )|  ( 3, )|| (2, )| (2, )|
+        ///     7   |   -3  ||   "   ||(-2, ) | (-2, )  | (-3, )|  (-2, )|| (-2, )| (-2, )|
+        ///    -7   |    3  ||   "   ||(-2, ) | (-3, )  | (-3, )|  (-2, )|| (-2, )| (-2, )|
+        ///    -7   |   -3  ||   "   ||(2, ) | (3, )  | ( 2, )|  ( 3, )|| (2, )| (2, )|
+        ///         |       ||       ||       |        |      |       ||      |      |
+        ///     8   |    5  || 1.6   ||(1, ) | (1, )  | (1, )|  (2, )|| (2, )| (2, )|
+        ///     6   |    4  || 1.5   ||(1, ) | (1, )  | (1, )|  (2, )|| (2, )| (2, )|
+        ///     7   |    5  || 1.25  ||(1, ) | (1, )  | (1, )|  (2, )|| (1, )| (2, )|
         ///
         /// [trunc]: Self#method.div_trunc
         /// [euclid]: Self#method.div_euclid
@@ -761,7 +507,7 @@ macro_rules! impl_integer_ops {
     // - modulo
     // - wrapping
     // - saturating
-    (op_rem: $t:ident + $p:ident + $b:literal) => { paste! {
+    (rem: $t:ident + $p:ident + $b:literal) => { paste! {
         impl Rem<[<$t$b>]> for [<$t$b>] {
             type Output = [<$t$b>];
             /// Performs the `%` operation, using truncated remainder.
@@ -879,7 +625,7 @@ macro_rules! impl_integer_ops {
 
     // impl the division + remainder operations together
     // // MAYBE join with op_div & op_rem
-    (op_div_rem: $t:ident + $p:ident + $b:literal) => { paste! {
+    (div_rem: $t:ident + $p:ident + $b:literal) => { paste! {
         // private function for the inner primitive
         #[inline]
         const fn [<div_rem_trunc_$p$b>](lhs: [<$p$b>], rhs: [<$p$b>]) -> ([<$p$b>], [<$p$b>]) {
@@ -1001,121 +747,11 @@ macro_rules! impl_integer_ops {
             }
         }
     }};
-
-    // impl the negation operations
-    //
-    // impl variants:
-    // - op
-    // - wrapping
-    (op_neg: $t:ident + $p:ident + $b:literal) => { paste! {
-        impl Neg for [<$t$b>] {
-            type Output = [<$t$b>];
-            /// Performs the unary `-` operation.
-            #[inline]
-            fn neg(self) -> Self::Output {
-                self.op_neg()
-            }
-        }
-        /// # Integer negation
-        impl [<$t$b>] {
-            /// Basic negation.
-            #[inline]
-            #[must_use]
-            pub const fn op_neg(self) -> [<$t$b>] {
-                [<$t$b>](-self.0)
-            }
-
-            /// Wrapping negation.
-            #[inline]
-            #[must_use]
-            pub const fn wrapping_neg(self) -> [<$t$b>] {
-                Self(self.0.wrapping_neg())
-            }
-        }
-    }};
 }
-impl_integer_ops![
+impl_integer_div_rem![
     Integer+i+8, cast:16;
     Integer+i+16, cast:32;
     Integer+i+32, cast:64;
     Integer+i+64, cast:128;
     Integer+i+128, cast:128
 ];
-
-#[cfg(test)]
-mod tests {
-    use crate::all::*;
-
-    #[test]
-    fn z_ops_add() -> NumeraResult<()> {
-        // op
-        assert_eq![Z8::new(120) + Z8::new(7), Z8::new(127)];
-
-        // checked
-        assert_eq![Z8::new(120).checked_add(Z8::new(7)), Some(Z8::new(127))];
-        assert_eq![Z8::new(120).checked_add(Z8::new(8)), None];
-
-        // saturating
-        assert_eq![Z8::new(120).saturating_add(Z8::new(8)), Z8::new(127)];
-
-        // wrapping
-        assert_eq![Z8::new(120).wrapping_add(Z8::new(8)), Z8::MIN];
-
-        // modular
-        // assert_eq![Z8::new(120).modular_add(Z8::new(8), Z8::MAX), Z8::MIN];
-        // assert_eq![Z8::new(5).modular_add(Z8::new(3), Z8::new(7)), Z8::new(1)];
-        // assert_eq![Z8::new(-5).modular_add(Z8::new(3), Z8::new(7)), Z8::new(-2)];
-        // assert_eq![Z8::new(127).modular_add(Z8::new(2), Z8::new(50)), Z8::new(-21)]; // BAD
-
-        // CHECK negative numbers
-        // assert_eq![Z8::new(-5).modular_add(Z8::new(-3), Z8::new(-7)), Z8::new(-1)];
-
-        // modulo_count CHECK
-
-        // overflowing
-
-        // PANICS
-        #[cfg(feature = "std")]
-        {
-            use std::panic::catch_unwind;
-            // basic overflow
-            assert![catch_unwind(|| Z8::new(120) + Z8::new(8)).is_err()];
-        }
-
-        Ok(())
-    }
-
-    #[test]
-    fn z_ops_rem() -> NumeraResult<()> {
-        // rem_trunc
-        assert_eq![Z16::new(-347) % Z16::new(6), Z16::new(-5)];
-        // rem_euclid
-        assert_eq![Z16::new(-347).rem_euclid(Z16::new(6)), Z16::new(1)];
-
-        Ok(())
-    }
-
-    // OLD DELETE
-    #[test]
-    fn z_ops() -> NumeraResult<()> {
-        let _5 = Z8::new(5);
-        let _7 = Z8::new(7);
-        assert_eq![_7 + _5, Z8::new(12)];
-        assert_eq![_7 - _5, Z8::new(2)];
-        assert_eq![_5 - _7, Z8::new(-2)];
-        assert_eq![_7 * _5, Z8::new(35)];
-        assert_eq![_7 / _5, Z8::new(1)];
-        assert_eq![_5 / _7, Z8::new(0)];
-        assert_eq![-_7, Z8::new(-7)];
-
-        #[cfg(feature = "std")]
-        {
-            use std::panic::catch_unwind;
-            // overflow
-            assert![catch_unwind(|| _7 * _7 * _7).is_err()];
-            // underflow
-            assert![catch_unwind(|| Z8::MIN - _5).is_err()];
-        }
-        Ok(())
-    }
-}
