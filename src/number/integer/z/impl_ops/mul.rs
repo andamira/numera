@@ -3,7 +3,7 @@
 //! Implement the multiplication operations, and the Product trait.
 //
 
-use crate::number::integer::*;
+use crate::number::{integer::*, traits::ConstOne};
 use core::{
     iter::Product,
     ops::{Mul, MulAssign},
@@ -59,6 +59,24 @@ macro_rules! impl_integer_mul {
                 self.0 *= rhs.0
             }
         }
+
+        impl Product for [<$t$b>] {
+            fn product<I: Iterator<Item=Self>>(iter: I) -> Self {
+                iter.fold(
+                    [<$t$b>]::ONE,
+                    |a, b| a * b,
+                )
+            }
+        }
+        impl<'a> Product<&'a [<$t$b>]> for [<$t$b>] {
+            fn product<I: Iterator<Item=&'a Self>>(iter: I) -> Self {
+                iter.fold(
+                    [<$t$b>]::ONE,
+                    |a, b| a * *b,
+                )
+            }
+        }
+
         /// # Integer multiplication
         impl [<$t$b>] {
             /// Integer multiplication.

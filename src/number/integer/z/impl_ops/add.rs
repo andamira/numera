@@ -3,7 +3,7 @@
 //! Implement the addition operations, and the Sum trait.
 //
 
-use crate::number::integer::*;
+use crate::number::{integer::*, traits::ConstZero};
 use core::{
     iter::Sum,
     ops::{Add, AddAssign},
@@ -59,6 +59,24 @@ macro_rules! impl_integer_add {
                 self.0 += rhs.0
             }
         }
+
+        impl Sum for [<$t$b>] {
+            fn sum<I: Iterator<Item=Self>>(iter: I) -> Self {
+                iter.fold(
+                    [<$t$b>]::ZERO,
+                    |a, b| a + b,
+                )
+            }
+        }
+        impl<'a> Sum<&'a [<$t$b>]> for [<$t$b>] {
+            fn sum<I: Iterator<Item=&'a Self>>(iter: I) -> Self {
+                iter.fold(
+                    [<$t$b>]::ZERO,
+                    |a, b| a + *b,
+                )
+            }
+        }
+
         /// # Integer addition
         impl [<$t$b>] {
             /// Integer addition.
