@@ -64,25 +64,34 @@ ndso = "doc --no-deps --open --features=nightly,deps_all"
 # BUILD
 b = "build"
 bb = "build --bin"
-be = "build --example"
 br = "build --release"
 brb = "build --release --bin"
+# examples
+be = "build --example"
+bea = "build --example --features=deps_all" # all
 bre = "build --release --example"
+brue = "build --release --example --no-default-features --features=std,try_from" # unsafe
+# examples, Fast compilation
+beF = "build --no-default-features --features=std,safe --example"
+beaF = "build --no-default-features --features=std,safe,deps_all --example"
+breF = "build --release --example --no-default-features --features=std,safe"
+breaF = "build --release --no-default-features --features=std,safe,deps_all --example"
 
 # RUN
 r = "run"
 rb = "run --bin"
 rr = "run --release"
 rrb = "run --release --bin"
-rre = "run --release --example"
 # examples
 re = "run --example"
-rea = "run --example --features=deps_all" # all
-rrue = "run --release --example --no-default-features --features=std,try_from" # unsafe
+rea = "run --features=deps_all --example" # all
+rre = "run --release --example"
+rrue = "run --release --no-default-features --features=std,try_from --example"
 # examples, Fast compilation
 reF = "run --no-default-features --features=std,safe --example"
 reaF = "run --no-default-features --features=std,safe,deps_all --example"
-rreF = "run --release --example --no-default-features --features=std,safe"
+rreF = "run --release --no-default-features --features=std,safe --example"
+rreaF = "run --release --no-default-features --features=std,safe,deps_all --example"
 
 # TEST
 # std, safe
