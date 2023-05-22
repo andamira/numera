@@ -86,7 +86,7 @@ macro_rules! define_negative_integer_sized {
         #[doc = "\n\nThe range of valid numeric values is $\\lbrack$"
         "$" $doc_sign "$[`" $p$b "::" $doc_lower "`]"
         " $\\dots"  $doc_sign $doc_upper  "\\rbrack$."]
-        #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+        #[derive(Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
         pub struct [<$name$b>](pub [<$p$b>]);
         impl fmt::Display for [<$name$b>]  {
             fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {

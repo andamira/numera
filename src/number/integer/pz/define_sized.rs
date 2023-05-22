@@ -92,7 +92,7 @@ macro_rules! define_positive_integer_sized {
         #[doc = "[`Counting" $b "`][super::Counting" $b "]."]
         ///
         /// [0m]: https://mathworld.wolfram.com/CountingNumber.html
-        #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+        #[derive(Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
         pub struct [<$name$b>](pub [<$p$b>]);
 
         impl fmt::Display for [<$name$b>]  {

@@ -87,7 +87,7 @@ macro_rules! define_nonpositive_integer_sized {
         " $\\dots"  $doc_upper  "\\rbrack$."]
         ///
         /// Please note that the given `value` will be interpreted as negative.
-        #[derive(Clone, Copy, Default, PartialEq, Eq, PartialOrd, Ord)]
+        #[derive(Clone, Copy, Default, Hash, PartialEq, Eq, PartialOrd, Ord)]
         pub struct [<$name$b>](pub [<$p$b>]);
 
         impl fmt::Display for [<$name$b>]  {

@@ -22,7 +22,7 @@ use crate::{
         },
     },
 };
-use core::{cmp::Ordering, fmt, ops::Neg};
+use core::{cmp::Ordering, fmt, ops::Neg, hash::{Hash, Hasher}};
 use devela::paste;
 
 /* macro */
@@ -109,7 +109,19 @@ macro_rules! define_rational_sized {
             }
         }
 
+        impl Hash for [<$name$b>] {
+            /// The hash of equivalent functions with different numerator and/or
+            /// denominator is considered different, even if they are considered
+            /// equal by the `PartialEq` and `Eq` implementations.
+            fn hash<H: Hasher>(&self, state: &mut H) {
+                self.num.hash(state);
+                self.den.hash(state);
+            }
+        }
+
         impl PartialEq for [<$name$b>] {
+            /// Equivalent functions are considered equal, even if they are
+            /// considered different by the `Hash` implementation.
             fn eq(&self, other: &Self) -> bool {
                 // upcast first
                 let uself = self.as_larger_or_same();

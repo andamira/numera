@@ -46,7 +46,7 @@ define_abbreviations![many P, Prime, 8, 16, 32, 64, 128];
 ///
 /// Can represent the first 54 prime numbers.
 ///
-#[derive(Clone, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
 // pub struct Prime8(PositiveInteger8);
 pub struct Prime8(pub(super) u8);
 
@@ -54,7 +54,7 @@ pub struct Prime8(pub(super) u8);
 /// also known as [`P16`].
 ///
 /// Can represent the first 6,542 prime numbers.
-#[derive(Clone, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
 // pub struct Prime16(PositiveInteger16);
 pub struct Prime16(pub(super) u16);
 
@@ -62,7 +62,7 @@ pub struct Prime16(pub(super) u16);
 /// also known as [`P32`].
 ///
 /// Can represent the first 203,280,219 prime numbers.
-#[derive(Clone, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
 // pub struct Prime32(PositiveInteger32);
 pub struct Prime32(pub(super) u32);
 
@@ -72,7 +72,7 @@ pub struct Prime32(pub(super) u32);
 /// Can represent the first *approximately* 415,828,534,307,635,072 prime
 /// numbers (1 per 44).
 /// This is calculated using the *prime number theorem* formula.
-#[derive(Clone, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
 // pub struct Prime64(PositiveInteger64);
 pub struct Prime64(pub(super) u64);
 
@@ -82,7 +82,7 @@ pub struct Prime64(pub(super) u64);
 /// Can represent the first *approximately*
 /// 3,835,341,275,459,348,115,779,911,081,237,938,176 prime numbers (1 per 88).
 /// This is calculated using the *prime number theorem* formula.
-#[derive(Clone, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
 // pub struct Prime128(PositiveInteger128);
 pub struct Prime128(pub(super) u128);
 

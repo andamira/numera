@@ -90,7 +90,7 @@ macro_rules! define_nonnegative_integer_sized {
         #[doc = "[`Natural" $b "`][super::Natural" $b "]."]
         ///
         /// [m0]: https://mathworld.wolfram.com/NaturalNumber.html
-        #[derive(Clone, Copy, Default, PartialEq, Eq, PartialOrd, Ord)]
+        #[derive(Clone, Copy, Default, Hash, PartialEq, Eq, PartialOrd, Ord)]
         pub struct [<$name$b>](pub [<$p$b>]);
 
         impl fmt::Display for [<$name$b>]  {

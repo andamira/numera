@@ -87,7 +87,7 @@ macro_rules! define_nonzero_integer_sized {
         "$[`" i$b "::" $doc_lower "`] $\\dots -1, 1 \\dots$ [`" i$b
         "::" $doc_upper "`]$\\rbrack$."]
         #[doc = "\n\nIt is equivalent to the [`" [<NonZeroI$b>] "`] primitive."]
-        #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+        #[derive(Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
         pub struct [<$name$b>](pub [<$p$b>]);
 
         impl fmt::Display for [<$name$b>]  {

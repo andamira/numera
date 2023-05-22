@@ -85,7 +85,7 @@ macro_rules! define_integer_sized {
         $doc_sign "$[`" $p$b "::" $doc_lower "`] $\\dots$ [`"
         $p$b "::" $doc_upper "`]$\\rbrack$."]
         #[doc = "\nIt is equivalent to the [`" [<i$b>] "`] primitive."]
-        #[derive(Clone, Copy, Default, PartialEq, Eq, PartialOrd, Ord)]
+        #[derive(Clone, Copy, Default, Hash, PartialEq, Eq, PartialOrd, Ord)]
         pub struct [<$name$b>](pub [<$p$b>]);
 
         impl fmt::Display for [<$name$b>]  {
