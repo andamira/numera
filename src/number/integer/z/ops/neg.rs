@@ -1,4 +1,4 @@
-// numera::number::integer::z::impl_ops::neg
+// numera::number::integer::z::ops::neg
 //
 //! Implement the negation operations.
 //
@@ -15,9 +15,7 @@ macro_rules! impl_integer_neg {
     // $p: inner primitive base name. e.g. i
     // $b: integer and primitive bitsize. e.g. 8
     ( $($t:ident + $p:ident + $b:literal, cast: $bcast:literal);+ ) => {
-        $(
-            impl_integer_neg![neg: $t + $p + $b];
-        )+
+        $( impl_integer_neg![neg: $t + $p + $b]; )+
     };
 
     // impl the negation operations
@@ -52,6 +50,7 @@ macro_rules! impl_integer_neg {
         }
     }};
 }
+
 impl_integer_neg![
     Integer+i+8, cast:16;
     Integer+i+16, cast:32;

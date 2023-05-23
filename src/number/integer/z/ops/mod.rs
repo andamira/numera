@@ -1,9 +1,7 @@
-// numera::number::integer::z::impl_ops
+// numera::number::integer::z::ops
 //
 //!
 //
-
-use devela::paste;
 
 #[cfg(test)]
 mod tests;

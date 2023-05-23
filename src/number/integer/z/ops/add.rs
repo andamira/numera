@@ -1,4 +1,4 @@
-// numera::number::integer::z::impl_ops::add
+// numera::number::integer::z::ops::add
 //
 //! Implement the addition operations, and the Sum trait.
 //
@@ -18,9 +18,7 @@ macro_rules! impl_integer_add {
     // $p: inner primitive base name. e.g. i
     // $b: integer and primitive bitsize. e.g. 8
     ( $($t:ident + $p:ident + $b:literal, cast: $bcast:literal);+ ) => {
-        $(
-            impl_integer_add![add: $t + $p + $b];
-        )+
+        $( impl_integer_add![add: $t + $p + $b]; )+
     };
 
     // addition operations
@@ -31,32 +29,32 @@ macro_rules! impl_integer_add {
     // - saturating
     // - wrapping
     // - overflowing
-    // - modular TODO TEST
-    // - modular_counting TODO TEST
+    // - modular TODO
+    // - modular_counting TODO
     (add: $t:ident + $p:ident + $b:literal) => { paste! {
         impl Add<[<$t$b>]> for [<$t$b>] {
             type Output = [<$t$b>];
             /// Performs the `+` operation.
             ///
             /// # Panics
-            /// In debug, on overflow.
-            ///
-            /// In release, it performs two's complement wrapping.
+            /// Panics in debug, on overflow.
+            /// While in release, it performs two's complement wrapping.
             #[inline]
             fn add(self, rhs: [<$t$b>]) -> Self::Output {
                 self.basic_add(rhs)
             }
         }
+        // impl<'a> Add<&'a[<$t$b>]> for &'a [<$t$b>] {} // MAYBE
+
         impl AddAssign for [<$t$b>] {
             /// Performs the `+=` operation.
             ///
             /// # Panics
-            /// In debug, on overflow.
-            ///
-            /// In release, it performs two's complement wrapping.
+            /// Panics in debug, on overflow.
+            /// While in release, it performs two's complement wrapping.
             #[inline]
             fn add_assign(&mut self, rhs: [<$t$b>]) {
-                self.0 += rhs.0
+                *self = self.basic_add(rhs)
             }
         }
 
@@ -162,6 +160,7 @@ macro_rules! impl_integer_add {
         }
     }};
 }
+
 impl_integer_add![
     Integer+i+8, cast:16;
     Integer+i+16, cast:32;

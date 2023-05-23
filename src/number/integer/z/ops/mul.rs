@@ -1,4 +1,4 @@
-// numera::number::integer::z::impl_ops::mul
+// numera::number::integer::z::ops::mul
 //
 //! Implement the multiplication operations, and the Product trait.
 //
@@ -18,9 +18,7 @@ macro_rules! impl_integer_mul {
     // $p: inner primitive base name. e.g. i
     // $b: integer and primitive bitsize. e.g. 8
     ( $($t:ident + $p:ident + $b:literal, cast: $bcast:literal);+ ) => {
-        $(
-            impl_integer_mul![mul: $t + $p + $b];
-        )+
+        $( impl_integer_mul![mul: $t + $p + $b]; )+
     };
 
     // multiplication operations
@@ -112,6 +110,7 @@ macro_rules! impl_integer_mul {
     }};
 
 }
+
 impl_integer_mul![
     Integer+i+8, cast:16;
     Integer+i+16, cast:32;

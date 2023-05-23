@@ -1,4 +1,4 @@
-// numera::number::integer::z::impl_ops::div_rem
+// numera::number::integer::z::ops::div_rem
 //
 //! Implement the division and remainder operations.
 //
@@ -748,6 +748,7 @@ macro_rules! impl_integer_div_rem {
         }
     }};
 }
+
 impl_integer_div_rem![
     Integer+i+8, cast:16;
     Integer+i+16, cast:32;

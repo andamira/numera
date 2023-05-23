@@ -13,7 +13,7 @@ mod define_sized;
 mod family;
 mod impl_from;
 mod impl_integer;
-mod impl_ops;
+mod ops;
 
 pub use define_sized::{
     NonPositiveInteger128, NonPositiveInteger16, NonPositiveInteger32, NonPositiveInteger64,

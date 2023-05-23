@@ -1,4 +1,4 @@
-// numera::number::integer::z::impl_ops::sub
+// numera::number::integer::z::ops::sub
 //
 //! Implement the substraction operations.
 //
@@ -117,6 +117,7 @@ macro_rules! impl_integer_sub {
         }
     }};
 }
+
 impl_integer_sub![
     Integer+i+8, cast:16;
     Integer+i+16, cast:32;

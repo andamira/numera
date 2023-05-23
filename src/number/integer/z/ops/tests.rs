@@ -1,4 +1,4 @@
-// numera::number::integer::z::impl_ops::tests
+// numera::number::integer::z::ops::tests
 
 use crate::all::*;
 

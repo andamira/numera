@@ -1,4 +1,4 @@
-// numera::number::integer::q::impl_ops
+// numera::number::integer::q::ops
 //
 //!
 //

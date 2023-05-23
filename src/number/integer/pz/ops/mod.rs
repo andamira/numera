@@ -1,12 +1,12 @@
-// numera::number::integer::n0z::impl_ops
+// numera::number::integer::pz::ops
 //
 //!
 //
 
 use super::*;
 use core::{
-    num::{NonZeroI128, NonZeroI16, NonZeroI32, NonZeroI64, NonZeroI8},
-    ops::{Add, Div, Mul, Neg, Rem, Sub},
+    num::{NonZeroU128, NonZeroU16, NonZeroU32, NonZeroU64, NonZeroU8},
+    ops::{Add, Div, Mul, Rem, Sub},
 };
 
 // impl ops (will panic on overflow, and when result is 0)
@@ -23,7 +23,6 @@ macro_rules! impl_integer_ops {
     // $t: integer type. e.g. Integer8
     (ops: $t:ident, $inner:ident) => {
         impl_integer_ops![bin_ops: $t, $inner, Add, add, Sub, sub, Mul, mul, Div, div, Rem, rem];
-        impl_integer_ops![un_op: $t, $inner, Neg, neg];
     };
 
     // impl multiple binary ops for a single integer type
@@ -54,33 +53,18 @@ macro_rules! impl_integer_ops {
             }
         }
     };
-
-    // impl a unary op for a single integer type
-    //
-    // $t: integer type. e.g. Integer8
-    // $op: operation. e.g. Neg
-    // $fn: operation fn. e.g. neg
-    (un_op: $t:ident, $inner:ident, $op:ident, $fn:ident) => {
-        impl $op for $t {
-            type Output = $t;
-
-            fn $fn(self) -> Self::Output {
-                $t($inner::new(self.0.get().$fn()).expect("Invalid value 0."))
-            }
-        }
-    };
 }
 impl_integer_ops![
-    NonZeroInteger8,
-    NonZeroI8,
-    NonZeroInteger16,
-    NonZeroI16,
-    NonZeroInteger32,
-    NonZeroI32,
-    NonZeroInteger64,
-    NonZeroI64,
-    NonZeroInteger128,
-    NonZeroI128
+    PositiveInteger8,
+    NonZeroU8,
+    PositiveInteger16,
+    NonZeroU16,
+    PositiveInteger32,
+    NonZeroU32,
+    PositiveInteger64,
+    NonZeroU64,
+    PositiveInteger128,
+    NonZeroU128
 ];
 
 #[cfg(test)]
@@ -88,16 +72,14 @@ mod tests {
     use crate::all::*;
 
     #[test]
-    fn n0z_ops() -> NumeraResult<()> {
-        let _5 = N0z8::from_parts(5)?;
-        let _7 = N0z8::from_parts(7)?;
+    fn pz_ops() -> NumeraResult<()> {
+        let _5 = PositiveInteger8::from_parts(5)?;
+        let _7 = PositiveInteger8::from_parts(7)?;
 
-        assert_eq![_7 + _5, N0z8::from_parts(12)?];
-        assert_eq![_7 - _5, N0z8::from_parts(2)?];
-        assert_eq![_5 - _7, N0z8::from_parts(-2)?];
-        assert_eq![_7 * _5, N0z8::from_parts(35)?];
-        assert_eq![_7 / _5, N0z8::from_parts(1)?];
-        assert_eq![-_7, N0z8::from_parts(-7)?];
+        assert_eq![_7 + _5, PositiveInteger8::from_parts(12)?];
+        assert_eq![_7 - _5, PositiveInteger8::from_parts(2)?];
+        assert_eq![_7 * _5, PositiveInteger8::from_parts(35)?];
+        assert_eq![_7 / _5, PositiveInteger8::from_parts(1)?];
 
         #[cfg(feature = "std")]
         {
@@ -105,7 +87,7 @@ mod tests {
             // overflow
             assert![catch_unwind(|| _7 * _7 * _7).is_err()];
             // underflow
-            assert![catch_unwind(|| N0z8::MIN - _5).is_err()];
+            assert![catch_unwind(|| PositiveInteger8::MIN - _5).is_err()];
             // zero
             assert![catch_unwind(|| _5 / _7).is_err()];
         }
