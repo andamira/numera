@@ -19,7 +19,7 @@ use {devela::az::CheckedAs, primal_sieve::Sieve};
 mod consts;
 mod family;
 mod fns;
-mod impl_from;
+mod from;
 mod impl_traits;
 mod trait_prime;
 

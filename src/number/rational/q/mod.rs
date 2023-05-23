@@ -12,7 +12,7 @@ use crate::number::macros::define_abbreviations;
 
 mod define_sized;
 mod family;
-mod impl_from;
+mod from;
 mod impl_rational;
 mod ops;
 

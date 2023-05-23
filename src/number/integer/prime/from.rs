@@ -1,4 +1,4 @@
-// numera::number::integer::prime::impl_from
+// numera::number::integer::prime::from
 //
 //!
 //

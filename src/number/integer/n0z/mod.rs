@@ -13,7 +13,7 @@
 
 mod define_sized;
 mod family;
-mod impl_from;
+mod from;
 mod impl_integer;
 mod ops;
 
