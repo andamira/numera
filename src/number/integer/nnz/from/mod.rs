@@ -137,13 +137,13 @@ try_from_any![error for: NonNegativeInteger+128, from: NegativeInteger+8,16,32,6
 
 /* from NonNegativeInteger */
 
-// for smaller or equal sized u
+// for bigger or equal sized u (Self inner representation)
 for_primitive![int for:u+8, from:NonNegativeInteger+8];
 for_primitive![int for:u+16, from:NonNegativeInteger+8,16];
 for_primitive![int for:u+32, from:NonNegativeInteger+8,16,32];
 for_primitive![int for:u+64, from:NonNegativeInteger+8,16,32,64];
 for_primitive![int for:u+128, from:NonNegativeInteger+8,16,32,64,128];
-// try_for bigger i
+// try_for smaller i (Self inner representation)
 try_for_primitive![int for:u+8, from:NonNegativeInteger+16,32,64,128];
 try_for_primitive![int for:u+16, from:NonNegativeInteger+32,64,128];
 try_for_primitive![int for:u+32, from:NonNegativeInteger+64,128];

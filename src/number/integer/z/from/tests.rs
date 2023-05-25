@@ -120,3 +120,42 @@ fn z_try_from() -> NumeraResult<()> {
 
     Ok(())
 }
+
+#[test]
+fn z_for() -> NumeraResult<()> {
+    // for bigger or equal sized i (Self inner representation)
+    assert_eq![0_i8, Z8::new(0).into()];
+    assert_eq![100_i8, Z8::new(100).into()];
+    assert_eq![-100_i8, Z8::new(-100).into()];
+    assert_eq![100_i16, Z8::new(100).into()];
+
+    Ok(())
+}
+
+#[test]
+#[cfg(feature = "try_from")]
+fn z_try_for() -> NumeraResult<()> {
+    use core::num::{NonZeroI8, NonZeroU8};
+
+    // try_for smaller i (Self inner representation)
+    assert_eq![0_i8, Z16::new(0).try_into()?];
+    assert_eq![100_i8, Z16::new(100).try_into()?];
+    assert![TryInto::<i8>::try_into(Z16::new(200)).is_err()];
+
+    // try_for u
+    assert_eq![0_u8, Z16::new(0).try_into()?];
+    assert_eq![200_u8, Z16::new(200).try_into()?];
+    assert![TryInto::<u8>::try_into(Z16::new(300)).is_err()];
+
+    // try_for NonZeroI
+    assert_eq![NonZeroI8::new(100).unwrap(), Z16::new(100).try_into()?];
+    assert![TryInto::<NonZeroI8>::try_into(Z8::new(0)).is_err()];
+    assert![TryInto::<NonZeroI8>::try_into(Z16::new(200)).is_err()];
+
+    // try_for NonZeroU
+    assert_eq![NonZeroU8::new(200).unwrap(), Z16::new(200).try_into()?];
+    assert![TryInto::<NonZeroU8>::try_into(Z8::new(0)).is_err()];
+    assert![TryInto::<NonZeroU8>::try_into(Z16::new(300)).is_err()];
+
+    Ok(())
+}

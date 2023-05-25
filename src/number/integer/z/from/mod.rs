@@ -1,6 +1,6 @@
 // numera::number::integer::z::from
 
-#[cfg(tests)]
+#[cfg(test)]
 mod tests;
 
 use crate::number::{
@@ -162,13 +162,13 @@ try_from_integer![int for:Integer+128, from:Prime+128];
 
 /* from Integer */
 
-// for smaller or equal sized i
+// for bigger or equal sized i (Self inner representation)
 for_primitive![int for:i+8, from:Integer+8];
 for_primitive![int for:i+16, from:Integer+8,16];
 for_primitive![int for:i+32, from:Integer+8,16,32];
 for_primitive![int for:i+64, from:Integer+8,16,32,64];
 for_primitive![int for:i+128, from:Integer+8,16,32,64,128];
-// try_for bigger i
+// try_for smaller i (Self inner representation)
 try_for_primitive![int for:i+8, from:Integer+16,32,64,128];
 try_for_primitive![int for:i+16, from:Integer+32,64,128];
 try_for_primitive![int for:i+32, from:Integer+64,128];

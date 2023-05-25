@@ -96,3 +96,38 @@ fn pz_try_from() -> NumeraResult<()> {
 
     Ok(())
 }
+
+#[test]
+fn pz_for() -> NumeraResult<()> {
+    use core::num::{NonZeroU8, NonZeroU16};
+
+    // for bigger or equal sized NonZeroU (Self inner representation)
+    assert_eq![NonZeroU8::new(200).unwrap(), Pz8::new(200)?.into()];
+    assert_eq![NonZeroU16::new(200).unwrap(), Pz8::new(200)?.into()];
+
+    Ok(())
+}
+
+#[test]
+#[cfg(feature = "try_from")]
+fn pz_try_for() -> NumeraResult<()> {
+    use core::num::{NonZeroI8, NonZeroU8};
+
+    // try_for smaller NonZeroU (Self inner representation)
+    assert_eq![NonZeroU8::new(200).unwrap(), Pz16::new(200)?.try_into()?];
+    assert![TryInto::<NonZeroU8>::try_into(Pz16::new(300)?).is_err()];
+
+    // try_for u
+    assert_eq![200_u8, Pz8::new(200)?.try_into()?];
+    assert![TryInto::<u8>::try_into(Pz16::new(300)?).is_err()];
+
+    // try_for NonZeroI
+    assert_eq![NonZeroI8::new(100).unwrap(), Pz16::new(100)?.try_into()?];
+    assert![TryInto::<NonZeroI8>::try_into(Pz16::new(200)?).is_err()];
+
+    // try_for i
+    assert_eq![100_i8, Pz8::new(100)?.try_into()?];
+    assert![TryInto::<i8>::try_into(Pz8::new(200)?).is_err()];
+
+    Ok(())
+}

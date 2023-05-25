@@ -115,36 +115,29 @@ try_from_any![error for: PositiveInteger+128, from: NonPositiveInteger+8,16,32,6
 
 /* from PositiveInteger */
 
-// for smaller or equal sized NonZeroU
+// for bigger or equal sized NonZeroU (Self inner representation)
 for_primitive![int for:NonZeroU+8, from:PositiveInteger+8];
 for_primitive![int for:NonZeroU+16, from:PositiveInteger+8,16];
 for_primitive![int for:NonZeroU+32, from:PositiveInteger+8,16,32];
 for_primitive![int for:NonZeroU+64, from:PositiveInteger+8,16,32,64];
 for_primitive![int for:NonZeroU+128, from:PositiveInteger+8,16,32,64,128];
-// try_for bigger NonZeroU
+// try_for smaller NonZeroU (Self inner representation)
 try_for_primitive![int for:NonZeroU+8, from:PositiveInteger+16,32,64,128];
 try_for_primitive![int for:NonZeroU+16, from:PositiveInteger+32,64,128];
 try_for_primitive![int for:NonZeroU+32, from:PositiveInteger+64,128];
 try_for_primitive![int for:NonZeroU+64, from:PositiveInteger+128];
 
-// for smaller or equal sized u
+// for bigger or equal sized u
 for_primitive![non0 for:u+8, from:PositiveInteger+8];
 for_primitive![non0 for:u+16, from:PositiveInteger+8,16];
 for_primitive![non0 for:u+32, from:PositiveInteger+8,16,32];
 for_primitive![non0 for:u+64, from:PositiveInteger+8,16,32,64];
 for_primitive![non0 for:u+128, from:PositiveInteger+8,16,32,64,128];
-// try_for bigger u
+// try_for smaller u
 try_for_primitive![non0 for:u+8, from:PositiveInteger+16,32,64,128];
 try_for_primitive![non0 for:u+16, from:PositiveInteger+32,64,128];
 try_for_primitive![non0 for:u+32, from:PositiveInteger+64,128];
 try_for_primitive![non0 for:u+64, from:PositiveInteger+128];
-
-// try_for i
-try_for_primitive![non0 for:i+8, from:PositiveInteger+8,16,32,64,128];
-try_for_primitive![non0 for:i+16, from:PositiveInteger+8,16,32,64,128];
-try_for_primitive![non0 for:i+32, from:PositiveInteger+8,16,32,64,128];
-try_for_primitive![non0 for:i+64, from:PositiveInteger+8,16,32,64,128];
-try_for_primitive![non0 for:i+128, from:PositiveInteger+8,16,32,64,128];
 
 // try_for NonZeroI
 try_for_primitive![int for:NonZeroI+8, from:PositiveInteger+8,16,32,64,128];
@@ -152,3 +145,10 @@ try_for_primitive![int for:NonZeroI+16, from:PositiveInteger+8,16,32,64,128];
 try_for_primitive![int for:NonZeroI+32, from:PositiveInteger+8,16,32,64,128];
 try_for_primitive![int for:NonZeroI+64, from:PositiveInteger+8,16,32,64,128];
 try_for_primitive![int for:NonZeroI+128, from:PositiveInteger+8,16,32,64,128];
+
+// try_for i
+try_for_primitive![non0 for:i+8, from:PositiveInteger+8,16,32,64,128];
+try_for_primitive![non0 for:i+16, from:PositiveInteger+8,16,32,64,128];
+try_for_primitive![non0 for:i+32, from:PositiveInteger+8,16,32,64,128];
+try_for_primitive![non0 for:i+64, from:PositiveInteger+8,16,32,64,128];
+try_for_primitive![non0 for:i+128, from:PositiveInteger+8,16,32,64,128];

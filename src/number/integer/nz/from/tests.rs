@@ -96,3 +96,25 @@ fn nz_try_from() -> NumeraResult<()> {
 
     Ok(())
 }
+
+#[test]
+#[cfg(feature = "try_from")]
+fn nz_try_for() -> NumeraResult<()> {
+    use core::num::{NonZeroI8, NonZeroU8};
+
+    // try_for i
+    assert_eq![-100_i8, Nz16::new_neg(100)?.try_into()?];
+    assert![TryInto::<i8>::try_into(Nz8::new_neg(200)?).is_err()];
+
+    // try_for NonZeroI
+    assert_eq![NonZeroI8::new(-100).unwrap(), Nz8::new_neg(100)?.try_into()?];
+    assert![TryInto::<NonZeroI8>::try_into(Nz8::new_neg(200)?).is_err()];
+
+    // try_for u
+    assert![TryInto::<u8>::try_into(Nz8::new_neg(1)?).is_err()];
+
+    // try_for NonZeroU
+    assert![TryInto::<NonZeroU8>::try_into(Nz8::new_neg(1)?).is_err()];
+
+    Ok(())
+}
