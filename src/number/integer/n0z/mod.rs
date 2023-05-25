@@ -11,9 +11,9 @@
 //! [0o]: https://oeis.org/wiki/Nonzero_integers
 //
 
+mod convert;
 mod define_sized;
 mod family;
-mod from;
 mod impl_integer;
 mod ops;
 

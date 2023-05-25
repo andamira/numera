@@ -1,4 +1,4 @@
-// numera::number::integer::nz::from::tests
+// numera::number::integer::nz::convert::tests
 
 use crate::all::*;
 
@@ -107,7 +107,10 @@ fn nz_try_for() -> NumeraResult<()> {
     assert![TryInto::<i8>::try_into(Nz8::new_neg(200)?).is_err()];
 
     // try_for NonZeroI
-    assert_eq![NonZeroI8::new(-100).unwrap(), Nz8::new_neg(100)?.try_into()?];
+    assert_eq![
+        NonZeroI8::new(-100).unwrap(),
+        Nz8::new_neg(100)?.try_into()?
+    ];
     assert![TryInto::<NonZeroI8>::try_into(Nz8::new_neg(200)?).is_err()];
 
     // try_for u

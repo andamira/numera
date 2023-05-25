@@ -1,4 +1,4 @@
-// numera::number::integer::z::from
+// numera::number::integer::z::convert
 
 #[cfg(test)]
 mod tests;

@@ -1,4 +1,4 @@
-// numera::number::integer::prime::arrays
+// numera::number::integer::prime::data
 //
 //! Arrays of primes for 8 and 16 bit.
 //

@@ -1,4 +1,4 @@
-// numera::number::integer::n0z::from::tests
+// numera::number::integer::n0z::convert::tests
 
 use crate::all::*;
 use core::num::{NonZeroI8, NonZeroU8};
@@ -113,7 +113,7 @@ fn n0z_try_from() -> NumeraResult<()> {
 
 #[test]
 fn n0z_for() -> NumeraResult<()> {
-    use core::num::{NonZeroI8, NonZeroI16};
+    use core::num::{NonZeroI16, NonZeroI8};
 
     // for bigger or equal sized NonZeroI (Self inner representation)
     assert_eq![NonZeroI8::new(100).unwrap(), N0z8::new(100)?.into()];
@@ -124,7 +124,7 @@ fn n0z_for() -> NumeraResult<()> {
     assert_eq![100_i8, N0z8::new(100)?.into()];
     assert_eq![-100_i8, N0z8::new(-100)?.into()];
     assert_eq![100_i16, N0z8::new(100)?.into()];
-    
+
     Ok(())
 }
 

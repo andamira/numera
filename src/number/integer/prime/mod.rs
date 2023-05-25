@@ -16,10 +16,10 @@ use core::fmt;
 #[cfg(feature = "std")]
 use {devela::az::CheckedAs, primal_sieve::Sieve};
 
-mod consts;
+mod convert;
+mod data;
 mod family;
 mod fns;
-mod from;
 mod impl_traits;
 mod trait_prime;
 
@@ -27,7 +27,7 @@ pub use all::*;
 pub(crate) mod all {
     #[doc(inline)]
     pub use super::{
-        consts::{PRIMES_BELL, PRIMES_U16, PRIMES_U8},
+        data::{PRIMES_BELL, PRIMES_U16, PRIMES_U8},
         family::Primes,
         fns::{is_prime, nth_prime, prime_pi},
         trait_prime::Prime,

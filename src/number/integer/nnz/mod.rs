@@ -18,9 +18,9 @@
 //! [2i]: https://en.wikipedia.org/wiki/ISO/IEC_80000#cite_note-80000-2:2019-4
 //
 
+mod convert;
 mod define_sized;
 mod family;
-mod from;
 mod impl_integer;
 mod ops;
 

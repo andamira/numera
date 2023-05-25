@@ -11,9 +11,9 @@
 //! [0w]: https://en.wikipedia.org/wiki/Integer
 //
 
+mod convert;
 mod define_sized;
 mod family;
-mod from;
 mod impl_integer;
 mod ops;
 

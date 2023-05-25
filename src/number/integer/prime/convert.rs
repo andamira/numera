@@ -1,4 +1,4 @@
-// numera::number::integer::prime::from
+// numera::number::integer::prime::convert
 //
 //!
 //

@@ -12,9 +12,9 @@
 //! [oeis]: http://oeis.org/A001478
 //
 
+mod convert;
 mod define_sized;
 mod family;
-mod from;
 mod impl_integer;
 mod ops;
 

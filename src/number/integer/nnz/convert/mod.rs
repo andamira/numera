@@ -1,4 +1,4 @@
-// numera::number::integer::nnz::from
+// numera::number::integer::nnz::convert
 //
 //!
 //

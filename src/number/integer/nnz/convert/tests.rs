@@ -1,4 +1,4 @@
-// numera::number::integer::nnz::from:tests
+// numera::number::integer::nnz::convert:tests
 
 use crate::all::*;
 use core::num::NonZeroU8;

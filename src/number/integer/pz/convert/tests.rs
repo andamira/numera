@@ -1,4 +1,4 @@
-// numera::number::integer::pz::from::tests
+// numera::number::integer::pz::convert::tests
 
 use crate::all::*;
 
@@ -99,7 +99,7 @@ fn pz_try_from() -> NumeraResult<()> {
 
 #[test]
 fn pz_for() -> NumeraResult<()> {
-    use core::num::{NonZeroU8, NonZeroU16};
+    use core::num::{NonZeroU16, NonZeroU8};
 
     // for bigger or equal sized NonZeroU (Self inner representation)
     assert_eq![NonZeroU8::new(200).unwrap(), Pz8::new(200)?.into()];

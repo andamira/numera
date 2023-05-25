@@ -9,9 +9,9 @@
 //! [oeis]: https://oeis.org/A001489
 //
 
+mod convert;
 mod define_sized;
 mod family;
-mod from;
 mod impl_integer;
 mod ops;
 
