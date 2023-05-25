@@ -153,6 +153,7 @@ mod core_impls {
     }
 
     impl PartialEq<IntegerError> for NumeraError {
+        #[inline]
         fn eq(&self, other: &IntegerError) -> bool {
             match self {
                 NumeraError::Integer(err) => err == other,
@@ -161,6 +162,7 @@ mod core_impls {
         }
     }
     impl PartialEq<RationalError> for NumeraError {
+        #[inline]
         fn eq(&self, other: &RationalError) -> bool {
             match self {
                 NumeraError::Rational(err) => err == other,
@@ -169,6 +171,7 @@ mod core_impls {
         }
     }
     impl PartialEq<RealError> for NumeraError {
+        #[inline]
         fn eq(&self, other: &RealError) -> bool {
             match self {
                 NumeraError::Real(err) => err == other,
@@ -227,17 +230,20 @@ mod ibig {
     use ibig::error::{OutOfBoundsError, ParseError};
 
     impl From<OutOfBoundsError> for IntegerError {
+        #[inline]
         fn from(_err: OutOfBoundsError) -> Self {
             IntegerError::Overflow
         }
     }
     impl From<OutOfBoundsError> for NumeraError {
+        #[inline]
         fn from(_err: OutOfBoundsError) -> Self {
             IntegerError::Overflow.into()
         }
     }
     // ParseError { NoDigits, InvalidDigit }
     impl From<ParseError> for NumeraError {
+        #[inline]
         fn from(_err: ParseError) -> Self {
             NumeraError::Conversion
         }
