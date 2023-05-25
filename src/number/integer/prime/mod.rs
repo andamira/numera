@@ -17,17 +17,18 @@ use core::fmt;
 use {devela::az::CheckedAs, primal_sieve::Sieve};
 
 mod convert;
-mod data;
+pub mod data;
 mod family;
 mod fns;
 mod impl_traits;
 mod trait_prime;
 
+use data::*;
+
 pub use all::*;
 pub(crate) mod all {
     #[doc(inline)]
     pub use super::{
-        data::{PRIMES_BELL, PRIMES_U16, PRIMES_U8},
         family::Primes,
         fns::{is_prime, nth_prime, prime_pi},
         trait_prime::Prime,

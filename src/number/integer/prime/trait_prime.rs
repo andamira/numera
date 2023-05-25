@@ -3,7 +3,10 @@
 //!
 //
 
-use super::{Prime16, Prime32, Prime8, PRIMES_U16, PRIMES_U8};
+use super::{
+    data::{PRIMES_BELL, PRIMES_U16, PRIMES_U8},
+    Prime128, Prime16, Prime32, Prime64, Prime8,
+};
 
 /// Common trait for all primes.
 pub trait Prime {
@@ -12,9 +15,9 @@ pub trait Prime {
     where
         Self: Sized;
 
-    /// Returns `true` if the prime is a Bell prime.
+    /// Returns `true` if this is a Bell prime.
     ///
-    /// Bell primes are those that are the number of partitions of a set with n members.
+    /// Bell primes are those that are the number of partitions of a set with *n* members.
     fn is_bell(&self) -> bool;
 
     // /// Returns Some(true) if the prime is balanced.
@@ -35,7 +38,7 @@ impl Prime for Prime8 {
     }
 
     fn is_bell(&self) -> bool {
-        matches![self.0, 5 | 8]
+        PRIMES_BELL.contains(&self.0.into())
     }
 }
 
@@ -49,17 +52,36 @@ impl Prime for Prime16 {
     }
 
     fn is_bell(&self) -> bool {
-        matches![self.0, 5 | 8 | 877]
+        PRIMES_BELL.contains(&self.0.into())
     }
 }
 
 impl Prime for Prime32 {
+    /// WIP: This function for now only returns Some values if `nth` <= 6,541.
     fn get_nth(nth: usize) -> Option<Self> {
         match nth {
             0..=53 => Some(Prime32(PRIMES_U8[nth].into())),
             54..=6541 => Some(Prime32(PRIMES_U16[nth - 54].into())),
             6542..=203_280_219 => {
-                todo![]
+                todo![] // TODO
+            }
+            _ => None,
+        }
+    }
+
+    fn is_bell(&self) -> bool {
+        PRIMES_BELL.contains(&self.0.into())
+    }
+}
+
+impl Prime for Prime64 {
+    /// WIP: This function for now only returns Some values if `nth` <= 6,541.
+    fn get_nth(nth: usize) -> Option<Self> {
+        match nth {
+            0..=53 => Some(Prime64(PRIMES_U8[nth].into())),
+            54..=6541 => Some(Prime64(PRIMES_U16[nth - 54].into())),
+            6542..=203_280_219 => {
+                todo![] // TODO
             }
             _ => None,
         }
@@ -67,5 +89,23 @@ impl Prime for Prime32 {
 
     fn is_bell(&self) -> bool {
         matches![self.0, 5 | 8 | 877 | 27_644_437]
+    }
+}
+
+impl Prime for Prime128 {
+    /// WIP: This function for now only returns Some values if `nth` <= 6,541.
+    fn get_nth(nth: usize) -> Option<Self> {
+        match nth {
+            0..=53 => Some(Prime128(PRIMES_U8[nth].into())),
+            54..=6541 => Some(Prime128(PRIMES_U16[nth - 54].into())),
+            6542..=203_280_219 => {
+                todo![] // TODO
+            }
+            _ => None,
+        }
+    }
+
+    fn is_bell(&self) -> bool {
+        PRIMES_BELL.contains(&self.0.into())
     }
 }

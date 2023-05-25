@@ -4,7 +4,10 @@
 //
 // NOTE: chosen the is_prime for Prime8 & Prime16 because it's faster.
 
-use super::{is_prime, Prime128, Prime16, Prime32, Prime64, Prime8, PRIMES_U16, PRIMES_U8};
+use super::{
+    data::{PRIMES_U16, PRIMES_U8},
+    is_prime, Prime128, Prime16, Prime32, Prime64, Prime8,
+};
 use crate::{
     error::{IntegerError, NumeraResult},
     number::traits::{
