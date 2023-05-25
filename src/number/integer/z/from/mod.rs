@@ -5,7 +5,10 @@ mod tests;
 
 use crate::number::{
     integer::{
-        macros::{from_integer, from_primitive, try_from_integer, try_from_primitive},
+        macros::{
+            for_primitive, from_integer, from_primitive, try_for_primitive, try_from_integer,
+            try_from_primitive,
+        },
         *,
     },
     traits::Number,
@@ -19,6 +22,8 @@ use core::{
     },
     ops::Neg,
 };
+
+/* for Integer */
 
 /* complementary primitive conversions */
 
@@ -154,3 +159,38 @@ try_from_integer![int for:Integer+16, from:Prime+16,32,64,128];
 try_from_integer![int for:Integer+32, from:Prime+32,64,128];
 try_from_integer![int for:Integer+64, from:Prime+64,128];
 try_from_integer![int for:Integer+128, from:Prime+128];
+
+/* from Integer */
+
+// for smaller or equal sized i
+for_primitive![int for:i+8, from:Integer+8];
+for_primitive![int for:i+16, from:Integer+8,16];
+for_primitive![int for:i+32, from:Integer+8,16,32];
+for_primitive![int for:i+64, from:Integer+8,16,32,64];
+for_primitive![int for:i+128, from:Integer+8,16,32,64,128];
+// try_for bigger i
+try_for_primitive![int for:i+8, from:Integer+16,32,64,128];
+try_for_primitive![int for:i+16, from:Integer+32,64,128];
+try_for_primitive![int for:i+32, from:Integer+64,128];
+try_for_primitive![int for:i+64, from:Integer+128];
+
+// try_for u
+try_for_primitive![int for:u+8, from:Integer+8,16,32,64,128];
+try_for_primitive![int for:u+16, from:Integer+8,16,32,64,128];
+try_for_primitive![int for:u+32, from:Integer+8,16,32,64,128];
+try_for_primitive![int for:u+64, from:Integer+8,16,32,64,128];
+try_for_primitive![int for:u+128, from:Integer+8,16,32,64,128];
+
+// try_for NonZeroI
+try_for_primitive![int_non0 for:NonZeroI+8, from:Integer+8,16,32,64,128];
+try_for_primitive![int_non0 for:NonZeroI+16, from:Integer+8,16,32,64,128];
+try_for_primitive![int_non0 for:NonZeroI+32, from:Integer+8,16,32,64,128];
+try_for_primitive![int_non0 for:NonZeroI+64, from:Integer+8,16,32,64,128];
+try_for_primitive![int_non0 for:NonZeroI+128, from:Integer+8,16,32,64,128];
+
+// // try_for NonZeroU
+try_for_primitive![int_non0 for:NonZeroU+8, from:Integer+8,16,32,64,128];
+try_for_primitive![int_non0 for:NonZeroU+16, from:Integer+8,16,32,64,128];
+try_for_primitive![int_non0 for:NonZeroU+32, from:Integer+8,16,32,64,128];
+try_for_primitive![int_non0 for:NonZeroU+64, from:Integer+8,16,32,64,128];
+try_for_primitive![int_non0 for:NonZeroU+128, from:Integer+8,16,32,64,128];

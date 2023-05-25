@@ -7,16 +7,23 @@ mod tests;
 use crate::number::traits::{ConstZero, Ident};
 use crate::number::{
     integer::{
-        macros::{from_integer, try_from_any, try_from_integer, try_from_primitive},
+        macros::{
+            from_integer, try_for_primitive, try_from_any, try_from_integer, try_from_primitive,
+        },
         *,
     },
     traits::Number,
 };
 #[cfg(feature = "try_from")]
-use core::num::{
-    NonZeroI128, NonZeroI16, NonZeroI32, NonZeroI64, NonZeroI8, NonZeroU128, NonZeroU16,
-    NonZeroU32, NonZeroU64, NonZeroU8,
+use core::{
+    num::{
+        NonZeroI128, NonZeroI16, NonZeroI32, NonZeroI64, NonZeroI8, NonZeroU128, NonZeroU16,
+        NonZeroU32, NonZeroU64, NonZeroU8,
+    },
+    ops::Neg,
 };
+
+/* for NonPositive Integer */
 
 /* fallible primitive conversions */
 
@@ -113,3 +120,30 @@ try_from_any![error for: NonPositiveInteger+16, from: Prime+8,16,32,64,128];
 try_from_any![error for: NonPositiveInteger+32, from: Prime+8,16,32,64,128];
 try_from_any![error for: NonPositiveInteger+64, from: Prime+8,16,32,64,128];
 try_from_any![error for: NonPositiveInteger+128, from: Prime+8,16,32,64,128];
+
+/* from NonPositive Integer */
+
+try_for_primitive![neg for: i+8, from: NonPositiveInteger+8,16,32,64,128];
+try_for_primitive![neg for: i+16, from: NonPositiveInteger+8,16,32,64,128];
+try_for_primitive![neg for: i+32, from: NonPositiveInteger+8,16,32,64,128];
+try_for_primitive![neg for: i+64, from: NonPositiveInteger+8,16,32,64,128];
+try_for_primitive![neg for: i+128, from: NonPositiveInteger+8,16,32,64,128];
+
+// (only the 0)
+try_from_any![zero for: u+8, from: NonPositiveInteger+8,16,32,64,128];
+try_from_any![zero for: u+16, from: NonPositiveInteger+8,16,32,64,128];
+try_from_any![zero for: u+32, from: NonPositiveInteger+8,16,32,64,128];
+try_from_any![zero for: u+64, from: NonPositiveInteger+8,16,32,64,128];
+try_from_any![zero for: u+128, from: NonPositiveInteger+8,16,32,64,128];
+
+try_for_primitive![neg_non0 for: NonZeroI+8, from: NonPositiveInteger+8,16,32,64,128];
+try_for_primitive![neg_non0 for: NonZeroI+16, from: NonPositiveInteger+8,16,32,64,128];
+try_for_primitive![neg_non0 for: NonZeroI+32, from: NonPositiveInteger+8,16,32,64,128];
+try_for_primitive![neg_non0 for: NonZeroI+64, from: NonPositiveInteger+8,16,32,64,128];
+try_for_primitive![neg_non0 for: NonZeroI+128, from: NonPositiveInteger+8,16,32,64,128];
+
+try_from_any![error for: NonZeroU+8, from: NonPositiveInteger+8,16,32,64,128];
+try_from_any![error for: NonZeroU+16, from: NonPositiveInteger+8,16,32,64,128];
+try_from_any![error for: NonZeroU+32, from: NonPositiveInteger+8,16,32,64,128];
+try_from_any![error for: NonZeroU+64, from: NonPositiveInteger+8,16,32,64,128];
+try_from_any![error for: NonZeroU+128, from: NonPositiveInteger+8,16,32,64,128];

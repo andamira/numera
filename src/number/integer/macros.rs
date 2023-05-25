@@ -7,10 +7,12 @@
 // infallible conversions:
 //   - from_integer!
 //   - from_primitive!
+//   - for_primitive!
 //
 // fallible conversions:
 //   - try_from_integer!
 //   - try_from_primitive!
+//   - try_for_primitive!
 //   - try_from_any!
 
 /* infallible From conversions */
@@ -74,7 +76,6 @@ macro_rules! from_integer {
         }
     };
 
-    // DONE
     // from_integer!
     // when `from` has an inner integer primitive,
     // and `for` has an inner non-zero,
@@ -114,7 +115,6 @@ macro_rules! from_integer {
         }
     };
 
-    // DONE
     // from_integer!
     // when `from` has an inner NonZero*
     //
@@ -171,7 +171,6 @@ macro_rules! from_integer {
         }
     };
 
-    // DONE
     // from_integer!
     // when `from` has an unsigned inner primitive that represents only negative values,
     // which has to be negated in the conversion
@@ -207,7 +206,6 @@ macro_rules! from_integer {
         }
     };
 
-    // DONE
     // from_integer!
     // when `from` has an unsigned inner NonZero* primitive that represents only negative values,
     // which has to be negated in the conversion
@@ -343,7 +341,6 @@ macro_rules! from_primitive {
         }
     };
 
-    // DONE
     // from_primitive!
     // when `from` is a NonZero* primitive
     //
@@ -401,6 +398,108 @@ macro_rules! from_primitive {
     };
 }
 pub(crate) use from_primitive;
+
+// WIP
+/// Implements Into<`$from_p$from_b`> for `$for$for_b`.
+///
+/// # Args
+/// - `$for`:    the base name of the target. e.g. `NonZeroInteger`.
+/// - `$for_b`:  the bit size of the target. e.g. `16`.
+/// - `$from_p`: the base name of the origin. e.g. `u`.
+/// - `$from_b`: a list of bit sizes of the origin. e.g. `8, 16`.
+///
+/// # Examples
+/// ```ignore
+/// for_primitive![many for: i+16, from: Integer+8];
+/// for_primitive![many for: i+16, from: Integer+8,16];
+/// ```
+///
+/// # Branches ids
+/// - `int`
+/// - `non0`
+macro_rules! for_primitive {
+    // for_primitive!
+    // when `from` is an integer
+    //
+    // - for: i        from: Z
+    // - for: u        from: Z, Nnz
+    // - for: NonZeroI from: N0z
+    // - for: NonZeroU from: Pz
+    (int
+     for: $for:ident + $for_b:expr,
+     from: $from_p:ident + $( $from_b:expr ),+
+    ) => {
+        $(
+            for_primitive![@int for: $for + $for_b, from: $from_p + $from_b];
+        )+
+    };
+    (@int
+     for: $for:ident + $for_b:expr,
+     from: $from_p:ident + $from_b:expr
+    ) => {
+        devela::paste! {
+            impl From<[<$from_p$from_b>]> for [<$for$for_b>] {
+                #[inline]
+                fn from(from: [<$from_p$from_b>]) -> Self {
+                    from.0.into()
+                }
+            }
+            impl From<&[<$from_p$from_b>]> for [<$for$for_b>] {
+                #[inline]
+                fn from(from: &[<$from_p$from_b>]) -> Self {
+                    from.0.into()
+                }
+            }
+            impl From<&mut [<$from_p$from_b>]> for [<$for$for_b>] {
+                #[inline]
+                fn from(from: &mut [<$from_p$from_b>]) -> Self {
+                    from.0.into()
+                }
+            }
+        }
+    };
+
+    // for_primitive!
+    // when `from` is a non-zero integer
+    //
+    // - for: i        from: N0z
+    // - for: u        from: Pz
+    // - for: NonZeroI from: N0z
+    (non0
+     for: $for:ident + $for_b:expr,
+     from: $from_p:ident + $( $from_b:expr ),+
+    ) => {
+        $(
+            for_primitive![@non0 for: $for + $for_b, from: $from_p + $from_b];
+        )+
+    };
+    (@non0
+     for: $for:ident + $for_b:expr,
+     from: $from_p:ident + $from_b:expr
+    ) => {
+        devela::paste! {
+            impl From<[<$from_p$from_b>]> for [<$for$for_b>] {
+                #[inline]
+                fn from(from: [<$from_p$from_b>]) -> Self {
+                    from.0.get().into()
+                }
+            }
+            impl From<&[<$from_p$from_b>]> for [<$for$for_b>] {
+                #[inline]
+                fn from(from: &[<$from_p$from_b>]) -> Self {
+                    from.0.get().into()
+                }
+            }
+            impl From<&mut [<$from_p$from_b>]> for [<$for$for_b>] {
+                #[inline]
+                fn from(from: &mut [<$from_p$from_b>]) -> Self {
+                    from.0.get().into()
+                }
+            }
+        }
+    };
+}
+pub(crate) use for_primitive;
 
 /* fallible TryFrom conversions */
 
@@ -480,7 +579,6 @@ macro_rules! try_from_integer {
         }
     };
 
-    // DONE
     // try_from_integer!
     // when `from` has an inner integer primitive,
     // and `for` has an inner non-zero,
@@ -529,7 +627,6 @@ macro_rules! try_from_integer {
         }
     };
 
-    // DONE
     // try_from_integer!
     // when `from` has an unsigned inner primitive representing only negative values,
     // which has to be negated in the conversion.
@@ -575,7 +672,6 @@ macro_rules! try_from_integer {
         }
     };
 
-    // DONE
     // try_from_integer!
     // when `from` has an inner integer primitive and `for` has an inner nonzero primitive
     //
@@ -622,7 +718,6 @@ macro_rules! try_from_integer {
         }
     };
 
-    // DONE
     // try_from_integer!
     // when `from` has an unsigned inner primitive representing only negative values,
     // and `for` has a non-zero inner primitive
@@ -669,7 +764,6 @@ macro_rules! try_from_integer {
         }
     };
 
-    // DONE
     // try_from_integer!
     // when `from` has an inner NonZero*.
     //
@@ -735,7 +829,6 @@ macro_rules! try_from_integer {
         }
     };
 
-    // DONE
     // try_from_integer!
     // when `from` has an unsigned inner NonZero* representing only negative values,
     // which has to be negated in the conversion.
@@ -812,7 +905,6 @@ macro_rules! try_from_integer {
         }
     };
 
-    // DONE
     // try_from_integer!
     // when `from` is an Integer and `for` can not represent negative values.
     //
@@ -858,7 +950,6 @@ macro_rules! try_from_integer {
         }
     };
 
-    // DONE
     // try_from_integer!
     // when `from` is an Integer and `for` can not represent negative values or 0.
     //
@@ -904,7 +995,6 @@ macro_rules! try_from_integer {
         }
     };
 
-    // DONE
     // try_from_integer!
     // when `from` is a NonZeroInteger and `for` can only represent positive values
     //
@@ -965,7 +1055,6 @@ macro_rules! try_from_integer {
         }
     };
 
-    // DONE
     // try_from_integer!
     // when both `for` and `from` are non-positive Integers
     //
@@ -1011,7 +1100,6 @@ macro_rules! try_from_integer {
         }
     };
 
-    // DONE
     // try_from_integer!
     // when `from` is a non-zero integer and `for` can not represent positive values
     //
@@ -1136,7 +1224,6 @@ macro_rules! try_from_primitive {
         }
     };
 
-    // DONE
     // try_from_primitive!
     // when `from` is a non-zero integer primitive.
     //
@@ -1203,7 +1290,6 @@ macro_rules! try_from_primitive {
         }
     };
 
-    // DONE
     // try_from_primitive!
     // when `from` is a NonZeroI and `for` can not represent positive values
     //
@@ -1316,7 +1402,6 @@ macro_rules! try_from_primitive {
         }
     };
 
-    // DONE
     // try_from_primitive!
     // when `from` is a primitive integer and `for` can only represent negative values.
     //
@@ -1365,7 +1450,6 @@ macro_rules! try_from_primitive {
         }
     };
 
-    // DONE
     // try_from_primitive!
     // when `from` is a NonZeroI and `for` can not represent positive values.
     //
@@ -1413,7 +1497,6 @@ macro_rules! try_from_primitive {
             }
         }
     };
-
 }
 /// No-op alternative for disabling `TryFrom` impls.
 #[cfg(not(feature = "try_from"))]
@@ -1421,6 +1504,387 @@ macro_rules! try_from_primitive {
     ($($tt:tt)*) => {};
 }
 pub(crate) use try_from_primitive;
+
+/// Implements `TryFrom`<`$from$from_b`> for `$for$for_b`.
+///
+/// # Args
+/// - `$for`:    the base name of the target. e.g. `NonZeroInteger`.
+/// - `$for_b`:  the bit size of the target. e.g. `16`.
+/// - `$from`:   the base name of the origin. e.g. `u`.
+/// - `$from_b`: a list of bit sizes of the origin. e.g. `8, 16`.
+///
+/// # Examples
+/// ```ignore
+/// try_for_primitive![many for: Integer + 8, from: u + 8, 16, 32, 64, 128];
+/// ```
+///
+/// # Branches ids
+/// - `int`
+/// - `nonzero`
+/// - `neg_int`
+/// - `non0_pos`
+/// - `neg_int`
+#[cfg(feature = "try_from")]
+macro_rules! try_for_primitive {
+    // try_for_primitive!
+    // when `from` is an integer with the same Zeroness as `for`
+    //
+    // Used by:
+    // - for: i        from: Z, Nnz
+    // - for: u        from: Z, Nnz, Pz
+    // - for: NonZeroI from: N0z, Pz
+    // - for: NonZeroU from: N0z
+    (int
+     for: $for:ident + $for_b:expr,
+     from: $from:ident + $( $from_b:expr ),+
+    ) => {
+        $(
+            try_for_primitive![@int for: $for + $for_b, from: $from + $from_b];
+        )+
+    };
+    (@int
+     for: $for:ident + $for_b:expr,
+     from: $from:ident + $from_b:expr
+    ) => {
+        devela::paste! {
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
+            impl TryFrom<[<$from$from_b>]> for [<$for$for_b>] {
+                type Error = $crate::error::NumeraError;
+                #[inline]
+                fn try_from(from: [<$from$from_b>])
+                    -> $crate::error::NumeraResult<[<$for$for_b>]> {
+                    Ok(from.0.try_into()?)
+                }
+            }
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
+            impl TryFrom<&[<$from$from_b>]> for [<$for$for_b>] {
+                type Error = $crate::error::NumeraError;
+                #[inline]
+                fn try_from(from: &[<$from$from_b>])
+                    -> $crate::error::NumeraResult<[<$for$for_b>]> {
+                    Ok(from.0.try_into()?)
+                }
+            }
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
+            impl TryFrom<&mut [<$from$from_b>]> for [<$for$for_b>] {
+                type Error = $crate::error::NumeraError;
+                #[inline]
+                fn try_from(from: &mut [<$from$from_b>])
+                    -> $crate::error::NumeraResult<[<$for$for_b>]> {
+                    Ok(from.0.try_into()?)
+                }
+            }
+        }
+    };
+
+    // try_for_primitive!
+    // when `from` is a non-zero integer, while `for` does support zero.
+    //
+    // Used by:
+    // - for: i     from: N0z, Pz
+    // - for: u     from: N0z, Pz
+    (non0
+     for: $for:ident + $for_b:expr,
+     from: $from:ident + $( $from_b:expr ),+
+    ) => {
+        $(
+            try_for_primitive![@non0 for: $for + $for_b, from: $from + $from_b];
+        )+
+    };
+    (@non0
+     for: $for:ident + $for_b:expr,
+     from: $from:ident + $from_b:expr
+    ) => {
+        devela::paste! {
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
+            impl TryFrom<[<$from$from_b>]> for [<$for$for_b>] {
+                type Error = $crate::error::NumeraError;
+                #[inline]
+                fn try_from(from: [<$from$from_b>])
+                    -> $crate::error::NumeraResult<[<$for$for_b>]> {
+                    Ok(from.0.get().try_into()?)
+                }
+            }
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
+            impl TryFrom<&[<$from$from_b>]> for [<$for$for_b>] {
+                type Error = $crate::error::NumeraError;
+                #[inline]
+                fn try_from(from: &[<$from$from_b>])
+                    -> $crate::error::NumeraResult<[<$for$for_b>]> {
+                    Ok(from.0.get().try_into()?)
+                }
+            }
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
+            impl TryFrom<&mut [<$from$from_b>]> for [<$for$for_b>] {
+                type Error = $crate::error::NumeraError;
+                #[inline]
+                fn try_from(from: &mut [<$from$from_b>])
+                    -> $crate::error::NumeraResult<[<$for$for_b>]> {
+                    Ok(from.0.get().try_into()?)
+                }
+            }
+        }
+    };
+
+    // try_for_primitive!
+    // when `from` supports zero, but `for` does not.
+    //
+    // Used by:
+    // - for: NonZeroI  from: Z, Nnz
+    // - for: NonZeroU  from: Z, Nnz
+    (int_non0
+     for: $for:ident + $for_b:expr,
+     from: $from:ident + $( $from_b:expr ),+
+    ) => {
+        $(
+            try_for_primitive![@int_non0 for: $for + $for_b, from: $from + $from_b];
+        )+
+    };
+    (@int_non0
+     for: $for:ident + $for_b:expr,
+     from: $from:ident + $from_b:expr
+    ) => {
+        devela::paste! {
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
+            impl TryFrom<[<$from$from_b>]> for [<$for$for_b>] {
+                type Error = $crate::error::NumeraError;
+                #[inline]
+                fn try_from(from: [<$from$from_b>])
+                    -> $crate::error::NumeraResult<[<$for$for_b>]> {
+                        [<$for$for_b>]::new(from.0.try_into()?).ok_or(Self::Error::Conversion)
+                }
+            }
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
+            impl TryFrom<&[<$from$from_b>]> for [<$for$for_b>] {
+                type Error = $crate::error::NumeraError;
+                #[inline]
+                fn try_from(from: &[<$from$from_b>])
+                    -> $crate::error::NumeraResult<[<$for$for_b>]> {
+                        [<$for$for_b>]::new(from.0.try_into()?).ok_or(Self::Error::Conversion)
+                }
+            }
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
+            impl TryFrom<&mut [<$from$from_b>]> for [<$for$for_b>] {
+                type Error = $crate::error::NumeraError;
+                #[inline]
+                fn try_from(from: &mut [<$from$from_b>])
+                    -> $crate::error::NumeraResult<[<$for$for_b>]> {
+                        [<$for$for_b>]::new(from.0.try_into()?).ok_or(Self::Error::Conversion)
+                }
+            }
+        }
+    };
+
+    // try_for_primitive!
+    // when `from` is an non-positive integer and `for` is a signed primitive
+    //
+    // Used by:
+    // - for: i        from: Npz
+    (neg
+     for: $for:ident + $for_b:expr,
+     from: $from:ident + $( $from_b:expr ),+
+    ) => {
+        $(
+            try_for_primitive![@neg for: $for + $for_b, from: $from + $from_b];
+        )+
+    };
+    (@neg
+     for: $for:ident + $for_b:expr,
+     from: $from:ident + $from_b:expr
+    ) => {
+        devela::paste! {
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
+            impl TryFrom<[<$from$from_b>]> for [<$for$for_b>] {
+                type Error = $crate::error::NumeraError;
+                #[inline]
+                fn try_from(from: [<$from$from_b>])
+                    -> $crate::error::NumeraResult<[<$for$for_b>]> {
+                    Ok([<$for$for_b>]::try_from(from.0)?.neg())
+                }
+            }
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
+            impl TryFrom<&[<$from$from_b>]> for [<$for$for_b>] {
+                type Error = $crate::error::NumeraError;
+                #[inline]
+                fn try_from(from: &[<$from$from_b>])
+                    -> $crate::error::NumeraResult<[<$for$for_b>]> {
+                    Ok([<$for$for_b>]::try_from(from.0)?.neg())
+                }
+            }
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
+            impl TryFrom<&mut [<$from$from_b>]> for [<$for$for_b>] {
+                type Error = $crate::error::NumeraError;
+                #[inline]
+                fn try_from(from: &mut [<$from$from_b>])
+                    -> $crate::error::NumeraResult<[<$for$for_b>]> {
+                    Ok([<$for$for_b>]::try_from(from.0)?.neg())
+                }
+            }
+        }
+    };
+
+    // try_for_primitive!
+    // when `from` is an non-positive integer and `for` is a non-zero signed primitive
+    //
+    // Used by:
+    // - for: NonZeroI  from: Npz
+    (neg_non0
+     for: $for:ident + $for_b:expr,
+     from: $from:ident + $( $from_b:expr ),+
+    ) => {
+        $(
+            try_for_primitive![@neg_non0 for: $for + $for_b, from: $from + $from_b];
+        )+
+    };
+    (@neg_non0
+     for: $for:ident + $for_b:expr,
+     from: $from:ident + $from_b:expr
+    ) => {
+        devela::paste! {
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
+            impl TryFrom<[<$from$from_b>]> for [<$for$for_b>] {
+                type Error = $crate::error::NumeraError;
+                #[inline]
+                fn try_from(from: [<$from$from_b>])
+                    -> $crate::error::NumeraResult<[<$for$for_b>]> {
+                    [<$for$for_b>]::new(
+                        [<i$for_b>]::try_from(from.0)?.neg()
+                    ).ok_or(Self::Error::Conversion)
+                }
+            }
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
+            impl TryFrom<&[<$from$from_b>]> for [<$for$for_b>] {
+                type Error = $crate::error::NumeraError;
+                #[inline]
+                fn try_from(from: &[<$from$from_b>])
+                    -> $crate::error::NumeraResult<[<$for$for_b>]> {
+                    [<$for$for_b>]::new(
+                        [<i$for_b>]::try_from(from.0)?.neg()
+                    ).ok_or(Self::Error::Conversion)
+                }
+            }
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
+            impl TryFrom<&mut [<$from$from_b>]> for [<$for$for_b>] {
+                type Error = $crate::error::NumeraError;
+                #[inline]
+                fn try_from(from: &mut [<$from$from_b>])
+                    -> $crate::error::NumeraResult<[<$for$for_b>]> {
+                    [<$for$for_b>]::new(
+                        [<i$for_b>]::try_from(from.0)?.neg()
+                    ).ok_or(Self::Error::Conversion)
+                }
+            }
+        }
+    };
+
+    // try_for_primitive!
+    // when `from` is a negative integer, and `for` is a signed primitive
+    //
+    // Used by:
+    // - for: i     from: Nz
+    (non0neg
+     for: $for:ident + $for_b:expr,
+     from: $from:ident + $( $from_b:expr ),+
+    ) => {
+        $(
+            try_for_primitive![@non0neg for: $for + $for_b, from: $from + $from_b];
+        )+
+    };
+    (@non0neg
+     for: $for:ident + $for_b:expr,
+     from: $from:ident + $from_b:expr
+    ) => {
+        devela::paste! {
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
+            impl TryFrom<[<$from$from_b>]> for [<$for$for_b>] {
+                type Error = $crate::error::NumeraError;
+                #[inline]
+                fn try_from(from: [<$from$from_b>])
+                    -> $crate::error::NumeraResult<[<$for$for_b>]> {
+                    Ok([<$for$for_b>]::try_from(from.0.get())?.neg())
+                }
+            }
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
+            impl TryFrom<&[<$from$from_b>]> for [<$for$for_b>] {
+                type Error = $crate::error::NumeraError;
+                #[inline]
+                fn try_from(from: &[<$from$from_b>])
+                    -> $crate::error::NumeraResult<[<$for$for_b>]> {
+                    Ok([<$for$for_b>]::try_from(from.0.get())?.neg())
+                }
+            }
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
+            impl TryFrom<&mut [<$from$from_b>]> for [<$for$for_b>] {
+                type Error = $crate::error::NumeraError;
+                #[inline]
+                fn try_from(from: &mut [<$from$from_b>])
+                    -> $crate::error::NumeraResult<[<$for$for_b>]> {
+                    Ok([<$for$for_b>]::try_from(from.0.get())?.neg())
+                }
+            }
+        }
+    };
+
+    // try_for_primitive!
+    // when `from` is an negative integer and `for` is a non-zero signed primitive
+    //
+    // Used by:
+    // - for: NonZeroI  from: Nz
+    (non0neg_non0
+     for: $for:ident + $for_b:expr,
+     from: $from:ident + $( $from_b:expr ),+
+    ) => {
+        $(
+            try_for_primitive![@non0neg_non0 for: $for + $for_b, from: $from + $from_b];
+        )+
+    };
+    (@non0neg_non0
+     for: $for:ident + $for_b:expr,
+     from: $from:ident + $from_b:expr
+    ) => {
+        devela::paste! {
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
+            impl TryFrom<[<$from$from_b>]> for [<$for$for_b>] {
+                type Error = $crate::error::NumeraError;
+                #[inline]
+                fn try_from(from: [<$from$from_b>])
+                    -> $crate::error::NumeraResult<[<$for$for_b>]> {
+                    [<$for$for_b>]::new(
+                        [<i$for_b>]::try_from(from.0.get())?.neg()
+                    ).ok_or(Self::Error::Conversion)
+                }
+            }
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
+            impl TryFrom<&[<$from$from_b>]> for [<$for$for_b>] {
+                type Error = $crate::error::NumeraError;
+                #[inline]
+                fn try_from(from: &[<$from$from_b>])
+                    -> $crate::error::NumeraResult<[<$for$for_b>]> {
+                    [<$for$for_b>]::new(
+                        [<i$for_b>]::try_from(from.0.get())?.neg()
+                    ).ok_or(Self::Error::Conversion)
+                }
+            }
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
+            impl TryFrom<&mut [<$from$from_b>]> for [<$for$for_b>] {
+                type Error = $crate::error::NumeraError;
+                #[inline]
+                fn try_from(from: &mut [<$from$from_b>])
+                    -> $crate::error::NumeraResult<[<$for$for_b>]> {
+                    [<$for$for_b>]::new(
+                        [<i$for_b>]::try_from(from.0.get())?.neg()
+                    ).ok_or(Self::Error::Conversion)
+                }
+            }
+        }
+    };
+}
+/// No-op alternative for disabling `TryFrom` impls.
+#[cfg(not(feature = "try_from"))]
+macro_rules! try_for_primitive {
+    ($($tt:tt)*) => {};
+}
+pub(crate) use try_for_primitive;
 
 /// Implements `TryFrom`<`$from$from_b`> for `$for$for_b`.
 ///
@@ -1444,8 +1908,9 @@ macro_rules! try_from_any {
     // when the conversion is only valid when the `from` value is `zero`.
     //
     // Used by:
-    // - for: Nnz   from: Npz
-    // - for: Npz   from: Nnz, u
+    // - for: Nnz       from: Npz
+    // - for: Npz       from: Nnz, u
+    // - for: u         from: Npz
     (zero
      for: $for:ident + $for_b:expr,
      from: $from:ident + $( $from_b:expr ),+) => {
@@ -1502,10 +1967,12 @@ macro_rules! try_from_any {
     // when the conversion attempt must always error.
     //
     // Used by:
-    // - for: Pz    from: Nz, Npz
-    // - for: Nz    from: Nnz, Pz, P
-    // - for: Nnz   from: Nz
-    // - for: Npz   from: Pz, P
+    // - for: Pz        from: Nz, Npz
+    // - for: Nz        from: Nnz, Pz, P
+    // - for: Nnz       from: Nz
+    // - for: Npz       from: Pz, P
+    // - for: u         from: Nz
+    // - for: NonZeroU  from: Npz, Nz
     (error
      for: $for:ident + $for_b:expr,
      from: $from:ident + $( $from_b:expr ),+) => {
