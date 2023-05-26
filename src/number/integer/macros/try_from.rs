@@ -8,11 +8,12 @@
 //   - try_from_integer!
 //   - try_from_primitive!
 //   - try_for_primitive!
+//   - try_for_big! TODO
 //   - try_from_any!
 
 /* fallible TryFrom conversions */
 
-/// Implements `TryFrom`<`$from$from_b`> for `$for$for_b`.
+/// Implements TryFrom: from integers, for integers.
 ///
 /// # Args
 /// - `$for`:    the base name of the target. e.g. `Integer`.
@@ -661,7 +662,7 @@ macro_rules! try_from_integer {
 }
 pub(crate) use try_from_integer;
 
-/// Implements `TryFrom`<`$from$from_b`> for `$for$for_b`.
+/// Implements TryFrom: from primitives, for integers.
 ///
 /// # Args
 /// - `$for`:    the base name of the target. e.g. `NonZeroInteger`.
@@ -1014,7 +1015,7 @@ macro_rules! try_from_primitive {
 }
 pub(crate) use try_from_primitive;
 
-/// Implements `TryFrom`<`$from$from_b`> for `$for$for_b`.
+/// Implements TryFrom: from integers, for primitives.
 ///
 /// # Args
 /// - `$for`:    the base name of the target. e.g. `NonZeroInteger`.
@@ -1395,7 +1396,7 @@ macro_rules! try_for_primitive {
 }
 pub(crate) use try_for_primitive;
 
-/// Implements `TryFrom`<`$from$from_b`> for `$for$for_b`.
+/// Implements TryFrom: from any, for any.
 ///
 /// # Args
 /// - `$for`:    the base name of the target. e.g. `NonZeroInteger`.

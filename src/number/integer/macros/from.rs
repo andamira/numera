@@ -8,10 +8,11 @@
 //   - from_integer!
 //   - from_primitive!
 //   - for_primitive!
+//   - for_big
 
 /* infallible From conversions */
 
-/// Implements From<`$from$from_b`> for `$for$for_b`.
+/// Implements From: from integers, for integers.
 ///
 /// # Args
 /// - `$for`:    the base name of the target. e.g. `Integer`.
@@ -263,7 +264,7 @@ macro_rules! from_integer {
 }
 pub(crate) use from_integer;
 
-/// Implements From<`$from_p$from_b`> for `$for$for_b`.
+/// Implements From: from primitives, for integers.
 ///
 /// # Args
 /// - `$for`:    the base name of the target. e.g. `NonZeroInteger`.
@@ -393,8 +394,7 @@ macro_rules! from_primitive {
 }
 pub(crate) use from_primitive;
 
-// WIP
-/// Implements Into<`$from_p$from_b`> for `$for$for_b`.
+/// Implements From: from integers, for primitives.
 ///
 /// # Args
 /// - `$for`:    the base name of the target. e.g. `NonZeroInteger`.
@@ -494,3 +494,253 @@ macro_rules! for_primitive {
     };
 }
 pub(crate) use for_primitive;
+
+// WIP
+/// Implements From: from integers, for big integers.
+///
+/// # Args
+/// - `$for`:    the base name of the target. e.g. `NonZeroInteger`.
+/// - `$for_b`:  the bit size of the target. e.g. `16`.
+/// - `$from_p`: the base name of the origin. e.g. `u`.
+/// - `$from_b`: a list of bit sizes of the origin. e.g. `8, 16`.
+///
+/// # Examples
+/// ```ignore
+/// TODO
+/// for_big![many for: IntegerBig, from: Integer+8];
+/// for_big![many for: IntegerBig, from: Integer+8,16];
+/// ```
+///
+/// # Branches ids
+/// - `int`
+/// - `non0`
+macro_rules! for_big {
+    // for_big!
+    // when `from` is an integer
+    //
+    // - from: Z, Nnz
+    (int
+     for: $for:ident,
+     from: $from_p:ident + $( $from_b:expr ),+
+    ) => {
+        $(
+            for_big![@int for: $for, from: $from_p + $from_b];
+        )+
+    };
+    (@int
+     for: $for:ident,
+     from: $from_p:ident + $from_b:expr
+    ) => {
+        devela::paste! {
+            impl From<[<$from_p$from_b>]> for $for {
+                #[inline]
+                fn from(from: [<$from_p$from_b>]) -> Self {
+                    Self(from.0.into())
+                }
+            }
+            impl From<&[<$from_p$from_b>]> for $for {
+                #[inline]
+                fn from(from: &[<$from_p$from_b>]) -> Self {
+                    Self(from.0.into())
+                }
+            }
+            impl From<&mut [<$from_p$from_b>]> for $for {
+                #[inline]
+                fn from(from: &mut [<$from_p$from_b>]) -> Self {
+                    Self(from.0.into())
+                }
+            }
+        }
+    };
+
+    // for_big!
+    // when `from` is a negative integer
+    //
+    // - from: Nz
+    (intneg
+     for: $for:ident,
+     from: $from_p:ident + $( $from_b:expr ),+
+    ) => {
+        $(
+            for_big![@intneg for: $for, from: $from_p + $from_b];
+        )+
+    };
+    (@intneg
+     for: $for:ident,
+     from: $from_p:ident + $from_b:expr
+    ) => {
+        devela::paste! {
+            impl From<[<$from_p$from_b>]> for $for {
+                #[inline]
+                fn from(from: [<$from_p$from_b>]) -> Self {
+                    Self(<ibig::IBig>::from(from.0).neg())
+                }
+            }
+            impl From<&[<$from_p$from_b>]> for $for {
+                #[inline]
+                fn from(from: &[<$from_p$from_b>]) -> Self {
+                    Self(<ibig::IBig>::from(from.0).neg())
+                }
+            }
+            impl From<&mut [<$from_p$from_b>]> for $for {
+                #[inline]
+                fn from(from: &mut [<$from_p$from_b>]) -> Self {
+                    Self(<ibig::IBig>::from(from.0).neg())
+                }
+            }
+        }
+    };
+
+    // for_big!
+    // when `from` is a non-zero integer
+    //
+    // - from: N0z, Pz
+    (non0int
+     for: $for:ident,
+     from: $from_p:ident + $( $from_b:expr ),+
+    ) => {
+        $(
+            for_big![@non0int for: $for, from: $from_p + $from_b];
+        )+
+    };
+    (@non0int
+     for: $for:ident,
+     from: $from_p:ident + $from_b:expr
+    ) => {
+        devela::paste! {
+            impl From<[<$from_p$from_b>]> for $for {
+                #[inline]
+                fn from(from: [<$from_p$from_b>]) -> Self {
+                    Self(from.0.get().into())
+                }
+            }
+            impl From<&[<$from_p$from_b>]> for $for {
+                #[inline]
+                fn from(from: &[<$from_p$from_b>]) -> Self {
+                    Self(from.0.get().into())
+                }
+            }
+            impl From<&mut [<$from_p$from_b>]> for $for {
+                #[inline]
+                fn from(from: &mut [<$from_p$from_b>]) -> Self {
+                    Self(from.0.get().into())
+                }
+            }
+        }
+    };
+
+    // for_big!
+    // when `from` is a non-zero negative integer
+    //
+    // - from: Nz
+    (non0intneg
+     for: $for:ident,
+     from: $from_p:ident + $( $from_b:expr ),+
+    ) => {
+        $(
+            for_big![@non0intneg for: $for, from: $from_p + $from_b];
+        )+
+    };
+    (@non0intneg
+     for: $for:ident,
+     from: $from_p:ident + $from_b:expr
+    ) => {
+        devela::paste! {
+            impl From<[<$from_p$from_b>]> for $for {
+                #[inline]
+                fn from(from: [<$from_p$from_b>]) -> Self {
+                    Self(<ibig::IBig>::from(from.0.get()).neg())
+                }
+            }
+            impl From<&[<$from_p$from_b>]> for $for {
+                #[inline]
+                fn from(from: &[<$from_p$from_b>]) -> Self {
+                    Self(<ibig::IBig>::from(from.0.get()).neg())
+                }
+            }
+            impl From<&mut [<$from_p$from_b>]> for $for {
+                #[inline]
+                fn from(from: &mut [<$from_p$from_b>]) -> Self {
+                    Self(<ibig::IBig>::from(from.0.get()).neg())
+                }
+            }
+        }
+    };
+
+    // for_big!
+    // when `from` is a primitive
+    //
+    // - from: i, u
+    (prim
+     for: $for:ident,
+     from: $from_p:ident + $( $from_b:expr ),+
+    ) => {
+        $(
+            for_big![@prim for: $for, from: $from_p + $from_b];
+        )+
+    };
+    (@prim
+     for: $for:ident,
+     from: $from_p:ident + $from_b:expr
+    ) => {
+        devela::paste! {
+            impl From<[<$from_p$from_b>]> for $for {
+                #[inline]
+                fn from(from: [<$from_p$from_b>]) -> Self {
+                    Self(from.into())
+                }
+            }
+            impl From<&[<$from_p$from_b>]> for $for {
+                #[inline]
+                fn from(from: &[<$from_p$from_b>]) -> Self {
+                    Self(<ibig::IBig>::from(*from))
+                }
+            }
+            impl From<&mut [<$from_p$from_b>]> for $for {
+                #[inline]
+                fn from(from: &mut [<$from_p$from_b>]) -> Self {
+                    Self(<ibig::IBig>::from(*from))
+                }
+            }
+        }
+    };
+
+    // for_big!
+    // when `from` is a non-zero primitive
+    //
+    // - from: NonZeroI, NonZeroU
+    (non0prim
+     for: $for:ident,
+     from: $from_p:ident + $( $from_b:expr ),+
+    ) => {
+        $(
+            for_big![@non0prim for: $for, from: $from_p + $from_b];
+        )+
+    };
+    (@non0prim
+     for: $for:ident,
+     from: $from_p:ident + $from_b:expr
+    ) => {
+        devela::paste! {
+            impl From<core::num::[<$from_p$from_b>]> for $for {
+                #[inline]
+                fn from(from: core::num::[<$from_p$from_b>]) -> Self {
+                    Self(from.get().into())
+                }
+            }
+            impl From<&core::num::[<$from_p$from_b>]> for $for {
+                #[inline]
+                fn from(from: &core::num::[<$from_p$from_b>]) -> Self {
+                    Self(<ibig::IBig>::from(from.get()))
+                }
+            }
+            impl From<&mut core::num::[<$from_p$from_b>]> for $for {
+                #[inline]
+                fn from(from: &mut core::num::[<$from_p$from_b>]) -> Self {
+                    Self(<ibig::IBig>::from(from.get()))
+                }
+            }
+        }
+    };
+}
+pub(crate) use for_big;

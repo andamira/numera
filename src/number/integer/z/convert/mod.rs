@@ -194,3 +194,27 @@ try_for_primitive![int_non0 for:NonZeroU+16, from:Integer+8,16,32,64,128];
 try_for_primitive![int_non0 for:NonZeroU+32, from:Integer+8,16,32,64,128];
 try_for_primitive![int_non0 for:NonZeroU+64, from:Integer+8,16,32,64,128];
 try_for_primitive![int_non0 for:NonZeroU+128, from:Integer+8,16,32,64,128];
+
+// TODO: TEST
+// TODO: TryFrom impls
+#[cfg(feature = "ibig")]
+mod big {
+    use super::*;
+    use crate::number::integer::{
+        macros::for_big,
+        IntegerBig,
+    };
+
+    for_big![prim for:IntegerBig, from:i+8,16,32,64,128];
+    for_big![prim for:IntegerBig, from:u+8,16,32,64,128];
+    for_big![non0prim for:IntegerBig, from:NonZeroI+8,16,32,64,128];
+    for_big![non0prim for:IntegerBig, from:NonZeroU+8,16,32,64,128];
+
+    for_big![int for:IntegerBig, from:Integer+8,16,32,64,128];
+    for_big![int for:IntegerBig, from:NonNegativeInteger+8,16,32,64,128];
+    for_big![int for:IntegerBig, from:Prime+8,16,32,64,128];
+    for_big![non0int for:IntegerBig, from:NonZeroInteger+8,16,32,64,128];
+    for_big![non0int for:IntegerBig, from:PositiveInteger+8,16,32,64,128];
+    for_big![intneg for:IntegerBig, from:NonPositiveInteger+8,16,32,64,128];
+    for_big![non0intneg for:IntegerBig, from:NegativeInteger+8,16,32,64,128];
+}
