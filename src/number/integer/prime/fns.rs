@@ -2,7 +2,25 @@
 //
 //! Prime related standalone functions.
 //
+// TOC
+//
+// - prime_number_theorem
+//
+// - is_prime
+// - is_prime_brute
+// - nth_prime
+// - prime_pi
+//
+// - is_prime_sieve
+// - nth_prime_sieve
+// - prime_pi_sieve
+//
+// - largest_prime_pow2_doublings
+// - ten_primes_less_pow2 // TODO
 
+use super::data::{LARGEST_PRIME_POW2_DOUBLINGS, TEN_PRIMES_LESS_POW2};
+#[cfg(feature = "big")]
+use crate::all::IntegerBig;
 use crate::number::real::float::fns::sqrt_fisr64;
 use core::num::NonZeroU32;
 #[cfg(feature = "std")]
@@ -18,7 +36,6 @@ use {core::num::NonZeroUsize, primal_sieve::Sieve};
 /// [0w]: https://en.wikipedia.org/wiki/Prime_number_theorem
 //
 // IMPROVE: use big int and big float.
-// IMPROVE: make a no-std version
 #[cfg(feature = "std")]
 #[cfg_attr(feature = "nightly", doc(cfg(feature = "std")))]
 pub fn prime_number_theorem(n: u128) -> u128 {
@@ -28,21 +45,6 @@ pub fn prime_number_theorem(n: u128) -> u128 {
     #[allow(clippy::cast_sign_loss, clippy::cast_possible_truncation)]
     return (float_n / ln_n).round() as u128;
 }
-
-// /// Checks whether a `number` is prime, using basic trial division.
-// ///
-// /// This naive approach checks all numbers from 2 to number/2.
-// pub fn is_prime_brute(number: u32) -> bool {
-//     if number <= 1 {
-//         return false;
-//     }
-//     for i in 2..=number / 2 {
-//         if number % i == 0 {
-//             return false;
-//         }
-//     }
-//     true
-// }
 
 /// Checks whether a `number` is prime, using optimized trial division.
 ///
@@ -71,6 +73,21 @@ pub fn is_prime(number: u32) -> bool {
             true
         }
     }
+}
+
+/// Checks whether a `number` is prime, using basic trial division.
+///
+/// This naive approach checks all numbers from 2 to number/2.
+pub fn is_prime_brute(number: u32) -> bool {
+    if number <= 1 {
+        return false;
+    }
+    for i in 2..=number / 2 {
+        if number % i == 0 {
+            return false;
+        }
+    }
+    true
 }
 
 /// Finds the `nth` prime number using [`is_prime`].
@@ -129,4 +146,33 @@ pub fn nth_prime_sieve(nth: NonZeroUsize) -> usize {
 #[cfg_attr(feature = "nightly", doc(cfg(feature = "std")))]
 pub fn prime_pi_sieve(n: usize) -> usize {
     Sieve::new(n).prime_pi(n)
+}
+
+/* data extraction */
+
+/// Returns a big integer containing the largest prime just less the power of
+/// two represented by $2^{3+i)}$.
+///
+/// Valid `i` values are between 0 and 13 inclusive, which corresponds to
+/// bit-sizes between 8 and 65,536.
+///
+/// It uses the [`LARGEST_PRIME_POW2_DOUBLINGS`] table.
+///
+/// # Panics
+/// If `index` is > 13.
+///
+/// # Examples
+/// ```
+/// use numera::all::{largest_prime_pow2_doublings, ConstUpperBounded, Nnz128, Prime64};
+///
+/// assert_eq![largest_prime_pow2_doublings(3), Prime64::MAX.into()];
+/// assert_eq![largest_prime_pow2_doublings(4), (Nnz128::MAX - Nnz128::new(159 -1)).into()];
+/// ```
+#[inline]
+#[cfg(feature = "big")]
+#[cfg_attr(feature = "nightly", doc(cfg(any(feature = "big", feature = "ibig"))))]
+pub fn largest_prime_pow2_doublings(i: usize) -> IntegerBig {
+    #[allow(clippy::cast_possible_truncation)]
+    return IntegerBig::new(2).pow(2_usize.pow(3 + i as u32))
+        - IntegerBig::new(LARGEST_PRIME_POW2_DOUBLINGS[i].into());
 }

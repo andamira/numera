@@ -24,7 +24,7 @@ pub(crate) mod all {
     pub use super::{
         data::*,
         family::Primes,
-        fns::{is_prime, nth_prime, prime_pi},
+        fns::{is_prime, is_prime_brute, nth_prime, prime_pi},
         prime_trait::Prime,
         sized::{Prime128, Prime16, Prime32, Prime64, Prime8},
     };
@@ -32,6 +32,10 @@ pub(crate) mod all {
     #[doc(inline)]
     #[cfg(feature = "std")]
     pub use super::fns::{is_prime_sieve, nth_prime_sieve, prime_number_theorem, prime_pi_sieve};
+
+    #[doc(inline)]
+    #[cfg(feature = "ibig")]
+    pub use super::fns::largest_prime_pow2_doublings;
 }
 
 use crate::number::macros::define_abbreviations;
