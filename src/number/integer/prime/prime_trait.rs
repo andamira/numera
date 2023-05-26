@@ -1,4 +1,4 @@
-// numera::number::integer::prime::trait_prime
+// numera::number::integer::prime::prime_trait
 //
 //!
 //

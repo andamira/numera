@@ -1,4 +1,4 @@
-// numera::number::integer::q::impl_rational
+// numera::number::integer::q::rational
 //
 //!
 //

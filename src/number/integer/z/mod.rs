@@ -14,7 +14,7 @@
 mod convert;
 mod define_sized;
 mod family;
-mod impl_integer;
+mod integer;
 mod ops;
 
 #[cfg(feature = "ibig")]

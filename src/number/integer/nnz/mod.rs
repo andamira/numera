@@ -21,7 +21,7 @@
 mod convert;
 mod define_sized;
 mod family;
-mod impl_integer;
+mod integer;
 mod ops;
 
 pub use define_sized::{

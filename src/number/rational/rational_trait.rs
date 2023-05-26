@@ -1,4 +1,4 @@
-// numera::number::integer::trait_rational
+// numera::number::integer::rational_trait
 //
 //!
 //

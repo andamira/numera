@@ -1,4 +1,4 @@
-// numera::number::integer::nz::impl_integer
+// numera::number::integer::nz::integer
 //
 //!
 //

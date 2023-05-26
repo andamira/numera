@@ -12,8 +12,8 @@
 pub(crate) mod macros;
 
 mod family;
+mod integer_trait;
 pub mod prime;
-mod trait_integer;
 
 pub mod n0z;
 pub mod nnz;
@@ -26,8 +26,8 @@ pub use all::*;
 pub(crate) mod all {
     #[doc(inline)]
     pub use super::{
-        family::AnyIntegers, n0z::*, nnz::*, npz::*, nz::*, prime::*, pz::*,
-        trait_integer::Integer, z::*,
+        family::AnyIntegers, integer_trait::Integer, n0z::*, nnz::*, npz::*, nz::*, prime::*,
+        pz::*, z::*,
     };
 
     #[doc(inline)]

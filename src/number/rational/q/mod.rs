@@ -13,8 +13,8 @@ use crate::number::macros::define_abbreviations;
 mod convert;
 mod define_sized;
 mod family;
-mod impl_rational;
 mod ops;
+mod rational;
 
 pub use define_sized::{Rational128, Rational16, Rational32, Rational64, Rational8};
 pub use family::Rationals;

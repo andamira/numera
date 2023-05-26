@@ -21,7 +21,7 @@ pub mod data;
 mod family;
 mod fns;
 mod impl_traits;
-mod trait_prime;
+mod prime_trait;
 
 use data::*;
 
@@ -31,7 +31,7 @@ pub(crate) mod all {
     pub use super::{
         family::Primes,
         fns::{is_prime, nth_prime, prime_pi},
-        trait_prime::Prime,
+        prime_trait::Prime,
     };
 
     #[doc(inline)]
