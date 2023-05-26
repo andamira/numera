@@ -20,22 +20,23 @@ keywords = ["math", "mathematics", "number", "numeral", "numeric"]
 publish = true
 
 [features]
-default = ["std", "safe"]
+default = ["std", "safe", "all_fast"]
 
 #* standard features *#
 
 std = ["devela/std", "half?/std", "ibig?/std", "primal-sieve"]
 safe = ["devela/safe"]
 unsafe = [] # unsafe alternatives
-nightly = [] # used for documentation
+nightly = [] # used only for docs
 
 #* extra features *#
 
-all = ["big", "try_from"] # all the extras
-all_nostd = ["try_from"] # all the no-std extras
+all = ["big", "try_from"] # all possible features
+all_nostd = ["try_from"] # all except std dependent
+all_fast = ["big"] # all except slow to compile
 
 big = ["ibig"] # big numbers
-try_from = [] # TryFrom conversions (+3s)
+try_from = [] # TryFrom conversions (slow +3s)
 
 
 [dependencies]

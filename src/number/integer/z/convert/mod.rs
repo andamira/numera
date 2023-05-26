@@ -200,10 +200,7 @@ try_for_primitive![int_non0 for:NonZeroU+128, from:Integer+8,16,32,64,128];
 #[cfg(feature = "ibig")]
 mod big {
     use super::*;
-    use crate::number::integer::{
-        macros::for_big,
-        IntegerBig,
-    };
+    use crate::number::integer::{macros::for_big, IntegerBig};
 
     for_big![prim for:IntegerBig, from:i+8,16,32,64,128];
     for_big![prim for:IntegerBig, from:u+8,16,32,64,128];

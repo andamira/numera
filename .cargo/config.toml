@@ -14,8 +14,8 @@ cNu = "check --target thumbv7m-none-eabi --no-default-features --features=all_no
 cF = "check --no-default-features --features=std,safe"
 cuF = "check --no-default-features --features=std"
 ## Fast all
-caF = "check --no-default-features --features=std,safe,all"
-craF = "check --release --no-default-features --features=std,safe,all"
+caF = "check --no-default-features --features=std,safe,all_fast"
+craF = "check --release --no-default-features --features=std,safe,all_fast"
 cauF = "check --no-default-features --features=std,all"
 ## Fast no-std
 cnF = "check --no-default-features --features=safe"
@@ -46,7 +46,7 @@ clNuF = "clippy --target thumbv7m-none-eabi --no-default-features"
 # Fast
 clF = "clippy --no-default-features --features=std,safe"
 cluF = "clippy --no-default-features --features=std"
-claF = "clippy --no-default-features --features=std,safe,all"
+claF = "clippy --no-default-features --features=std,safe,all_fast"
 clnF = "clippy --no-default-features --features=safe"
 clnuF = "clippy --no-default-features"
 
@@ -65,15 +65,16 @@ doa = "doc --no-deps --open --features=all"
 #
 dn = "doc --no-deps --no-default-features"
 don = "doc --no-deps --open --no-default-features"
-# +nightly; document everything, unsafe
-nd = "doc --no-deps --no-default-features --features=nightly,std,try_from,all"
-ndo = "doc --no-deps --no-default-features --open --features=nightly,std,try_from,all"
-# fast
-ndF = "doc --no-deps --no-default-features --features=nightly,std,all"
-ndoF = "doc --no-deps --no-default-features --open --features=nightly,std,all"
-# safe
+# +nightly, document everything
+## unsafe
+nd = "doc --no-deps --no-default-features --features=nightly,std,all"
+ndo = "doc --no-deps --no-default-features --open --features=nightly,std,all"
+## safe
 nds = "doc --no-deps --features=nightly,all"
 ndso = "doc --no-deps --open --features=nightly,all"
+# Fast
+ndF = "doc --no-deps --no-default-features --features=nightly,std,all_fast"
+ndoF = "doc --no-deps --no-default-features --open --features=nightly,std,all_fast"
 
 # BUILD
 b = "build"
