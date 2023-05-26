@@ -14,14 +14,13 @@
 ///
 /// # Examples
 /// ```
-/// # use numera::all::*;
-/// # fn main() -> NumeraResult<()> {
-/// assert_eq![Nnz8::MAX - Prime8::MAX.into() + 1.into(), LARGEST_PRIME_POW2_DOUBLINGS[0].try_into()?];
-/// assert_eq![Nnz16::MAX - Prime16::MAX.into() + 1_u8.into(), LARGEST_PRIME_POW2_DOUBLINGS[1].try_into()?];
-/// assert_eq![Nnz32::MAX - Prime32::MAX.into() + 1_u8.into(), LARGEST_PRIME_POW2_DOUBLINGS[2].try_into()?];
-/// assert_eq![Nnz64::MAX - Prime64::MAX.into() + 1_u8.into(), LARGEST_PRIME_POW2_DOUBLINGS[3].try_into()?];
-/// assert_eq![Nnz128::MAX - Prime128::MAX.into() + 1_u8.into(), LARGEST_PRIME_POW2_DOUBLINGS[4].try_into()?];
-/// # Ok(()) }
+/// use numera::all::{LARGEST_PRIME_POW2_DOUBLINGS as LPP2D, *};
+///
+/// assert_eq![Nnz8::MAX - Prime8::MAX.into() + Nnz8::ONE, (LPP2D[0] as u8).into()];
+/// assert_eq![Nnz16::MAX - Prime16::MAX.into() + Nnz16::ONE, (LPP2D[1] as u16).into()];
+/// assert_eq![Nnz32::MAX - Prime32::MAX.into() + Nnz32::ONE, (LPP2D[2] as u32).into()];
+/// assert_eq![Nnz64::MAX - Prime64::MAX.into() + Nnz64::ONE, (LPP2D[3] as u64).into()];
+/// assert_eq![Nnz128::MAX - Prime128::MAX.into() + Nnz128::ONE, (LPP2D[4] as u128).into()];
 /// ```
 pub const LARGEST_PRIME_POW2_DOUBLINGS: [u32; 14] = [
     5,     // 0: 8-bit, 3 digits
@@ -46,6 +45,18 @@ pub const LARGEST_PRIME_POW2_DOUBLINGS: [u32; 14] = [
 /// The information was extracted from the [prime pages].
 ///
 /// [prime pages]: https://t5k.org/lists/2small/
+///
+/// # Examples
+/// ```
+/// use numera::all::{LARGEST_PRIME_POW2_DOUBLINGS as LPP2D, TEN_PRIMES_LESS_POW2 as TPLP2, *};
+///
+/// assert_eq![Nnz8::MAX - Prime8::MAX.into() + Nnz8::ONE, (TPLP2[8-8][0] as u8).into()];
+/// assert_eq![Nnz16::MAX - Prime16::MAX.into() + Nnz16::ONE, (TPLP2[16-8][0] as u16).into()];
+/// assert_eq![Nnz32::MAX - Prime32::MAX.into() + Nnz32::ONE, (TPLP2[32-8][0] as u32).into()];
+/// assert_eq![Nnz64::MAX - Prime64::MAX.into() + Nnz64::ONE, (TPLP2[64-8][0] as u64).into()];
+/// assert_eq![Nnz128::MAX - Prime128::MAX.into() + Nnz128::ONE, (TPLP2[128-8][0] as u128).into()];
+/// assert_eq![LPP2D[5], TPLP2[256-8][0] as u32];
+/// ```
 pub const TEN_PRIMES_LESS_POW2: [[u16; 10]; 100 * 4 - 7] = [
     [5, 15, 17, 23, 27, 29, 33, 45, 57, 59],                  // 8
     [3, 9, 13, 21, 25, 33, 45, 49, 51, 55],                   // 9

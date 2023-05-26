@@ -16,7 +16,7 @@
 // - prime_pi_sieve
 //
 // - largest_prime_pow2_doublings
-// - ten_primes_less_pow2 // TODO
+// - ten_primes_less_pow2
 
 use super::data::{LARGEST_PRIME_POW2_DOUBLINGS, TEN_PRIMES_LESS_POW2};
 #[cfg(feature = "big")]
@@ -156,23 +156,70 @@ pub fn prime_pi_sieve(n: usize) -> usize {
 /// Valid `i` values are between 0 and 13 inclusive, which corresponds to
 /// bit-sizes between 8 and 65,536.
 ///
-/// It uses the [`LARGEST_PRIME_POW2_DOUBLINGS`] table.
+/// Returns `None` if `index` is > 13.
 ///
-/// # Panics
-/// If `index` is > 13.
+/// It uses the [`LARGEST_PRIME_POW2_DOUBLINGS`] table.
 ///
 /// # Examples
 /// ```
 /// use numera::all::{largest_prime_pow2_doublings, ConstUpperBounded, Nnz128, Prime64};
 ///
-/// assert_eq![largest_prime_pow2_doublings(3), Prime64::MAX.into()];
-/// assert_eq![largest_prime_pow2_doublings(4), (Nnz128::MAX - Nnz128::new(159 -1)).into()];
+/// assert_eq![largest_prime_pow2_doublings(3).unwrap(), Prime64::MAX.into()];
+/// assert_eq![largest_prime_pow2_doublings(4).unwrap(), (Nnz128::MAX - Nnz128::new(159 -1)).into()];
 /// ```
 #[inline]
 #[cfg(feature = "big")]
 #[cfg_attr(feature = "nightly", doc(cfg(any(feature = "big", feature = "ibig"))))]
-pub fn largest_prime_pow2_doublings(i: usize) -> IntegerBig {
-    #[allow(clippy::cast_possible_truncation)]
-    return IntegerBig::new(2).pow(2_usize.pow(3 + i as u32))
-        - IntegerBig::new(LARGEST_PRIME_POW2_DOUBLINGS[i].into());
+pub fn largest_prime_pow2_doublings(i: usize) -> Option<IntegerBig> {
+    if i > 13 {
+        None
+    } else {
+        #[allow(clippy::cast_possible_truncation)]
+        return Some(
+            IntegerBig::new(2).pow(2_usize.pow(3 + i as u32))
+                - IntegerBig::new(LARGEST_PRIME_POW2_DOUBLINGS[i].into()),
+        );
+    }
+}
+
+/// Returns a big integer containing one of the ten largest primes just less
+/// than a power of two, between 8 and 400 bits.
+///
+/// - Valid `bitsize` values are between 8 and 400 inclusive.
+/// - Valid `index` values are from 0 to 9 inclusive, and indexes from the end.
+///   E.g. index=0 is the largest prime for the given bitsize.
+///
+/// Returns `None` if `bitsize` is < 8 or > 400 or if `index` is more than 9.
+///
+/// It uses the [`TEN_PRIMES_LESS_POW2`] table.
+///
+/// # Examples
+/// ```
+/// use numera::number::{integer::prime::*, traits::ConstUpperBounded};
+///
+/// assert_eq![ten_primes_less_pow2(8, 0).unwrap(), Prime8::MAX.into()];
+/// assert_eq![ten_primes_less_pow2(16, 0).unwrap(), Prime16::MAX.into()];
+/// assert_eq![ten_primes_less_pow2(32, 0).unwrap(), Prime32::MAX.into()];
+/// assert_eq![ten_primes_less_pow2(64, 0).unwrap(), Prime64::MAX.into()];
+/// assert_eq![ten_primes_less_pow2(128, 0).unwrap(), Prime128::MAX.into()];
+///
+/// assert_eq![ten_primes_less_pow2(8, 0).unwrap(), PRIMES_U8[53].into()];
+/// assert_eq![ten_primes_less_pow2(8, 1).unwrap(), PRIMES_U8[53-1].into()];
+/// assert_eq![ten_primes_less_pow2(8, 9).unwrap(), PRIMES_U8[53-9].into()];
+/// assert_eq![ten_primes_less_pow2(16, 0).unwrap(), PRIMES_U16[6_487].into()];
+/// assert_eq![ten_primes_less_pow2(16, 1).unwrap(), PRIMES_U16[6_487-1].into()];
+/// assert_eq![ten_primes_less_pow2(16, 9).unwrap(), PRIMES_U16[6_487-9].into()];
+/// ```
+#[inline]
+#[cfg(feature = "big")]
+#[cfg_attr(feature = "nightly", doc(cfg(any(feature = "big", feature = "ibig"))))]
+pub fn ten_primes_less_pow2(bitsize: usize, index: usize) -> Option<IntegerBig> {
+    if (8..=400).contains(&bitsize) && index < 10 {
+        Some(
+            IntegerBig::new(2).pow(bitsize)
+                - IntegerBig::new(TEN_PRIMES_LESS_POW2[bitsize - 8][index].into()),
+        )
+    } else {
+        None
+    }
 }
