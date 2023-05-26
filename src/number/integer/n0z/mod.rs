@@ -17,10 +17,10 @@ mod integer;
 mod ops;
 mod sized;
 
+pub use family::NonZeroIntegers;
 pub use sized::{
     NonZeroInteger128, NonZeroInteger16, NonZeroInteger32, NonZeroInteger64, NonZeroInteger8,
 };
-pub use family::NonZeroIntegers;
 
 use crate::number::macros::define_abbreviations;
 define_abbreviations![many N0z, NonZeroInteger, 8, 16, 32, 64, 128];

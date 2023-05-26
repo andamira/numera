@@ -24,7 +24,7 @@ pub use family::Integers;
 pub use sized::{Integer128, Integer16, Integer32, Integer64, Integer8};
 
 #[cfg(feature = "ibig")]
-#[cfg_attr(feature = "nightly", doc(cfg(feature = "ibig")))]
+#[cfg_attr(feature = "nightly", doc(cfg(any(feature = "big", feature = "ibig"))))]
 pub use big::IntegerBig;
 
 use crate::number::macros::define_abbreviations;
@@ -32,5 +32,5 @@ define_abbreviations![many Z, Integer, 8, 16, 32, 64, 128];
 
 /// Abbreviation of [`IntegerBig`].
 #[cfg(feature = "ibig")]
-#[cfg_attr(feature = "nightly", doc(cfg(feature = "ibig")))]
+#[cfg_attr(feature = "nightly", doc(cfg(any(feature = "big", feature = "ibig"))))]
 pub type ZBig = IntegerBig;

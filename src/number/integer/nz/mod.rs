@@ -18,10 +18,10 @@ mod integer;
 mod ops;
 mod sized;
 
+pub use family::NegativeIntegers;
 pub use sized::{
     NegativeInteger128, NegativeInteger16, NegativeInteger32, NegativeInteger64, NegativeInteger8,
 };
-pub use family::NegativeIntegers;
 
 use crate::number::macros::define_abbreviations;
 define_abbreviations![many Nz, NegativeInteger, 8, 16, 32, 64, 128];

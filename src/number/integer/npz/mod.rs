@@ -15,11 +15,11 @@ mod integer;
 mod ops;
 mod sized;
 
+pub use family::NonPositiveIntegers;
 pub use sized::{
     NonPositiveInteger128, NonPositiveInteger16, NonPositiveInteger32, NonPositiveInteger64,
     NonPositiveInteger8,
 };
-pub use family::NonPositiveIntegers;
 
 use crate::number::macros::define_abbreviations;
 define_abbreviations![many Npz, NonPositiveInteger, 8, 16, 32, 64, 128];

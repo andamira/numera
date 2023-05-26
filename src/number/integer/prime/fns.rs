@@ -1,6 +1,6 @@
 // numera::number::integer::prime::fns
 //
-//! Alternative implementations for finding primes.
+//! Prime related standalone functions.
 //
 
 use crate::number::real::float::fns::sqrt_fisr64;

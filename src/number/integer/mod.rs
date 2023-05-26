@@ -12,6 +12,7 @@
 pub(crate) mod macros;
 
 mod family;
+mod fns;
 mod integer_trait;
 pub mod prime;
 
@@ -32,5 +33,8 @@ pub(crate) mod all {
 
     #[doc(inline)]
     #[cfg(feature = "ibig")]
-    pub use super::z::IntegerBig;
+    pub use super::{
+        fns::{bit_len, bit_len_next_power},
+        z::IntegerBig,
+    };
 }

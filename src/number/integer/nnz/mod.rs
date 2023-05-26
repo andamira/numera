@@ -24,11 +24,11 @@ mod integer;
 mod ops;
 mod sized;
 
+pub use family::NonNegativeIntegers;
 pub use sized::{
     NonNegativeInteger128, NonNegativeInteger16, NonNegativeInteger32, NonNegativeInteger64,
     NonNegativeInteger8,
 };
-pub use family::NonNegativeIntegers;
 
 use crate::number::macros::{define_abbreviations, define_aliases};
 define_abbreviations![many Nnz, NonNegativeInteger, 8, 16, 32, 64, 128];
