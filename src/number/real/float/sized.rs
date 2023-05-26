@@ -1,4 +1,4 @@
-// numera::number::real::float::define_sized
+// numera::number::real::float::sized
 //
 //!
 //

@@ -1,23 +1,23 @@
-// numera::number::integer::nnz::define_sized
+// numera::number::integer::z::sized
 //
 //!
 //
 // TOC
 //
 // - macro
-//   - define_non_negative_integer_sized
+//   - define_integer_sized
 // - definitions
-//   - NonNegativeInteger[8|16|32|64|128]
+//   - Integer[8|16|32|64|128]
 
 #[cfg(feature = "try_from")]
-use crate::number::integer::NonNegativeIntegers;
+use crate::number::integer::Integers;
 use crate::{
     error::{IntegerError, NumeraResult},
     number::{
         macros::impl_larger_smaller,
         traits::{
-            Bound, ConstLowerBounded, ConstOne, ConstUpperBounded, ConstZero, Count, Countable,
-            Ident, LowerBounded, NonNegOne, Number, One, Sign, Unsigned, UpperBounded, Zero,
+            Bound, ConstLowerBounded, ConstNegOne, ConstOne, ConstUpperBounded, ConstZero, Count,
+            Countable, Ident, LowerBounded, NegOne, Number, One, Sign, Signed, UpperBounded, Zero,
         },
     },
 };
@@ -32,8 +32,8 @@ use devela::paste;
 /// - implements Default → 0
 ///
 /// # Args
-/// - `$name`: the base name of the integer. E.g. `NonNegaiveInteger`.
-/// - `$abbr`: the base abbreviated name, E.g. `Nnz`.
+/// - `$name`: the base name of the integer. E.g. `Integer`.
+/// - `$abbr`: the base abbreviated name, E.g. `Z`.
 /// - `$p`: the primitive prefix (i or u).
 ///
 /// - `$doc_num`: the type of number.
@@ -46,13 +46,13 @@ use devela::paste;
 ///
 /// - `$doc_det`: the determinant before the bit size. e.g. "An" (8-bit) or "A" 16-bit.
 /// - `$b`: the size in bits of the primitive used.
-macro_rules! define_nonnegative_integer_sized {
+macro_rules! define_integer_sized {
     // defines multiple integer types, with an inner primitive.
     (multi $name:ident, $abbr:ident, $p:ident,
      $doc_num:literal, $doc_type:literal, // $doc_new:literal,
      $doc_sign:literal, $doc_lower:expr, $doc_upper:expr,
         $(
-            (
+             (
              $doc_det:literal, $b:expr,
              larger: $larger:literal, $larger_b:literal,
              smaller: $smaller:literal, $smaller_b:literal
@@ -60,7 +60,7 @@ macro_rules! define_nonnegative_integer_sized {
         ),+
      ) => {
         $(
-            define_nonnegative_integer_sized![single $name, $abbr, $p,
+            define_integer_sized![single $name, $abbr, $p,
                $doc_num, $doc_type, // $doc_new,
                $doc_sign, $doc_lower, $doc_upper,
                ($doc_det, $b,
@@ -82,14 +82,9 @@ macro_rules! define_nonnegative_integer_sized {
         #[doc = $doc_det " "$b "-bit " $doc_num $doc_type ","]
         #[doc = "also known as [`" [<$abbr$b>] "`][super::" [<$abbr$b>] "]."]
         #[doc = "\n\nThe range of valid numeric values is $\\lbrack"
-        $doc_sign 0 " \\dots$ [`"
+        $doc_sign "$[`" $p$b "::" $doc_lower "`] $\\dots$ [`"
         $p$b "::" $doc_upper "`]$\\rbrack$."]
-        #[doc = "\n\nIt is equivalent to the [`" [<u$b>] "`] primitive."]
-        ///
-        /// Also known as a [*natural number*][m0], you can also use the alias
-        #[doc = "[`Natural" $b "`][super::Natural" $b "]."]
-        ///
-        /// [m0]: https://mathworld.wolfram.com/NaturalNumber.html
+        #[doc = "\nIt is equivalent to the [`" [<i$b>] "`] primitive."]
         #[derive(Clone, Copy, Default, Hash, PartialEq, Eq, PartialOrd, Ord)]
         pub struct [<$name$b>](pub [<$p$b>]);
 
@@ -104,17 +99,16 @@ macro_rules! define_nonnegative_integer_sized {
             }
         }
 
+        /// # Constructors
         impl [<$name$b>]  {
             #[doc = "Returns a new `" [<$name$b>] "`."]
             #[inline]
-            pub const fn new(value: [<$p$b>]) -> Self {
-                Self(value)
-            }
+            pub const fn new(value: [<$p$b>]) -> Self { Self(value) }
         }
 
         /* resizing */
 
-        impl_larger_smaller![$name, $b, NonNegativeIntegers,
+        impl_larger_smaller![$name, $b, Integers,
             larger: $larger, $larger_b, smaller: $smaller, $smaller_b
         ];
 
@@ -122,15 +116,15 @@ macro_rules! define_nonnegative_integer_sized {
 
         impl Sign for [<$name$b>] {
             #[inline]
-            fn can_negative(&self) -> bool { false }
+            fn can_negative(&self) -> bool { true }
             #[inline]
             fn can_positive(&self) -> bool { true }
             #[inline]
-            fn is_negative(&self) -> bool { false }
+            fn is_negative(&self) -> bool { self.0.is_negative() }
             #[inline]
             fn is_positive(&self) -> bool { self.0.is_positive() }
         }
-        impl Unsigned for [<$name$b>] {}
+        impl Signed for [<$name$b>] {}
 
         /* bound */
 
@@ -185,14 +179,14 @@ macro_rules! define_nonnegative_integer_sized {
             #[inline]
             fn can_one(&self) -> bool { true }
             #[inline]
-            fn can_neg_one(&self) -> bool { false }
+            fn can_neg_one(&self) -> bool { true }
 
             #[inline]
             fn is_zero(&self) -> bool { self.0 == 0 }
             #[inline]
             fn is_one(&self) -> bool { self.0 == 1 }
             #[inline]
-            fn is_neg_one(&self) -> bool { false }
+            fn is_neg_one(&self) -> bool { self.0 == -1 }
         }
         impl ConstZero for [<$name$b>] { const ZERO: Self = Self(0); }
         impl Zero for [<$name$b>] {
@@ -204,7 +198,11 @@ macro_rules! define_nonnegative_integer_sized {
             #[inline]
             fn new_one() -> Self { Self(1) }
         }
-        impl NonNegOne for [<$name$b>] {}
+        impl ConstNegOne for [<$name$b>] { const NEG_ONE: Self = Self(-1); }
+        impl NegOne for [<$name$b>] {
+            #[inline]
+            fn new_neg_one() -> Self { Self(-1) }
+        }
 
         /* number */
 
@@ -232,8 +230,8 @@ macro_rules! define_nonnegative_integer_sized {
 
 /* definitions */
 
-define_nonnegative_integer_sized![multi NonNegativeInteger, Nnz, u,
-    "non-negative integer number", ", from the set $\\Z^*$ ($\\N _0$)",
+define_integer_sized![multi Integer, Z, i,
+    "integer number", ", from the set $\\Z$",
     // "",
     "", MIN, MAX,
     ("An", 8, larger: true, 16, smaller: false, 8),
@@ -242,3 +240,57 @@ define_nonnegative_integer_sized![multi NonNegativeInteger, Nnz, u,
     ("A", 64, larger: true, 128, smaller: true, 32),
     ("A", 128, larger: false, 128, smaller: true, 64)
 ];
+
+#[cfg(test)]
+mod tests {
+    use crate::all::*;
+
+    #[test]
+    fn z_define_sized() -> NumeraResult<()> {
+        // Display
+        #[cfg(feature = "std")]
+        assert_eq![Z8::new(17).to_string(), "17"];
+
+        Ok(())
+    }
+
+    #[test]
+    fn z_define_sized_larger() -> NumeraResult<()> {
+        // min
+        assert_eq![Z8::new(100).as_larger_or_same(), Z16::new(100)];
+        assert_eq![Z8::new(100).try_as_larger(), Ok(Z16::new(100))];
+
+        // max
+        assert_eq![Z128::new(100).as_larger_or_same(), Z128::new(100)];
+        assert![Z128::new(100).try_as_larger().is_err()];
+
+        Ok(())
+    }
+
+    #[test]
+    #[cfg(feature = "try_from")]
+    fn z_define_sized_smaller() -> NumeraResult<()> {
+        // min
+        assert_eq![
+            Z8::new(100).as_smaller_or_same(),
+            Integers::Integer8(Z8::new(100))
+        ];
+        assert![Z8::new(100).try_as_smaller().is_err()];
+
+        // can't fit
+        assert_eq![
+            Z16::new(3_000).as_smaller_or_same(),
+            Integers::Integer16(Z16::new(3_000))
+        ];
+        assert![Z16::new(3_000).try_as_smaller().is_err()];
+
+        // max
+        assert_eq![
+            Z128::new(100).as_smaller_or_same(),
+            Integers::Integer64(Z64::new(100))
+        ];
+        assert_eq![Z128::new(100).try_as_smaller(), Ok(Z64::new(100))];
+
+        Ok(())
+    }
+}

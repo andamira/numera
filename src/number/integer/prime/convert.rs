@@ -3,8 +3,13 @@
 //!
 //
 
-use super::{NumeraError, NumeraResult, Prime16, Prime32, Prime8, Primes};
-use crate::all::{IntegerError, Number};
+use crate::{
+    error::{NumeraResult, IntegerError, NumeraError},
+    number::{
+        integer::prime::all::*,
+        traits::Number,
+    },
+};
 use devela::az::CheckedAs;
 
 /* conversions between primes */

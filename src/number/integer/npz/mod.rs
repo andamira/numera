@@ -10,12 +10,12 @@
 //
 
 mod convert;
-mod define_sized;
 mod family;
 mod integer;
 mod ops;
+mod sized;
 
-pub use define_sized::{
+pub use sized::{
     NonPositiveInteger128, NonPositiveInteger16, NonPositiveInteger32, NonPositiveInteger64,
     NonPositiveInteger8,
 };

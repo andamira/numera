@@ -1,4 +1,4 @@
-// numera::number::integer::z::define_big
+// numera::number::integer::z::big
 //
 //!
 //

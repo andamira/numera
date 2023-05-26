@@ -13,12 +13,12 @@
 //
 
 mod convert;
-mod define_sized;
 mod family;
 mod integer;
 mod ops;
+mod sized;
 
-pub use define_sized::{
+pub use sized::{
     NegativeInteger128, NegativeInteger16, NegativeInteger32, NegativeInteger64, NegativeInteger8,
 };
 pub use family::NegativeIntegers;

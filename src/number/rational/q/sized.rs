@@ -1,4 +1,4 @@
-// numera::number::rational::q::define_sized
+// numera::number::rational::q::sized
 //
 //!
 //

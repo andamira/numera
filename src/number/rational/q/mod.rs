@@ -11,12 +11,12 @@
 use crate::number::macros::define_abbreviations;
 
 mod convert;
-mod define_sized;
 mod family;
 mod ops;
 mod rational;
+mod sized;
 
-pub use define_sized::{Rational128, Rational16, Rational32, Rational64, Rational8};
 pub use family::Rationals;
+pub use sized::{Rational128, Rational16, Rational32, Rational64, Rational8};
 
 define_abbreviations![many Q, Rational, 8, 16, 32, 64, 128];

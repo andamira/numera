@@ -6,12 +6,12 @@
 //! [0w]: https://en.wikipedia.org/wiki/Floating-point_arithmetic#Floating-point_numbers
 //
 
-mod define_sized;
 // mod family;
 pub(crate) mod fns;
 // mod ops;
+mod sized;
 
-pub use define_sized::{Float32, Float64};
+pub use sized::{Float32, Float64};
 
 use crate::number::macros::define_abbreviations;
 define_abbreviations![many F, Float, 32, 64];

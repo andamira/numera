@@ -1,4 +1,4 @@
-// numera::number::integer::n0z::define_sized
+// numera::number::integer::n0z::sized
 //
 //!
 //

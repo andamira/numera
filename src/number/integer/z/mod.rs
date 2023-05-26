@@ -12,20 +12,20 @@
 //
 
 mod convert;
-mod define_sized;
 mod family;
 mod integer;
 mod ops;
+mod sized;
 
 #[cfg(feature = "ibig")]
-mod define_big;
+mod big;
 
-pub use define_sized::{Integer128, Integer16, Integer32, Integer64, Integer8};
 pub use family::Integers;
+pub use sized::{Integer128, Integer16, Integer32, Integer64, Integer8};
 
 #[cfg(feature = "ibig")]
 #[cfg_attr(feature = "nightly", doc(cfg(feature = "ibig")))]
-pub use define_big::IntegerBig;
+pub use big::IntegerBig;
 
 use crate::number::macros::define_abbreviations;
 define_abbreviations![many Z, Integer, 8, 16, 32, 64, 128];

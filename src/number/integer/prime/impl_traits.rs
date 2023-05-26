@@ -17,7 +17,7 @@ use crate::{
 };
 
 #[cfg(feature = "std")]
-use {super::Sieve, crate::all::is_prime_sieve, core::cmp::min, devela::az::CheckedAs};
+use {devela::az::CheckedAs, crate::all::is_prime_sieve, core::cmp::min, primal_sieve::Sieve};
 
 /* Prime8 */
 

@@ -18,12 +18,12 @@
 //
 
 mod convert;
-mod define_sized;
 mod family;
 mod integer;
 mod ops;
+mod sized;
 
-pub use define_sized::{
+pub use sized::{
     PositiveInteger128, PositiveInteger16, PositiveInteger32, PositiveInteger64, PositiveInteger8,
 };
 pub use family::PositiveIntegers;

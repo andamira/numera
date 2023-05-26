@@ -12,12 +12,12 @@
 //
 
 mod convert;
-mod define_sized;
 mod family;
 mod integer;
 mod ops;
+mod sized;
 
-pub use define_sized::{
+pub use sized::{
     NonZeroInteger128, NonZeroInteger16, NonZeroInteger32, NonZeroInteger64, NonZeroInteger8,
 };
 pub use family::NonZeroIntegers;
