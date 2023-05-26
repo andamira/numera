@@ -26,7 +26,7 @@ pub(crate) mod all {
         family::Primes,
         fns::{is_prime, nth_prime, prime_pi},
         prime_trait::Prime,
-        sized::{Prime8, Prime16, Prime32, Prime64, Prime128},
+        sized::{Prime128, Prime16, Prime32, Prime64, Prime8},
     };
 
     #[doc(inline)]

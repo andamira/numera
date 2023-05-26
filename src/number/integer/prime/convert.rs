@@ -4,11 +4,8 @@
 //
 
 use crate::{
-    error::{NumeraResult, IntegerError, NumeraError},
-    number::{
-        integer::prime::all::*,
-        traits::Number,
-    },
+    error::{IntegerError, NumeraError, NumeraResult},
+    number::{integer::prime::all::*, traits::Number},
 };
 use devela::az::CheckedAs;
 

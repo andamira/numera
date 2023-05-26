@@ -5,20 +5,22 @@
 
 // use crate::all::{IntegerError, NumeraError, NumeraResult};
 use crate::{
-    error::{NumeraResult, IntegerError, NumeraError},
-    number::{
-        integer::prime::all::{PRIMES_U8, PRIMES_U16, is_prime},
-    },
+    error::{IntegerError, NumeraError, NumeraResult},
+    number::integer::prime::all::{is_prime, PRIMES_U16, PRIMES_U8},
 };
 use core::fmt;
 
-#[cfg(feature = "std")]
-use {devela::az::CheckedAs, primal_sieve::Sieve, crate::number::integer::prime::fns::{nth_prime_sieve, is_prime_sieve}};
 #[cfg(not(feature = "std"))]
 use crate::number::integer::prime::fns::nth_prime;
+#[cfg(feature = "std")]
+use {
+    crate::number::integer::prime::fns::{is_prime_sieve, nth_prime_sieve},
+    devela::az::CheckedAs,
+    primal_sieve::Sieve,
+};
 
 /// An 8-bit prime number, from the set $\Bbb{P}$,
-/// also known as [`P8`].
+/// also known as [`P8`][super::P8].
 ///
 /// Can represent the first 54 prime numbers.
 ///
@@ -27,7 +29,7 @@ use crate::number::integer::prime::fns::nth_prime;
 pub struct Prime8(pub(crate) u8);
 
 /// A 16-bit prime number, from the set $\Bbb{P}$,
-/// also known as [`P16`].
+/// also known as [`P16`][super::P16].
 ///
 /// Can represent the first 6,542 prime numbers.
 #[derive(Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
@@ -35,7 +37,7 @@ pub struct Prime8(pub(crate) u8);
 pub struct Prime16(pub(crate) u16);
 
 /// A 32-bit prime number, from the set $\Bbb{P}$,
-/// also known as [`P32`].
+/// also known as [`P32`][super::P32].
 ///
 /// Can represent the first 203,280,219 prime numbers.
 #[derive(Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
@@ -43,7 +45,7 @@ pub struct Prime16(pub(crate) u16);
 pub struct Prime32(pub(crate) u32);
 
 /// A 64-bit prime number, from the set $\Bbb{P}$,
-/// also known as [`P64`].
+/// also known as [`P64`][super::P64].
 ///
 /// Can represent the first *approximately* 415,828,534,307,635,072 prime
 /// numbers (1 per 44).
@@ -53,7 +55,7 @@ pub struct Prime32(pub(crate) u32);
 pub struct Prime64(pub(crate) u64);
 
 /// A 128-bit prime number, from the set $\Bbb{P}$,
-/// also known as [`P64`].
+/// also known as [`P128`][super::P128].
 ///
 /// Can represent the first *approximately*
 /// 3,835,341,275,459,348,115,779,911,081,237,938,176 prime numbers (1 per 88).

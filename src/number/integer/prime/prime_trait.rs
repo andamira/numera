@@ -4,7 +4,7 @@
 //
 
 use super::{
-    data::{PRIMES_BELL, PRIMES_U16, PRIMES_U8},
+    data::{PRIMES_U16, PRIMES_U8},
     Prime128, Prime16, Prime32, Prime64, Prime8,
 };
 
@@ -38,7 +38,7 @@ impl Prime for Prime8 {
     }
 
     fn is_bell(&self) -> bool {
-        PRIMES_BELL.contains(&self.0.into())
+        matches![self.0, 2 | 5]
     }
 }
 
@@ -52,7 +52,7 @@ impl Prime for Prime16 {
     }
 
     fn is_bell(&self) -> bool {
-        PRIMES_BELL.contains(&self.0.into())
+        matches![self.0, 2 | 5 | 877]
     }
 }
 
@@ -70,7 +70,7 @@ impl Prime for Prime32 {
     }
 
     fn is_bell(&self) -> bool {
-        PRIMES_BELL.contains(&self.0.into())
+        matches![self.0, 2 | 5 | 877 | 27_644_437]
     }
 }
 
@@ -88,7 +88,7 @@ impl Prime for Prime64 {
     }
 
     fn is_bell(&self) -> bool {
-        matches![self.0, 5 | 8 | 877 | 27_644_437]
+        matches![self.0, 2 | 5 | 877 | 27_644_437]
     }
 }
 
@@ -106,6 +106,9 @@ impl Prime for Prime128 {
     }
 
     fn is_bell(&self) -> bool {
-        PRIMES_BELL.contains(&self.0.into())
+        matches![
+            self.0,
+            2 | 5 | 877 | 27_644_437 | 35_742_549_198_872_617_291_353_508_656_626_642_567
+        ]
     }
 }
