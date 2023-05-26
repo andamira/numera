@@ -26,7 +26,6 @@ use core::{
     cmp::Ordering,
     fmt,
     hash::{Hash, Hasher},
-    ops::Neg,
 };
 use devela::paste;
 

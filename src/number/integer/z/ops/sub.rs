@@ -8,7 +8,7 @@ use core::ops::{Sub, SubAssign};
 use devela::paste;
 
 macro_rules! impl_integer_sub {
-    // impl Add ops for multiple integer types
+    // impl Sub ops for multiple integer types
     //
     // # Args
     // $t: integer base name. e.g. Integer
@@ -23,37 +23,36 @@ macro_rules! impl_integer_sub {
     // substraction operations
     //
     // impl variants:
-    // - basic
-    // - checked
-    // - saturating TODO
-    // - wrapping TODO
-    // - overflowing TODO
-    // - modular TEST
-    // - modular_counting TODO
+    // - sub
+    // - checked_
+    // - saturating_
+    // - wrapping_
+    // - overflowing_
+    // - modular_ TODO
+    // - modular_counting_ TODO
     (sub: $t:ident + $p:ident + $b:literal) => { paste! {
         impl Sub<[<$t$b>]> for [<$t$b>] {
             type Output = [<$t$b>];
             /// Performs the `-` operation.
             ///
             /// # Panics
-            /// In debug, on overflow.
-            ///
-            /// In release, it performs two's complement wrapping.
+            /// Panics in debug, on overflow.
+            /// While in release, it performs two's complement wrapping.
             #[inline]
+            #[must_use]
             fn sub(self, rhs: [<$t$b>]) -> Self::Output {
-                self.basic_sub(rhs)
+                self.sub(rhs)
             }
         }
         impl SubAssign for [<$t$b>] {
             /// Performs the `-=` operation.
             ///
             /// # Panics
-            /// In debug, on overflow.
-            ///
-            /// In release, it performs two's complement wrapping.
+            /// Panics in debug, on overflow.
+            /// While in release, it performs two's complement wrapping.
             #[inline]
             fn sub_assign(&mut self, rhs: [<$t$b>]) {
-                self.0 -= rhs.0
+                *self = self.add(rhs);
             }
         }
         /// # Integer substraction
@@ -61,10 +60,11 @@ macro_rules! impl_integer_sub {
             /// Integer substraction.
             ///
             /// # Panics
-            /// If the substraction results in overflow.
+            /// Panics in debug, on overflow.
+            /// While in release, it performs two's complement wrapping.
             #[inline]
             #[must_use]
-            pub const fn basic_sub(self, rhs: [<$t$b>]) -> [<$t$b>] {
+            pub const fn sub(self, rhs: [<$t$b>]) -> [<$t$b>] {
                 Self(self.0 - rhs.0)
             }
 
@@ -111,8 +111,7 @@ macro_rules! impl_integer_sub {
             // #[inline]
             // #[must_use]
             // pub const fn modular_sub(self, rhs: [<$t$b>], modulo: [<$t$b>]) -> [<$t$b>] {
-            //     self.basic_sub(rhs).rem_euclid(modulo)
-            //
+            //     self.sub(rhs).rem_euclid(modulo)
             // }
         }
     }};
@@ -125,3 +124,25 @@ impl_integer_sub![
     Integer+i+64, cast:128;
     Integer+i+128, cast:128
 ];
+
+#[cfg(feature = "ibig")]
+mod big {
+    use super::*;
+
+    impl Sub<IntegerBig> for IntegerBig {
+        type Output = IntegerBig;
+        /// Performs the `-` operation.
+        #[inline]
+        #[must_use]
+        fn sub(self, rhs: IntegerBig) -> Self::Output {
+            Self(self.0 - rhs.0)
+        }
+    }
+    impl SubAssign for IntegerBig {
+        /// Performs the `-=` operation.
+        #[inline]
+        fn sub_assign(&mut self, rhs: IntegerBig) {
+            self.0 -= rhs.0;
+        }
+    }
+}

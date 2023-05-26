@@ -24,13 +24,13 @@ macro_rules! impl_integer_add {
     // addition operations
     //
     // impl variants:
-    // - basic
-    // - checked
-    // - saturating
-    // - wrapping
-    // - overflowing
-    // - modular TODO
-    // - modular_counting TODO
+    // - add
+    // - checked_
+    // - saturating_
+    // - wrapping_
+    // - overflowing_
+    // - modular_ TODO
+    // - modular_counting_ TODO
     (add: $t:ident + $p:ident + $b:literal) => { paste! {
         impl Add<[<$t$b>]> for [<$t$b>] {
             type Output = [<$t$b>];
@@ -40,8 +40,9 @@ macro_rules! impl_integer_add {
             /// Panics in debug, on overflow.
             /// While in release, it performs two's complement wrapping.
             #[inline]
+            #[must_use]
             fn add(self, rhs: [<$t$b>]) -> Self::Output {
-                self.basic_add(rhs)
+                self.add(rhs)
             }
         }
         // impl<'a> Add<&'a[<$t$b>]> for &'a [<$t$b>] {} // MAYBE
@@ -54,7 +55,7 @@ macro_rules! impl_integer_add {
             /// While in release, it performs two's complement wrapping.
             #[inline]
             fn add_assign(&mut self, rhs: [<$t$b>]) {
-                *self = self.basic_add(rhs)
+                *self = self.add(rhs)
             }
         }
 
@@ -80,14 +81,17 @@ macro_rules! impl_integer_add {
             /// Integer addition.
             ///
             /// # Panics
-            /// If the addition results in overflow.
+            /// Panics in debug, on overflow.
+            /// While in release, it performs two's complement wrapping.
             #[inline]
             #[must_use]
-            pub const fn basic_add(self, rhs: [<$t$b>]) -> [<$t$b>] {
+            pub const fn add(self, rhs: [<$t$b>]) -> [<$t$b>] {
                 Self(self.0 + rhs.0)
             }
 
             /// Checked addition.
+            ///
+            /// Returns `None` on overflow.
             #[inline]
             #[must_use]
             pub const fn checked_add(self, rhs: [<$t$b>]) -> Option<[<$t$b>]> {
@@ -168,3 +172,39 @@ impl_integer_add![
     Integer+i+64, cast:128;
     Integer+i+128, cast:128
 ];
+
+#[cfg(feature = "ibig")]
+mod big {
+    use super::*;
+
+    impl Add<IntegerBig> for IntegerBig {
+        type Output = IntegerBig;
+        /// Performs the `+` operation.
+        #[inline]
+        #[must_use]
+        fn add(self, rhs: IntegerBig) -> Self::Output {
+            Self(self.0 + rhs.0)
+        }
+    }
+    impl AddAssign for IntegerBig {
+        /// Performs the `-=` operation.
+        #[inline]
+        fn add_assign(&mut self, rhs: IntegerBig) {
+            self.0 += rhs.0;
+        }
+    }
+
+    impl Sum for IntegerBig {
+        fn sum<I: Iterator<Item = Self>>(iter: I) -> Self {
+            iter.fold(IntegerBig::new(0), |a, b| a + b)
+        }
+    }
+    impl<'a> Sum<&'a IntegerBig> for IntegerBig {
+        fn sum<I: Iterator<Item = &'a Self>>(iter: I) -> Self {
+            iter.fold(
+                IntegerBig::new(0),
+                |a, b| a + b.clone(), // CHECK performance
+            )
+        }
+    }
+}
