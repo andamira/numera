@@ -65,7 +65,7 @@ jobs:
 
       - name: "cargo doc"
         # NOTE: custom
-        run: cargo doc --features=nightly,deps_all
+        run: cargo doc --features=nightly,all
         env:
           RUSTDOCFLAGS: --cfg docsrs
 
