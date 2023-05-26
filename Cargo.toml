@@ -15,30 +15,33 @@ include = [
 	"/LICENSE-*.md",
 	"/README.md",
 ]
-categories = ["mathematics", "data-structures"]
+categories = ["mathematics"]
 keywords = ["math", "mathematics", "number", "numeral", "numeric"]
 publish = true
 
 [features]
-default = ["std", "safe", "try_from"]
+default = ["std", "safe"]
+
+#* standard features *#
 
 std = ["devela/std", "half?/std", "ibig?/std", "primal-sieve"]
 safe = ["devela/safe"]
-unsafe = []
-nightly = [] # used only for docs
+unsafe = [] # unsafe alternatives
+nightly = [] # used for documentation
 
-#* extras *#
+#* extra features *#
 
-# Enables all the `TryFrom` impls, (+3s compilation time in my system).
-try_from = []
+all = ["big", "try_from"] # all the extras
+all_nostd = ["try_from"] # all the no-std extras
 
-deps_all = ["twofloat", "half", "ibig"]
+big = ["ibig"] # big numbers
+try_from = [] # TryFrom conversions (+3s)
 
 
 [dependencies]
 devela = { version = "0.4.0", default-features = false }
 
-#* optional *#
+#* optional dependencies *#
 
 half = { version = "2.2.1", optional = true, default-features = false  }
 ibig = { version = "0.3.6", optional = true, default-features = false }
@@ -52,10 +55,9 @@ static_assertions = "1.1.0"
 [profile.dev]
 opt-level = 3 # for faster prime testing
 
-
 [package.metadata.docs.rs]
 no-default-features = true
-features = ["nightly", "std", "try_from", "deps_all"]
+features = ["nightly", "std", "all"]
 rustdoc-args = [ "--html-in-header", "./res/rustdoc-header.html" ]
 
 [badges]

@@ -1,40 +1,54 @@
 [alias]
 
 # CHECK
-c = "check" # std, safe
-cr = "check --release" # std, safe
-# fast compilation without costly features
-cF = "check --no-default-features --features=std,safe" # std, safe
-caF = "check --no-default-features --features=std,safe,deps_all" # std, safe, all
-cauF = "check --no-default-features --features=std,deps_all" # std, unsafe, all
-craF = "check --release --no-default-features --features=std,safe,deps_all" # std, safe, all
-cnF = "check --no-default-features --features=safe" # no-std, safe
-cuF = "check --no-default-features --features=std" # std, unsafe
-cnuF = "check --no-default-features" # no-std, unsafe
-cNF = "check --target thumbv7m-none-eabi --no-default-features --features=safe" # no-std, no-alloc, safe
-cNuF = "check --target thumbv7m-none-eabi --no-default-features" # no-std, no-alloc, unsafe
+# std
+c = "check"
+cr = "check --release"
+# no-std
+cn = "check --no-default-features --features=safe,all_nostd"
+cnu = "check --no-default-features --features=all_nostd"
+# no-alloc
+cN = "check --target thumbv7m-none-eabi --no-default-features --features=safe,all_nostd"
+cNu = "check --target thumbv7m-none-eabi --no-default-features --features=all_nostd"
+# Fast
+cF = "check --no-default-features --features=std,safe"
+cuF = "check --no-default-features --features=std"
+## Fast all
+caF = "check --no-default-features --features=std,safe,all"
+craF = "check --release --no-default-features --features=std,safe,all"
+cauF = "check --no-default-features --features=std,all"
+## Fast no-std
+cnF = "check --no-default-features --features=safe"
+cnuF = "check --no-default-features"
+## Fast no-alloc
+cNF = "check --target thumbv7m-none-eabi --no-default-features --features=safe"
+cNuF = "check --target thumbv7m-none-eabi --no-default-features"
 
 # CLIPPY
-cl = "clippy" # std, safe
-clr = "clippy --release" # std, safe
-#
-cla = "clippy --features=deps_all" # std, safe, all
-clu = "clippy --no-default-features --features=std" # std, unsafe
-cln = "clippy --no-default-features --features=safe" # no-std, safe
-clau = "clippy --no-default-features --features=std,deps_all" # std, unsafe, all
-clnu = "clippy --no-default-features" # no-std, unsafe
-#
-clra = "clippy --release --features=deps_all" # std, safe, all
-clru = "clippy --release --no-default-features --features=std" # std, unsafe
-clrn = "clippy --release --no-default-features --features=safe" # no-std, safe
-clrau = "clippy --release --no-default-features --features=std,deps_all" # std, unsafe, all
-clrnu = "clippy --release --no-default-features" # no-std, unsafe
-# fast compilation (no `try_from`)
-clF = "clippy --no-default-features --features=std,safe" # std, safe
-claF = "clippy --no-default-features --features=std,safe,deps_all" # std, safe, all
-cluF = "clippy --no-default-features --features=std" # std, unsafe
-clnF = "clippy --no-default-features --features=safe" # no-std, safe
-clnuF = "clippy --no-default-features" # no-std, unsafe
+# std
+cl = "clippy"
+clr = "clippy --release"
+clu = "clippy --no-default-features --features=std"
+# all
+cla = "clippy --features=all"
+clra = "clippy --release --features=all"
+clau = "clippy --no-default-features --features=std,all"
+clru = "clippy --release --no-default-features --features=std"
+clrau = "clippy --release --no-default-features --features=std,all"
+# no-std
+cln = "clippy --no-default-features --features=safe"
+clrn = "clippy --release --no-default-features --features=safe"
+clnu = "clippy --no-default-features"
+clrnu = "clippy --release --no-default-features"
+# no-alloc
+clNF = "clippy --target thumbv7m-none-eabi --no-default-features --features=safe"
+clNuF = "clippy --target thumbv7m-none-eabi --no-default-features"
+# Fast
+clF = "clippy --no-default-features --features=std,safe"
+cluF = "clippy --no-default-features --features=std"
+claF = "clippy --no-default-features --features=std,safe,all"
+clnF = "clippy --no-default-features --features=safe"
+clnuF = "clippy --no-default-features"
 
 # CLEAN PACKAGE
 cp = "clean --package"
@@ -46,20 +60,20 @@ do = "doc --no-deps --open"
 dd = "doc"
 ddo = "doc --open"
 #
-da = "doc --no-deps --features=deps_all"
-doa = "doc --no-deps --open --features=deps_all"
+da = "doc --no-deps --features=all"
+doa = "doc --no-deps --open --features=all"
 #
 dn = "doc --no-deps --no-default-features"
 don = "doc --no-deps --open --no-default-features"
 # +nightly; document everything, unsafe
-nd = "doc --no-deps --no-default-features --features=nightly,std,try_from,deps_all"
-ndo = "doc --no-deps --no-default-features --open --features=nightly,std,try_from,deps_all"
+nd = "doc --no-deps --no-default-features --features=nightly,std,try_from,all"
+ndo = "doc --no-deps --no-default-features --open --features=nightly,std,try_from,all"
 # fast
-ndF = "doc --no-deps --no-default-features --features=nightly,std,deps_all"
-ndoF = "doc --no-deps --no-default-features --open --features=nightly,std,deps_all"
+ndF = "doc --no-deps --no-default-features --features=nightly,std,all"
+ndoF = "doc --no-deps --no-default-features --open --features=nightly,std,all"
 # safe
-nds = "doc --no-deps --features=nightly,deps_all"
-ndso = "doc --no-deps --open --features=nightly,deps_all"
+nds = "doc --no-deps --features=nightly,all"
+ndso = "doc --no-deps --open --features=nightly,all"
 
 # BUILD
 b = "build"
@@ -68,14 +82,14 @@ br = "build --release"
 brb = "build --release --bin"
 # examples
 be = "build --example"
-bea = "build --example --features=deps_all" # all
+bea = "build --example --features=all" # all
 bre = "build --release --example"
 brue = "build --release --example --no-default-features --features=std,try_from" # unsafe
 # examples, Fast compilation
 beF = "build --no-default-features --features=std,safe --example"
-beaF = "build --no-default-features --features=std,safe,deps_all --example"
+beaF = "build --no-default-features --features=std,safe,all --example"
 breF = "build --release --example --no-default-features --features=std,safe"
-breaF = "build --release --no-default-features --features=std,safe,deps_all --example"
+breaF = "build --release --no-default-features --features=std,safe,all --example"
 
 # RUN
 r = "run"
@@ -84,14 +98,14 @@ rr = "run --release"
 rrb = "run --release --bin"
 # examples
 re = "run --example"
-rea = "run --features=deps_all --example" # all
+rea = "run --features=all --example" # all
 rre = "run --release --example"
 rrue = "run --release --no-default-features --features=std,try_from --example"
 # examples, Fast compilation
 reF = "run --no-default-features --features=std,safe --example"
-reaF = "run --no-default-features --features=std,safe,deps_all --example"
+reaF = "run --no-default-features --features=std,safe,all --example"
 rreF = "run --release --no-default-features --features=std,safe --example"
-rreaF = "run --release --no-default-features --features=std,safe,deps_all --example"
+rreaF = "run --release --no-default-features --features=std,safe,all --example"
 
 # TEST
 # std, safe
@@ -100,10 +114,10 @@ td = "test --doc"
 t_ = "test -- --nocapture"
 t_1 = "test -- --test-threads 1 --nocapture"
 # std, safe, all dependencies
-ta = "test --features=deps_all"
-tda = "test --features=deps_all --doc"
-ta_ = "test --features=deps_all -- --nocapture"
-ta_1 = "test --features=deps_all -- --test-threads 1 --nocapture"
+ta = "test --features=all"
+tda = "test --features=all --doc"
+ta_ = "test --features=all -- --nocapture"
+ta_1 = "test --features=all -- --test-threads 1 --nocapture"
 # std, unsafe
 tu = "test --no-default-features --features=std"
 tdu = "test --no-default-features --features=std --doc"
@@ -114,7 +128,7 @@ tn = "test --no-default-features"
 tdn = "test --no-default-features --doc"
 tn_ = "test --no-default-features -- --nocapture"
 tn_1 = "test --no-default-features -- --test-threads 1 --nocapture"
-# Fast:
+# Fast
 tF = "test --no-default-features --features=std,safe" # std,safe
 tnF = "test --no-default-features --features=safe" # no-std, safe
 tdF = "test --doc --no-default-features --features=std,safe" # std, safe, docs
