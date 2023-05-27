@@ -8,7 +8,7 @@ use super::{
 };
 use crate::number::traits::{
     ConstLowerBounded, ConstNegOne, ConstOne, ConstUpperBounded, ConstZero, LowerBounded, NegOne,
-    One, Signed, UpperBounded, Zero,
+    Negative, One, Positive, UpperBounded, Zero,
 };
 
 #[cfg(feature = "ibig")]
@@ -30,7 +30,8 @@ define_integers_family![build_variants:
 
 /* sign */
 
-impl Signed for Integers {}
+impl Positive for Integers {}
+impl Negative for Integers {}
 
 /* ident */
 

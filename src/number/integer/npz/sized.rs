@@ -18,7 +18,7 @@ use crate::{
         macros::impl_larger_smaller,
         traits::{
             Bound, ConstLowerBounded, ConstNegOne, ConstUpperBounded, ConstZero, Count, Countable,
-            Ident, LowerBounded, NegOne, NegSigned, NonOne, Number, Sign, UpperBounded, Zero,
+            Ident, LowerBounded, NegOne, Negative, NonPositive, Number, Sign, UpperBounded, Zero,
         },
     },
 };
@@ -128,7 +128,8 @@ macro_rules! define_nonpositive_integer_sized {
             #[inline]
             fn is_positive(&self) -> bool { false }
         }
-        impl NegSigned for [<$name$b>] {
+        impl Negative for [<$name$b>] {}
+        impl NonPositive for [<$name$b>] {
             type Parts = [<$p$b>];
             #[inline]
             fn new_neg(value: Self::Parts) -> NumeraResult<Self> {
@@ -208,7 +209,6 @@ macro_rules! define_nonpositive_integer_sized {
             #[inline]
             fn new_neg_one() -> Self { Self(1) }
         }
-        impl NonOne for [<$name$b>] {}
 
         /* number */
 
@@ -224,8 +224,8 @@ macro_rules! define_nonpositive_integer_sized {
             //
             // ALTERNATIVE:
             // For `value`s other than 0, please use the
-            // [`new_neg`][NegSigned#method.new_neg] method from the
-            // [`NegSigned`] trait.
+            // [`new_neg`][NonPositive#method.new_neg] method from the
+            // [`NonPositive`] trait.
             #[inline]
             fn from_parts(value: Self::Parts) -> NumeraResult<Self> {
                 Ok(Self(value))

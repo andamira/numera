@@ -9,7 +9,7 @@ use super::{
 };
 use crate::number::traits::{
     ConstLowerBounded, ConstNegOne, ConstOne, ConstUpperBounded, ConstZero, LowerBounded, NegOne,
-    One, Signed, UpperBounded, Zero,
+    Negative, One, Positive, UpperBounded, Zero,
 };
 
 define_rationals_family![build_variants:
@@ -28,7 +28,8 @@ define_rationals_family![build_variants:
 
 /* sign */
 
-impl Signed for Rationals {}
+impl Positive for Rationals {}
+impl Negative for Rationals {}
 
 /* ident */
 

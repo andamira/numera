@@ -12,7 +12,7 @@ use crate::{
     error::{IntegerError, NumeraResult},
     number::traits::{
         Bound, ConstLowerBounded, ConstUpperBounded, Count, Countable, Ident, LowerBounded,
-        NonNegOne, NonOne, NonZero, Number, Sign, Unsigned, UpperBounded,
+        NonNegative, NonOne, NonZero, Number, Positive, Sign, UpperBounded,
     },
 };
 
@@ -119,7 +119,6 @@ impl Ident for Prime8 {
 }
 impl NonZero for Prime8 {}
 impl NonOne for Prime8 {}
-impl NonNegOne for Prime8 {}
 
 #[rustfmt::skip]
 impl Sign for Prime8 {
@@ -132,7 +131,8 @@ impl Sign for Prime8 {
     #[inline]
     fn is_negative(&self) -> bool { false }
 }
-impl Unsigned for Prime8 {}
+impl NonNegative for Prime8 {}
+impl Positive for Prime8 {}
 
 impl Number for Prime8 {
     type Parts = u8;
@@ -279,7 +279,6 @@ impl Ident for Prime16 {
 }
 impl NonZero for Prime16 {}
 impl NonOne for Prime16 {}
-impl NonNegOne for Prime16 {}
 
 #[rustfmt::skip]
 impl Sign for Prime16 {
@@ -292,7 +291,8 @@ impl Sign for Prime16 {
     #[inline]
     fn is_negative(&self) -> bool { false }
 }
-impl Unsigned for Prime16 {}
+impl NonNegative for Prime16 {}
+impl Positive for Prime16 {}
 
 impl Number for Prime16 {
     type Parts = u16;
@@ -439,7 +439,6 @@ impl Ident for Prime32 {
 }
 impl NonZero for Prime32 {}
 impl NonOne for Prime32 {}
-impl NonNegOne for Prime32 {}
 
 #[rustfmt::skip]
 impl Sign for Prime32 {
@@ -452,7 +451,8 @@ impl Sign for Prime32 {
     #[inline]
     fn is_negative(&self) -> bool { false }
 }
-impl Unsigned for Prime32 {}
+impl NonNegative for Prime32 {}
+impl Positive for Prime32 {}
 
 impl Number for Prime32 {
     type Parts = u32;
@@ -550,7 +550,6 @@ impl Ident for Prime64 {
 }
 impl NonZero for Prime64 {}
 impl NonOne for Prime64 {}
-impl NonNegOne for Prime64 {}
 
 #[rustfmt::skip]
 impl Sign for Prime64 {
@@ -563,7 +562,8 @@ impl Sign for Prime64 {
     #[inline]
     fn is_negative(&self) -> bool { false }
 }
-impl Unsigned for Prime64 {}
+impl NonNegative for Prime64 {}
+impl Positive for Prime64 {}
 
 impl Number for Prime64 {
     type Parts = u64;
@@ -662,7 +662,6 @@ impl Ident for Prime128 {
 }
 impl NonZero for Prime128 {}
 impl NonOne for Prime128 {}
-impl NonNegOne for Prime128 {}
 
 #[rustfmt::skip]
 impl Sign for Prime128 {
@@ -675,7 +674,8 @@ impl Sign for Prime128 {
     #[inline]
     fn is_negative(&self) -> bool { false }
 }
-impl Unsigned for Prime128 {}
+impl NonNegative for Prime128 {}
+impl Positive for Prime128 {}
 
 impl Number for Prime128 {
     type Parts = u128;

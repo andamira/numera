@@ -17,7 +17,8 @@ use crate::{
         macros::impl_larger_smaller,
         traits::{
             Bound, ConstLowerBounded, ConstNegOne, ConstOne, ConstUpperBounded, Count, Countable,
-            Ident, LowerBounded, NegOne, NonZero, Number, One, Sign, Signed, UpperBounded,
+            Ident, LowerBounded, NegOne, Negative, NonZero, Number, One, Positive, Sign,
+            UpperBounded,
         },
     },
 };
@@ -151,7 +152,8 @@ macro_rules! define_nonzero_integer_sized {
             #[inline]
             fn is_positive(&self) -> bool { self.0.get().is_positive() }
         }
-        impl Signed for [<$name$b>] {}
+        impl Positive for [<$name$b>] {}
+        impl Negative for [<$name$b>] {}
 
         /* bound */
 

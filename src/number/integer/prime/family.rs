@@ -5,8 +5,8 @@
 
 use super::{Prime16, Prime32, Prime8};
 use crate::all::{
-    Bound, ConstLowerBounded, ConstUpperBounded, Count, Countable, Ident, LowerBounded, NonNegOne,
-    NonOne, NonZero, Number, NumeraResult, Sign, Unsigned, UpperBounded,
+    Bound, ConstLowerBounded, ConstUpperBounded, Count, Countable, Ident, LowerBounded,
+    NonNegative, NonOne, NonZero, Number, NumeraResult, Positive, Sign, UpperBounded,
 };
 
 /// The family of primes.
@@ -103,7 +103,6 @@ impl Count for Primes {
         true
     }
 }
-
 impl Countable for Primes {
     fn next(&self) -> NumeraResult<Self> {
         use Primes::*;
@@ -148,10 +147,8 @@ impl Ident for Primes {
     #[inline]
     fn is_neg_one(&self) -> bool { false }
 }
-
 impl NonZero for Primes {}
 impl NonOne for Primes {}
-impl NonNegOne for Primes {}
 
 #[rustfmt::skip]
 impl Sign for Primes {
@@ -164,4 +161,5 @@ impl Sign for Primes {
     #[inline]
     fn is_negative(&self) -> bool { false }
 }
-impl Unsigned for Primes {}
+impl Positive for Primes {}
+impl NonNegative for Primes {}

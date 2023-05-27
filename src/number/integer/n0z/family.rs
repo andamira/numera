@@ -8,8 +8,8 @@ use super::{
     NonZeroInteger64, NonZeroInteger8,
 };
 use crate::number::traits::{
-    ConstLowerBounded, ConstNegOne, ConstOne, ConstUpperBounded, LowerBounded, NegOne, NonZero,
-    One, Signed, UpperBounded,
+    ConstLowerBounded, ConstNegOne, ConstOne, ConstUpperBounded, LowerBounded, NegOne, Negative,
+    NonZero, One, Positive, UpperBounded,
 };
 
 define_integers_family![build_variants:
@@ -27,7 +27,8 @@ define_integers_family![build_variants:
 
 /* sign */
 
-impl Signed for NonZeroIntegers {}
+impl Positive for NonZeroIntegers {}
+impl Negative for NonZeroIntegers {}
 
 /* ident */
 

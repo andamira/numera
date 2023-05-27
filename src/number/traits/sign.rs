@@ -10,8 +10,8 @@
 //   - *Sign*
 //
 //   - Signed
-//   - Unsigned
-//   - NegSigned
+//   - NonNegative
+//   - NonPositive
 //
 // - macros
 //   - impl_sign
@@ -30,13 +30,13 @@ use core::num::{
 ///
 /// # Relevant traits
 /// - [`Signed`].
-/// - [`Unsigned`].
-/// - [`NegSigned`].
+/// - [`NonNegative`].
+/// - [`NonPositive`].
 ///
 /// If a type can represent both positive and negative numbers it must implement
 /// the [`Signed`] trait. Otherwise, if it can only represent positive numbers
-/// it must implement instead the [`Unsigned`] trait. Otherwise if it can only
-/// represent negative numbers it must implement the [`NegSigned`] trait.
+/// it must implement instead the [`NonNegative`] trait. Otherwise if it can only
+/// represent negative numbers it must implement the [`NonPositive`] trait.
 ///
 /// These three traits are mutually exclusive with each other.
 pub trait Sign {
@@ -55,18 +55,33 @@ pub trait Sign {
 
 /// A number that can represent both positive and negative numbers.
 ///
-/// This trait is mutually exclusive with [`Unsigned`] and [`NegSigned`].
-pub trait Signed: Sign {}
+/// This trait is automatically implemented for [`Positive`] + [`Negative`].
+///
+/// This trait is mutually exclusive with [`NonNegative`] and [`NonPositive`].
+pub trait Signed: Positive + Negative {}
+
+/// A number that can represent positive numbers, but not negative numbers.
+pub trait Unsigned: Positive + NonNegative {}
+
+/// A number that can represent positive numbers.
+///
+/// This trait is mutually exclusive with [`NonPositive`].
+pub trait Positive: Sign {}
+
+/// A number that can represent negative numbers.
+///
+/// This trait is mutually exclusive with [`NonNegative`].
+pub trait Negative: Sign {}
 
 /// A number that can *not* represent negative numbers.
 ///
-/// This trait is mutually exclusive with [`Signed`] and [`NegSigned`].
-pub trait Unsigned: Sign {}
+/// This trait is mutually exclusive with [`Signed`] and [`Negative`].
+pub trait NonNegative: Sign {}
 
 /// A number that can *not* represent positive numbers.
 ///
-/// This trait is mutually exclusive with [`Unsigned`] and [`Signed`].
-pub trait NegSigned: Sign {
+/// This trait is mutually exclusive with [`Signed`] and [`Positive`].
+pub trait NonPositive: Sign {
     /// The number's inner constituent parts.
     type Parts;
 
@@ -82,9 +97,17 @@ pub trait NegSigned: Sign {
         Self: Sized;
 }
 
+/* impls */
+
+// auto-impl `Signed`.
+impl<T: Positive + Negative> Signed for T {}
+
+// auto-impl `Unsigned`.
+impl<T: Positive + NonNegative> Unsigned for T {}
+
 /* macros */
 
-/// implement `Signed` & `Unsigned` traits for the numeric primitives.
+/// implement `Signed` & `NonNegative` traits for the numeric primitives.
 macro_rules! impl_sign {
     // impl `Signed` for signed integer primitives
     (many_signed_prim: $($t:ty),+) => {
@@ -97,7 +120,8 @@ macro_rules! impl_sign {
             fn is_negative(&self) -> bool { <$t>::is_negative(*self) }
             fn is_positive(&self) -> bool { <$t>::is_positive(*self) }
         }
-        impl Signed for $t {}
+        impl Positive for $t {}
+        impl Negative for $t {}
     };
 
     // impl `Signed` for floating-point primitives
@@ -111,7 +135,8 @@ macro_rules! impl_sign {
             fn is_negative(&self) -> bool { self.is_sign_negative() && *self != $zero }
             fn is_positive(&self) -> bool { self.is_sign_positive() && *self != $zero }
         }
-        impl Signed for $t {}
+        impl Positive for $t {}
+        impl Negative for $t {}
     };
 
     // impl `Signed` for non-zero signed integer primitives
@@ -125,12 +150,13 @@ macro_rules! impl_sign {
             fn is_negative(&self) -> bool { self.get().is_negative() }
             fn is_positive(&self) -> bool { self.get().is_positive() }
         }
-        impl Signed for $t {}
+        impl Positive for $t {}
+        impl Negative for $t {}
     };
 
-    /* Unsigned */
+    /* NonNegative */
 
-    // impl Unsigned for unsigned integer primitives
+    // impl NonNegative for unsigned integer primitives
     (many_unsigned_prim: $($t:ty),+) => {
         $( impl_sign![unsigned_prim: $t]; )+
     };
@@ -141,10 +167,10 @@ macro_rules! impl_sign {
             fn is_negative(&self) -> bool { false }
             fn is_positive(&self) -> bool { *self != 0 }
         }
-        impl Unsigned for $t {}
+        impl NonNegative for $t {}
     };
 
-    // impl Unsigned for unsigned nonzero primitives
+    // impl NonNegative for unsigned nonzero primitives
     (many_unsigned_nonzero: $($t:ty),+) => {
         $( impl_sign![unsigned_nonzero: $t]; )+
     };
@@ -155,7 +181,7 @@ macro_rules! impl_sign {
             fn is_negative(&self) -> bool { false }
             fn is_positive(&self) -> bool { true } // can't be 0
         }
-        impl Unsigned for $t {}
+        impl NonNegative for $t {}
     };
 
 }
@@ -178,7 +204,7 @@ impl_sign![many_unsigned_nonzero:
 #[cfg(feature = "ibig")]
 #[rustfmt::skip]
 mod impl_ibig {
-    use super::{Sign, Signed, Unsigned};
+    use super::{Sign, Positive, Negative, NonNegative};
     use ibig::{IBig, UBig};
 
     impl Sign for IBig {
@@ -187,7 +213,8 @@ mod impl_ibig {
         fn is_negative(&self) -> bool { *self < IBig::from(0u8) }
         fn is_positive(&self) -> bool { *self > IBig::from(0u8) }
     }
-    impl Signed for IBig {}
+    impl Positive for IBig {}
+    impl Negative for IBig {}
 
     impl Sign for UBig {
         fn can_negative(&self) -> bool { false }
@@ -195,7 +222,8 @@ mod impl_ibig {
         fn is_negative(&self) -> bool { false }
         fn is_positive(&self) -> bool { *self != UBig::from(0u8) }
     }
-    impl Unsigned for UBig {}
+    impl Positive for UBig {}
+    impl NonNegative for UBig {}
 }
 
 #[cfg(feature = "twofloat")]

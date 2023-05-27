@@ -17,7 +17,7 @@ use crate::{
         macros::impl_larger_smaller,
         traits::{
             Bound, ConstLowerBounded, ConstOne, ConstUpperBounded, ConstZero, Count, Countable,
-            Ident, LowerBounded, NonNegOne, Number, One, Sign, Unsigned, UpperBounded, Zero,
+            Ident, LowerBounded, NonNegative, Number, One, Positive, Sign, UpperBounded, Zero,
         },
     },
 };
@@ -130,7 +130,8 @@ macro_rules! define_nonnegative_integer_sized {
             #[inline]
             fn is_positive(&self) -> bool { self.0.is_positive() }
         }
-        impl Unsigned for [<$name$b>] {}
+        impl Positive for [<$name$b>] {}
+        impl NonNegative for [<$name$b>] {}
 
         /* bound */
 
@@ -204,7 +205,6 @@ macro_rules! define_nonnegative_integer_sized {
             #[inline]
             fn new_one() -> Self { Self(1) }
         }
-        impl NonNegOne for [<$name$b>] {}
 
         /* number */
 

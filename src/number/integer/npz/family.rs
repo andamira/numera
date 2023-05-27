@@ -8,7 +8,7 @@ use crate::{
     error::NumeraResult,
     number::traits::{
         ConstLowerBounded, ConstNegOne, ConstUpperBounded, ConstZero, LowerBounded, NegOne,
-        NegSigned, NonOne, UpperBounded, Zero,
+        Negative, NonPositive, UpperBounded, Zero,
     },
 };
 
@@ -27,8 +27,10 @@ define_integers_family![build_variants:
 
 /* sign */
 
+impl Negative for NonPositiveIntegers {}
+
 /// This implementation is a no-op.
-impl NegSigned for NonPositiveIntegers {
+impl NonPositive for NonPositiveIntegers {
     type Parts = Self;
 
     /// Returns `value` unchanged.
@@ -40,7 +42,6 @@ impl NegSigned for NonPositiveIntegers {
 
 /* ident */
 
-impl NonOne for NonPositiveIntegers {}
 impl Zero for NonPositiveIntegers {
     /// Returns a [`NonPositiveInteger8::new_zero()`][NonPositiveInteger8#method.new_zero].
     #[inline]

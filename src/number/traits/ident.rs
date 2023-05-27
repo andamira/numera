@@ -30,6 +30,7 @@
 //   - nonzero
 //   - external: ibig, twofloat, half
 
+use super::sign::{NonNegative, NonPositive};
 use core::num::{
     NonZeroI128, NonZeroI16, NonZeroI32, NonZeroI64, NonZeroI8, NonZeroIsize, NonZeroU128,
     NonZeroU16, NonZeroU32, NonZeroU64, NonZeroU8, NonZeroUsize,
@@ -323,8 +324,6 @@ macro_rules! impl_ident {
             #[inline]
             fn new_one() -> Self { $one }
         }
-
-        impl NonNegOne for $t {}
     };
 
     // impl [Const][NonZero|One|NegOne] for signed nonzero primitives.
@@ -425,8 +424,6 @@ macro_rules! impl_ident {
             // SAFETY: constant value
             fn new_one() -> Self { unsafe { <$t>::new_unchecked($one) } }
         }
-
-        impl NonNegOne for $t {}
     };
 
     // impl non-const [NonZero|One|NegOne].
@@ -490,12 +487,16 @@ macro_rules! impl_ident {
         impl Zero for $t { fn new_zero() -> Self { $zero } }
 
         impl One for $t { fn new_one() -> Self { $one } }
-
-        impl NonNegOne for $t {}
     };
 }
 
 /* impls */
+
+// auto-impl `NonNegOne` for NonNegative numbers.
+impl<T: Ident + NonNegative> NonNegOne for T {}
+
+// auto-impl `NonOne` for NonPositive numbers.
+impl<T: Ident + NonPositive> NonOne for T {}
 
 // 0, 1, -1
 #[rustfmt::skip]

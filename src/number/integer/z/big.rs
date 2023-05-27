@@ -15,8 +15,8 @@
 use crate::{
     error::{NumeraError, NumeraResult},
     number::traits::{
-        Bound, Count, Countable, Ident, NegOne, NonLowerBounded, NonUpperBounded, Number, One,
-        Sign, Signed, Zero,
+        Bound, Count, Countable, Ident, NegOne, Negative, NonLowerBounded, NonUpperBounded, Number,
+        One, Positive, Sign, Zero,
     },
 };
 use core::{fmt, str::FromStr};
@@ -97,7 +97,8 @@ impl Sign for IntegerBig {
     #[inline]
     fn is_positive(&self) -> bool { self.0.is_positive() }
 }
-impl Signed for IntegerBig {}
+impl Positive for IntegerBig {}
+impl Negative for IntegerBig {}
 
 /* bound */
 

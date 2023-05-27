@@ -5,8 +5,8 @@
 
 use super::{super::family::define_integers_family, *};
 use crate::number::traits::{
-    ConstLowerBounded, ConstOne, ConstUpperBounded, ConstZero, LowerBounded, NonNegOne, One,
-    Unsigned, UpperBounded, Zero,
+    ConstLowerBounded, ConstOne, ConstUpperBounded, ConstZero, LowerBounded, NonNegative, One,
+    Positive, UpperBounded, Zero,
 };
 
 define_integers_family![build_variants:
@@ -24,11 +24,11 @@ define_integers_family![build_variants:
 
 /* sign */
 
-impl Unsigned for NonNegativeIntegers {}
+impl Positive for NonNegativeIntegers {}
+impl NonNegative for NonNegativeIntegers {}
 
 /* ident */
 
-impl NonNegOne for NonNegativeIntegers {}
 impl Zero for NonNegativeIntegers {
     /// Returns a [`NonNegativeInteger8::new_zero()`][NonNegativeInteger8#method.new_zero].
     #[inline]

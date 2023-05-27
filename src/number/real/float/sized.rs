@@ -15,7 +15,8 @@ use crate::{
     error::{NumeraResult, RealError},
     number::traits::{
         Bound, ConstLowerBounded, ConstNegOne, ConstOne, ConstUpperBounded, ConstZero, Count,
-        Countable, Ident, LowerBounded, NegOne, Number, One, Sign, Signed, UpperBounded, Zero,
+        Countable, Ident, LowerBounded, NegOne, Negative, Number, One, Positive, Sign,
+        UpperBounded, Zero,
     },
 };
 use core::fmt;
@@ -122,7 +123,8 @@ macro_rules! define_float_sized {
             #[inline]
             fn is_positive(&self) -> bool { self.0.is_sign_positive() }
         }
-        impl Signed for [<$name$b>] {}
+        impl Positive for [<$name$b>] {}
+        impl Negative for [<$name$b>] {}
 
         /* bound */
 
