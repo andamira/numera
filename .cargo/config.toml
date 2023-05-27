@@ -4,6 +4,7 @@
 # std
 c = "check"
 cr = "check --release"
+ca = "check --features=all"
 # no-std
 cn = "check --no-default-features --features=safe,all_nostd"
 cnu = "check --no-default-features --features=all_nostd"

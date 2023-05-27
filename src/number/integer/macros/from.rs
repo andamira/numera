@@ -495,7 +495,6 @@ macro_rules! for_primitive {
 }
 pub(crate) use for_primitive;
 
-// WIP
 /// Implements From: from integers, for big integers.
 ///
 /// # Args
@@ -514,6 +513,7 @@ pub(crate) use for_primitive;
 /// # Branches ids
 /// - `int`
 /// - `non0`
+#[cfg(feature = "ibig")]
 macro_rules! for_big {
     // for_big!
     // when `from` is an integer
@@ -743,4 +743,5 @@ macro_rules! for_big {
         }
     };
 }
+#[cfg(feature = "ibig")]
 pub(crate) use for_big;

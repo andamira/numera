@@ -18,13 +18,17 @@
 // - largest_prime_pow2_doublings
 // - ten_primes_less_pow2
 
-use super::data::{LARGEST_PRIME_POW2_DOUBLINGS, TEN_PRIMES_LESS_POW2};
-#[cfg(feature = "big")]
-use crate::all::IntegerBig;
-use crate::number::real::float::fns::sqrt_fisr64;
-use core::num::NonZeroU32;
 #[cfg(feature = "std")]
 use {core::num::NonZeroUsize, primal_sieve::Sieve};
+
+#[cfg(feature = "big")]
+use {
+    super::data::{LARGEST_PRIME_POW2_DOUBLINGS, TEN_PRIMES_LESS_POW2},
+    crate::all::IntegerBig,
+};
+
+use crate::number::real::float::fns::sqrt_fisr64;
+use core::num::NonZeroU32;
 
 /// The prime number theorem ([m][0m]/[w][0w]) formula.
 ///
