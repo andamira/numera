@@ -57,13 +57,13 @@ impl Prime for Prime16 {
 }
 
 impl Prime for Prime32 {
-    /// WIP: This function for now only returns Some values if `nth` <= 6,541.
+    /// WIP: For now this function only returns Some values if `nth` <= 6,541.
     fn get_nth(nth: usize) -> Option<Self> {
         match nth {
             0..=53 => Some(Prime32(PRIMES_U8[nth].into())),
             54..=6541 => Some(Prime32(PRIMES_U16[nth - 54].into())),
-            6542..=203_280_219 => {
-                todo![] // TODO
+            6542..=203_280_220 => {
+                None // TODO
             }
             _ => None,
         }
@@ -75,13 +75,18 @@ impl Prime for Prime32 {
 }
 
 impl Prime for Prime64 {
-    /// WIP: This function for now only returns Some values if `nth` <= 6,541.
+    /// WIP: For now this function only returns Some values if `nth` <= 6,541.
+    #[allow(clippy::match_same_arms)] // TEMP
     fn get_nth(nth: usize) -> Option<Self> {
         match nth {
             0..=53 => Some(Prime64(PRIMES_U8[nth].into())),
-            54..=6541 => Some(Prime64(PRIMES_U16[nth - 54].into())),
-            6542..=203_280_219 => {
-                todo![] // TODO
+            54..=6_541 => Some(Prime64(PRIMES_U16[nth - 54].into())),
+            6_542..=203_280_220 => {
+                None // TODO
+            }
+            #[allow(overflowing_literals)] // usize on < 64-bit platforms
+            203_280_221..=425_656_284_035_217_742 => {
+                None // TODO
             }
             _ => None,
         }
@@ -93,13 +98,18 @@ impl Prime for Prime64 {
 }
 
 impl Prime for Prime128 {
-    /// WIP: This function for now only returns Some values if `nth` <= 6,541.
+    /// WIP: For now this function only returns Some values if `nth` <= 6,541.
+    #[allow(clippy::match_same_arms)] // TEMP
     fn get_nth(nth: usize) -> Option<Self> {
         match nth {
             0..=53 => Some(Prime128(PRIMES_U8[nth].into())),
-            54..=6541 => Some(Prime128(PRIMES_U16[nth - 54].into())),
-            6542..=203_280_219 => {
-                todo![] // TODO
+            54..=6_541 => Some(Prime128(PRIMES_U16[nth - 54].into())),
+            6_542..=203_280_220 => {
+                None // TODO
+            }
+            #[allow(overflowing_literals)] // usize on < 64-bit platforms
+            203_280_221..=425_656_284_035_217_742 => {
+                None // TODO
             }
             _ => None,
         }

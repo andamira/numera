@@ -3,7 +3,7 @@
 //!
 //
 
-use super::{Prime16, Prime32, Prime8};
+use super::{Prime128, Prime16, Prime32, Prime64, Prime8};
 use crate::all::{
     Bound, ConstLowerBounded, ConstUpperBounded, Count, Countable, Ident, LowerBounded,
     NonNegative, NonOne, NonZero, Number, NumeraResult, Positive, Sign, UpperBounded,
@@ -15,7 +15,8 @@ pub enum Primes {
     Prime8(Prime8),
     Prime16(Prime16),
     Prime32(Prime32),
-    // Prime64(Prime64),
+    Prime64(Prime64),
+    Prime128(Prime128),
     // PrimeBig(PrimeBig),
 }
 
@@ -48,6 +49,8 @@ impl Bound for Primes {
             Prime8(p) => p.is_lower_bounded(),
             Prime16(p) => p.is_lower_bounded(),
             Prime32(p) => p.is_lower_bounded(),
+            Prime64(p) => p.is_lower_bounded(),
+            Prime128(p) => p.is_lower_bounded(),
         }
     }
     fn is_upper_bounded(&self) -> bool {
@@ -56,6 +59,8 @@ impl Bound for Primes {
             Prime8(p) => p.is_upper_bounded(),
             Prime16(p) => p.is_upper_bounded(),
             Prime32(p) => p.is_upper_bounded(),
+            Prime64(p) => p.is_upper_bounded(),
+            Prime128(p) => p.is_upper_bounded(),
         }
     }
     fn lower_bound(&self) -> Option<Self> {
@@ -64,6 +69,8 @@ impl Bound for Primes {
             Prime8(p) => p.lower_bound().map(|p| p.into()),
             Prime16(p) => p.lower_bound().map(|p| p.into()),
             Prime32(p) => p.lower_bound().map(|p| p.into()),
+            Prime64(p) => p.lower_bound().map(|p| p.into()),
+            Prime128(p) => p.lower_bound().map(|p| p.into()),
         }
     }
     fn upper_bound(&self) -> Option<Self> {
@@ -72,6 +79,8 @@ impl Bound for Primes {
             Prime8(p) => p.upper_bound().map(|p| p.into()),
             Prime16(p) => p.upper_bound().map(|p| p.into()),
             Prime32(p) => p.upper_bound().map(|p| p.into()),
+            Prime64(p) => p.upper_bound().map(|p| p.into()),
+            Prime128(p) => p.upper_bound().map(|p| p.into()),
         }
     }
 }
@@ -87,10 +96,10 @@ impl ConstLowerBounded for Primes {
     const MIN: Self = Primes::Prime8(Prime8::MIN);
 }
 impl UpperBounded for Primes {
-    /// Returns a [`Prime32::new_max()`][Prime32#method.new_max].
+    /// Returns a [`Prime128::new_max()`][Prime128#method.new_max].
     #[inline]
     fn new_max() -> Primes {
-        Primes::Prime32(Prime32::new_max())
+        Primes::Prime128(Prime128::new_max())
     }
 }
 impl ConstUpperBounded for Primes {
@@ -112,8 +121,9 @@ impl Countable for Primes {
             Prime16(p) => p.next().map(|p| p.into()),
             #[cfg(feature = "std")]
             Prime32(p) => p.next().map(|p| p.into()),
+            // IMPROVE for bigger sized
             // IMPROVE for no-std
-            #[cfg(not(feature = "std"))]
+            // #[cfg(not(feature = "std"))]
             _ => Err(crate::all::NumeraError::NotImplemented),
         }
     }
@@ -125,8 +135,9 @@ impl Countable for Primes {
             Prime16(p) => p.previous().map(|p| p.into()),
             #[cfg(feature = "std")]
             Prime32(p) => p.previous().map(|p| p.into()),
+            // IMPROVE for bigger sized
             // IMPROVE for no-std
-            #[cfg(not(feature = "std"))]
+            // #[cfg(not(feature = "std"))]
             _ => Err(crate::all::NumeraError::NotImplemented),
         }
     }

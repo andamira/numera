@@ -19,7 +19,7 @@
 // - ten_primes_less_pow2
 
 #[cfg(feature = "std")]
-use {core::num::NonZeroUsize, primal_sieve::Sieve};
+use primal_sieve::Sieve;
 
 #[cfg(feature = "big")]
 use {
@@ -28,7 +28,6 @@ use {
 };
 
 use crate::number::real::float::fns::sqrt_fisr64;
-use core::num::NonZeroU32;
 
 /// The prime number theorem ([m][0m]/[w][0w]) formula.
 ///
@@ -40,6 +39,22 @@ use core::num::NonZeroU32;
 /// [0w]: https://en.wikipedia.org/wiki/Prime_number_theorem
 //
 // IMPROVE: use big int and big float.
+/// # Examples
+/// ```
+/// use numera::all::prime_number_theorem as pi;
+///
+/// // Showing the % difference against the real amount, if known.
+/// // Note how precision increases in direct relationship to the power.
+/// assert_eq![pi(u8::MAX.into()), 46]; // 14.81% < 54
+/// assert_eq![pi(u16::MAX.into()), 5909]; // 9.67% < 6542
+/// assert_eq![pi(u32::MAX.into()), 193635251]; // 4.74% < 203280221
+/// assert_eq![pi(u64::MAX.into()), 415828534307635072]; // 2.30% < 425656284035217743
+/// assert_eq![pi(2u128.pow(92)), 77650867634561160386183168]; // 1.59% < 78908656317357166866404346
+/// assert_eq![pi(u128::MAX.into()), 3835341275459348115779911081237938176];
+/// ```
+///
+/// # Links
+/// - The exact prime count till $2^92$ is available at <https://oeis.org/A007053>.
 #[cfg(feature = "std")]
 #[cfg_attr(feature = "nightly", doc(cfg(feature = "std")))]
 pub fn prime_number_theorem(n: u128) -> u128 {
@@ -57,6 +72,14 @@ pub fn prime_number_theorem(n: u128) -> u128 {
 /// divisible by a number larger than its square root, the result of the
 /// division will be smaller than the square root, and it would have already
 /// been checked in previous iterations.
+///
+/// # Examples
+/// ```
+/// use numera::all::is_prime;
+///
+/// assert![is_prime(13)];
+/// assert![!is_prime(8)];
+/// ```
 pub fn is_prime(number: u32) -> bool {
     match number {
         0..=1 => false,
@@ -82,6 +105,14 @@ pub fn is_prime(number: u32) -> bool {
 /// Checks whether a `number` is prime, using basic trial division.
 ///
 /// This naive approach checks all numbers from 2 to number/2.
+///
+/// # Examples
+/// ```
+/// use numera::all::is_prime_brute;
+///
+/// assert![is_prime_brute(13)];
+/// assert![!is_prime_brute(8)];
+/// ```
 pub fn is_prime_brute(number: u32) -> bool {
     if number <= 1 {
         return false;
@@ -94,17 +125,25 @@ pub fn is_prime_brute(number: u32) -> bool {
     true
 }
 
-/// Finds the `nth` prime number using [`is_prime`].
-pub fn nth_prime(nth: NonZeroU32) -> u32 {
-    let mut count = 0;
+/// Finds the 0-indexed `nth` prime number using [`is_prime`].
+///
+/// # Examples
+/// ```
+/// use numera::all::nth_prime;
+///
+/// assert_eq![nth_prime(0), 2];
+/// assert_eq![nth_prime(1), 3];
+/// assert_eq![nth_prime(53), 251];
+/// ```
+pub fn nth_prime(nth: u32) -> u32 {
+    let mut count = 1;
     let mut i = 2;
-    let nth = nth.get();
     loop {
         if is_prime(i) {
+            if count - 1 == nth {
+                return i;
+            }
             count += 1;
-        }
-        if count == nth {
-            return i;
         }
         i += 1;
     }
@@ -114,6 +153,15 @@ pub fn nth_prime(nth: NonZeroU32) -> u32 {
 ///
 /// # Notation
 /// $\pi(x)$
+///
+/// # Examples
+/// ```
+/// use numera::all::prime_pi;
+///
+/// assert_eq![prime_pi(2), 1];
+/// assert_eq![prime_pi(3), 2];
+/// assert_eq![prime_pi(251), 54];
+/// ```
 ///
 /// # Links
 /// - <https://mathworld.wolfram.com/PrimeCountingFunction.html>.
@@ -128,7 +176,8 @@ pub fn prime_pi(n: u32) -> usize {
     prime_count
 }
 
-/// Checks whether a `number` is prime, using an optimized [`Sieve`].
+/// Checks whether a `number` is prime using an optimized
+/// [`Sieve`][https://docs.rs/primal-sieve/latest/primal_sieve/struct.Sieve.html].
 #[inline]
 #[cfg(feature = "std")]
 #[cfg_attr(feature = "nightly", doc(cfg(feature = "std")))]
@@ -136,15 +185,29 @@ pub fn is_prime_sieve(number: usize) -> bool {
     Sieve::new(number).is_prime(number)
 }
 
-/// Finds the `nth` prime number, using [`is_prime_sieve`].
+// /// Finds the 1-indexed `nth` prime number, using [`is_prime_sieve`].
+// #[inline]
+// #[cfg(feature = "std")]
+// #[cfg_attr(feature = "nightly", doc(cfg(feature = "std")))]
+// pub fn nth_prime_sieve(nth: NonZeroUsize) -> usize {
+//     Sieve::new(nth.get()).nth_prime(nth.get())
+// }
+
+/// Finds the 0-indexed `nth` prime number using [`is_prime_sieve`] with
+/// the provided `upper_bound`.
+///
+/// # Panics
+/// Panics if nth == [`usize::MAX`].
+//
+// IMPROVE: make non-panicking version
 #[inline]
 #[cfg(feature = "std")]
 #[cfg_attr(feature = "nightly", doc(cfg(feature = "std")))]
-pub fn nth_prime_sieve(nth: NonZeroUsize) -> usize {
-    Sieve::new(nth.get()).nth_prime(nth.get())
+pub fn nth_prime_sieve(nth: usize, upper_bound: usize) -> usize {
+    Sieve::new(upper_bound).nth_prime(nth + 1)
 }
 
-/// Counts the number of primes upto and including `n`, using [`is_prime_sieve`].
+/// Counts the number of primes upto and including `n` using [`is_prime_sieve`].
 #[inline]
 #[cfg(feature = "std")]
 #[cfg_attr(feature = "nightly", doc(cfg(feature = "std")))]

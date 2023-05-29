@@ -39,7 +39,7 @@ pub struct Prime16(pub(crate) u16);
 /// A 32-bit prime number, from the set $\Bbb{P}$,
 /// also known as [`P32`][super::P32].
 ///
-/// Can represent the first 203,280,219 prime numbers.
+/// Can represent the first 203,280,221 prime numbers.
 #[derive(Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
 // pub struct Prime32(PositiveInteger32);
 pub struct Prime32(pub(crate) u32);
@@ -47,8 +47,7 @@ pub struct Prime32(pub(crate) u32);
 /// A 64-bit prime number, from the set $\Bbb{P}$,
 /// also known as [`P64`][super::P64].
 ///
-/// Can represent the first *approximately* 415,828,534,307,635,072 prime
-/// numbers (1 per 44).
+/// Can represent the first 425,656,284,035,217,743 prime numbers.
 /// This is calculated using the *prime number theorem* formula.
 #[derive(Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
 // pub struct Prime64(PositiveInteger64);
@@ -129,14 +128,25 @@ impl Prime8 {
         }
     }
 
-    /// Returns the `nth` prime number.
+    /// Returns the 0-indexed `nth` prime number.
     ///
     /// # Errors
-    /// If `nth` is 0 or greater than 54.
+    /// If `nth` is >= 54.
+    ///
+    /// # Examples
+    /// ```
+    /// use numera::all::*;
+    /// # fn main() -> NumeraResult<()> {
+    ///
+    /// assert_eq![Prime8::MIN, Prime8::new_nth(0)?];
+    /// assert_eq![Prime8::MAX, Prime8::new_nth(53)?];
+    /// assert![Prime8::new_nth(54).is_err()];
+    /// # Ok(()) }
+    /// ```
     #[inline]
     pub const fn new_nth(nth: u8) -> NumeraResult<Self> {
         match nth {
-            1..=54 => Ok(Self(PRIMES_U8[(nth - 1) as usize])),
+            0..=53 => Ok(Self(PRIMES_U8[nth as usize])),
             _ => Err(NumeraError::Integer(IntegerError::Overflow)),
         }
     }
@@ -213,13 +223,25 @@ impl Prime16 {
     /// Returns the `nth` prime number.
     ///
     /// # Errors
-    /// If `nth` is 0 or greater than 6,542.
+    /// If `nth` is >= 6,542.
+    ///
+    /// # Examples
+    /// ```
+    /// use numera::all::*;
+    ///
+    /// # fn main() -> NumeraResult<()> {
+    /// assert_eq![Prime16::MIN, Prime16::new_nth(0)?];
+    /// assert_eq![Prime16::from(Prime8::MAX), Prime16::new_nth(53)?];
+    /// assert_eq![Prime16::MAX, Prime16::new_nth(6_541)?];
+    /// assert![Prime16::new_nth(6_542).is_err()];
+    /// # Ok(()) }
+    /// ```
     #[inline]
     pub const fn new_nth(nth: u16) -> NumeraResult<Self> {
         match nth {
             #[allow(clippy::cast_possible_truncation)]
-            1..=54 => Ok(Self(PRIMES_U8[(nth as u8 - 1) as usize] as u16)),
-            55..=6542 => Ok(Self(PRIMES_U16[(nth + 54) as usize])),
+            0..=53 => Ok(Self(PRIMES_U8[nth as usize] as u16)),
+            54..=6541 => Ok(Self(PRIMES_U16[(nth - 54) as usize])),
             _ => Err(NumeraError::Integer(IntegerError::Overflow)),
         }
     }
@@ -329,36 +351,46 @@ impl Prime32 {
         }
     }
 
-    /// Returns the `nth` prime number.
+    /// Returns the 0-indexed `nth` prime number.
+    ///
+    /// Note that this operation can be slow for high values in `no-std`.
     ///
     /// # Errors
-    /// If `nth` is 0 or greater than 203,280,219.
+    /// If `nth` is >= 203,280,221.
+    ///
+    /// # Examples
+    /// ```
+    /// use numera::all::*;
+    ///
+    /// # fn main() -> NumeraResult<()> {
+    /// assert_eq![Prime32::MIN, Prime32::new_nth(0)?];
+    /// assert_eq![Prime32::from(Prime8::MAX), Prime32::new_nth(53)?];
+    /// assert_eq![Prime32::from(Prime16::MAX), Prime32::new_nth(6_541)?];
+    /// assert_eq![Prime32::MAX, Prime32::new_nth(203_280_220)?];
+    /// assert![Prime32::new_nth(203_280_221).is_err()];
+    /// # Ok(()) }
+    /// ```
     #[inline]
-    #[allow(clippy::missing_panics_doc)] // NonZeroUsize can't be zero
     pub fn new_nth(nth: u32) -> NumeraResult<Self> {
         match nth {
             #[allow(clippy::cast_possible_truncation)]
-            1..=54 => Ok(Self(u32::from(PRIMES_U8[(nth as u8 - 1) as usize]))),
+            0..=53 => Ok(Self(u32::from(PRIMES_U8[nth as usize]))),
             #[allow(clippy::cast_possible_truncation)]
-            55..=6_542 => Ok(Self(u32::from(PRIMES_U16[(nth as u16 + 54) as usize]))),
-            6_543..=203_280_219 => {
+            54..=6_541 => Ok(Self(u32::from(PRIMES_U16[nth as usize - 54]))),
+            6_542..=203_280_220 => {
                 #[cfg(feature = "std")]
                 {
-                    use core::num::NonZeroUsize;
+                    use crate::all::ConstUpperBounded;
 
+                    // IMPROVE casting
                     #[allow(clippy::cast_possible_truncation)]
                     return Ok(Self(
-                        nth_prime_sieve(NonZeroUsize::new(nth as usize).unwrap()) as u32,
+                        nth_prime_sieve(nth as usize, u32::from(Prime32::MAX) as usize) as u32,
                     ));
                 }
 
                 #[cfg(not(feature = "std"))]
-                {
-                    use core::num::NonZeroU32;
-
-                    // Ok(Self(nth_prime(nth)))
-                    Ok(Self(nth_prime(NonZeroU32::new(nth).unwrap())))
-                }
+                return Ok(Self(nth_prime(nth)));
             }
             _ => Err(NumeraError::Integer(IntegerError::Overflow)),
         }
@@ -466,38 +498,48 @@ impl Prime64 {
         }
     }
 
-    /// Returns the `nth` prime number.
+    /// Returns the 0-indexed `nth` prime number.
+    ///
+    /// Note that this operation can be slow for high 32-bit values in `no-std`.
     ///
     /// # Errors
-    /// If `nth` is 0 or greater than *415,828,534,307,635,072* (a rough approximation).
+    /// If `nth` is >= 203,280,221. (Not yet implemented for higher values).
+    // If `nth` is >= 425,656,284,035,217,743.
+    ///
+    /// # Examples
+    /// ```
+    /// use numera::all::*;
+    ///
+    /// # fn main() -> NumeraResult<()> {
+    /// assert_eq![Prime64::MIN, Prime64::new_nth(0)?];
+    /// assert_eq![Prime64::from(Prime8::MAX), Prime64::new_nth(53)?];
+    /// assert_eq![Prime64::from(Prime16::MAX), Prime64::new_nth(6_541)?];
+    /// assert_eq![Prime64::from(Prime32::MAX), Prime64::new_nth(203_280_220)?];
+    /// assert![Prime64::new_nth(203_280_221).is_err()];
+    /// # Ok(()) }
+    /// ```
     #[inline]
-    #[allow(clippy::missing_panics_doc)] // NonZeroUsize can't be zero
     pub fn new_nth(nth: u64) -> NumeraResult<Self> {
         match nth {
             #[allow(clippy::cast_possible_truncation)]
-            1..=54 => Ok(Self(u64::from(PRIMES_U8[(nth as u8 - 1) as usize]))),
+            0..=53 => Ok(Self(u64::from(PRIMES_U8[(nth as u8) as usize]))),
             #[allow(clippy::cast_possible_truncation)]
-            55..=6_542 => Ok(Self(u64::from(PRIMES_U16[(nth as u16 + 54) as usize]))),
-            6_543..=203_280_219 => {
+            54..=6_541 => Ok(Self(u64::from(PRIMES_U16[(nth as u16 - 54) as usize]))),
+            6_542..=203_280_220 => {
                 #[cfg(feature = "std")]
                 {
-                    use core::num::NonZeroUsize;
-
+                    use crate::all::ConstUpperBounded;
                     #[allow(clippy::cast_possible_truncation)]
                     return Ok(Self(
-                        nth_prime_sieve(NonZeroUsize::new(nth as usize).unwrap()) as u64,
+                        nth_prime_sieve(nth as usize, u32::from(Prime32::MAX) as usize) as u64,
                     ));
                 }
 
                 #[cfg(not(feature = "std"))]
-                {
-                    todo![]
-                    // use core::num::NonZeroU32;
-                    // Ok(Self(nth_prime(NonZeroU32::new(nth.try_into().unwrap()).unwrap())))
-                }
+                return Ok(Self(nth_prime(nth as u32) as u64));
             }
-            203_280_223..=415_828_534_307_635_072 => {
-                todo![] // TODO
+            203_280_221..=425_656_284_035_217_742 => {
+                Err(NumeraError::NotImplemented) // TODO
             }
             _ => Err(NumeraError::Integer(IntegerError::Overflow)),
         }
@@ -584,7 +626,7 @@ impl Prime64 {
                 nth_prime(core::num::NonZeroU64::new(self.0).unwrap())
             }
         }
-        return 415_828_534_307_635_072; // a rough approximation
+        return 425_656_284_035_217_743;
     }
 }
 
@@ -605,46 +647,50 @@ impl Prime128 {
         }
     }
 
-    /// Returns the `nth` prime number.
+    /// Returns the 0-indexed `nth` prime number.
     ///
     /// # Errors
-    /// If `nth` is 0 or greater than *415,828,534,307,635,072* (a rough approximation).
+    /// If `nth` is >= 203,280,221. (Not yet implemented for higher values).
+    // If `nth` is >= *425,656,284,035,217,743*,
+    // or if usize <= 32-bit and `nth` is >= [`usize::MAX`].
+    ///
+    /// # Examples
+    /// ```
+    /// use numera::all::*;
+    ///
+    /// # fn main() -> NumeraResult<()> {
+    /// assert_eq![Prime128::MIN, Prime128::new_nth(0)?];
+    /// assert_eq![Prime128::from(Prime8::MAX), Prime128::new_nth(53)?];
+    /// assert_eq![Prime128::from(Prime16::MAX), Prime128::new_nth(6_541)?];
+    /// assert_eq![Prime128::from(Prime32::MAX), Prime128::new_nth(203_280_220)?];
+    /// assert![Prime128::new_nth(203_280_221).is_err()];
+    /// # Ok(()) }
+    /// ```
     #[inline]
-    // NonZeroUsize can't be zero
-    #[allow(clippy::missing_panics_doc, clippy::match_overlapping_arm)]
+    #[allow(clippy::match_same_arms)]
     pub fn new_nth(nth: u128) -> NumeraResult<Self> {
         match nth {
             #[allow(clippy::cast_possible_truncation)]
-            1..=54 => Ok(Self(u128::from(PRIMES_U8[(nth as u8 - 1) as usize]))),
+            0..=53 => Ok(Self(u128::from(PRIMES_U8[(nth as u8) as usize]))),
             #[allow(clippy::cast_possible_truncation)]
-            55..=6_542 => Ok(Self(u128::from(PRIMES_U16[(nth as u16 + 54) as usize]))),
-            6_543..=203_280_219 => {
+            54..=6_541 => Ok(Self(u128::from(PRIMES_U16[(nth as u16 - 54) as usize]))),
+            6_542..=203_280_220 => {
                 #[cfg(feature = "std")]
                 {
-                    use core::num::NonZeroUsize;
-
-                    #[allow(clippy::cast_possible_truncation)]
+                    use crate::all::ConstUpperBounded;
                     return Ok(Self(
-                        nth_prime_sieve(NonZeroUsize::new(nth as usize).unwrap()) as u128,
+                        nth_prime_sieve(nth as usize, u32::from(Prime32::MAX) as usize) as u128,
                     ));
                 }
-
                 #[cfg(not(feature = "std"))]
-                {
-                    todo![]
-                    // use core::num::NonZeroU32;
-                    // Ok(Self(nth_prime(NonZeroU32::new(nth.try_into().unwrap()).unwrap())))
-                }
+                return Ok(Self(nth_prime(nth as u32) as u128));
             }
-            // a rough approximation
-            203_280_223..=415_828_534_307_635_072 => {
-                todo![] // TODO
+            203_280_221..=425_656_284_035_217_742 => {
+                Err(NumeraError::NotImplemented) // TODO
             }
-
-            // a rough approximation
-            #[allow(overlapping_range_endpoints)]
-            415_828_534_307_635_072..=3_835_341_275_459_348_115_779_911_081_237_938_176 => {
-                todo![] // TODO
+            // a roughly approximated upper limit:
+            425_656_284_035_217_743..=3_835_341_275_459_348_115_779_911_081_237_938_175 => {
+                Err(NumeraError::NotImplemented) // TODO
             }
             _ => Err(NumeraError::Integer(IntegerError::Overflow)),
         }
