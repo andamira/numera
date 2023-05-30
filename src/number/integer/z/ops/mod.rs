@@ -11,4 +11,5 @@ mod div_rem;
 mod mul;
 mod neg;
 mod pow;
+mod sqrt;
 mod sub;
