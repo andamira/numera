@@ -4,7 +4,7 @@
 //
 
 use crate::number::{
-    integer::{n0z::*, Integer},
+    integer::{n0z::*, Integers},
     traits::ConstOne,
 };
 use devela::az::CheckedAs;
@@ -126,7 +126,7 @@ macro_rules! impl_nonzero_integer {
                 return unsafe { $t::new_unchecked(lcm) };
             }
         }
-        impl Integer for $t {
+        impl Integers for $t {
             #[inline]
             fn integer_is_even(&self) -> bool {
                 self.is_even()

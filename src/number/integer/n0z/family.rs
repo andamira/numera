@@ -4,7 +4,7 @@
 //
 
 use super::{
-    super::family::define_integers_family, NonZeroInteger128, NonZeroInteger16, NonZeroInteger32,
+    super::family::define_integer_family, NonZeroInteger128, NonZeroInteger16, NonZeroInteger32,
     NonZeroInteger64, NonZeroInteger8,
 };
 use crate::number::traits::{
@@ -12,8 +12,8 @@ use crate::number::traits::{
     NonZero, One, Positive, UpperBounded,
 };
 
-define_integers_family![build_variants:
-    NonZeroIntegers,
+define_integer_family![build_variants:
+    NonZeroInteger,
     "The family of non-zero integers.",
     no_std:
         NonZeroInteger8, NonZeroInteger16, NonZeroInteger32, NonZeroInteger64, NonZeroInteger128
@@ -27,56 +27,56 @@ define_integers_family![build_variants:
 
 /* sign */
 
-impl Positive for NonZeroIntegers {}
-impl Negative for NonZeroIntegers {}
+impl Positive for NonZeroInteger {}
+impl Negative for NonZeroInteger {}
 
 /* ident */
 
-impl NonZero for NonZeroIntegers {}
-impl NegOne for NonZeroIntegers {
+impl NonZero for NonZeroInteger {}
+impl NegOne for NonZeroInteger {
     /// Returns a [`NonZeroInteger8::new_neg_one()`][NonZeroInteger8#method.new_neg_one].
     #[inline]
     fn new_neg_one() -> Self {
         NonZeroInteger8::new_neg_one().into()
     }
 }
-impl One for NonZeroIntegers {
+impl One for NonZeroInteger {
     /// Returns a [`NonZeroInteger8::new_one()`][NonZeroInteger8#method.new_one].
     #[inline]
     fn new_one() -> Self {
         NonZeroInteger8::new_one().into()
     }
 }
-impl ConstNegOne for NonZeroIntegers {
+impl ConstNegOne for NonZeroInteger {
     /// Returns a [`NonZeroInteger8::NEG_ONE`][NonZeroInteger8#associatedconstant.NEG_ONE].
-    const NEG_ONE: Self = NonZeroIntegers::NonZeroInteger8(NonZeroInteger8::NEG_ONE);
+    const NEG_ONE: Self = NonZeroInteger::NonZeroInteger8(NonZeroInteger8::NEG_ONE);
 }
-impl ConstOne for NonZeroIntegers {
+impl ConstOne for NonZeroInteger {
     /// Returns a [`NonZeroInteger8::ONE`][NonZeroInteger8#associatedconstant.ONE].
-    const ONE: Self = NonZeroIntegers::NonZeroInteger8(NonZeroInteger8::ONE);
+    const ONE: Self = NonZeroInteger::NonZeroInteger8(NonZeroInteger8::ONE);
 }
 
 /* bound */
 
-impl LowerBounded for NonZeroIntegers {
+impl LowerBounded for NonZeroInteger {
     /// Returns a [`NonZeroInteger8::new_min()`][NonZeroInteger8#method.new_min].
     #[inline]
     fn new_min() -> Self {
         NonZeroInteger8::new_min().into()
     }
 }
-impl UpperBounded for NonZeroIntegers {
+impl UpperBounded for NonZeroInteger {
     /// Returns a [`NonZeroInteger128::new_max()`][NonZeroInteger128#method.new_max].
     #[inline]
     fn new_max() -> Self {
         NonZeroInteger128::new_max().into()
     }
 }
-impl ConstLowerBounded for NonZeroIntegers {
+impl ConstLowerBounded for NonZeroInteger {
     /// Returns a [`NonZeroInteger128::MIN`][NonZeroInteger128#associatedconstant.MIN].
-    const MIN: Self = NonZeroIntegers::NonZeroInteger128(NonZeroInteger128::MIN);
+    const MIN: Self = NonZeroInteger::NonZeroInteger128(NonZeroInteger128::MIN);
 }
-impl ConstUpperBounded for NonZeroIntegers {
+impl ConstUpperBounded for NonZeroInteger {
     /// Returns a [`NonZeroInteger128::MAX`][NonZeroInteger128#associatedconstant.MAX].
-    const MAX: Self = NonZeroIntegers::NonZeroInteger128(NonZeroInteger128::MAX);
+    const MAX: Self = NonZeroInteger::NonZeroInteger128(NonZeroInteger128::MAX);
 }

@@ -4,7 +4,7 @@
 //
 
 use super::{
-    integer::AnyIntegers,
+    integer::AnyInteger,
     rational::AnyRational, // real::AnyReal, complex::AnyComplex,
     traits::{self, Numbers},
     NoNumber,
@@ -170,7 +170,7 @@ macro_rules! define_numbers {
 #[rustfmt::skip]
 define_numbers![build_variants:
     no_std:
-    Integer, AnyIntegers,
+    Integer, AnyInteger,
     Rational, AnyRational
     // Real, AnyReals,
     // Complex, AnyComplex,

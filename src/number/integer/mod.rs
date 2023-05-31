@@ -80,7 +80,7 @@ pub use all::*;
 pub(crate) mod all {
     #[doc(inline)]
     pub use super::{
-        family::AnyIntegers, integers::Integer, n0z::*, nnz::*, npz::*, nz::*, prime::*, pz::*,
+        family::AnyInteger, integers::Integers, n0z::*, nnz::*, npz::*, nz::*, prime::*, pz::*,
         z::*,
     };
 

@@ -10,7 +10,7 @@
 //   - NonZeroInteger[8|16|32|64|128]
 
 #[cfg(feature = "try_from")]
-use crate::number::integer::NonZeroIntegers;
+use crate::number::integer::NonZeroInteger;
 use crate::{
     error::{IntegerError, NumeraError, NumeraResult},
     number::{
@@ -136,7 +136,7 @@ macro_rules! define_nonzero_integer_sized {
 
         /* resizing */
 
-        impl_larger_smaller![$name, $b, NonZeroIntegers,
+        impl_larger_smaller![$name, $b, NonZeroInteger,
             larger: $larger, $larger_b, smaller: $smaller, $smaller_b
         ];
 

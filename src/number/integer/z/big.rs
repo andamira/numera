@@ -15,8 +15,8 @@
 use crate::{
     error::{NumeraError, NumeraResult},
     number::traits::{
-        Bound, Count, Countable, Ident, NegOne, Negative, NonLowerBounded, NonUpperBounded, Numbers,
-        One, Positive, Sign, Zero,
+        Bound, Count, Countable, Ident, NegOne, Negative, NonLowerBounded, NonUpperBounded,
+        Numbers, One, Positive, Sign, Zero,
     },
 };
 use core::{fmt, str::FromStr};

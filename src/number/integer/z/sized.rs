@@ -10,7 +10,7 @@
 //   - Integer[8|16|32|64|128]
 
 #[cfg(feature = "try_from")]
-use crate::number::integer::Integers;
+use crate::number::integer::Integer;
 use crate::{
     error::{IntegerError, NumeraResult},
     number::{
@@ -109,7 +109,7 @@ macro_rules! define_integer_sized {
 
         /* resizing */
 
-        impl_larger_smaller![$name, $b, Integers,
+        impl_larger_smaller![$name, $b, Integer,
             larger: $larger, $larger_b, smaller: $smaller, $smaller_b
         ];
 

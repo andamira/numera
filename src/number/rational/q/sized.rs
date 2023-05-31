@@ -10,7 +10,7 @@
 //   - Rational[8|16|32|64|128]
 
 #[cfg(feature = "try_from")]
-use crate::number::rational::Rationals;
+use crate::number::rational::Rational;
 use crate::{
     error::{NumeraError, NumeraResult, RationalError},
     number::{
@@ -215,7 +215,7 @@ macro_rules! define_rational_sized {
 
         /* resizing */
 
-        impl_larger_smaller![$name, $b, Rationals,
+        impl_larger_smaller![$name, $b, Rational,
             larger: $larger, $larger_b, smaller: $smaller, $smaller_b
         ];
 

@@ -10,7 +10,7 @@
 //   - NonNegativeInteger[8|16|32|64|128]
 
 #[cfg(feature = "try_from")]
-use crate::number::integer::NonNegativeIntegers;
+use crate::number::integer::NonNegativeInteger;
 use crate::{
     error::{IntegerError, NumeraResult},
     number::{
@@ -114,7 +114,7 @@ macro_rules! define_nonnegative_integer_sized {
 
         /* resizing */
 
-        impl_larger_smaller![$name, $b, NonNegativeIntegers,
+        impl_larger_smaller![$name, $b, NonNegativeInteger,
             larger: $larger, $larger_b, smaller: $smaller, $smaller_b
         ];
 

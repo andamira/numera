@@ -10,7 +10,7 @@
 //   - PositiveInteger[8|16|32|64|128]
 
 #[cfg(feature = "try_from")]
-use crate::number::integer::PositiveIntegers;
+use crate::number::integer::PositiveInteger;
 use crate::{
     error::{IntegerError, NumeraError, NumeraResult},
     number::{
@@ -140,7 +140,7 @@ macro_rules! define_positive_integer_sized {
 
         /* resizing */
 
-        impl_larger_smaller![$name, $b, PositiveIntegers,
+        impl_larger_smaller![$name, $b, PositiveInteger,
             larger: $larger, $larger_b, smaller: $smaller, $smaller_b
         ];
 

@@ -10,7 +10,7 @@
 //   - NegativeInteger[8|16|32|64|128]
 
 #[cfg(feature = "try_from")]
-use crate::number::integer::NegativeIntegers;
+use crate::number::integer::NegativeInteger;
 use crate::{
     error::{IntegerError, NumeraError, NumeraResult},
     number::{
@@ -121,7 +121,7 @@ macro_rules! define_negative_integer_sized {
 
         /* resizing */
 
-        impl_larger_smaller![$name, $b, NegativeIntegers,
+        impl_larger_smaller![$name, $b, NegativeInteger,
             larger: $larger, $larger_b, smaller: $smaller, $smaller_b
         ];
 

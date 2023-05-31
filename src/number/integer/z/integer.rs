@@ -4,7 +4,7 @@
 //
 
 use crate::number::{
-    integer::{z::*, Integer},
+    integer::{z::*, Integers},
     traits::ConstOne,
 };
 use devela::az::CheckedAs;
@@ -106,7 +106,7 @@ macro_rules! impl_integer {
             }
         }
 
-        impl Integer for $t {
+        impl Integers for $t {
             #[inline]
             fn integer_is_even(&self) -> bool {
                 self.is_even()
@@ -139,7 +139,7 @@ impl_integer![many: Integer8, Integer16, Integer32, Integer64, Integer128];
 #[cfg(feature = "ibig")]
 mod ibig {
     use crate::number::{
-        integer::{is_prime_sieve, z::IntegerBig, Integer},
+        integer::{is_prime_sieve, z::IntegerBig, Integers},
         traits::{One, Zero},
     };
 
@@ -218,7 +218,7 @@ mod ibig {
         }
     }
 
-    impl Integer for IntegerBig {
+    impl Integers for IntegerBig {
         #[inline]
         fn integer_is_even(&self) -> bool {
             self.is_even()

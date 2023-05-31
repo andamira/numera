@@ -23,7 +23,7 @@ mod integer;
 mod ops;
 mod sized;
 
-pub use family::PositiveIntegers;
+pub use family::PositiveInteger;
 pub use sized::{
     PositiveInteger128, PositiveInteger16, PositiveInteger32, PositiveInteger64, PositiveInteger8,
 };

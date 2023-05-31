@@ -4,7 +4,7 @@
 //
 // TOC
 //
-// - define the `Integer` trait
+// - define the `Integers` trait
 // - impl for integer primitives
 
 use crate::number::traits::{ConstZero, Numbers};
@@ -20,7 +20,7 @@ use crate::all::is_prime;
 use crate::all::is_prime_sieve;
 
 /// Common trait for all integers.
-pub trait Integer: Numbers {
+pub trait Integers: Numbers {
     /// Returns `true` if this integer is even.
     fn integer_is_even(&self) -> bool;
     /// Returns `true` if this integer is odd.
@@ -66,14 +66,14 @@ pub trait Integer: Numbers {
     fn integer_digits(&self) -> usize;
 }
 
-/// Implements `Integer` for integer primitives.
+/// Implements `Integers` for integer primitives.
 ///
 /// # Args
 /// - `$t`:
 macro_rules! impl_integer {
     (many $($t:ident),+) => { $( impl_integer![$t]; )+ };
     ($t:ident) => {
-        impl Integer for $t {
+        impl Integers for $t {
             #[inline]
             fn integer_is_even(&self) -> bool {
                 *self & 1 == 0
@@ -114,7 +114,7 @@ macro_rules! impl_integer {
 
     (many_nonzero $($t:ident),+) => { $( impl_integer![nonzero $t]; )+ };
     (nonzero $t:ident) => {
-        impl Integer for $t {
+        impl Integers for $t {
             #[inline]
             fn integer_is_even(&self) -> bool {
                 self.get() & 1 == 0

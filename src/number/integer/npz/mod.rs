@@ -15,7 +15,7 @@ mod integer;
 mod ops;
 mod sized;
 
-pub use family::NonPositiveIntegers;
+pub use family::NonPositiveInteger;
 pub use sized::{
     NonPositiveInteger128, NonPositiveInteger16, NonPositiveInteger32, NonPositiveInteger64,
     NonPositiveInteger8,

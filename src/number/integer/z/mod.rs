@@ -20,7 +20,7 @@ mod sized;
 #[cfg(feature = "ibig")]
 mod big;
 
-pub use family::Integers;
+pub use family::Integer;
 pub use sized::{Integer128, Integer16, Integer32, Integer64, Integer8};
 
 #[cfg(feature = "ibig")]

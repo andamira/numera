@@ -18,7 +18,7 @@ mod integer;
 mod ops;
 mod sized;
 
-pub use family::NegativeIntegers;
+pub use family::NegativeInteger;
 pub use sized::{
     NegativeInteger128, NegativeInteger16, NegativeInteger32, NegativeInteger64, NegativeInteger8,
 };
