@@ -5,7 +5,7 @@
 
 use super::{
     integer::AnyIntegers,
-    rational::AnyRationals, // real::AnyReals, complex::AnyComplex,
+    rational::AnyRational, // real::AnyReal, complex::AnyComplex,
     traits::{self, Numbers},
     NoNumber,
 };
@@ -171,7 +171,7 @@ macro_rules! define_numbers {
 define_numbers![build_variants:
     no_std:
     Integer, AnyIntegers,
-    Rational, AnyRationals
+    Rational, AnyRational
     // Real, AnyReals,
     // Complex, AnyComplex,
 ];

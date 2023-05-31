@@ -4,18 +4,18 @@
 //
 // TOC
 // - macro
-//   - define_rationals_family!
-//   - define_any_rationals_family!
+//   - define_rational_family!
+//   - define_any_rational_family!
 // - tests
 
 // TODO
-// NegativeRationals, NonNegativeRationals, NonPositiveRationals, NonZeroRationals, PositiveRationals,
-use crate::number::rational::Rationals;
+// NegativeRational, NonNegativeRational, NonPositiveRational, NonZeroRational, PositiveRational,
+use crate::number::rational::Rational;
 
-/// Defines a subfamily of rationals and implements `Numbers` on it.
+/// Defines a subfamily of rational numbers and implements `Numbers` on it.
 //
 // It doesn't implement `Rational`.
-macro_rules! define_rationals_family {
+macro_rules! define_rational_family {
     // applies a method to each variant (0 args)
     (match_variants_0:
         $fname:ident,
@@ -87,25 +87,25 @@ macro_rules! define_rationals_family {
         /// This implementation defers to the actual rational variant.
         impl crate::all::Bound for $fname {
             fn is_lower_bounded(&self) -> bool {
-                define_rationals_family! { match_variants_0:
+                define_rational_family! { match_variants_0:
                     $fname, self, is_lower_bounded,
                     no_std: $($vtype),+ ; depending: $($vtype_dep, $dep_name)+
                 }
             }
             fn is_upper_bounded(&self) -> bool {
-                define_rationals_family! { match_variants_0:
+                define_rational_family! { match_variants_0:
                     $fname, self, is_lower_bounded,
                     no_std: $($vtype),+ ; depending: $($vtype_dep, $dep_name)+
                 }
             }
             fn lower_bound(&self) -> Option<Self> {
-                define_rationals_family! { match_variants_0_rewrap:
+                define_rational_family! { match_variants_0_rewrap:
                     $fname, self, lower_bound,
                     no_std: $($vtype),+ ; depending: $($vtype_dep, $dep_name)+
                 }
             }
             fn upper_bound(&self) -> Option<Self> {
-                define_rationals_family! { match_variants_0_rewrap:
+                define_rational_family! { match_variants_0_rewrap:
                     $fname, self, upper_bound,
                     no_std: $($vtype),+ ; depending: $($vtype_dep, $dep_name)+
                 }
@@ -119,13 +119,13 @@ macro_rules! define_rationals_family {
         /// This implementation defers to the actual integer variant.
         impl crate::all::Countable for $fname {
             fn next(&self) -> crate::all::NumeraResult<Self> {
-                define_rationals_family! { match_variants_0_rewrap:
+                define_rational_family! { match_variants_0_rewrap:
                     $fname, self, next,
                     no_std: $($vtype),+ ; depending: $($vtype_dep, $dep_name)+
                 }
             }
             fn previous(&self) -> crate::all::NumeraResult<Self> {
-                define_rationals_family! { match_variants_0_rewrap:
+                define_rational_family! { match_variants_0_rewrap:
                     $fname, self, previous,
                     no_std: $($vtype),+ ; depending: $($vtype_dep, $dep_name)+
                 }
@@ -134,25 +134,25 @@ macro_rules! define_rationals_family {
         /// This implementation defers to the actual integer variant.
         impl crate::all::Sign for $fname {
             fn can_positive(&self) -> bool {
-                define_rationals_family! { match_variants_0:
+                define_rational_family! { match_variants_0:
                     $fname, self, can_positive,
                     no_std: $($vtype),+ ; depending: $($vtype_dep, $dep_name)+
                 }
             }
             fn can_negative(&self) -> bool {
-                define_rationals_family! { match_variants_0:
+                define_rational_family! { match_variants_0:
                     $fname, self, can_negative,
                     no_std: $($vtype),+ ; depending: $($vtype_dep, $dep_name)+
                 }
             }
             fn is_positive(&self) -> bool {
-                define_rationals_family! { match_variants_0:
+                define_rational_family! { match_variants_0:
                     $fname, self, is_positive,
                     no_std: $($vtype),+ ; depending: $($vtype_dep, $dep_name)+
                 }
             }
             fn is_negative(&self) -> bool {
-                define_rationals_family! { match_variants_0:
+                define_rational_family! { match_variants_0:
                     $fname, self, is_negative,
                     no_std: $($vtype),+ ; depending: $($vtype_dep, $dep_name)+
                 }
@@ -161,37 +161,37 @@ macro_rules! define_rationals_family {
         /// This implementation defers to the actual integer variant.
         impl crate::all::Ident for $fname {
             fn can_zero(&self) -> bool {
-                define_rationals_family! { match_variants_0:
+                define_rational_family! { match_variants_0:
                     $fname, self, can_zero,
                     no_std: $($vtype),+ ; depending: $($vtype_dep, $dep_name)+
                 }
             }
             fn can_one(&self) -> bool {
-                define_rationals_family! { match_variants_0:
+                define_rational_family! { match_variants_0:
                     $fname, self, can_one,
                     no_std: $($vtype),+ ; depending: $($vtype_dep, $dep_name)+
                 }
             }
             fn can_neg_one(&self) -> bool {
-                define_rationals_family! { match_variants_0:
+                define_rational_family! { match_variants_0:
                     $fname, self, can_neg_one,
                     no_std: $($vtype),+ ; depending: $($vtype_dep, $dep_name)+
                 }
             }
             fn is_zero(&self) -> bool {
-                define_rationals_family! { match_variants_0:
+                define_rational_family! { match_variants_0:
                     $fname, self, is_zero,
                     no_std: $($vtype),+ ; depending: $($vtype_dep, $dep_name)+
                 }
             }
             fn is_one(&self) -> bool {
-                define_rationals_family! { match_variants_0:
+                define_rational_family! { match_variants_0:
                     $fname, self, is_one,
                     no_std: $($vtype),+ ; depending: $($vtype_dep, $dep_name)+
                 }
             }
             fn is_neg_one(&self) -> bool {
-                define_rationals_family! { match_variants_0:
+                define_rational_family! { match_variants_0:
                     $fname, self, is_neg_one,
                     no_std: $($vtype),+ ; depending: $($vtype_dep, $dep_name)+
                 }
@@ -243,10 +243,10 @@ macro_rules! define_rationals_family {
         )+
     };
 }
-pub(crate) use define_rationals_family;
+pub(crate) use define_rational_family;
 
 /// Defines the family of all rationals and implements `Numbers` on it.
-macro_rules! define_any_rationals_family {
+macro_rules! define_any_rational_family {
     // applies a method to each variant (0 args)
     (match_variants_0:
         $fname:ident,
@@ -313,25 +313,25 @@ macro_rules! define_any_rationals_family {
         /// This implementation defers to the actual integer variant.
         impl crate::all::Bound for $fname {
             fn is_lower_bounded(&self) -> bool {
-                define_any_rationals_family! { match_variants_0:
+                define_any_rational_family! { match_variants_0:
                     $fname, self, is_lower_bounded,
                     no_std: $($vname),+ // ; depending: $($vtype_dep, $dep_name)+
                 }
             }
             fn is_upper_bounded(&self) -> bool {
-                define_any_rationals_family! { match_variants_0:
+                define_any_rational_family! { match_variants_0:
                     $fname, self, is_lower_bounded,
                     no_std: $($vname),+ // ; depending: $($vtype_dep, $dep_name)+
                 }
             }
             fn lower_bound(&self) -> Option<Self> {
-                define_any_rationals_family! { match_variants_0_rewrap:
+                define_any_rational_family! { match_variants_0_rewrap:
                     $fname, self, lower_bound,
                     no_std: $($vname),+ // ; depending: $($vtype_dep, $dep_name)+
                 }
             }
             fn upper_bound(&self) -> Option<Self> {
-                define_any_rationals_family! { match_variants_0_rewrap:
+                define_any_rational_family! { match_variants_0_rewrap:
                     $fname, self, upper_bound,
                     no_std: $($vname),+ // ; depending: $($vtype_dep, $dep_name)+
                 }
@@ -345,13 +345,13 @@ macro_rules! define_any_rationals_family {
         /// This implementation defers to the actual integer variant.
         impl crate::all::Countable for $fname {
             fn next(&self) -> crate::all::NumeraResult<Self> {
-                define_any_rationals_family! { match_variants_0_rewrap:
+                define_any_rational_family! { match_variants_0_rewrap:
                     $fname, self, next,
                     no_std: $($vname),+ // ; depending: $($vtype_dep, $dep_name)+
                 }
             }
             fn previous(&self) -> crate::all::NumeraResult<Self> {
-                define_any_rationals_family! { match_variants_0_rewrap:
+                define_any_rational_family! { match_variants_0_rewrap:
                     $fname, self, previous,
                     no_std: $($vname),+ // ; depending: $($vtype_dep, $dep_name)+
                 }
@@ -360,25 +360,25 @@ macro_rules! define_any_rationals_family {
         /// This implementation defers to the actual integer variant.
         impl crate::all::Sign for $fname {
             fn can_positive(&self) -> bool {
-                define_any_rationals_family! { match_variants_0:
+                define_any_rational_family! { match_variants_0:
                     $fname, self, can_positive,
                     no_std: $($vname),+ // ; depending: $($vtype_dep, $dep_name)+
                 }
             }
             fn can_negative(&self) -> bool {
-                define_any_rationals_family! { match_variants_0:
+                define_any_rational_family! { match_variants_0:
                     $fname, self, can_negative,
                     no_std: $($vname),+ // ; depending: $($vtype_dep, $dep_name)+
                 }
             }
             fn is_positive(&self) -> bool {
-                define_any_rationals_family! { match_variants_0:
+                define_any_rational_family! { match_variants_0:
                     $fname, self, is_positive,
                     no_std: $($vname),+ // ; depending: $($vtype_dep, $dep_name)+
                 }
             }
             fn is_negative(&self) -> bool {
-                define_any_rationals_family! { match_variants_0:
+                define_any_rational_family! { match_variants_0:
                     $fname, self, is_negative,
                     no_std: $($vname),+ // ; depending: $($vtype_dep, $dep_name)+
                 }
@@ -387,37 +387,37 @@ macro_rules! define_any_rationals_family {
         /// This implementation defers to the actual integer variant.
         impl crate::all::Ident for $fname {
             fn can_zero(&self) -> bool {
-                define_any_rationals_family! { match_variants_0:
+                define_any_rational_family! { match_variants_0:
                     $fname, self, can_zero,
                     no_std: $($vname),+ // ; depending: $($vtype_dep, $dep_name)+
                 }
             }
             fn can_one(&self) -> bool {
-                define_any_rationals_family! { match_variants_0:
+                define_any_rational_family! { match_variants_0:
                     $fname, self, can_one,
                     no_std: $($vname),+ // ; depending: $($vtype_dep, $dep_name)+
                 }
             }
             fn can_neg_one(&self) -> bool {
-                define_any_rationals_family! { match_variants_0:
+                define_any_rational_family! { match_variants_0:
                     $fname, self, can_neg_one,
                     no_std: $($vname),+ // ; depending: $($vtype_dep, $dep_name)+
                 }
             }
             fn is_zero(&self) -> bool {
-                define_any_rationals_family! { match_variants_0:
+                define_any_rational_family! { match_variants_0:
                     $fname, self, is_zero,
                     no_std: $($vname),+ // ; depending: $($vtype_dep, $dep_name)+
                 }
             }
             fn is_one(&self) -> bool {
-                define_any_rationals_family! { match_variants_0:
+                define_any_rational_family! { match_variants_0:
                     $fname, self, is_one,
                     no_std: $($vname),+ // ; depending: $($vtype_dep, $dep_name)+
                 }
             }
             fn is_neg_one(&self) -> bool {
-                define_any_rationals_family! { match_variants_0:
+                define_any_rational_family! { match_variants_0:
                     $fname, self, is_neg_one,
                     no_std: $($vname),+ // ; depending: $($vtype_dep, $dep_name)+
                 }
@@ -470,18 +470,18 @@ macro_rules! define_any_rationals_family {
 }
 
 #[rustfmt::skip]
-define_any_rationals_family![
+define_any_rational_family![
     build_variants:
-        AnyRationals,
-        "The family of any kind of rationals.",
+        AnyRational,
+        "The family of any kind of rational number.",
     no_std:
-        Rationals, Rationals
+        Rational, Rational
         // TODO
-        // NonZeroRationals, NonZero,
-        // PositiveRationals, Positive,
-        // NonNegativeRationals, NonNegative,
-        // NegativeRationals, Negative,
-        // NonPositiveRationals, NonPositive,
+        // NonZeroRational, NonZero,
+        // PositiveRational, Positive,
+        // NonNegativeRational, NonNegative,
+        // NegativeRational, Negative,
+        // NonPositiveRational, NonPositive,
 ];
 
 // #[cfg(test)]
@@ -493,12 +493,12 @@ define_any_rationals_family![
 //     #[test]
 //     fn sizes() {
 //         // 24 because of the enum discriminant
-//         assert_eq![24, size_of::<super::AnyRationals>()];
+//         assert_eq![24, size_of::<super::AnyRational>()];
 //     }
 //
 //     #[test]
 //     #[cfg(feature = "deps_all")]
 //     fn size_all_features() {
-//         assert_eq![32, size_of::<super::AnyRationals>()];
+//         assert_eq![32, size_of::<super::AnyRational>()];
 //     }
 // }

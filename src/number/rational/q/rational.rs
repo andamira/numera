@@ -26,7 +26,7 @@ macro_rules! impl_rational {
     //   `$num`: the type of the numerator. E.g. Integer16.
     //   `$den`: the type of the denominator. E.g. NonZeroInteger16.
     (single: $t:ident, $num:ident, $den:ident) => {
-        impl Rational for $t {
+        impl Rationals for $t {
             #[inline]
             fn is_integer(&self) -> bool {
                 self.num % self.den.into() == $num::ZERO

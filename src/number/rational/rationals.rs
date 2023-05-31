@@ -3,12 +3,12 @@
 //!
 //
 // TOC
-// - define the `Rational` trait
+// - define the `Rationals` trait
 
 use crate::number::traits::Numbers;
 
 /// Common trait for all rationals.
-pub trait Rational: Numbers {
+pub trait Rationals: Numbers {
     /// Is fraction an integer?
     ///
     /// Retuns `true` if the denominator 1 or the numerator is a multiple of the
