@@ -25,8 +25,8 @@ fn nnz_from() -> NumeraResult<()> {
     assert_eq![Nnz8::new(200), Pz8::new(200)?.into()];
 
     // from smaller or equal sized PRime
-    assert_eq![Nnz16::new(251), P8::new(251)?.into()];
-    assert_eq![Nnz8::new(251), P8::new(251)?.into()];
+    assert_eq![Nnz16::new(251), Prime8::new(251)?.into()];
+    assert_eq![Nnz8::new(251), Prime8::new(251)?.into()];
 
     Ok(())
 }

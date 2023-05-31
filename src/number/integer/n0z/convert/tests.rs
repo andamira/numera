@@ -26,7 +26,7 @@ fn n0z_from() -> NumeraResult<()> {
     assert_eq![N0z16::new(-100)?, Nz8::new_neg(100)?.into()];
 
     // from smaller Prime
-    assert_eq![N0z16::new(101)?, P8::new(101)?.into()];
+    assert_eq![N0z16::new(101)?, Prime8::new(101)?.into()];
 
     Ok(())
 }

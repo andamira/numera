@@ -18,8 +18,8 @@ fn pz_from() -> NumeraResult<()> {
     assert_eq![Pz16::new(200)?, Pz8::new(200)?.into()];
 
     // from smaller or equal sized Prime
-    assert_eq![Pz8::new(251)?, P8::new(251)?.into()];
-    assert_eq![Pz16::new(251)?, P8::new(251)?.into()];
+    assert_eq![Pz8::new(251)?, Prime8::new(251)?.into()];
+    assert_eq![Pz16::new(251)?, Prime8::new(251)?.into()];
 
     Ok(())
 }

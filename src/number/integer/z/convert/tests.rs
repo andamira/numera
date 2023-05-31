@@ -53,7 +53,7 @@ fn z_from() -> NumeraResult<()> {
     assert_eq![Z16::new(-100), Nz8::new_neg(100)?.into()];
 
     // from smaller Prime
-    assert_eq![Z16::new(101), P8::new(101)?.into()];
+    assert_eq![Z16::new(101), Prime8::new(101)?.into()];
 
     Ok(())
 }
@@ -115,7 +115,7 @@ fn z_try_from() -> NumeraResult<()> {
 
     // from bigger or equal sized Prime
     assert_eq![Z8::new(101), P16::new(101)?.try_into()?];
-    assert_eq![Z8::new(101), P8::new(101)?.try_into()?];
+    assert_eq![Z8::new(101), Prime8::new(101)?.try_into()?];
     assert![TryInto::<Z8>::try_into(P16::new(251)?).is_err()];
 
     Ok(())

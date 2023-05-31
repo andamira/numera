@@ -93,7 +93,7 @@ fn npz_try_from() -> NumeraResult<()> {
     assert![TryInto::<Npz8>::try_into(Pz8::new(100)?).is_err()];
 
     // try_from Prime (no valid values)
-    assert![TryInto::<Npz8>::try_into(P8::new(101)?).is_err()];
+    assert![TryInto::<Npz8>::try_into(Prime8::new(101)?).is_err()];
 
     Ok(())
 }
