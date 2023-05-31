@@ -6,7 +6,7 @@
 use super::{Prime128, Prime16, Prime32, Prime64, Prime8};
 use crate::all::{
     Bound, ConstLowerBounded, ConstUpperBounded, Count, Countable, Ident, LowerBounded,
-    NonNegative, NonOne, NonZero, Number, NumeraResult, Positive, Sign, UpperBounded,
+    NonNegative, NonOne, NonZero, Numbers, NumeraResult, Positive, Sign, UpperBounded,
 };
 
 /// The family of primes.
@@ -20,10 +20,10 @@ pub enum Primes {
     // PrimeBig(PrimeBig),
 }
 
-/* number impl */
+/* Numbers impl */
 
 /// This implementation is no-op.
-impl Number for Primes {
+impl Numbers for Primes {
     type Parts = Self;
 
     /// Returns `value` unchanged.

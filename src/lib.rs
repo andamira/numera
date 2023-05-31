@@ -27,7 +27,7 @@ pub mod error;
 pub mod number;
 
 #[doc(inline)]
-pub use number::{integer::Integer, traits::Number};
+pub use number::{integer::Integer, traits::Numbers};
 
 /// Everything is directly available in here.
 pub mod all {

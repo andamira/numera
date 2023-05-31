@@ -5,7 +5,7 @@
 
 use crate::{
     error::{IntegerError, NumeraError, NumeraResult},
-    number::{integer::prime::all::*, traits::Number},
+    number::{integer::prime::all::*, traits::Numbers},
 };
 use devela::az::CheckedAs;
 

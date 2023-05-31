@@ -1,4 +1,4 @@
-// numera::number::integer::trait_integer
+// numera::number::integer::integers
 //
 //!
 //
@@ -7,7 +7,7 @@
 // - define the `Integer` trait
 // - impl for integer primitives
 
-use crate::number::traits::{ConstZero, Number};
+use crate::number::traits::{ConstZero, Numbers};
 use core::num::{
     NonZeroI128, NonZeroI16, NonZeroI32, NonZeroI64, NonZeroI8, NonZeroIsize, NonZeroU128,
     NonZeroU16, NonZeroU32, NonZeroU64, NonZeroU8, NonZeroUsize,
@@ -20,7 +20,7 @@ use crate::all::is_prime;
 use crate::all::is_prime_sieve;
 
 /// Common trait for all integers.
-pub trait Integer: Number {
+pub trait Integer: Numbers {
     /// Returns `true` if this integer is even.
     fn integer_is_even(&self) -> bool;
     /// Returns `true` if this integer is odd.

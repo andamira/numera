@@ -18,7 +18,7 @@ use crate::{
         macros::impl_larger_smaller,
         traits::{
             Bound, ConstLowerBounded, ConstNegOne, ConstOne, ConstUpperBounded, ConstZero, Count,
-            Countable, Ident, LowerBounded, NegOne, Negative, Number, One, Positive, Sign,
+            Countable, Ident, LowerBounded, NegOne, Negative, Numbers, One, Positive, Sign,
             UpperBounded, Zero,
         },
     },
@@ -34,7 +34,7 @@ use devela::paste;
 
 /// # What it does
 /// - defines a Rational of a concrete size.
-/// - implements Number: Bound + Count + Ident + Sign
+/// - implements Numbers: Bound + Count + Ident + Sign
 /// - implements Default → 0
 ///
 /// # Args
@@ -355,9 +355,9 @@ macro_rules! define_rational_sized {
             fn new_neg_one() -> Self { <Self as ConstNegOne>::NEG_ONE }
         }
 
-        /* number */
+        /* Numbers */
 
-        impl Number for [<$name$b>] {
+        impl Numbers for [<$name$b>] {
             type Parts = ([<$p$b>], [<$p$b>]);
 
             /// Forms a new rational from a numerator and denominator.

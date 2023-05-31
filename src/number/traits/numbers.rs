@@ -1,14 +1,14 @@
-// numera::number::traits::number
+// numera::number::traits::numbers
 //
-//! Defines the `Number` trait.
+//! Defines the `Numbers` trait.
 //!
 //! Also implements it for all the supported primitives and external types.
 //
 // TOC
-// - definition of `Number`
+// - definition of `Numbers`
 //
 // - macros
-//   - impl_number
+//   - impl_numbers
 //
 // - impls
 //   - primitive integers
@@ -27,7 +27,7 @@ use crate::{
 /* definitions */
 
 /// Common trait for all numbers.
-pub trait Number: Bound + Count + Ident + Sign {
+pub trait Numbers: Bound + Count + Ident + Sign {
     /// The inner value representation of the number.
     type Parts;
 
@@ -64,19 +64,19 @@ pub trait Number: Bound + Count + Ident + Sign {
     where
         Self: Sized,
     {
-        Number::from_parts(value.into())
+        Numbers::from_parts(value.into())
     }
 }
 
 /* macros */
 
-/// impl the `Number` trait for values that already has the required trait bounds.
-macro_rules! impl_number {
+/// impl the `Numbers` trait for values that already has the required trait bounds.
+macro_rules! impl_numbers {
     (many: $($t:ty ),+) => {
-        $( impl_number![single: $t]; )+
+        $( impl_numbers![single: $t]; )+
     };
     (single: $t:ty) => {
-        impl Number for $t {
+        impl Numbers for $t {
             type Parts = $t;
 
             #[inline]
@@ -90,7 +90,7 @@ macro_rules! impl_number {
 }
 
 #[rustfmt::skip]
-impl_number![many:
+impl_numbers![many:
     f32, f64,
     i8, i16, i32, i64, i128, isize,
     u8, u16, u32, u64, u128, usize,
@@ -99,10 +99,10 @@ impl_number![many:
 ];
 
 #[cfg(feature = "twofloat")]
-impl_number![single: twofloat::TwoFloat];
+impl_numbers![single: twofloat::TwoFloat];
 
 #[cfg(feature = "half")]
-impl_number![many: half::bf16, half::f16];
+impl_numbers![many: half::bf16, half::f16];
 
 #[cfg(feature = "ibig")]
-impl_number![many: ibig::IBig, ibig::UBig];
+impl_numbers![many: ibig::IBig, ibig::UBig];

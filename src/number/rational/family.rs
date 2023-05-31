@@ -12,7 +12,7 @@
 // NegativeRationals, NonNegativeRationals, NonPositiveRationals, NonZeroRationals, PositiveRationals,
 use crate::number::rational::Rationals;
 
-/// Defines a subfamily of rationals and implements `Number` on it.
+/// Defines a subfamily of rationals and implements `Numbers` on it.
 //
 // It doesn't implement `Rational`.
 macro_rules! define_rationals_family {
@@ -70,7 +70,7 @@ macro_rules! define_rationals_family {
         }
 
         /// This implementation is no-op.
-        impl crate::all::Number for $fname {
+        impl crate::all::Numbers for $fname {
             type Parts = Self;
 
             /// Returns `value` unchanged.
@@ -245,7 +245,7 @@ macro_rules! define_rationals_family {
 }
 pub(crate) use define_rationals_family;
 
-/// Defines the family of all rationals and implements `Number` on it.
+/// Defines the family of all rationals and implements `Numbers` on it.
 macro_rules! define_any_rationals_family {
     // applies a method to each variant (0 args)
     (match_variants_0:
@@ -296,7 +296,7 @@ macro_rules! define_any_rationals_family {
         }
 
         /// This implementation is no-op.
-        impl crate::all::Number for $fname {
+        impl crate::all::Numbers for $fname {
             type Parts = Self;
 
             /// Returns `value` unchanged.

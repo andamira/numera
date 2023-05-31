@@ -11,7 +11,7 @@ use crate::number::integer::{
     PositiveIntegers, Primes,
 };
 
-/// Defines a subfamily of integers and implements `Number` on it.
+/// Defines a subfamily of integers and implements `Numbers` on it.
 //
 // It doesn't implement `Integer`, brings too much complexity for little gain.
 macro_rules! define_integers_family {
@@ -69,7 +69,7 @@ macro_rules! define_integers_family {
         }
 
         /// This implementation is no-op.
-        impl crate::all::Number for $fname {
+        impl crate::all::Numbers for $fname {
             type Parts = Self;
 
             #[inline]
@@ -242,7 +242,7 @@ macro_rules! define_integers_family {
 }
 pub(crate) use define_integers_family;
 
-/// Defines the family of all integers and implements `Number` on it.
+/// Defines the family of all integers and implements `Numbers` on it.
 macro_rules! define_any_integers_family {
     // applies a method to each variant (0 args)
     (match_variants_0:
@@ -293,7 +293,7 @@ macro_rules! define_any_integers_family {
         }
 
         /// This implementation is no-op.
-        impl crate::all::Number for $fname {
+        impl crate::all::Numbers for $fname {
             type Parts = Self;
 
             #[inline]

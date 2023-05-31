@@ -21,13 +21,13 @@ mod no;
 
 #[doc(inline)]
 pub use all::{
-    AnyIntegers, AnyNumbers, AnyRationals, Bound, Count, Ident, Integer, Integer32, Integer64,
+    AnyIntegers, AnyNumber, AnyRationals, Bound, Count, Ident, Integer, Integer32, Integer64,
     NoNumber, Number, Numbers, Prime, Prime16, Prime32, Rational, Rational32, Rational64, Sign,
 };
 pub(crate) mod all {
     #[doc(inline)]
     pub use super::{
-        family::{AnyNumbers, Numbers},
+        family::{AnyNumber, Number},
         integer::all::*,
         no::NoNumber,
         rational::all::*,

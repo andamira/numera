@@ -11,7 +11,7 @@ use crate::number::{
         },
         *,
     },
-    traits::Number,
+    traits::Numbers,
 };
 #[cfg(feature = "try_from")]
 use core::num::NonZeroU128;

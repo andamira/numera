@@ -6,18 +6,18 @@
 use super::{
     integer::AnyIntegers,
     rational::AnyRationals, // real::AnyReals, complex::AnyComplex,
-    traits::{self, Number},
+    traits::{self, Numbers},
     NoNumber,
 };
 use crate::error::NumeraResult as Result;
 
 /// The family of all possible *non-custom* kinds of numbers.
 ///
-/// This is an alias of [`AnyNumbers`] which allows to concisely use variants
+/// This is an alias of [`AnyNumber`] which allows to concisely use variants
 /// other than `Any`, without having to specify a type.
-pub type Numbers = AnyNumbers<NoNumber>;
+pub type Number = AnyNumber<NoNumber>;
 
-/// Defines the family of `Numbers` and implements `Number` on it.
+/// Defines the `AnyNumber` family and implements `Numbers` on it.
 macro_rules! define_numbers {
     // applies a method to each variant
     (match_variants:
@@ -26,8 +26,8 @@ macro_rules! define_numbers {
         no_std: $($v:ident),+
     ) => {
         match $self {
-            $( AnyNumbers::$v(n) => n.$method(), )+
-            AnyNumbers::Any(n) => n.$method(),
+            $( AnyNumber::$v(n) => n.$method(), )+
+            AnyNumber::Any(n) => n.$method(),
         }
     };
 
@@ -38,8 +38,8 @@ macro_rules! define_numbers {
         no_std: $($v:ident),+
     ) => {
         match $self {
-            $( AnyNumbers::$v(n) => n.$method().map(|n| AnyNumbers::$v(n)), )+
-            AnyNumbers::Any(n) => n.$method().map(|n| AnyNumbers::Any(n)),
+            $( AnyNumber::$v(n) => n.$method().map(|n| AnyNumber::$v(n)), )+
+            AnyNumber::Any(n) => n.$method().map(|n| AnyNumber::Any(n)),
         }
     };
 
@@ -56,35 +56,35 @@ macro_rules! define_numbers {
         /// since they are mutually exclusive, and don't apply to all cases.
         ///
         /// The [`Numbers`] alias is more convenient to use unless you need to
-        /// refer to custom numbers via the [`Any`][AnyNumbers::Any] variant.
+        /// refer to custom numbers via the [`Any`][AnyNumber::Any] variant.
         #[derive(Clone, Debug, PartialEq)]
         #[non_exhaustive]
         #[allow(clippy::derive_partial_eq_without_eq)]
-        pub enum AnyNumbers<N: Number> {
+        pub enum AnyNumber<N: Numbers> {
             $( $v($t),)+
 
             /// Any kind of number.
             Any(N)
         }
 
-        /* impl Number */
+        /* impl Numbers */
 
         /// This implementation is no-op.
-        impl<N: Number> traits::Number for AnyNumbers<N> {
+        impl<N: Numbers> Numbers for AnyNumber<N> {
             type Parts = Self;
             /// Returns `value` unchanged.
             #[inline]
-            fn from_parts(value: AnyNumbers<N>) -> Result<Self> { Ok(value) }
+            fn from_parts(value: AnyNumber<N>) -> Result<Self> { Ok(value) }
 
             /// Returns `value` unchanged.
             #[inline]
             #[cfg(not(feature = "safe"))]
             #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
-            unsafe fn from_parts_unchecked(value: AnyNumbers<N>) -> Self { value }
+            unsafe fn from_parts_unchecked(value: AnyNumber<N>) -> Self { value }
         }
 
         /// This implementation defers to the actual number variant.
-        impl<N: Number> traits::Bound for AnyNumbers<N> {
+        impl<N: Numbers> traits::Bound for AnyNumber<N> {
             fn is_lower_bounded(&self) -> bool {
                 define_numbers! { match_variants: self, is_lower_bounded, no_std: $($v),+ }
             }
@@ -100,14 +100,14 @@ macro_rules! define_numbers {
         }
 
         /// This implementation defers to the actual number variant.
-        impl<N: Number> traits::Count for AnyNumbers<N> {
+        impl<N: Numbers> traits::Count for AnyNumber<N> {
             fn is_countable(&self) -> bool {
                 define_numbers! { match_variants: self, is_countable, no_std: $($v),+ }
             }
         }
 
         /// This implementation defers to the actual number variant.
-        impl<N: Number> traits::Sign for AnyNumbers<N> {
+        impl<N: Numbers> traits::Sign for AnyNumber<N> {
             fn can_positive(&self) -> bool {
                 define_numbers! { match_variants: self, can_positive, no_std: $($v),+ }
             }
@@ -123,7 +123,7 @@ macro_rules! define_numbers {
         }
 
         /// This implementation defers to the actual number variant.
-        impl<N: Number> traits::Ident for AnyNumbers<N> {
+        impl<N: Numbers> traits::Ident for AnyNumber<N> {
             fn can_zero(&self) -> bool {
                 define_numbers! { match_variants: self, can_zero, no_std: $($v),+ }
             }
@@ -147,18 +147,18 @@ macro_rules! define_numbers {
         /* impl From & TryFrom */
 
         $(
-        impl<N: Number> From<$t> for AnyNumbers<N> {
+        impl<N: Numbers> From<$t> for AnyNumber<N> {
             #[inline]
-            fn from(n: $t) -> AnyNumbers<N> { AnyNumbers::$v(n) }
+            fn from(n: $t) -> AnyNumber<N> { AnyNumber::$v(n) }
         }
         )+
 
         $(
-        impl<N: Number> TryFrom<AnyNumbers<N>> for $t {
+        impl<N: Numbers> TryFrom<AnyNumber<N>> for $t {
             type Error = crate::error::NumeraError;
-            fn try_from(n: AnyNumbers<N>) -> core::result::Result<$t, Self::Error> {
+            fn try_from(n: AnyNumber<N>) -> core::result::Result<$t, Self::Error> {
                 match n {
-                    AnyNumbers::$v(n) => Ok(n),
+                    AnyNumber::$v(n) => Ok(n),
                     _ => Err(Self::Error::Conversion)
                 }
             }

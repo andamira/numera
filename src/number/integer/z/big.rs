@@ -15,7 +15,7 @@
 use crate::{
     error::{NumeraError, NumeraResult},
     number::traits::{
-        Bound, Count, Countable, Ident, NegOne, Negative, NonLowerBounded, NonUpperBounded, Number,
+        Bound, Count, Countable, Ident, NegOne, Negative, NonLowerBounded, NonUpperBounded, Numbers,
         One, Positive, Sign, Zero,
     },
 };
@@ -173,9 +173,9 @@ impl NegOne for IntegerBig {
     }
 }
 
-/* number */
+/* Numbers */
 
-impl Number for IntegerBig {
+impl Numbers for IntegerBig {
     type Parts = IBig;
 
     /// Returns a new `IntegerBig` from the constituent parts.

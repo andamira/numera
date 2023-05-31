@@ -18,7 +18,7 @@ use crate::{
         macros::impl_larger_smaller,
         traits::{
             Bound, ConstLowerBounded, ConstNegOne, ConstUpperBounded, ConstZero, Count, Countable,
-            Ident, LowerBounded, NegOne, Negative, NonPositive, Number, Sign, UpperBounded, Zero,
+            Ident, LowerBounded, NegOne, Negative, NonPositive, Numbers, Sign, UpperBounded, Zero,
         },
     },
 };
@@ -29,7 +29,7 @@ use devela::paste;
 
 /// # What it does
 /// - defines an Integer of a concrete size.
-/// - implements Number: Bound + Count + Ident + Sign
+/// - implements Numbers: Bound + Count + Ident + Sign
 /// - implements Default → 0
 ///
 /// # Args
@@ -212,7 +212,7 @@ macro_rules! define_nonpositive_integer_sized {
 
         /* number */
 
-        impl Number for [<$name$b>] {
+        impl Numbers for [<$name$b>] {
             type Parts = [<$p$b>];
 
             #[doc = "Returns a new `" [<$name$b>] "` from the constituent parts."]

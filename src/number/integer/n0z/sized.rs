@@ -17,7 +17,7 @@ use crate::{
         macros::impl_larger_smaller,
         traits::{
             Bound, ConstLowerBounded, ConstNegOne, ConstOne, ConstUpperBounded, Count, Countable,
-            Ident, LowerBounded, NegOne, Negative, NonZero, Number, One, Positive, Sign,
+            Ident, LowerBounded, NegOne, Negative, NonZero, Numbers, One, Positive, Sign,
             UpperBounded,
         },
     },
@@ -32,7 +32,7 @@ use devela::paste;
 
 /// # What it does
 /// - defines an Integer of a concrete size.
-/// - implements Number: Bound + Count + Ident + Sign
+/// - implements Numbers: Bound + Count + Ident + Sign
 ///
 /// # Args
 /// - `$name`: the base name of the integer. E.g. `NonZeroInteger`.
@@ -316,7 +316,7 @@ macro_rules! define_nonzero_integer_sized {
 
         /* number */
 
-        impl Number for [<$name$b>] {
+        impl Numbers for [<$name$b>] {
             type Parts = [<i$b>];
 
             #[doc = "Returns a new `" [<$name$b>] "` from the constituent parts."]
