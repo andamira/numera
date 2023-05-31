@@ -22,4 +22,4 @@ pub use sized::{
 };
 
 use crate::number::macros::define_abbreviations;
-define_abbreviations![many Npz, NonPositiveInteger, 8, 16, 32, 64, 128];
+define_abbreviations![Npz, NonPositiveInteger, 8, 16, 32, 64, 128];

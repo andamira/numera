@@ -14,4 +14,6 @@ mod sized;
 pub use sized::{Float32, Float64};
 
 use crate::number::macros::define_abbreviations;
-define_abbreviations![many F, Float, 32, 64];
+// define_abbreviations![F, Float, 32, 64]; // TEMP
+define_abbreviations![sized F, Float, 32];
+define_abbreviations![sized F, Float, 64];

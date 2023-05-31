@@ -11,7 +11,7 @@ use crate::number::traits::{
 
 define_integer_family![build_variants:
     NonNegativeInteger,
-    "The family of non-negative integers.",
+    "The family of [non-negative integers][super], also known as [`Nnz`][super::Nnz].",
     no_std:
         NonNegativeInteger8, NonNegativeInteger16, NonNegativeInteger32, NonNegativeInteger64, NonNegativeInteger128
     ;

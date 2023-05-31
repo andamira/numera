@@ -14,7 +14,7 @@ use crate::{
 
 define_integer_family![build_variants:
     NegativeInteger,
-    "The family of negative integers.",
+    "The family of [negative integers][super], also known as [`Nz`][super::Nz].",
     no_std:
         NegativeInteger8, NegativeInteger16, NegativeInteger32, NegativeInteger64, NegativeInteger128
     ;

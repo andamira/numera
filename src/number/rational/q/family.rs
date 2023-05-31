@@ -14,7 +14,7 @@ use crate::number::traits::{
 
 define_rational_family![build_variants:
     Rational,
-    "The family of rational numbers.",
+    "The family of [rational][super] numbers, also known as [`Q`][super::Q].",
     no_std:
         Rational8, Rational16, Rational32, Rational64, Rational128
     ;

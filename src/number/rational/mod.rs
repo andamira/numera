@@ -27,5 +27,5 @@ pub mod q;
 pub use all::*;
 pub(crate) mod all {
     #[doc(inline)]
-    pub use super::{family::AnyRational, q::*, rationals::Rationals};
+    pub use super::{family::*, q::*, rationals::Rationals};
 }

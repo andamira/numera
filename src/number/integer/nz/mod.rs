@@ -24,4 +24,4 @@ pub use sized::{
 };
 
 use crate::number::macros::define_abbreviations;
-define_abbreviations![many Nz, NegativeInteger, 8, 16, 32, 64, 128];
+define_abbreviations![Nz, NegativeInteger, 8, 16, 32, 64, 128];

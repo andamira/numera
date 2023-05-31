@@ -14,7 +14,7 @@ use crate::number::traits::{
 
 define_integer_family![build_variants:
     NonZeroInteger,
-    "The family of non-zero integers.",
+    "The family of [non-zero integers][super], also known as [`N0z`][super::N0z].",
     no_std:
         NonZeroInteger8, NonZeroInteger16, NonZeroInteger32, NonZeroInteger64, NonZeroInteger128
     ;

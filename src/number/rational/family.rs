@@ -473,7 +473,7 @@ macro_rules! define_any_rational_family {
 define_any_rational_family![
     build_variants:
         AnyRational,
-        "The family of any kind of rational number.",
+        "The family of [any kind of rational][super] numbers, also known as [`AnyQ`]",
     no_std:
         Rational, Rational
         // TODO
@@ -483,6 +483,9 @@ define_any_rational_family![
         // NegativeRational, Negative,
         // NonPositiveRational, NonPositive,
 ];
+
+use crate::number::macros::define_abbreviations;
+define_abbreviations![family AnyQ, AnyRational];
 
 // #[cfg(test)]
 // mod tests {

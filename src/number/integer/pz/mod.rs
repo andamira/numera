@@ -29,5 +29,5 @@ pub use sized::{
 };
 
 use crate::number::macros::{define_abbreviations, define_aliases};
-define_abbreviations![many Pz, PositiveInteger, 8, 16, 32, 64, 128];
-define_aliases![many Counting, PositiveInteger, 8, 16, 32, 64, 128];
+define_abbreviations![Pz, PositiveInteger, 8, 16, 32, 64, 128];
+define_aliases![Counting, PositiveInteger, 8, 16, 32, 64, 128];

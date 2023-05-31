@@ -468,7 +468,7 @@ macro_rules! define_any_integer_family {
 define_any_integer_family![
     build_variants:
         AnyInteger,
-        "The family of any kind of integers.",
+        "The family of [any kind of integer][super] numbers, also known as [`AnyZ`][super::AnyZ].",
     no_std:
         Integer, Integer,
         NonZeroInteger, NonZero,
@@ -478,3 +478,6 @@ define_any_integer_family![
         NonPositiveInteger, NonPositive,
         Primes, Primes
 ];
+
+use crate::number::macros::define_abbreviations;
+define_abbreviations![family AnyZ, AnyInteger];

@@ -16,7 +16,7 @@ use super::IntegerBig;
 
 define_integer_family![build_variants:
     Integer,
-    "The family of integer numbers.",
+    "The family of [integer][super] numbers, also known as [`Z`][super::Z].",
     no_std:
         Integer8, Integer16, Integer32, Integer64, Integer128
     ;

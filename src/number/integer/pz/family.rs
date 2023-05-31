@@ -11,7 +11,7 @@ use crate::number::traits::{
 
 define_integer_family![build_variants:
     PositiveInteger,
-    "The family of positive integers.",
+    "The family of [positive integers][super], also known as [`Pz`][super::Pz].",
     no_std:
         PositiveInteger8, PositiveInteger16, PositiveInteger32, PositiveInteger64, PositiveInteger128
     ;

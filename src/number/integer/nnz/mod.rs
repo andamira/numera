@@ -31,5 +31,5 @@ pub use sized::{
 };
 
 use crate::number::macros::{define_abbreviations, define_aliases};
-define_abbreviations![many Nnz, NonNegativeInteger, 8, 16, 32, 64, 128];
-define_aliases![many Natural, NonNegativeInteger, 8, 16, 32, 64, 128];
+define_abbreviations![Nnz, NonNegativeInteger, 8, 16, 32, 64, 128];
+define_aliases![Natural, NonNegativeInteger, 8, 16, 32, 64, 128];

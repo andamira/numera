@@ -28,7 +28,7 @@ pub use sized::{Integer128, Integer16, Integer32, Integer64, Integer8};
 pub use big::IntegerBig;
 
 use crate::number::macros::define_abbreviations;
-define_abbreviations![many Z, Integer, 8, 16, 32, 64, 128];
+define_abbreviations![Z, Integer, 8, 16, 32, 64, 128];
 
 /// Abbreviation of [`IntegerBig`].
 #[cfg(feature = "ibig")]

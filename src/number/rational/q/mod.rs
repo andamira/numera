@@ -19,4 +19,4 @@ mod sized;
 pub use family::Rational;
 pub use sized::{Rational128, Rational16, Rational32, Rational64, Rational8};
 
-define_abbreviations![many Q, Rational, 8, 16, 32, 64, 128];
+define_abbreviations![Q, Rational, 8, 16, 32, 64, 128];

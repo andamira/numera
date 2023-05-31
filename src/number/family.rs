@@ -17,6 +17,9 @@ use crate::error::NumeraResult as Result;
 /// other than `Any`, without having to specify a type.
 pub type Number = AnyNumber<NoNumber>;
 
+/// Abbreviation of [`AnyNumber`] family.
+pub type AnyN<N> = AnyNumber<N>;
+
 /// Defines the `AnyNumber` family and implements `Numbers` on it.
 macro_rules! define_numbers {
     // applies a method to each variant
@@ -48,7 +51,7 @@ macro_rules! define_numbers {
     (build_variants:
         no_std: $($v:ident, $t:ident),+
     ) => {
-        /// The family of any kind of numbers.
+        /// The family of [any kind of number][super], also known as [`AnyN`].
         ///
         /// # Notes
         /// Note that it wont have several specific traits implemented, like for

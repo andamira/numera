@@ -27,11 +27,6 @@ pub use all::{
 pub(crate) mod all {
     #[doc(inline)]
     pub use super::{
-        family::{AnyNumber, Number},
-        integer::all::*,
-        no::NoNumber,
-        rational::all::*,
-        real::all::*,
-        traits::all::*,
+        family::*, integer::all::*, no::NoNumber, rational::all::*, real::all::*, traits::all::*,
     };
 }
