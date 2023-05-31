@@ -11,7 +11,7 @@ use super::{
 };
 use crate::error::NumeraResult as Result;
 
-/// The family of all possible *non-custom* kinds of numbers.
+/// The family of *non-custom* numbers.
 ///
 /// This is an alias of [`AnyNumber`] which allows to concisely use variants
 /// other than `Any`, without having to specify a type.

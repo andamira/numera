@@ -8,7 +8,7 @@
 
 use crate::number::integer::{
     Integer, NegativeInteger, NonNegativeInteger, NonPositiveInteger, NonZeroInteger,
-    PositiveInteger, Primes,
+    PositiveInteger, Prime,
 };
 
 /// Defines a subfamily of integers and implements `Numbers` on it.
@@ -476,7 +476,7 @@ define_any_integer_family![
         NonNegativeInteger, NonNegative,
         NegativeInteger, Negative,
         NonPositiveInteger, NonPositive,
-        Primes, Primes
+        Prime, Prime
 ];
 
 use crate::number::macros::define_abbreviations;

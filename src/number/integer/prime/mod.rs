@@ -15,7 +15,7 @@ pub mod data;
 mod family;
 mod fns;
 mod impl_traits;
-mod prime_trait;
+mod primes;
 mod sized;
 
 pub use all::*;
@@ -23,9 +23,9 @@ pub(crate) mod all {
     #[doc(inline)]
     pub use super::{
         data::*,
-        family::Primes,
+        family::Prime,
         fns::{is_prime, is_prime_brute, nth_prime, prime_pi},
-        prime_trait::Prime,
+        primes::Primes,
         sized::{Prime128, Prime16, Prime32, Prime64, Prime8},
     };
 

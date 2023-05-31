@@ -9,7 +9,7 @@ use super::{
 };
 
 /// Common trait for all primes.
-pub trait Prime {
+pub trait Primes {
     /// Returns the `nth` prime, or `None` if out of bounds.
     fn get_nth(nth: usize) -> Option<Self>
     where
@@ -29,7 +29,7 @@ pub trait Prime {
     // fn is_some_balanced(&self) -> bool;
 }
 
-impl Prime for Prime8 {
+impl Primes for Prime8 {
     fn get_nth(nth: usize) -> Option<Self> {
         match nth {
             0..=53 => Some(Prime8(PRIMES_U8[nth])),
@@ -42,7 +42,7 @@ impl Prime for Prime8 {
     }
 }
 
-impl Prime for Prime16 {
+impl Primes for Prime16 {
     fn get_nth(nth: usize) -> Option<Self> {
         match nth {
             0..=53 => Some(Prime16(PRIMES_U8[nth].into())),
@@ -56,7 +56,7 @@ impl Prime for Prime16 {
     }
 }
 
-impl Prime for Prime32 {
+impl Primes for Prime32 {
     /// WIP: For now this function only returns Some values if `nth` <= 6,541.
     fn get_nth(nth: usize) -> Option<Self> {
         match nth {
@@ -74,7 +74,7 @@ impl Prime for Prime32 {
     }
 }
 
-impl Prime for Prime64 {
+impl Primes for Prime64 {
     /// WIP: For now this function only returns Some values if `nth` <= 6,541.
     #[allow(clippy::match_same_arms)] // TEMP
     fn get_nth(nth: usize) -> Option<Self> {
@@ -97,7 +97,7 @@ impl Prime for Prime64 {
     }
 }
 
-impl Prime for Prime128 {
+impl Primes for Prime128 {
     /// WIP: For now this function only returns Some values if `nth` <= 6,541.
     #[allow(clippy::match_same_arms)] // TEMP
     fn get_nth(nth: usize) -> Option<Self> {

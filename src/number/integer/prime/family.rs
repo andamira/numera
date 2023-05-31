@@ -9,9 +9,9 @@ use crate::all::{
     NonNegative, NonOne, NonZero, Numbers, NumeraResult, Positive, Sign, UpperBounded,
 };
 
-/// The family of primes.
+/// The family of [prime][super] integer numbers.
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
-pub enum Primes {
+pub enum Prime {
     Prime8(Prime8),
     Prime16(Prime16),
     Prime32(Prime32),
@@ -23,12 +23,12 @@ pub enum Primes {
 /* Numbers impl */
 
 /// This implementation is no-op.
-impl Numbers for Primes {
+impl Numbers for Prime {
     type Parts = Self;
 
     /// Returns `value` unchanged.
     #[inline]
-    fn from_parts(value: Primes) -> NumeraResult<Self> {
+    fn from_parts(value: Prime) -> NumeraResult<Self> {
         Ok(value)
     }
 
@@ -36,15 +36,15 @@ impl Numbers for Primes {
     #[inline]
     #[cfg(not(feature = "safe"))]
     #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
-    unsafe fn from_parts_unchecked(value: Primes) -> Self {
+    unsafe fn from_parts_unchecked(value: Prime) -> Self {
         value
     }
 }
 
 /// This implementation defers to the actual integer variant.
-impl Bound for Primes {
+impl Bound for Prime {
     fn is_lower_bounded(&self) -> bool {
-        use Primes::*;
+        use Prime::*;
         match self {
             Prime8(p) => p.is_lower_bounded(),
             Prime16(p) => p.is_lower_bounded(),
@@ -54,7 +54,7 @@ impl Bound for Primes {
         }
     }
     fn is_upper_bounded(&self) -> bool {
-        use Primes::*;
+        use Prime::*;
         match self {
             Prime8(p) => p.is_upper_bounded(),
             Prime16(p) => p.is_upper_bounded(),
@@ -64,7 +64,7 @@ impl Bound for Primes {
         }
     }
     fn lower_bound(&self) -> Option<Self> {
-        use Primes::*;
+        use Prime::*;
         match self {
             Prime8(p) => p.lower_bound().map(|p| p.into()),
             Prime16(p) => p.lower_bound().map(|p| p.into()),
@@ -74,7 +74,7 @@ impl Bound for Primes {
         }
     }
     fn upper_bound(&self) -> Option<Self> {
-        use Primes::*;
+        use Prime::*;
         match self {
             Prime8(p) => p.upper_bound().map(|p| p.into()),
             Prime16(p) => p.upper_bound().map(|p| p.into()),
@@ -85,36 +85,36 @@ impl Bound for Primes {
     }
 }
 
-impl LowerBounded for Primes {
+impl LowerBounded for Prime {
     /// Returns a [`Prime8::new_min()`][Prime8#method.new_min].
     #[inline]
-    fn new_min() -> Primes {
-        Primes::Prime8(Prime8::new_min())
+    fn new_min() -> Prime {
+        Prime::Prime8(Prime8::new_min())
     }
 }
-impl ConstLowerBounded for Primes {
-    const MIN: Self = Primes::Prime8(Prime8::MIN);
+impl ConstLowerBounded for Prime {
+    const MIN: Self = Prime::Prime8(Prime8::MIN);
 }
-impl UpperBounded for Primes {
+impl UpperBounded for Prime {
     /// Returns a [`Prime128::new_max()`][Prime128#method.new_max].
     #[inline]
-    fn new_max() -> Primes {
-        Primes::Prime128(Prime128::new_max())
+    fn new_max() -> Prime {
+        Prime::Prime128(Prime128::new_max())
     }
 }
-impl ConstUpperBounded for Primes {
-    const MAX: Self = Primes::Prime32(Prime32::MAX);
+impl ConstUpperBounded for Prime {
+    const MAX: Self = Prime::Prime32(Prime32::MAX);
 }
 
-impl Count for Primes {
+impl Count for Prime {
     #[inline]
     fn is_countable(&self) -> bool {
         true
     }
 }
-impl Countable for Primes {
+impl Countable for Prime {
     fn next(&self) -> NumeraResult<Self> {
-        use Primes::*;
+        use Prime::*;
         match self {
             // Prime8(p) => Prime8(p.),
             Prime8(p) => p.next().map(|p| p.into()),
@@ -128,7 +128,7 @@ impl Countable for Primes {
         }
     }
     fn previous(&self) -> NumeraResult<Self> {
-        use Primes::*;
+        use Prime::*;
         match self {
             // Prime8(p) => Prime8(p.),
             Prime8(p) => p.previous().map(|p| p.into()),
@@ -144,7 +144,7 @@ impl Countable for Primes {
 }
 
 #[rustfmt::skip]
-impl Ident for Primes {
+impl Ident for Prime {
     #[inline]
     fn can_zero(&self) -> bool { false }
     #[inline]
@@ -158,11 +158,11 @@ impl Ident for Primes {
     #[inline]
     fn is_neg_one(&self) -> bool { false }
 }
-impl NonZero for Primes {}
-impl NonOne for Primes {}
+impl NonZero for Prime {}
+impl NonOne for Prime {}
 
 #[rustfmt::skip]
-impl Sign for Primes {
+impl Sign for Prime {
     #[inline]
     fn can_positive(&self) -> bool { true }
     #[inline]
@@ -172,5 +172,5 @@ impl Sign for Primes {
     #[inline]
     fn is_negative(&self) -> bool { false }
 }
-impl Positive for Primes {}
-impl NonNegative for Primes {}
+impl Positive for Prime {}
+impl NonNegative for Prime {}
