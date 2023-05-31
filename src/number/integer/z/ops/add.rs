@@ -55,7 +55,7 @@ macro_rules! impl_integer_add {
             /// While in release, it performs two's complement wrapping.
             #[inline]
             fn add_assign(&mut self, rhs: [<$t$b>]) {
-                *self = self.add(rhs)
+                *self = self.add(rhs);
             }
         }
 
@@ -76,7 +76,7 @@ macro_rules! impl_integer_add {
             }
         }
 
-        /// # Integer addition
+        /// # Addition
         impl [<$t$b>] {
             /// Integer addition.
             ///

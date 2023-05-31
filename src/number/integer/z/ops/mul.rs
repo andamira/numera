@@ -52,7 +52,7 @@ macro_rules! impl_integer_mul {
             /// While in release, it performs two's complement wrapping.
             #[inline]
             fn mul_assign(&mut self, rhs: [<$t$b>]) {
-                self.0 *= rhs.0
+                self.0 *= rhs.0;
             }
         }
 
@@ -73,7 +73,7 @@ macro_rules! impl_integer_mul {
             }
         }
 
-        /// # Integer multiplication
+        /// # Multiplication
         impl [<$t$b>] {
             /// Integer multiplication.
             ///

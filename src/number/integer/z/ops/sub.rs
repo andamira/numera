@@ -55,7 +55,7 @@ macro_rules! impl_integer_sub {
                 *self = self.add(rhs);
             }
         }
-        /// # Integer substraction
+        /// # Substraction
         impl [<$t$b>] {
             /// Integer substraction.
             ///

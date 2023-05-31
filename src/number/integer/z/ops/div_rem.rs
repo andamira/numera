@@ -81,11 +81,11 @@ macro_rules! impl_integer_div_rem {
             /// In release, it performs two's complement wrapping.
             #[inline]
             fn div_assign(&mut self, rhs: [<$t$b>]) {
-                self.0 /= rhs.0
+                self.0 /= rhs.0;
             }
         }
 
-        /// # Integer division
+        /// # Division
         ///
         /// ## Comparison of division functions
         ///
@@ -146,7 +146,7 @@ macro_rules! impl_integer_div_rem {
                 Self(self.0 / rhs.0)
             }
 
-            /// Checked truncated division.
+            /// Returns the checked truncated division.
             ///
             /// Rounds the quotient towards zero, or away from infinity.
             ///
@@ -167,7 +167,7 @@ macro_rules! impl_integer_div_rem {
                 }
             }
 
-            /// Euclidean division.
+            /// Returns the euclidean division.
             ///
             /// Ensures that the remainder is always non-negative and smaller
             /// than the divisor.
@@ -194,7 +194,7 @@ macro_rules! impl_integer_div_rem {
                 Self(self.0.div_euclid(rhs.0))
             }
 
-            /// Checked euclidean division.
+            /// Returns the checked euclidean division.
             ///
             /// Ensures that the remainder is always non-negative and smaller
             /// than the divisor.
@@ -216,7 +216,7 @@ macro_rules! impl_integer_div_rem {
                 }
             }
 
-            /// Floored division
+            /// Returns the floored division
             ///
             /// Rounds the quotient towards negative infinity.
             ///
@@ -259,7 +259,7 @@ macro_rules! impl_integer_div_rem {
                 // }
             }
 
-            /// Checked floored division.
+            /// Returns the checked floored division.
             ///
             /// Rounds the quotient towards negative infinity.
             ///
@@ -283,7 +283,7 @@ macro_rules! impl_integer_div_rem {
                 }
             }
 
-            /// Ceiled division.
+            /// Returns the ceiled division.
             ///
             /// Rounds the quotient towards positive infinity.
             ///
@@ -315,7 +315,7 @@ macro_rules! impl_integer_div_rem {
                 }
             }
 
-            /// Checked ceiled division.
+            /// Returns the checked ceiled division.
             ///
             /// Rounds the quotient towards positive infinity.
             ///
@@ -339,7 +339,7 @@ macro_rules! impl_integer_div_rem {
                 }
             }
 
-            /// Rounded division half away from 0.
+            /// Returns the rounded division half away from 0.
             ///
             /// Rounds the quotient to the nearest integer, tie-breaking away
             /// from 0 ([w]).
@@ -380,7 +380,7 @@ macro_rules! impl_integer_div_rem {
                 }
             }
 
-            /// Checked rounded division half away from 0.
+            /// Returns the checked rounded division half away from 0.
             ///
             /// Rounds the quotient to the nearest integer, tie-breaking away
             /// from 0 ([w]).
@@ -404,7 +404,7 @@ macro_rules! impl_integer_div_rem {
                 }
             }
 
-            /// Rounded division half to even.
+            /// Returns the rounded division half to even.
             ///
             /// Rounds the quotient to the nearest integer, tie-breaking to the
             /// nearest even number.
@@ -450,7 +450,7 @@ macro_rules! impl_integer_div_rem {
             //     Self(crate::all::round_half_even64(self.0 as f64 / rhs.0 as f64) as [<$p$b>])
             // }
 
-            /// Checked rounded division half to even.
+            /// Returns the checked rounded division half to even.
             ///
             /// Rounds the quotient to the nearest integer, tie-breaking to the
             /// nearest even number.
@@ -520,12 +520,12 @@ macro_rules! impl_integer_div_rem {
             /// Performs the `%=` operation.
             #[inline]
             fn rem_assign(&mut self, rhs: [<$t$b>]) {
-                self.0 %= rhs.0
+                self.0 %= rhs.0;
             }
         }
-        /// # Integer remainder
+        /// # Remainder
         impl [<$t$b>] {
-            /// Truncated remained operation.
+            /// Returns the truncated remainder operation.
             ///
             /// This is the default remainder operation in Rust, C and Java.
             ///
@@ -547,7 +547,7 @@ macro_rules! impl_integer_div_rem {
                 Self(self.0 % rhs.0)
             }
 
-            /// Euclidean remainder operation.
+            /// Returns the euclidean remainder operation.
             ///
             /// This is often used in modular arithmetic, since it always
             /// returns a non-negative remainder.
@@ -571,7 +571,7 @@ macro_rules! impl_integer_div_rem {
                 Self(self.0.rem_euclid(rhs.0))
             }
 
-            /// Checked Euclidean remainder operation.
+            /// Returns the checked Euclidean remainder operation.
             ///
             /// Computes [`rem_euclid`][Self#method.rem_euclid], returning `None`
             /// if `rhs` == 0 or the division results in overflow.
@@ -593,7 +593,7 @@ macro_rules! impl_integer_div_rem {
                 }
             }
 
-            /// Floored remainder operation.
+            /// Returns the floored remainder operation.
             ///
             /// Rounds the quotient towards negative infinity, differing
             /// from the truncated division in regard to negative numbers.
@@ -632,7 +632,7 @@ macro_rules! impl_integer_div_rem {
             (lhs / rhs, lhs % rhs)
         }
 
-        /// # Integer division and remainder
+        /// # Division and remainder
         impl [<$t$b>] {
             /// Alias of [`div_rem_trunc`][Self#method.div_rem_trunc].
             #[inline(always)]

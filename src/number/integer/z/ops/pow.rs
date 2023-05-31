@@ -28,7 +28,7 @@ macro_rules! impl_integer_sub {
     // - wrapping_
     // - overflowing_
     (pow: $t:ident + $p:ident + $b:literal) => { paste! {
-        /// # Integer exponentiation
+        /// # Exponentiation
         impl [<$t$b>] {
 
             /// Integer exponentiation.

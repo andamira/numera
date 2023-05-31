@@ -176,8 +176,7 @@ pub fn prime_pi(n: u32) -> usize {
     prime_count
 }
 
-/// Checks whether a `number` is prime using an optimized
-/// [`Sieve`][https://docs.rs/primal-sieve/latest/primal_sieve/struct.Sieve.html].
+/// Checks whether a `number` is prime using an optimized sieve.
 #[inline]
 #[cfg(feature = "std")]
 #[cfg_attr(feature = "nightly", doc(cfg(feature = "std")))]

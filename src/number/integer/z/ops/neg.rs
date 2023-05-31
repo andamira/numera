@@ -35,7 +35,7 @@ macro_rules! impl_integer_neg {
                 self.neg()
             }
         }
-        /// # Integer negation
+        /// # Negation
         impl [<$t$b>] {
             /// Basic negation. Computes `-self`.
             ///
