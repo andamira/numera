@@ -37,3 +37,6 @@ pub(crate) mod all {
     #[cfg(feature = "ibig")]
     pub use super::fns::{largest_prime_pow2_doublings, ten_primes_less_pow2};
 }
+
+use crate::number::macros::define_abbreviations;
+define_abbreviations![P, Prime, 8, 16, 32, 64, 128];
