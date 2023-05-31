@@ -7,6 +7,7 @@ use super::{
     integer::AnyIntegers,
     rational::AnyRationals, // real::AnyReals, complex::AnyComplex,
     traits::{self, Number},
+    NoNumber,
 };
 use crate::error::NumeraResult as Result;
 
@@ -14,7 +15,7 @@ use crate::error::NumeraResult as Result;
 ///
 /// This is an alias of [`AnyNumbers`] which allows to concisely use variants
 /// other than `Any`, without having to specify a type.
-pub type Numbers = AnyNumbers<()>;
+pub type Numbers = AnyNumbers<NoNumber>;
 
 /// Defines the family of `Numbers` and implements `Number` on it.
 macro_rules! define_numbers {
