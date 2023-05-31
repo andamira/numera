@@ -7,6 +7,7 @@
 #![warn(clippy::all)]
 #![warn(clippy::pedantic)]
 #![allow(
+    clippy::doc_markdown,
     clippy::enum_glob_use,
     clippy::module_name_repetitions,
     clippy::must_use_candidate,

@@ -113,6 +113,7 @@ rreaF = "run --release --no-default-features --features=std,safe,all --example"
 # std, safe
 t = "test"
 td = "test --doc"
+td_ = "test --doc -- --nocapture"
 t_ = "test -- --nocapture"
 t_1 = "test -- --test-threads 1 --nocapture"
 # std, safe, all dependencies
