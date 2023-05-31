@@ -15,12 +15,13 @@ use crate::{
 define_integer_family![build_variants:
     NonPositiveInteger,
     "The family of [non-positive integers][super], also known as [`Npz`][super::Npz].",
-    no_std:
-        NonPositiveInteger8, NonPositiveInteger16, NonPositiveInteger32, NonPositiveInteger64, NonPositiveInteger128
+    common:
+        NonPositiveInteger+8, NonPositiveInteger+16, NonPositiveInteger+32, NonPositiveInteger+64,
+        NonPositiveInteger+128
     ;
 
     depending:
-        NonPositiveIntegerBig, "ibig-TODO" // placeholder, disabled
+        Big, NonPositiveIntegerBig, "ibig-TODO" // placeholder, disabled
 ];
 
 /* impl additional traits for the family */
@@ -58,11 +59,11 @@ impl NegOne for NonPositiveInteger {
 }
 impl ConstZero for NonPositiveInteger {
     /// Returns a [`NonPositiveInteger8::ZERO`][NonPositiveInteger8#associatedconstant.ZERO].
-    const ZERO: Self = NonPositiveInteger::NonPositiveInteger8(NonPositiveInteger8::ZERO);
+    const ZERO: Self = NonPositiveInteger::_8(NonPositiveInteger8::ZERO);
 }
 impl ConstNegOne for NonPositiveInteger {
     /// Returns a [`NonPositiveInteger8::NEG_ONE`][NonPositiveInteger8#associatedconstant.NEG_ONE].
-    const NEG_ONE: Self = NonPositiveInteger::NonPositiveInteger8(NonPositiveInteger8::NEG_ONE);
+    const NEG_ONE: Self = NonPositiveInteger::_8(NonPositiveInteger8::NEG_ONE);
 }
 
 /* bound */
@@ -83,9 +84,9 @@ impl UpperBounded for NonPositiveInteger {
 }
 impl ConstLowerBounded for NonPositiveInteger {
     /// Returns a [`NonPositiveInteger128::MIN`][NonPositiveInteger128#associatedconstant.MIN].
-    const MIN: Self = NonPositiveInteger::NonPositiveInteger128(NonPositiveInteger128::MIN);
+    const MIN: Self = NonPositiveInteger::_128(NonPositiveInteger128::MIN);
 }
 impl ConstUpperBounded for NonPositiveInteger {
     /// Returns a [`NonPositiveInteger8::MAX`][NonPositiveInteger8#associatedconstant.MAX].
-    const MAX: Self = NonPositiveInteger::NonPositiveInteger8(NonPositiveInteger8::MAX);
+    const MAX: Self = NonPositiveInteger::_8(NonPositiveInteger8::MAX);
 }

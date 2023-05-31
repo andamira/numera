@@ -12,12 +12,13 @@ use crate::number::traits::{
 define_integer_family![build_variants:
     PositiveInteger,
     "The family of [positive integers][super], also known as [`Pz`][super::Pz].",
-    no_std:
-        PositiveInteger8, PositiveInteger16, PositiveInteger32, PositiveInteger64, PositiveInteger128
+    common:
+        PositiveInteger+8, PositiveInteger+16, PositiveInteger+32, PositiveInteger+64,
+        PositiveInteger+128
     ;
 
     depending:
-        PositiveIntegerBig, "ibig-TODO" // placeholder, disabled
+        Big, PositiveIntegerBig, "ibig-TODO" // placeholder, disabled
 ];
 
 /* impl additional traits for the family */
@@ -39,7 +40,7 @@ impl One for PositiveInteger {
 }
 impl ConstOne for PositiveInteger {
     /// Returns a [`PositiveInteger8::ONE`][PositiveInteger8#associatedconstant.ONE].
-    const ONE: Self = PositiveInteger::PositiveInteger8(PositiveInteger8::ONE);
+    const ONE: Self = PositiveInteger::_8(PositiveInteger8::ONE);
 }
 
 /* bound */
@@ -60,9 +61,9 @@ impl UpperBounded for PositiveInteger {
 }
 impl ConstLowerBounded for PositiveInteger {
     /// Returns a [`PositiveInteger8::MIN`][PositiveInteger8#associatedconstant.MIN].
-    const MIN: Self = PositiveInteger::PositiveInteger8(PositiveInteger8::MIN);
+    const MIN: Self = PositiveInteger::_8(PositiveInteger8::MIN);
 }
 impl ConstUpperBounded for PositiveInteger {
     /// Returns a [`PositiveInteger128::MAX`][PositiveInteger128#associatedconstant.MAX].
-    const MAX: Self = PositiveInteger::PositiveInteger128(PositiveInteger128::MAX);
+    const MAX: Self = PositiveInteger::_128(PositiveInteger128::MAX);
 }

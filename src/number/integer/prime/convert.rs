@@ -21,21 +21,21 @@ mod between_primes {
     impl From<Prime8> for Prime32 { fn from(p: Prime8) -> Prime32 { Prime32(p.0.into()) } }
     impl From<Prime8> for Prime64 { fn from(p: Prime8) -> Prime64 { Prime64(p.0.into()) } }
     impl From<Prime8> for Prime128 { fn from(p: Prime8) -> Prime128 { Prime128(p.0.into()) } }
-    impl From<Prime8> for Prime { fn from(p: Prime8) -> Prime { Prime::Prime8(p) } }
+    impl From<Prime8> for Prime { fn from(p: Prime8) -> Prime { Prime::_8(p) } }
 
     impl From<Prime16> for Prime32 { fn from(p: Prime16) -> Prime32 { Prime32(p.0.into()) } }
     impl From<Prime16> for Prime64 { fn from(p: Prime16) -> Prime64 { Prime64(p.0.into()) } }
     impl From<Prime16> for Prime128 { fn from(p: Prime16) -> Prime128 { Prime128(p.0.into()) } }
-    impl From<Prime16> for Prime { fn from(p: Prime16) -> Prime { Prime::Prime16(p) } }
+    impl From<Prime16> for Prime { fn from(p: Prime16) -> Prime { Prime::_16(p) } }
 
     impl From<Prime32> for Prime64 { fn from(p: Prime32) -> Prime64 { Prime64(p.0.into()) } }
     impl From<Prime32> for Prime128 { fn from(p: Prime32) -> Prime128 { Prime128(p.0.into()) } }
-    impl From<Prime32> for Prime { fn from(p: Prime32) -> Prime { Prime::Prime32(p) } }
+    impl From<Prime32> for Prime { fn from(p: Prime32) -> Prime { Prime::_32(p) } }
 
     impl From<Prime64> for Prime128 { fn from(p: Prime64) -> Prime128 { Prime128(p.0.into()) } }
-    impl From<Prime64> for Prime { fn from(p: Prime64) -> Prime { Prime::Prime64(p) } }
+    impl From<Prime64> for Prime { fn from(p: Prime64) -> Prime { Prime::_64(p) } }
 
-    impl From<Prime128> for Prime { fn from(p: Prime128) -> Prime { Prime::Prime128(p) } }
+    impl From<Prime128> for Prime { fn from(p: Prime128) -> Prime { Prime::_128(p) } }
 
     /* fallible */
 
@@ -108,11 +108,11 @@ mod between_primes {
         fn try_from(value: Prime) -> NumeraResult<Prime8> {
             use Prime::*;
             match value {
-                Prime8(p) => Ok(p),
-                Prime16(p) => Ok(p.try_into()?),
-                Prime32(p) => Ok(p.try_into()?),
-                Prime64(p) => Ok(p.try_into()?),
-                Prime128(p) => Ok(p.try_into()?),
+                _8(p) => Ok(p),
+                _16(p) => Ok(p.try_into()?),
+                _32(p) => Ok(p.try_into()?),
+                _64(p) => Ok(p.try_into()?),
+                _128(p) => Ok(p.try_into()?),
             }
         }
     }

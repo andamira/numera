@@ -17,13 +17,13 @@ use super::IntegerBig;
 define_integer_family![build_variants:
     Integer,
     "The family of [integer][super] numbers, also known as [`Z`][super::Z].",
-    no_std:
-        Integer8, Integer16, Integer32, Integer64, Integer128
+    common:
+        Integer+8, Integer+16, Integer+32, Integer+64, Integer+128
     ;
 
     // feature-gated variants
     depending:
-        IntegerBig, "ibig"
+        Big, IntegerBig, "ibig"
 ];
 
 /* impl additional traits for the family */
@@ -58,15 +58,15 @@ impl NegOne for Integer {
 }
 impl ConstZero for Integer {
     /// Returns a [`Integer8::ZERO`][Integer8#associatedconstant.ZERO].
-    const ZERO: Self = Integer::Integer8(Integer8::ZERO);
+    const ZERO: Self = Integer::_8(Integer8::ZERO);
 }
 impl ConstOne for Integer {
     /// Returns a [`Integer8::ONE`][Integer8#associatedconstant.ONE].
-    const ONE: Self = Integer::Integer8(Integer8::ONE);
+    const ONE: Self = Integer::_8(Integer8::ONE);
 }
 impl ConstNegOne for Integer {
     /// Returns a [`Integer8::NEG_ONE`][Integer8#associatedconstant.NEG_ONE].
-    const NEG_ONE: Self = Integer::Integer8(Integer8::NEG_ONE);
+    const NEG_ONE: Self = Integer::_8(Integer8::NEG_ONE);
 }
 
 /* bound */
@@ -87,9 +87,9 @@ impl UpperBounded for Integer {
 }
 impl ConstLowerBounded for Integer {
     /// Returns a [`Integer128::MIN`][Integer128#associatedconstant.MIN].
-    const MIN: Self = Integer::Integer128(Integer128::MIN);
+    const MIN: Self = Integer::_128(Integer128::MIN);
 }
 impl ConstUpperBounded for Integer {
     /// Returns a [`Integer128::MAX`][Integer128#associatedconstant.MAX].
-    const MAX: Self = Integer::Integer128(Integer128::MAX);
+    const MAX: Self = Integer::_128(Integer128::MAX);
 }

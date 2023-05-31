@@ -12,12 +12,13 @@ use crate::number::traits::{
 define_integer_family![build_variants:
     NonNegativeInteger,
     "The family of [non-negative integers][super], also known as [`Nnz`][super::Nnz].",
-    no_std:
-        NonNegativeInteger8, NonNegativeInteger16, NonNegativeInteger32, NonNegativeInteger64, NonNegativeInteger128
+    common:
+        NonNegativeInteger+8, NonNegativeInteger+16, NonNegativeInteger+32, NonNegativeInteger+64,
+        NonNegativeInteger+128
     ;
 
     depending:
-        NonNegativeIntegerBig, "ibig-TODO" // placeholder, disabled
+        Big, NonNegativeIntegerBig, "ibig-TODO" // placeholder, disabled
 ];
 
 /* impl additional traits for the family */
@@ -45,11 +46,11 @@ impl One for NonNegativeInteger {
 }
 impl ConstZero for NonNegativeInteger {
     /// Returns a [`NonNegativeInteger8::ZERO`][NonNegativeInteger8#associatedconstant.ZERO].
-    const ZERO: Self = NonNegativeInteger::NonNegativeInteger8(NonNegativeInteger8::ZERO);
+    const ZERO: Self = NonNegativeInteger::_8(NonNegativeInteger8::ZERO);
 }
 impl ConstOne for NonNegativeInteger {
     /// Returns a [`NonNegativeInteger8::ONE`][NonNegativeInteger8#associatedconstant.ONE].
-    const ONE: Self = NonNegativeInteger::NonNegativeInteger8(NonNegativeInteger8::ONE);
+    const ONE: Self = NonNegativeInteger::_8(NonNegativeInteger8::ONE);
 }
 
 /* bound */
@@ -70,9 +71,9 @@ impl UpperBounded for NonNegativeInteger {
 }
 impl ConstLowerBounded for NonNegativeInteger {
     /// Returns a [`NonNegativeInteger8::MIN`][NonNegativeInteger8#associatedconstant.MIN].
-    const MIN: Self = NonNegativeInteger::NonNegativeInteger8(NonNegativeInteger8::MIN);
+    const MIN: Self = NonNegativeInteger::_8(NonNegativeInteger8::MIN);
 }
 impl ConstUpperBounded for NonNegativeInteger {
     /// Returns a [`NonNegativeInteger128::MAX`][NonNegativeInteger128#associatedconstant.MAX].
-    const MAX: Self = NonNegativeInteger::NonNegativeInteger128(NonNegativeInteger128::MAX);
+    const MAX: Self = NonNegativeInteger::_128(NonNegativeInteger128::MAX);
 }

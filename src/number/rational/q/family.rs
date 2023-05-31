@@ -15,13 +15,13 @@ use crate::number::traits::{
 define_rational_family![build_variants:
     Rational,
     "The family of [rational][super] numbers, also known as [`Q`][super::Q].",
-    no_std:
-        Rational8, Rational16, Rational32, Rational64, Rational128
+    common:
+        Rational+8, Rational+16, Rational+32, Rational+64, Rational+128
     ;
 
     // feature-gated variants
     depending:
-        RationalBig, "---"
+        Big, RationalBig, "---"
 ];
 
 /* impl additional traits for the family */
@@ -56,15 +56,15 @@ impl NegOne for Rational {
 }
 impl ConstZero for Rational {
     /// Returns a [`Rational8::ZERO`][Rational8#associatedconstant.ZERO].
-    const ZERO: Self = Rational::Rational8(Rational8::ZERO);
+    const ZERO: Self = Rational::_8(Rational8::ZERO);
 }
 impl ConstOne for Rational {
     /// Returns a [`Rational8::ONE`][Rational8#associatedconstant.ONE].
-    const ONE: Self = Rational::Rational8(Rational8::ONE);
+    const ONE: Self = Rational::_8(Rational8::ONE);
 }
 impl ConstNegOne for Rational {
     /// Returns a [`Rational8::NEG_ONE`][Rational8#associatedconstant.NEG_ONE].
-    const NEG_ONE: Self = Rational::Rational8(Rational8::NEG_ONE);
+    const NEG_ONE: Self = Rational::_8(Rational8::NEG_ONE);
 }
 
 /* bound */
@@ -85,9 +85,9 @@ impl UpperBounded for Rational {
 }
 impl ConstLowerBounded for Rational {
     /// Returns a [`Rational128::MIN`][Rational128#associatedconstant.MIN].
-    const MIN: Self = Rational::Rational128(Rational128::MIN);
+    const MIN: Self = Rational::_128(Rational128::MIN);
 }
 impl ConstUpperBounded for Rational {
     /// Returns a [`Rational128::MAX`][Rational128#associatedconstant.MAX].
-    const MAX: Self = Rational::Rational128(Rational128::MAX);
+    const MAX: Self = Rational::_128(Rational128::MAX);
 }

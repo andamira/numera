@@ -119,9 +119,9 @@ macro_rules! impl_larger_smaller {
                 #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
                 pub fn as_smaller_or_same(&self) -> $family {
                     if let Ok(smaller) = [<$name $smaller_b>]::try_from(self) {
-                        $family::[<$name $smaller_b>](smaller)
+                        $family::[<_ $smaller_b>](smaller)
                     } else {
-                        $family::[<$name $b>](*self)
+                        $family::[<_ $b>](*self)
                     }
                 }
                 /// Returns the current number as the next smaller bit-size,
@@ -131,7 +131,7 @@ macro_rules! impl_larger_smaller {
                 #[cfg(feature = "try_from")]
                 #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
                 pub fn as_smaller_or_same(&self) -> $family {
-                    $family::[<$name $b>](*self)
+                    $family::[<_ $b>](*self)
                 }
 
                 /// Tries to return the current number as the next smaller bit-size.

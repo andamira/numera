@@ -15,12 +15,13 @@ use crate::{
 define_integer_family![build_variants:
     NegativeInteger,
     "The family of [negative integers][super], also known as [`Nz`][super::Nz].",
-    no_std:
-        NegativeInteger8, NegativeInteger16, NegativeInteger32, NegativeInteger64, NegativeInteger128
+    common:
+        NegativeInteger+8, NegativeInteger+16, NegativeInteger+32, NegativeInteger+64,
+        NegativeInteger+128
     ;
 
     depending:
-        NegativeIntegerBig, "ibig-TODO" // placeholder, disabled
+        Big, NegativeIntegerBig, "ibig-TODO" // placeholder, disabled
 ];
 
 /* impl additional traits for the family */
@@ -52,7 +53,7 @@ impl NegOne for NegativeInteger {
 }
 impl ConstNegOne for NegativeInteger {
     /// Returns a [`NegativeInteger8::NEG_ONE`][NegativeInteger8#associatedconstant.NEG_ONE].
-    const NEG_ONE: Self = NegativeInteger::NegativeInteger8(NegativeInteger8::NEG_ONE);
+    const NEG_ONE: Self = NegativeInteger::_8(NegativeInteger8::NEG_ONE);
 }
 
 /* bound */
@@ -73,9 +74,9 @@ impl UpperBounded for NegativeInteger {
 }
 impl ConstLowerBounded for NegativeInteger {
     /// Returns a [`NegativeInteger128::MIN`][NegativeInteger128#associatedconstant.MIN].
-    const MIN: Self = NegativeInteger::NegativeInteger128(NegativeInteger128::MIN);
+    const MIN: Self = NegativeInteger::_128(NegativeInteger128::MIN);
 }
 impl ConstUpperBounded for NegativeInteger {
     /// Returns a [`NegativeInteger8::MAX`][NegativeInteger8#associatedconstant.MAX].
-    const MAX: Self = NegativeInteger::NegativeInteger8(NegativeInteger8::MAX);
+    const MAX: Self = NegativeInteger::_8(NegativeInteger8::MAX);
 }

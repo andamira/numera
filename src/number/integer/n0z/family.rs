@@ -15,12 +15,13 @@ use crate::number::traits::{
 define_integer_family![build_variants:
     NonZeroInteger,
     "The family of [non-zero integers][super], also known as [`N0z`][super::N0z].",
-    no_std:
-        NonZeroInteger8, NonZeroInteger16, NonZeroInteger32, NonZeroInteger64, NonZeroInteger128
+    common:
+        NonZeroInteger+8, NonZeroInteger+16, NonZeroInteger+32, NonZeroInteger+64,
+        NonZeroInteger+128
     ;
 
     depending:
-        NonZeroIntegerBig, "ibig-TODO" // placeholder, disabled
+        Big, NonZeroIntegerBig, "ibig-TODO" // placeholder, disabled
 ];
 
 /* impl additional traits for the family */
@@ -49,11 +50,11 @@ impl One for NonZeroInteger {
 }
 impl ConstNegOne for NonZeroInteger {
     /// Returns a [`NonZeroInteger8::NEG_ONE`][NonZeroInteger8#associatedconstant.NEG_ONE].
-    const NEG_ONE: Self = NonZeroInteger::NonZeroInteger8(NonZeroInteger8::NEG_ONE);
+    const NEG_ONE: Self = NonZeroInteger::_8(NonZeroInteger8::NEG_ONE);
 }
 impl ConstOne for NonZeroInteger {
     /// Returns a [`NonZeroInteger8::ONE`][NonZeroInteger8#associatedconstant.ONE].
-    const ONE: Self = NonZeroInteger::NonZeroInteger8(NonZeroInteger8::ONE);
+    const ONE: Self = NonZeroInteger::_8(NonZeroInteger8::ONE);
 }
 
 /* bound */
@@ -74,9 +75,9 @@ impl UpperBounded for NonZeroInteger {
 }
 impl ConstLowerBounded for NonZeroInteger {
     /// Returns a [`NonZeroInteger128::MIN`][NonZeroInteger128#associatedconstant.MIN].
-    const MIN: Self = NonZeroInteger::NonZeroInteger128(NonZeroInteger128::MIN);
+    const MIN: Self = NonZeroInteger::_128(NonZeroInteger128::MIN);
 }
 impl ConstUpperBounded for NonZeroInteger {
     /// Returns a [`NonZeroInteger128::MAX`][NonZeroInteger128#associatedconstant.MAX].
-    const MAX: Self = NonZeroInteger::NonZeroInteger128(NonZeroInteger128::MAX);
+    const MAX: Self = NonZeroInteger::_128(NonZeroInteger128::MAX);
 }
