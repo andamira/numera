@@ -11,7 +11,7 @@
 
 use crate::{error::NumeraResult, number::traits::*};
 
-/// Represents the absence of a number.
+/// The absence of a number.
 ///
 /// This unit type alias implements every number trait, in order to be able to
 /// be used wherever a generic number is expected.

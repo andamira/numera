@@ -19,8 +19,7 @@ use {
     primal_sieve::Sieve,
 };
 
-/// An 8-bit prime number, from the set $\Bbb{P}$,
-/// also known as [`P8`][super::P8].
+/// An 8-bit prime number, from the set $\Bbb{P}$.
 ///
 /// Can represent the first 54 prime numbers.
 ///
@@ -28,24 +27,21 @@ use {
 // pub struct Prime8(PositiveInteger8);
 pub struct Prime8(pub(crate) u8);
 
-/// A 16-bit prime number, from the set $\Bbb{P}$,
-/// also known as [`P16`][super::P16].
+/// A 16-bit prime number, from the set $\Bbb{P}$.
 ///
 /// Can represent the first 6,542 prime numbers.
 #[derive(Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
 // pub struct Prime16(PositiveInteger16);
 pub struct Prime16(pub(crate) u16);
 
-/// A 32-bit prime number, from the set $\Bbb{P}$,
-/// also known as [`P32`][super::P32].
+/// A 32-bit prime number, from the set $\Bbb{P}$.
 ///
 /// Can represent the first 203,280,221 prime numbers.
 #[derive(Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
 // pub struct Prime32(PositiveInteger32);
 pub struct Prime32(pub(crate) u32);
 
-/// A 64-bit prime number, from the set $\Bbb{P}$,
-/// also known as [`P64`][super::P64].
+/// A 64-bit prime number, from the set $\Bbb{P}$.
 ///
 /// Can represent the first 425,656,284,035,217,743 prime numbers.
 /// This is calculated using the *prime number theorem* formula.
@@ -53,8 +49,7 @@ pub struct Prime32(pub(crate) u32);
 // pub struct Prime64(PositiveInteger64);
 pub struct Prime64(pub(crate) u64);
 
-/// A 128-bit prime number, from the set $\Bbb{P}$,
-/// also known as [`P128`][super::P128].
+/// A 128-bit prime number, from the set $\Bbb{P}$.
 ///
 /// Can represent the first *approximately*
 /// 3,835,341,275,459,348,115,779,911,081,237,938,176 prime numbers (1 per 88).

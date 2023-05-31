@@ -55,7 +55,7 @@ macro_rules! define_numbers {
         /// example [`Zero`][traits::Zero] or [`NonZero`][traits::NonZero],
         /// since they are mutually exclusive, and don't apply to all cases.
         ///
-        /// The [`Numbers`] alias is more convenient to use unless you need to
+        /// The [`Number`] alias is more convenient to use unless you need to
         /// refer to custom numbers via the [`Any`][AnyNumber::Any] variant.
         #[derive(Clone, Debug, PartialEq)]
         #[non_exhaustive]
