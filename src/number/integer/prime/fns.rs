@@ -235,7 +235,10 @@ pub fn prime_pi_sieve(n: usize) -> usize {
 /// ```
 #[inline]
 #[cfg(feature = "big")]
-#[cfg_attr(feature = "nightly", doc(cfg(any(feature = "big", feature = "ibig"))))]
+#[cfg_attr(
+    feature = "nightly",
+    doc(cfg(any(feature = "big", feature = "dashu-int")))
+)]
 pub fn largest_prime_pow2_doublings(i: usize) -> Option<IntegerBig> {
     if i > 13 {
         None
@@ -278,7 +281,10 @@ pub fn largest_prime_pow2_doublings(i: usize) -> Option<IntegerBig> {
 /// ```
 #[inline]
 #[cfg(feature = "big")]
-#[cfg_attr(feature = "nightly", doc(cfg(any(feature = "big", feature = "ibig"))))]
+#[cfg_attr(
+    feature = "nightly",
+    doc(cfg(any(feature = "big", feature = "dashu-int")))
+)]
 pub fn ten_primes_less_pow2(bitsize: usize, index: usize) -> Option<IntegerBig> {
     if (8..=400).contains(&bitsize) && index < 10 {
         Some(

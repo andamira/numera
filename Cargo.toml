@@ -24,7 +24,7 @@ default = ["std", "safe", "all_fast"]
 
 #* standard features *#
 
-std = ["devela/std", "half?/std", "ibig?/std", "primal-sieve"]
+std = ["devela/std", "half?/std", "dashu-base?/std", "dashu-int?/std", "primal-sieve"]
 safe = ["devela/safe"]
 unsafe = [] # unsafe alternatives
 nightly = [] # used only for docs
@@ -33,9 +33,9 @@ nightly = [] # used only for docs
 
 all = ["big", "try_from"] # all possible features
 all_nostd = ["try_from"] # all except std dependent
-all_fast = ["big"] # all except slow to compile
+all_fast = ["big"] # all except those slow to compile
 
-big = ["ibig"] # big numbers
+big = ["dashu-base", "dashu-int"] # big numbers
 try_from = [] # TryFrom conversions (slow +3s)
 
 
@@ -44,8 +44,9 @@ devela = { version = "0.4.0", default-features = false }
 
 #* optional dependencies *#
 
+dashu-int = { version = "0.3.1", optional = true, default-features = false }
+dashu-base = { version = "0.3.1", optional = true, default-features = false }
 half = { version = "2.2.1", optional = true, default-features = false  }
-ibig = { version = "0.3.6", optional = true, default-features = false }
 primal-sieve = { version = "0.3.6", optional = true }
 twofloat = { version = "0.6.1", optional = true, default-features = false }
 

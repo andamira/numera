@@ -18,7 +18,7 @@ define_integer_family![build_variants:
     ;
 
     depending:
-        Big, PositiveIntegerBig, "ibig-TODO" // placeholder, disabled
+        Big, PositiveIntegerBig, "dashu-int-TODO" // placeholder, disabled
 ];
 
 /* impl additional traits for the family */

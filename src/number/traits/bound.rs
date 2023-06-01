@@ -193,7 +193,7 @@ macro_rules! impl_bounded_nonzero {
 
 /// implement just the *non-const* `LowerBounded` or `UpperBounded` traits.
 //
-// Used for `ibig::UBig`.
+// Used for `dashu_int::UBig`.
 #[rustfmt::skip]
 #[allow(unused_macros)]
 macro_rules! impl_nonconst_bounded {
@@ -224,7 +224,7 @@ macro_rules! impl_nonconst_bounded {
 
 /// implement `NonBounded`.
 //
-// Used for `ibig::IBig`.
+// Used for `dashu_int::IBig`.
 #[allow(unused_macros)]
 macro_rules! impl_nonbounded {
     ($t:ty) => {
@@ -279,10 +279,10 @@ impl_bounded![both: twofloat::TwoFloat];
 #[cfg(feature = "half")]
 impl_bounded![many_both: half::bf16, half::f16];
 
-#[cfg(feature = "ibig")]
-mod impl_ibig {
+#[cfg(feature = "dashu-int")]
+mod impl_big {
     use super::*;
-    use ibig::{IBig, UBig};
+    use dashu_int::{IBig, UBig};
 
     impl_nonconst_bounded![only_lower: UBig, UBig::from(0u8)];
 

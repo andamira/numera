@@ -34,7 +34,7 @@ pub(crate) mod all {
     pub use super::fns::{is_prime_sieve, nth_prime_sieve, prime_number_theorem, prime_pi_sieve};
 
     #[doc(inline)]
-    #[cfg(feature = "ibig")]
+    #[cfg(feature = "dashu-int")]
     pub use super::fns::{largest_prime_pow2_doublings, ten_primes_less_pow2};
 }
 

@@ -25,10 +25,8 @@
 //   - impl_ident
 //
 // - impls
-//   - ints
-//   - floats
-//   - nonzero
-//   - external: ibig, twofloat, half
+//
+// - tests
 
 use super::sign::{NonNegative, NonPositive};
 use core::num::{
@@ -526,10 +524,10 @@ impl_ident![many_unsigned_nonzero:
 /* impls for external types */
 
 #[rustfmt::skip]
-#[cfg(feature = "ibig")]
-mod impl_ibig {
+#[cfg(feature = "dashu-int")]
+mod impl_big {
     use super::*;
-    use ibig::{IBig, UBig};
+    use dashu_int::{IBig, UBig};
 
     impl_ident![signed_nonconst: IBig, IBig::from(0_i8), IBig::from(1_i8), IBig::from(-1_i8)];
     impl_ident![unsigned_nonconst: UBig, UBig::from(0_u8), UBig::from(1_u8)];

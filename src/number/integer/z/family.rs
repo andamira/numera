@@ -11,7 +11,7 @@ use crate::number::traits::{
     Negative, One, Positive, UpperBounded, Zero,
 };
 
-#[cfg(feature = "ibig")]
+#[cfg(feature = "dashu-int")]
 use super::IntegerBig;
 
 define_integer_family![build_variants:
@@ -23,7 +23,7 @@ define_integer_family![build_variants:
 
     // feature-gated variants
     depending:
-        Big, IntegerBig, "ibig"
+        Big, IntegerBig, "dashu-int"
 ];
 
 /* impl additional traits for the family */

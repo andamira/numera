@@ -148,7 +148,7 @@ impl_integer_mul![
     Integer+i+128, cast:128
 ];
 
-#[cfg(feature = "ibig")]
+#[cfg(feature = "dashu-int")]
 mod big {
     use super::*;
 

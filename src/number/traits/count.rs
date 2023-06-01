@@ -158,12 +158,12 @@ impl_uncountable![many_float: twofloat::TwoFloat];
 #[cfg(feature = "half")]
 impl_uncountable![many_float: half::bf16, half::f16];
 
-#[cfg(feature = "ibig")]
+#[cfg(feature = "dashu-int")]
 #[rustfmt::skip]
-mod impl_ibig {
+mod impl_big {
     use core::ops::{Add, Sub};
     use super::{Count, Countable};
-    use ibig::{IBig, UBig};
+    use dashu_int::{IBig, UBig, ops::BitTest};
     use crate::error::{IntegerError, NumeraResult};
 
     impl Count for IBig {
@@ -178,9 +178,9 @@ mod impl_ibig {
         fn is_countable(&self) -> bool { true }
     }
     impl Countable for UBig {
-        fn next(&self) -> NumeraResult<Self> { Ok(self.add(1)) }
+        fn next(&self) -> NumeraResult<Self> { Ok(self.add(1_u8)) }
         fn previous(&self) -> NumeraResult<Self> {
-            if self.bit_len() > 0 { Ok(self.sub(1)) } 
+            if self.bit_len() > 0 { Ok(self.sub(1_u8)) }
             else { Err(IntegerError::LessThanZero.into()) }
         }
     }
@@ -216,8 +216,8 @@ mod tests {
         assert_impl![countable:
             i8, u8, i16, u16, i32, u32, i64, u64, i128, u128, isize, usize];
 
-        #[cfg(feature = "ibig")]
-        assert_impl![countable: ibig::IBig, ibig::UBig];
+        #[cfg(feature = "dashu-int")]
+        assert_impl![countable: dashu_int::IBig, dashu_int::UBig];
     }
 
     #[test]

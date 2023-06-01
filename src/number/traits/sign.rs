@@ -201,11 +201,11 @@ impl_sign![many_unsigned_nonzero:
 
 /* impls external*/
 
-#[cfg(feature = "ibig")]
+#[cfg(feature = "dashu-int")]
 #[rustfmt::skip]
-mod impl_ibig {
+mod impl_big {
     use super::{Sign, Positive, Negative, NonNegative};
-    use ibig::{IBig, UBig};
+    use dashu_int::{IBig, UBig};
 
     impl Sign for IBig {
         fn can_negative(&self) -> bool { true }

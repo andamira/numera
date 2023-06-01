@@ -84,7 +84,7 @@ pub(crate) mod all {
     };
 
     #[doc(inline)]
-    #[cfg(feature = "ibig")]
+    #[cfg(feature = "dashu-int")]
     pub use super::{
         fns::{bit_len, bit_len_next_power},
         z::IntegerBig,

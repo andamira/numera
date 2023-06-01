@@ -197,7 +197,7 @@ try_for_primitive![int_non0 for:NonZeroU+128, from:Integer+8,16,32,64,128];
 
 // TODO: TEST
 // TODO: TryFrom impls
-#[cfg(feature = "ibig")]
+#[cfg(feature = "dashu-int")]
 mod big {
     use super::*;
     use crate::number::integer::{macros::for_big, IntegerBig};

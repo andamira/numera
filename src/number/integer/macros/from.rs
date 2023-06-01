@@ -513,7 +513,7 @@ pub(crate) use for_primitive;
 /// # Branches ids
 /// - `int`
 /// - `non0`
-#[cfg(feature = "ibig")]
+#[cfg(feature = "dashu-int")]
 macro_rules! for_big {
     // for_big!
     // when `from` is an integer
@@ -573,19 +573,19 @@ macro_rules! for_big {
             impl From<[<$from_p$from_b>]> for $for {
                 #[inline]
                 fn from(from: [<$from_p$from_b>]) -> Self {
-                    Self(<ibig::IBig>::from(from.0).neg())
+                    Self(<dashu_int::IBig>::from(from.0).neg())
                 }
             }
             impl From<&[<$from_p$from_b>]> for $for {
                 #[inline]
                 fn from(from: &[<$from_p$from_b>]) -> Self {
-                    Self(<ibig::IBig>::from(from.0).neg())
+                    Self(<dashu_int::IBig>::from(from.0).neg())
                 }
             }
             impl From<&mut [<$from_p$from_b>]> for $for {
                 #[inline]
                 fn from(from: &mut [<$from_p$from_b>]) -> Self {
-                    Self(<ibig::IBig>::from(from.0).neg())
+                    Self(<dashu_int::IBig>::from(from.0).neg())
                 }
             }
         }
@@ -649,19 +649,19 @@ macro_rules! for_big {
             impl From<[<$from_p$from_b>]> for $for {
                 #[inline]
                 fn from(from: [<$from_p$from_b>]) -> Self {
-                    Self(<ibig::IBig>::from(from.0.get()).neg())
+                    Self(<dashu_int::IBig>::from(from.0.get()).neg())
                 }
             }
             impl From<&[<$from_p$from_b>]> for $for {
                 #[inline]
                 fn from(from: &[<$from_p$from_b>]) -> Self {
-                    Self(<ibig::IBig>::from(from.0.get()).neg())
+                    Self(<dashu_int::IBig>::from(from.0.get()).neg())
                 }
             }
             impl From<&mut [<$from_p$from_b>]> for $for {
                 #[inline]
                 fn from(from: &mut [<$from_p$from_b>]) -> Self {
-                    Self(<ibig::IBig>::from(from.0.get()).neg())
+                    Self(<dashu_int::IBig>::from(from.0.get()).neg())
                 }
             }
         }
@@ -693,13 +693,13 @@ macro_rules! for_big {
             impl From<&[<$from_p$from_b>]> for $for {
                 #[inline]
                 fn from(from: &[<$from_p$from_b>]) -> Self {
-                    Self(<ibig::IBig>::from(*from))
+                    Self(<dashu_int::IBig>::from(*from))
                 }
             }
             impl From<&mut [<$from_p$from_b>]> for $for {
                 #[inline]
                 fn from(from: &mut [<$from_p$from_b>]) -> Self {
-                    Self(<ibig::IBig>::from(*from))
+                    Self(<dashu_int::IBig>::from(*from))
                 }
             }
         }
@@ -731,17 +731,17 @@ macro_rules! for_big {
             impl From<&core::num::[<$from_p$from_b>]> for $for {
                 #[inline]
                 fn from(from: &core::num::[<$from_p$from_b>]) -> Self {
-                    Self(<ibig::IBig>::from(from.get()))
+                    Self(<dashu_int::IBig>::from(from.get()))
                 }
             }
             impl From<&mut core::num::[<$from_p$from_b>]> for $for {
                 #[inline]
                 fn from(from: &mut core::num::[<$from_p$from_b>]) -> Self {
-                    Self(<ibig::IBig>::from(from.get()))
+                    Self(<dashu_int::IBig>::from(from.get()))
                 }
             }
         }
     };
 }
-#[cfg(feature = "ibig")]
+#[cfg(feature = "dashu-int")]
 pub(crate) use for_big;

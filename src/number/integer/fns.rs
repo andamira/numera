@@ -3,6 +3,9 @@
 //! Integer related standalone functions.
 //
 
+#[cfg(feature = "dashu-int")]
+use dashu_int::{ops::BitTest, UBig};
+
 /// Returns the minimum binary bits necessary to represent the given `integer`
 /// in the given `base`.
 ///
@@ -22,14 +25,13 @@
 /// assert_eq![bit_len(16, "FFFFFFFFFFFF"), Some(48)];
 /// ```
 #[inline]
-#[cfg(feature = "ibig")]
-#[cfg_attr(feature = "nightly", doc(cfg(any(feature = "big", feature = "ibig"))))]
+#[cfg(feature = "dashu-int")]
+#[cfg_attr(
+    feature = "nightly",
+    doc(cfg(any(feature = "big", feature = "dashu-int")))
+)]
 pub fn bit_len(base: u8, integer: &str) -> Option<usize> {
-    Some(
-        ibig::UBig::from_str_radix(integer, base.into())
-            .ok()?
-            .bit_len(),
-    )
+    Some(UBig::from_str_radix(integer, base.into()).ok()?.bit_len())
 }
 
 /// Returns the result of the [`bit_len`] function and the next power of 2.
@@ -51,8 +53,11 @@ pub fn bit_len(base: u8, integer: &str) -> Option<usize> {
 /// assert_eq![bit_len_next_power(16, "FFFFFFFFFFFF"), Some((48, 64))];
 /// ```
 #[inline]
-#[cfg(feature = "ibig")]
-#[cfg_attr(feature = "nightly", doc(cfg(any(feature = "big", feature = "ibig"))))]
+#[cfg(feature = "dashu-int")]
+#[cfg_attr(
+    feature = "nightly",
+    doc(cfg(any(feature = "big", feature = "dashu-int")))
+)]
 pub fn bit_len_next_power(base: u8, integer: &str) -> Option<(usize, usize)> {
     let min = bit_len(base, integer)?;
     Some((min, min.checked_next_power_of_two()?))

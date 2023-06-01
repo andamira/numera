@@ -15,12 +15,12 @@
 use crate::{
     error::{NumeraError, NumeraResult},
     number::traits::{
-        Bound, Count, Countable, Ident, NegOne, Negative, NonLowerBounded, NonUpperBounded,
-        Numbers, One, Positive, Sign, Zero,
+        Bound, ConstNegOne, ConstOne, ConstZero, Count, Countable, Ident, NegOne, Negative,
+        NonLowerBounded, NonUpperBounded, Numbers, One, Positive, Sign, Zero,
     },
 };
 use core::{fmt, str::FromStr};
-use ibig::IBig;
+use dashu_int::IBig;
 
 /* definition */
 
@@ -154,22 +154,28 @@ impl Ident for IntegerBig {
     #[inline]
     fn is_neg_one(&self) -> bool { self.0.is_neg_one() }
 }
+#[rustfmt::skip]
+impl ConstZero for IntegerBig { const ZERO: Self = Self(IBig::ZERO); }
 impl Zero for IntegerBig {
     #[inline]
     fn new_zero() -> Self {
-        Self(IBig::new_zero())
+        Self::ZERO
     }
 }
+#[rustfmt::skip]
+impl ConstOne for IntegerBig { const ONE: Self = Self(IBig::ONE); }
 impl One for IntegerBig {
     #[inline]
     fn new_one() -> Self {
-        Self(IBig::new_one())
+        Self::ONE
     }
 }
+#[rustfmt::skip]
+impl ConstNegOne for IntegerBig { const NEG_ONE: Self = Self(IBig::NEG_ONE); }
 impl NegOne for IntegerBig {
     #[inline]
     fn new_neg_one() -> Self {
-        Self(IBig::new_neg_one())
+        Self::NEG_ONE
     }
 }
 

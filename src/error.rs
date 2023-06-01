@@ -224,21 +224,15 @@ mod core_impls {
     }
 }
 
-#[cfg(feature = "ibig")]
-mod ibig {
-    use super::{IntegerError, NumeraError};
-    use ibig::error::{OutOfBoundsError, ParseError};
+#[cfg(feature = "dashu-base")]
+mod dashu_base {
+    use super::NumeraError;
+    use dashu_base::error::{ConversionError, ParseError};
 
-    impl From<OutOfBoundsError> for IntegerError {
+    impl From<ConversionError> for NumeraError {
         #[inline]
-        fn from(_err: OutOfBoundsError) -> Self {
-            IntegerError::Overflow
-        }
-    }
-    impl From<OutOfBoundsError> for NumeraError {
-        #[inline]
-        fn from(_err: OutOfBoundsError) -> Self {
-            IntegerError::Overflow.into()
+        fn from(_err: ConversionError) -> Self {
+            NumeraError::Conversion
         }
     }
     // ParseError { NoDigits, InvalidDigit }

@@ -136,12 +136,10 @@ macro_rules! impl_integer {
 }
 impl_integer![many: Integer8, Integer16, Integer32, Integer64, Integer128];
 
-#[cfg(feature = "ibig")]
-mod ibig {
-    use crate::number::{
-        integer::{is_prime_sieve, z::IntegerBig, Integers},
-        traits::{One, Zero},
-    };
+#[cfg(feature = "dashu-int")]
+mod big {
+    use crate::number::integer::{is_prime_sieve, z::IntegerBig, Integers};
+    use dashu_int::{ops::Gcd, IBig, UBig};
 
     /// # Methods for all integers
     impl IntegerBig {
@@ -149,7 +147,7 @@ mod ibig {
         #[inline]
         #[must_use]
         pub fn is_even(&self) -> bool {
-            &self.0 & IntegerBig::new_one().0 == IntegerBig::new_zero().0
+            &self.0 & IBig::ONE == IBig::ZERO
         }
         /// Returns `true` if this integer is odd.
         #[inline]
@@ -162,7 +160,7 @@ mod ibig {
         #[inline]
         #[must_use]
         pub fn is_multiple_of(&self, other: &Self) -> bool {
-            &self.0 % &other.0 == IntegerBig::new_zero().0
+            &self.0 % &other.0 == IBig::ZERO
         }
         /// Returns `true` if this integer is a divisor of the `other`.
         #[inline]
@@ -179,7 +177,7 @@ mod ibig {
         #[inline]
         #[must_use]
         pub fn is_coprime(&self, other: &Self) -> bool {
-            self.0.gcd(&other.0) == IntegerBig::new_one().0
+            self.0.clone().gcd(&other.0) == UBig::ONE
         }
 
         /// Returns the number of digits in base 10.
@@ -207,7 +205,7 @@ mod ibig {
         #[inline]
         #[must_use]
         pub fn gcd(&self, other: &Self) -> Self {
-            Self(self.0.gcd(&other.0))
+            Self(self.0.clone().gcd(&other.0).into())
         }
 
         /// Calculates the *Lowest Common Multiple* of this integer and `other`.

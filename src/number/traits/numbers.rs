@@ -104,5 +104,5 @@ impl_numbers![single: twofloat::TwoFloat];
 #[cfg(feature = "half")]
 impl_numbers![many: half::bf16, half::f16];
 
-#[cfg(feature = "ibig")]
-impl_numbers![many: ibig::IBig, ibig::UBig];
+#[cfg(feature = "dashu-int")]
+impl_numbers![many: dashu_int::IBig, dashu_int::UBig];
