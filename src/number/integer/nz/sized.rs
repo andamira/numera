@@ -163,32 +163,10 @@ macro_rules! define_negative_integer_sized {
             fn new_max() -> Self { [<$name$b>]::MAX }
         }
         impl ConstLowerBounded for [<$name$b>] {
-            // IMPROVE WAIT for https://github.com/rust-lang/rust/pull/106633 1.70
-            // const MIN: Self = Self([<$p$b>]::MIN);
-
-            #[cfg(feature = "safe")]
-            const MIN: Self = Self(
-                if let Some(n) = [<$p$b>]::new([<u$b>]::MAX)
-                    { n } else { unreachable!() }
-            );
-
-            #[cfg(not(feature = "safe"))]
-            // SAFETY: constant value
-            const MIN: Self = Self(unsafe {[<$p$b>]::new_unchecked([<u$b>]::MAX) });
+            const MIN: Self = Self([<$p$b>]::MIN);
         }
         impl ConstUpperBounded for [<$name$b>] {
-            // IMPROVE WAIT for https://github.com/rust-lang/rust/pull/106633 1.70
-            // const MAX: Self = Self([<$p$b>]::MAX);
-
-            #[cfg(feature = "safe")]
-            const MAX: Self = Self(
-                if let Some(n) = [<$p$b>]::new(1)
-                    { n } else { unreachable!() }
-            );
-
-            #[cfg(not(feature = "safe"))]
-            // SAFETY: constant value
-            const MAX: Self = Self(unsafe { [<$p$b>]::new_unchecked(1) });
+            const MAX: Self = Self([<$p$b>]::MAX);
         }
 
         /* count */
