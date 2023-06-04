@@ -397,11 +397,11 @@ define_rational_sized![multi Rational, Q, i,
     // "",
     "", MIN, MAX,
     Integer, NonZeroInteger,
-    ("A 2×", 8, larger: true, 16, smaller: false, 4),
-    ("A 2×", 16, larger: true, 32, smaller: true, 8),
-    ("A 2×", 32, larger: true, 64, smaller: true, 16),
-    ("A 2×", 64, larger: true, 128, smaller: true, 32),
-    ("A 2×", 128, larger: false, 256, smaller: true, 64)
+    ("A 2 ×", 8, larger: true, 16, smaller: false, 4),
+    ("A 2 ×", 16, larger: true, 32, smaller: true, 8),
+    ("A 2 ×", 32, larger: true, 64, smaller: true, 16),
+    ("A 2 ×", 64, larger: true, 128, smaller: true, 32),
+    ("A 2 ×", 128, larger: false, 256, smaller: true, 64)
 ];
 
 #[cfg(test)]

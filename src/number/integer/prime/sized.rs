@@ -536,7 +536,8 @@ impl Prime64 {
                 }
 
                 #[cfg(not(feature = "std"))]
-                return Ok(Self(nth_prime(nth as u32) as u64));
+                #[allow(clippy::cast_possible_truncation)]
+                return Ok(Self(u64::from(nth_prime(nth as u32))));
             }
             203_280_221..=425_656_284_035_217_742 => {
                 Err(NumeraError::NotImplemented) // TODO
@@ -683,7 +684,8 @@ impl Prime128 {
                     ));
                 }
                 #[cfg(not(feature = "std"))]
-                return Ok(Self(nth_prime(nth as u32) as u128));
+                #[allow(clippy::cast_possible_truncation)]
+                return Ok(Self(u128::from(nth_prime(nth as u32))));
             }
             203_280_221..=425_656_284_035_217_742 => {
                 Err(NumeraError::NotImplemented) // TODO

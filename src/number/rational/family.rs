@@ -94,6 +94,9 @@ macro_rules! define_rational_family {
             fn from_parts(value: $tname) -> crate::all::NumeraResult<Self> { Ok(value) }
 
             /// Returns `value` unchanged.
+            ///
+            /// # Safety
+            /// This is safe
             #[inline]
             #[cfg(not(feature = "safe"))]
             #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]

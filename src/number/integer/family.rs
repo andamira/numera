@@ -87,10 +87,15 @@ macro_rules! define_integer_family {
         impl crate::all::Numbers for $tname {
             type Parts = Self;
 
+            /// Returns `value` unchanged.
             #[inline]
             #[allow(clippy::missing_errors_doc)]
             fn from_parts(value: $tname) -> crate::all::NumeraResult<Self> { Ok(value) }
 
+            /// Returns `value` unchanged.
+            ///
+            /// # Safety
+            /// This is safe
             #[inline]
             #[cfg(not(feature = "safe"))]
             #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
