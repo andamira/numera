@@ -31,11 +31,12 @@ nightly = [] # used only for docs
 
 #* extra features *#
 
-all = ["big", "try_from"] # all possible features
-all_nostd = ["try_from"] # all except std dependent
+all = ["big", "float", "try_from"] # all possible features
+all_nostd = ["float", "try_from"] # all except std dependent
 all_fast = ["big"] # all except those slow to compile
 
 big = ["dashu-base", "dashu-int"] # big numbers
+float = ["half", "twofloat"] # extra floating-point dependencies
 try_from = [] # TryFrom conversions (slow +3s)
 
 
