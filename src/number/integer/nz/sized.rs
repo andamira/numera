@@ -163,10 +163,10 @@ macro_rules! define_negative_integer_sized {
             fn new_max() -> Self { [<$name$b>]::MAX }
         }
         impl ConstLowerBounded for [<$name$b>] {
-            const MIN: Self = Self([<$p$b>]::MIN);
+            const MIN: Self = Self([<$p$b>]::MAX);
         }
         impl ConstUpperBounded for [<$name$b>] {
-            const MAX: Self = Self([<$p$b>]::MAX);
+            const MAX: Self = Self([<$p$b>]::MIN);
         }
 
         /* count */

@@ -161,7 +161,7 @@ macro_rules! define_nonpositive_integer_sized {
             const MIN: Self = Self([<$p$b>]::MAX);
         }
         impl ConstUpperBounded for [<$name$b>] {
-            const MAX: Self = Self(0);
+            const MAX: Self = Self([<$p$b>]::MIN);
         }
 
         /* count */
