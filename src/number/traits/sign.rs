@@ -120,8 +120,8 @@ macro_rules! impl_sign {
             fn is_negative(&self) -> bool { <$t>::is_negative(*self) }
             fn is_positive(&self) -> bool { <$t>::is_positive(*self) }
         }
-        impl Positive for $t {}
-        impl Negative for $t {}
+        impl $crate::all::Positive for $t {}
+        impl $crate::all::Negative for $t {}
     };
 
     // impl `Signed` for floating-point primitives
@@ -135,8 +135,8 @@ macro_rules! impl_sign {
             fn is_negative(&self) -> bool { self.is_sign_negative() && *self != $zero }
             fn is_positive(&self) -> bool { self.is_sign_positive() && *self != $zero }
         }
-        impl Positive for $t {}
-        impl Negative for $t {}
+        impl $crate::all::Positive for $t {}
+        impl $crate::all::Negative for $t {}
     };
 
     // impl `Signed` for non-zero signed integer primitives
@@ -150,8 +150,8 @@ macro_rules! impl_sign {
             fn is_negative(&self) -> bool { self.get().is_negative() }
             fn is_positive(&self) -> bool { self.get().is_positive() }
         }
-        impl Positive for $t {}
-        impl Negative for $t {}
+        impl $crate::all::Positive for $t {}
+        impl $crate::all::Negative for $t {}
     };
 
     /* NonNegative */
@@ -167,7 +167,8 @@ macro_rules! impl_sign {
             fn is_negative(&self) -> bool { false }
             fn is_positive(&self) -> bool { *self != 0 }
         }
-        impl NonNegative for $t {}
+        impl $crate::all::Positive for $t {}
+        impl $crate::all::NonNegative for $t {}
     };
 
     // impl NonNegative for unsigned nonzero primitives
@@ -181,7 +182,8 @@ macro_rules! impl_sign {
             fn is_negative(&self) -> bool { false }
             fn is_positive(&self) -> bool { true } // can't be 0
         }
-        impl NonNegative for $t {}
+        impl $crate::all::Positive for $t {}
+        impl $crate::all::NonNegative for $t {}
     };
 
 }
@@ -228,14 +230,14 @@ mod impl_big {
 
 #[cfg(feature = "twofloat")]
 mod impl_twofloat {
-    use super::{Sign, Signed};
+    use super::Sign;
     use twofloat::TwoFloat;
     impl_sign![signed_float: TwoFloat, TwoFloat::from_f64(0.0)];
 }
 
 #[cfg(feature = "half")]
 mod impl_half {
-    use super::{Sign, Signed};
+    use super::Sign;
     use half::{bf16, f16};
     impl_sign![many_signed_float: f16, f16::ZERO, bf16, bf16::ZERO];
 }
