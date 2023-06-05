@@ -25,6 +25,7 @@ pub use all::{
     NoNumber, Number, Numbers, Prime, Prime16, Prime32, Rational, Rational32, Rational64, Sign,
 };
 pub(crate) mod all {
+    pub(crate) use super::macros::*;
     #[doc(inline)]
     pub use super::{
         family::*, integer::all::*, no::NoNumber, rational::all::*, real::all::*, traits::all::*,

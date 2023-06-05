@@ -5,6 +5,7 @@
 // TOC
 //
 // - define-abbreviations!
+// - impl_from!
 // - impl_larger_smaller!
 
 /// Creates abbreviation type aliases.
@@ -60,6 +61,200 @@ macro_rules! define_aliases {
     };
 }
 pub(crate) use define_aliases;
+
+/// Implements `From` from: owned, `&` and `&mut`.
+///
+/// # Args
+///
+/// - try:       optional prefix for implementing TryFrom
+///
+/// - `$for`:    the base name of the target. e.g. `Integer`.
+/// - `$for_b`:  the bit size of the target. e.g. `32`. (optional)
+/// - `$from`:   the base name of the origin. e.g. `i`.
+/// - `$from_b`: the bit size of the origin. e.g. `16`.
+/// - `$arg`:    the name of the argument to the from function.
+/// - `$body`:   the body of the from function.
+macro_rules! impl_from {
+    // implements `From` from: owned, `&` and `&mut`.
+    //
+    // Use this when all implementations share the same body.
+    (
+        for: $for:ident + $for_b:literal,
+        from: @$from:ident + $from_b:literal,
+        arg: $arg:ident, body: $body:block
+     ) => {
+        $crate::all::impl_from!(for: $for+$for_b, from: $from+$from_b, arg:$arg, body: $body);
+        $crate::all::impl_from!(for: $for+$for_b, from: &$from+$from_b, arg:$arg, body: $body);
+    };
+    // implements `From` from: owned.
+    (
+        for: $for:ident + $for_b:literal,
+        from: $from:ident + $from_b:literal,
+        arg: $arg:ident, body: $body:block
+     ) => { devela::paste! {
+        impl From<[<$from$from_b>]> for [<$for $for_b>] {
+            #[inline]
+            fn from($arg: [<$from$from_b>]) -> Self { $body }
+        }
+    }};
+    // implements `From` from: `&` and `&mut`.
+    (
+        for: $for:ident + $for_b:literal,
+        from: &$from:ident + $from_b:literal,
+        arg: $arg:ident, body: $body:block
+    ) => { devela::paste! {
+        impl From<&[<$from$from_b>]> for [<$for $for_b>] {
+            #[inline]
+            fn from($arg: &[<$from$from_b>]) -> Self { $body }
+        }
+        impl From<&mut [<$from$from_b>]> for [<$for $for_b>] {
+            #[inline]
+            fn from($arg: &mut [<$from$from_b>]) -> Self { $body }
+        }
+    }};
+
+    // implements `From` from: owned, `&` and `&mut`, when `for` is not sized.
+    //
+    // Use this when all implementations share the same body.
+    (
+        for: $for:ident,
+        from: @$from:ident + $from_b:literal,
+        arg: $arg:ident, body: $body:block
+     ) => {
+        $crate::all::impl_from!(for: $for, from: $from+$from_b, arg:$arg, body: $body);
+        $crate::all::impl_from!(for: $for, from: &$from+$from_b, arg:$arg, body: $body);
+    };
+    // implements `From` from: owned, when `for` is not sized.
+    (
+        for: $for:ident,
+        from: $from:ident + $from_b:literal,
+        arg: $arg:ident, body: $body:block
+     ) => { devela::paste! {
+        impl From<[<$from$from_b>]> for $for {
+            #[inline]
+            fn from($arg: [<$from$from_b>]) -> Self { $body }
+        }
+    }};
+    // implements `From` from: `&` and `&mut`, when `for` is not sized.
+    (
+        for: $for:ident,
+        from: &$from:ident + $from_b:literal,
+        arg: $arg:ident, body: $body:block
+    ) => { devela::paste! {
+        impl From<&[<$from$from_b>]> for $for {
+            #[inline]
+            fn from($arg: &[<$from$from_b>]) -> Self { $body }
+        }
+        impl From<&mut [<$from$from_b>]> for $for {
+            #[inline]
+            fn from($arg: &mut [<$from$from_b>]) -> Self { $body }
+        }
+    }};
+
+    /* TryFrom */
+
+    // implements `TryFrom` from: owned, `&` and `&mut`.
+    //
+    // Use this when all implementations share the same body.
+    (try
+        for: $for:ident + $for_b:literal,
+        from: @$from:ident + $from_b:literal,
+        arg: $arg:ident, body: $body:block
+     ) => {
+        $crate::all::impl_from!(try for: $for+$for_b, from: $from+$from_b, arg:$arg, body: $body);
+        $crate::all::impl_from!(try for: $for+$for_b, from: &$from+$from_b, arg:$arg, body: $body);
+    };
+    // implements `TryFrom` from: owned.
+    (try
+        for: $for:ident + $for_b:literal,
+        from: $from:ident + $from_b:literal,
+        arg: $arg:ident, body: $body:block
+     ) => { devela::paste! {
+        #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
+        impl TryFrom<[<$from$from_b>]> for [<$for$for_b>] {
+            type Error = $crate::error::NumeraError;
+            #[inline]
+            fn try_from($arg: [<$from$from_b>]) -> $crate::error::NumeraResult<[<$for$for_b>]> {
+                $body
+            }
+        }
+    }};
+    // implements `TryFrom` from: `&` and `&mut`.
+    (try
+        for: $for:ident + $for_b:literal,
+        from: &$from:ident + $from_b:literal,
+        arg: $arg:ident, body: $body:block
+    ) => { devela::paste! {
+        #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
+        impl TryFrom<&[<$from$from_b>]> for [<$for$for_b>] {
+            type Error = $crate::error::NumeraError;
+            #[inline]
+            fn try_from($arg: &[<$from$from_b>]) -> $crate::error::NumeraResult<[<$for$for_b>]> {
+                $body
+            }
+        }
+        #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
+        impl TryFrom<&mut [<$from$from_b>]> for [<$for$for_b>] {
+            type Error = $crate::error::NumeraError;
+            #[inline]
+            fn try_from($arg: &mut [<$from$from_b>]) -> $crate::error::NumeraResult<[<$for$for_b>]> {
+                $body
+            }
+        }
+    }};
+
+    // implements `TryFrom` from: owned, `&` and `&mut`, when `for` is not sized.
+    //
+    // Use this when all implementations share the same body.
+    (try
+        for: $for:ident,
+        from: @$from:ident + $from_b:literal,
+        arg: $arg:ident, body: $body:block
+     ) => {
+        $crate::all::impl_from!(try for: $for, from: $from+$from_b, arg:$arg, body: $body);
+        $crate::all::impl_from!(try for: $for, from: &$from+$from_b, arg:$arg, body: $body);
+    };
+    // implements `TryFrom` from: owned.
+    (try
+        for: $for:ident,
+        from: $from:ident + $from_b:literal,
+        arg: $arg:ident, body: $body:block
+     ) => { devela::paste! {
+        #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
+        impl TryFrom<[<$from$from_b>]> for $for {
+            type Error = $crate::error::NumeraError;
+            #[inline]
+            fn try_from($arg: [<$from$from_b>]) -> $crate::error::NumeraResult<$for> {
+                $body
+            }
+        }
+    }};
+    // implements `TryFrom` from: `&` and `&mut`, when `for` is not sized.
+    (try
+        for: $for:ident,
+        from: &$from:ident + $from_b:literal,
+        arg: $arg:ident, body: $body:block
+    ) => { devela::paste! {
+        #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
+        impl TryFrom<&[<$from$from_b>]> for $for {
+            type Error = $crate::error::NumeraError;
+            #[inline]
+            fn try_from($arg: &[<$from$from_b>]) -> $crate::error::NumeraResult<$for> {
+                $body
+            }
+        }
+        #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
+        impl TryFrom<&mut [<$from$from_b>]> for $for {
+            type Error = $crate::error::NumeraError;
+            #[inline]
+            fn try_from($arg: &mut [<$from$from_b>]) -> $crate::error::NumeraResult<$for> {
+                $body
+            }
+        }
+    }};
+
+}
+pub(crate) use impl_from;
 
 /// Implements upcasting and downcasting methods.
 macro_rules! impl_larger_smaller {

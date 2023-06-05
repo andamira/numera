@@ -29,7 +29,8 @@
 ///
 /// # Branches ids
 /// - `int`
-/// - `nonzero`
+/// - `int_non0`
+/// - `non0`
 /// - `neg_signed`
 /// - `negnon0_signed`
 macro_rules! from_integer {
@@ -40,35 +41,13 @@ macro_rules! from_integer {
     // - for: Z     from: Z, Nnz, Npz, P
     // - for: Nnz   from: Nnz, P
     // - for: Npz   from: Npz
-    (int
-     for: $for:ident + $for_b:expr,
-     from: $from:ident + $( $from_b:expr ),+) => {
-        $(
-            from_integer![@int for: $for + $for_b, from: $from + $from_b];
-        )+
+    (int for: $for:ident + $for_b:expr, from: $from:ident + $( $from_b:expr ),+) => {
+        $( from_integer![@int for: $for + $for_b, from: $from + $from_b]; )+
     };
-    (@int
-     for: $for:ident + $for_b:expr, from: $from:ident + $from_b:expr) => {
-        devela::paste! {
-            impl From<[<$from$from_b>]> for [<$for$for_b>] {
-                #[inline]
-                fn from(from: [<$from$from_b>]) -> Self {
-                    Self(from.0.into())
-                }
-            }
-            impl From<&[<$from$from_b>]> for [<$for$for_b>] {
-                #[inline]
-                fn from(from: &[<$from$from_b>]) -> Self {
-                    Self(from.0.into())
-                }
-            }
-            impl From<&mut [<$from$from_b>]> for [<$for$for_b>] {
-                #[inline]
-                fn from(from: &mut [<$from$from_b>]) -> Self {
-                    Self(from.0.into())
-                }
-            }
-        }
+    (@int for: $for:ident + $for_b:expr, from: $from:ident + $from_b:expr) => {
+        $crate::all::impl_from!(for: $for+$for_b, from: @$from+$from_b, arg:f, body: {
+            Self(f.0.into())
+        });
     };
 
     // from_integer!
@@ -79,35 +58,13 @@ macro_rules! from_integer {
     // Used by:
     // - for: N0z   from: P
     // - for: Pz    from: P
-    (int_non0
-     for: $for:ident + $for_b:expr,
-     from: $from:ident + $( $from_b:expr ),+) => {
-        $(
-            from_integer![@int_non0 for: $for + $for_b, from: $from + $from_b];
-        )+
+    (int_non0 for: $for:ident + $for_b:expr, from: $from:ident + $( $from_b:expr ),+) => {
+        $( from_integer![@int_non0 for: $for + $for_b, from: $from + $from_b]; )+
     };
-    (@int_non0
-     for: $for:ident + $for_b:expr, from: $from:ident + $from_b:expr) => {
-        devela::paste! {
-            impl From<[<$from$from_b>]> for [<$for$for_b>] {
-                #[inline]
-                fn from(from: [<$from$from_b>]) -> Self {
-                    Self::new(from.0.into()).unwrap()
-                }
-            }
-            impl From<&[<$from$from_b>]> for [<$for$for_b>] {
-                #[inline]
-                fn from(from: &[<$from$from_b>]) -> Self {
-                    Self::new(from.0.into()).unwrap()
-                }
-            }
-            impl From<&mut [<$from$from_b>]> for [<$for$for_b>] {
-                #[inline]
-                fn from(from: &mut [<$from$from_b>]) -> Self {
-                    Self::new(from.0.into()).unwrap()
-                }
-            }
-        }
+    (@int_non0 for: $for:ident + $for_b:expr, from: $from:ident + $from_b:expr) => {
+        $crate::all::impl_from!(for: $for+$for_b, from: @$from+$from_b, arg:f, body: {
+            Self::new(f.0.into()).unwrap()
+        });
     };
 
     // from_integer!
@@ -118,52 +75,20 @@ macro_rules! from_integer {
     // - for: N0z   from: N0z, Pz
     // - for: Nnz   from: Pz
     // - for: Pz    from: Pz
-    // - for: Npz   from: Nz        (negative to negative is OK)
-    // - for: Nz    from: Nz        (negative to negative is OK)
-    (non0
-     for: $for:ident + $for_b:expr,
-     from: $from:ident + $( $from_b:expr ),+) => {
-        $(
-            from_integer![@non0 for: $for + $for_b, from: $from + $from_b];
-        )+
+    // - for: Npz   from: Nz        (negative to negative OK)
+    // - for: Nz    from: Nz        (negative to negative OK)
+    (non0 for: $for:ident + $for_b:expr, from: $from:ident + $( $from_b:expr ),+) => {
+        $( from_integer![@non0 for: $for + $for_b, from: $from + $from_b]; )+
     };
-    (@non0
-     for: $for:ident + $for_b:expr, from: $from:ident + $from_b:expr) => {
-        devela::paste! {
-            impl From<[<$from$from_b>]> for [<$for$for_b>] {
-                #[inline]
-                fn from(from: [<$from$from_b>]) -> Self {
-                    #[cfg(feature = "safe")]
-                    return Self::from_parts(from.0.get().into()).unwrap();
+    (@non0 for: $for:ident + $for_b:expr, from: $from:ident + $from_b:expr) => {
+        $crate::all::impl_from!(for: $for+$for_b, from: @$from+$from_b, arg:f, body: {
+            #[cfg(feature = "safe")]
+            return Self::from_parts(f.0.get().into()).unwrap();
 
-                    #[cfg(not(feature = "safe"))]
-                    // SAFETY: coming from a type that respects the invariant of not having 0
-                    return unsafe { Self::from_parts_unchecked(from.0.get().into()) };
-                }
-            }
-            impl From<&[<$from$from_b>]> for [<$for$for_b>] {
-                #[inline]
-                fn from(from: &[<$from$from_b>]) -> Self {
-                    #[cfg(feature = "safe")]
-                    return Self::from_parts(from.0.get().into()).unwrap();
-
-                    #[cfg(not(feature = "safe"))]
-                    // SAFETY: coming from a type that respects the invariant of not having 0
-                    return unsafe { Self::from_parts_unchecked(from.0.get().into()) };
-                }
-            }
-            impl From<&mut [<$from$from_b>]> for [<$for$for_b>] {
-                #[inline]
-                fn from(from: &mut [<$from$from_b>]) -> Self {
-                    #[cfg(feature = "safe")]
-                    return Self::from_parts(from.0.get().into()).unwrap();
-
-                    #[cfg(not(feature = "safe"))]
-                    // SAFETY: coming from a type that respects the invariant of not having 0
-                    return unsafe { Self::from_parts_unchecked(from.0.get().into()) };
-                }
-            }
-        }
+            #[cfg(not(feature = "safe"))]
+            // SAFETY: coming from a type that respects the invariant of not having 0
+            return unsafe { Self::from_parts_unchecked(f.0.get().into()) };
+        });
     };
 
     // from_integer!
@@ -173,31 +98,14 @@ macro_rules! from_integer {
     // - for: Z     from: Npz
     (neg_signed
      for: $for:ident + $p:ident + $for_b:expr, from: $from:ident + $( $from_b:expr ),+) => {
-        $(
-            from_integer![@neg_signed for: $for + $p + $for_b, from: $from + $from_b];
-        )+
+        $( from_integer![@neg_signed for: $for + $p + $for_b, from: $from + $from_b]; )+
     };
     (@neg_signed
      for: $for:ident + $p:ident + $for_b:expr, from: $from:ident + $from_b:expr) => {
         devela::paste! {
-            impl From<[<$from$from_b>]> for [<$for$for_b>] {
-                #[inline]
-                fn from(from: [<$from$from_b>]) -> Self {
-                    Self(Into::<[<$p$for_b>]>::into(from.0).neg())
-                }
-            }
-            impl From<&[<$from$from_b>]> for [<$for$for_b>] {
-                #[inline]
-                fn from(from: &[<$from$from_b>]) -> Self {
-                    Self(Into::<[<$p$for_b>]>::into(from.0).neg())
-                }
-            }
-            impl From<&mut [<$from$from_b>]> for [<$for$for_b>] {
-                #[inline]
-                fn from(from: &mut [<$from$from_b>]) -> Self {
-                    Self(Into::<[<$p$for_b>]>::into(from.0).neg())
-                }
-            }
+            $crate::all::impl_from!(for: $for+$for_b, from: @$from+$from_b, arg:f, body: {
+                Self(Into::<[<$p$for_b>]>::into(f.0).neg())
+            });
         }
     };
 
@@ -209,56 +117,21 @@ macro_rules! from_integer {
     // - for: N0z   from: Nz
     (negnon0_signed
      for: $for:ident + $p:ident + $for_b:expr, from: $from:ident + $( $from_b:expr ),+) => {
-        $(
-            from_integer![@negnon0_signed
-            for: $for + $p + $for_b, from: $from + $from_b];
-        )+
+        $( from_integer![@negnon0_signed for: $for + $p + $for_b, from: $from + $from_b]; )+
     };
     (@negnon0_signed
      for: $for:ident + $p:ident + $for_b:expr, from: $from:ident + $from_b:expr) => {
         devela::paste! {
-            impl From<[<$from$from_b>]> for [<$for$for_b>] {
-                #[inline]
-                fn from(from: [<$from$from_b>]) -> Self {
-                    #[cfg(feature = "safe")]
-                    return
-                        Self::from_parts(Into::<[<$p$for_b>]>::into(from.0.get()).neg()).unwrap();
+            $crate::all::impl_from!(for: $for+$for_b, from: @$from+$from_b, arg:f, body: {
+                #[cfg(feature = "safe")]
+                return Self::from_parts(Into::<[<$p$for_b>]>::into(f.0.get()).neg()).unwrap();
 
-                    #[cfg(not(feature = "safe"))]
-                    // SAFETY: coming from a type that respects the invariant of not having 0
-                    return unsafe {
-                        Self::from_parts_unchecked(Into::<[<$p$for_b>]>::into(from.0.get()).neg())
-                    };
-                }
-            }
-            impl From<&[<$from$from_b>]> for [<$for$for_b>] {
-                #[inline]
-                fn from(from: &[<$from$from_b>]) -> Self {
-                    #[cfg(feature = "safe")]
-                    return
-                        Self::from_parts(Into::<[<$p$for_b>]>::into(from.0.get()).neg()).unwrap();
-
-                    #[cfg(not(feature = "safe"))]
-                    // SAFETY: coming from a type that respects the invariant of not having 0
-                    return unsafe {
-                        Self::from_parts_unchecked(Into::<[<$p$for_b>]>::into(from.0.get()).neg())
-                    };
-                }
-            }
-            impl From<&mut [<$from$from_b>]> for [<$for$for_b>] {
-                #[inline]
-                fn from(from: &mut [<$from$from_b>]) -> Self {
-                    #[cfg(feature = "safe")]
-                    return
-                        Self::from_parts(Into::<[<$p$for_b>]>::into(from.0.get()).neg()).unwrap();
-
-                    #[cfg(not(feature = "safe"))]
-                    // SAFETY: coming from a type that respects the invariant of not having 0
-                    return unsafe {
-                        Self::from_parts_unchecked(Into::<[<$p$for_b>]>::into(from.0.get()).neg())
-                    };
-                }
-            }
+                #[cfg(not(feature = "safe"))]
+                // SAFETY: coming from a type that respects the invariant of not having 0
+                return unsafe {
+                    Self::from_parts_unchecked(Into::<[<$p$for_b>]>::into(f.0.get()).neg())
+                };
+            });
         }
     };
 }
@@ -269,7 +142,7 @@ pub(crate) use from_integer;
 /// # Args
 /// - `$for`:    the base name of the target. e.g. `NonZeroInteger`.
 /// - `$for_b`:  the bit size of the target. e.g. `16`.
-/// - `$from_p`: the base name of the origin. e.g. `u`.
+/// - `$from`: the base name of the origin. e.g. `u`.
 /// - `$from_b`: a list of bit sizes of the origin. e.g. `8, 16`.
 ///
 /// # Examples
@@ -287,53 +160,27 @@ macro_rules! from_primitive {
     //
     // - for: Z     from: u, i
     // - for: Nnz   from: u
-    (int
-     for: $for:ident + $for_b:expr,
-     from: $from_p:ident + $( $from_b:expr ),+
-    ) => {
-        $(
-            from_primitive![@int for: $for + $for_b, from: $from_p + $from_b];
-        )+
+    (int for: $for:ident + $for_b:expr, from: $from:ident + $( $from_b:expr ),+) => {
+        $( from_primitive![@int for: $for + $for_b, from: $from + $from_b]; )+
     };
-    (@int
-     for: $for:ident + $for_b:expr,
-     from: $from_p:ident + $from_b:expr
-    ) => {
-        devela::paste! {
-            impl From<[<$from_p$from_b>]> for [<$for$for_b>] {
-                #[inline]
-                fn from(from: [<$from_p$from_b>]) -> Self {
-                    #[cfg(feature = "safe")]
-                    return Self::from_parts(from.into()).unwrap();
+    (@int for: $for:ident + $for_b:expr, from: $from:ident + $from_b:expr) => {
+        $crate::all::impl_from!(for: $for+$for_b, from: $from+$from_b, arg:f, body: {
+            #[cfg(feature = "safe")]
+            return Self::from_parts(f.into()).unwrap();
 
-                    #[cfg(not(feature = "safe"))]
-                    // SAFETY: all values should be valid
-                    return unsafe { Self::from_parts_unchecked(from.into()) };
-                }
-            }
-            impl From<&[<$from_p$from_b>]> for [<$for$for_b>] {
-                #[inline]
-                fn from(from: &[<$from_p$from_b>]) -> Self {
-                    #[cfg(feature = "safe")]
-                    return Self::from_parts((*from).into()).unwrap();
+            #[cfg(not(feature = "safe"))]
+            // SAFETY: all values should be valid
+            return unsafe { Self::from_parts_unchecked(f.into()) };
+        });
 
-                    #[cfg(not(feature = "safe"))]
-                    // SAFETY: all values should be valid
-                    return unsafe { Self::from_parts_unchecked((*from).into()) };
-                }
-            }
-            impl From<&mut [<$from_p$from_b>]> for [<$for$for_b>] {
-                #[inline]
-                fn from(from: &mut [<$from_p$from_b>]) -> Self {
-                    #[cfg(feature = "safe")]
-                    return Self::from_parts((*from).into()).unwrap();
+        $crate::all::impl_from!(for: $for+$for_b, from: &$from+$from_b, arg:f, body: {
+            #[cfg(feature = "safe")]
+            return Self::from_parts((*f).into()).unwrap();
 
-                    #[cfg(not(feature = "safe"))]
-                    // SAFETY: all values should be valid
-                    return unsafe { Self::from_parts_unchecked((*from).into()) };
-                }
-            }
-        }
+            #[cfg(not(feature = "safe"))]
+            // SAFETY: all values should be valid
+            return unsafe { Self::from_parts_unchecked((*f).into()) };
+        });
     };
 
     // from_primitive!
@@ -343,53 +190,27 @@ macro_rules! from_primitive {
     // - for: N0z   from: NonZeroU, NonZeroI
     // - for: Pz    from: NonZeroU
     // - for: Nnz   from: NonZeroU
-    (non0
-     for: $for:ident + $for_b:expr,
-     from: $from_p:ident + $( $from_b:expr ),+
-    ) => {
-        $(
-            from_primitive![@non0 for: $for + $for_b, from: $from_p + $from_b];
-        )+
+    (non0 for: $for:ident + $for_b:expr, from: $from:ident + $( $from_b:expr ),+) => {
+        $( from_primitive![@non0 for: $for + $for_b, from: $from + $from_b]; )+
     };
-    (@non0
-     for: $for:ident + $for_b:expr,
-     from: $from_p:ident + $from_b:expr
-    ) => {
-        devela::paste! {
-            impl From<[<$from_p$from_b>]> for [<$for$for_b>] {
-                #[inline]
-                fn from(from: [<$from_p$from_b>]) -> Self {
-                    #[cfg(feature = "safe")]
-                    return Self::from_parts(from.get().into()).unwrap();
+    (@non0 for: $for:ident + $for_b:expr, from: $from:ident + $from_b:expr) => {
+        $crate::all::impl_from!(for: $for+$for_b, from: $from+$from_b, arg:f, body: {
+            #[cfg(feature = "safe")]
+            return Self::from_parts(f.get().into()).unwrap();
 
-                    #[cfg(not(feature = "safe"))]
-                    // SAFETY: coming from a type that respects the invariant of not having 0
-                    return unsafe { Self::from_parts_unchecked(from.get().into()) };
-                }
-            }
-            impl From<&[<$from_p$from_b>]> for [<$for$for_b>] {
-                #[inline]
-                fn from(from: &[<$from_p$from_b>]) -> Self {
-                    #[cfg(feature = "safe")]
-                    return Self::from_parts((*from).get().into()).unwrap();
+            #[cfg(not(feature = "safe"))]
+            // SAFETY: coming from a type that respects the invariant of not having 0
+            return unsafe { Self::from_parts_unchecked(f.get().into()) };
+        });
 
-                    #[cfg(not(feature = "safe"))]
-                    // SAFETY: coming from a type that respects the invariant of not having 0
-                    return unsafe { Self::from_parts_unchecked((*from).get().into()) };
-                }
-            }
-            impl From<&mut [<$from_p$from_b>]> for [<$for$for_b>] {
-                #[inline]
-                fn from(from: &mut [<$from_p$from_b>]) -> Self {
-                    #[cfg(feature = "safe")]
-                    return Self::from_parts((*from).get().into()).unwrap();
+        $crate::all::impl_from!(for: $for+$for_b, from: &$from+$from_b, arg:f, body: {
+            #[cfg(feature = "safe")]
+            return Self::from_parts((*f).get().into()).unwrap();
 
-                    #[cfg(not(feature = "safe"))]
-                    // SAFETY: coming from a type that respects the invariant of not having 0
-                    return unsafe { Self::from_parts_unchecked((*from).get().into()) };
-                }
-            }
-        }
+            #[cfg(not(feature = "safe"))]
+            // SAFETY: coming from a type that respects the invariant of not having 0
+            return unsafe { Self::from_parts_unchecked((*f).get().into()) };
+        });
     };
 }
 pub(crate) use from_primitive;
@@ -399,7 +220,7 @@ pub(crate) use from_primitive;
 /// # Args
 /// - `$for`:    the base name of the target. e.g. `NonZeroInteger`.
 /// - `$for_b`:  the bit size of the target. e.g. `16`.
-/// - `$from_p`: the base name of the origin. e.g. `u`.
+/// - `$from`: the base name of the origin. e.g. `u`.
 /// - `$from_b`: a list of bit sizes of the origin. e.g. `8, 16`.
 ///
 /// # Examples
@@ -419,38 +240,13 @@ macro_rules! for_primitive {
     // - for: u        from: Z, Nnz
     // - for: NonZeroI from: N0z
     // - for: NonZeroU from: Pz
-    (int
-     for: $for:ident + $for_b:expr,
-     from: $from_p:ident + $( $from_b:expr ),+
-    ) => {
-        $(
-            for_primitive![@int for: $for + $for_b, from: $from_p + $from_b];
-        )+
+    (int for: $for:ident + $for_b:expr, from: $from:ident + $( $from_b:expr ),+) => {
+        $( for_primitive![@int for: $for + $for_b, from: $from + $from_b]; )+
     };
-    (@int
-     for: $for:ident + $for_b:expr,
-     from: $from_p:ident + $from_b:expr
-    ) => {
-        devela::paste! {
-            impl From<[<$from_p$from_b>]> for [<$for$for_b>] {
-                #[inline]
-                fn from(from: [<$from_p$from_b>]) -> Self {
-                    from.0.into()
-                }
-            }
-            impl From<&[<$from_p$from_b>]> for [<$for$for_b>] {
-                #[inline]
-                fn from(from: &[<$from_p$from_b>]) -> Self {
-                    from.0.into()
-                }
-            }
-            impl From<&mut [<$from_p$from_b>]> for [<$for$for_b>] {
-                #[inline]
-                fn from(from: &mut [<$from_p$from_b>]) -> Self {
-                    from.0.into()
-                }
-            }
-        }
+    (@int for: $for:ident + $for_b:expr, from: $from:ident + $from_b:expr) => {
+        $crate::all::impl_from!(for: $for+$for_b, from: @$from+$from_b, arg:f, body: {
+            f.0.into()
+        });
     };
 
     // for_primitive!
@@ -459,38 +255,13 @@ macro_rules! for_primitive {
     // - for: i        from: N0z
     // - for: u        from: Pz
     // - for: NonZeroI from: N0z
-    (non0
-     for: $for:ident + $for_b:expr,
-     from: $from_p:ident + $( $from_b:expr ),+
-    ) => {
-        $(
-            for_primitive![@non0 for: $for + $for_b, from: $from_p + $from_b];
-        )+
+    (non0 for: $for:ident + $for_b:expr, from: $from:ident + $( $from_b:expr ),+) => {
+        $( for_primitive![@non0 for: $for + $for_b, from: $from + $from_b]; )+
     };
-    (@non0
-     for: $for:ident + $for_b:expr,
-     from: $from_p:ident + $from_b:expr
-    ) => {
-        devela::paste! {
-            impl From<[<$from_p$from_b>]> for [<$for$for_b>] {
-                #[inline]
-                fn from(from: [<$from_p$from_b>]) -> Self {
-                    from.0.get().into()
-                }
-            }
-            impl From<&[<$from_p$from_b>]> for [<$for$for_b>] {
-                #[inline]
-                fn from(from: &[<$from_p$from_b>]) -> Self {
-                    from.0.get().into()
-                }
-            }
-            impl From<&mut [<$from_p$from_b>]> for [<$for$for_b>] {
-                #[inline]
-                fn from(from: &mut [<$from_p$from_b>]) -> Self {
-                    from.0.get().into()
-                }
-            }
-        }
+    (@non0 for: $for:ident + $for_b:expr, from: $from:ident + $from_b:expr) => {
+        $crate::all::impl_from!(for: $for+$for_b, from: @$from+$from_b, arg:f, body: {
+            f.0.get().into()
+        });
     };
 }
 pub(crate) use for_primitive;
@@ -500,7 +271,7 @@ pub(crate) use for_primitive;
 /// # Args
 /// - `$for`:    the base name of the target. e.g. `NonZeroInteger`.
 /// - `$for_b`:  the bit size of the target. e.g. `16`.
-/// - `$from_p`: the base name of the origin. e.g. `u`.
+/// - `$from`: the base name of the origin. e.g. `u`.
 /// - `$from_b`: a list of bit sizes of the origin. e.g. `8, 16`.
 ///
 /// # Examples
@@ -512,82 +283,38 @@ pub(crate) use for_primitive;
 ///
 /// # Branches ids
 /// - `int`
-/// - `non0`
+/// - `int_neg`
+/// - `non0int`
+/// - `non0intneg`
+/// - `prim`
+/// - `non0prim`
 #[cfg(feature = "dashu-int")]
 macro_rules! for_big {
     // for_big!
     // when `from` is an integer
     //
     // - from: Z, Nnz
-    (int
-     for: $for:ident,
-     from: $from_p:ident + $( $from_b:expr ),+
-    ) => {
-        $(
-            for_big![@int for: $for, from: $from_p + $from_b];
-        )+
+    (int for: $for:ident, from: $from:ident + $( $from_b:expr ),+) => {
+        $( for_big![@int for: $for, from: $from + $from_b]; )+
     };
-    (@int
-     for: $for:ident,
-     from: $from_p:ident + $from_b:expr
-    ) => {
-        devela::paste! {
-            impl From<[<$from_p$from_b>]> for $for {
-                #[inline]
-                fn from(from: [<$from_p$from_b>]) -> Self {
-                    Self(from.0.into())
-                }
-            }
-            impl From<&[<$from_p$from_b>]> for $for {
-                #[inline]
-                fn from(from: &[<$from_p$from_b>]) -> Self {
-                    Self(from.0.into())
-                }
-            }
-            impl From<&mut [<$from_p$from_b>]> for $for {
-                #[inline]
-                fn from(from: &mut [<$from_p$from_b>]) -> Self {
-                    Self(from.0.into())
-                }
-            }
-        }
+    (@int for: $for:ident, from: $from:ident + $from_b:expr) => {
+        $crate::all::impl_from!(for: $for, from: @$from+$from_b, arg:f, body: {
+            Self(f.0.into())
+        });
     };
 
     // for_big!
     // when `from` is a negative integer
     //
     // - from: Nz
-    (intneg
-     for: $for:ident,
-     from: $from_p:ident + $( $from_b:expr ),+
-    ) => {
-        $(
-            for_big![@intneg for: $for, from: $from_p + $from_b];
-        )+
+    (intneg for: $for:ident, from: $from:ident + $( $from_b:expr ),+) => {
+        $( for_big![@intneg for: $for, from: $from + $from_b]; )+
     };
-    (@intneg
-     for: $for:ident,
-     from: $from_p:ident + $from_b:expr
-    ) => {
+    (@intneg for: $for:ident, from: $from:ident + $from_b:expr) => {
         devela::paste! {
-            impl From<[<$from_p$from_b>]> for $for {
-                #[inline]
-                fn from(from: [<$from_p$from_b>]) -> Self {
-                    Self(<dashu_int::IBig>::from(from.0).neg())
-                }
-            }
-            impl From<&[<$from_p$from_b>]> for $for {
-                #[inline]
-                fn from(from: &[<$from_p$from_b>]) -> Self {
-                    Self(<dashu_int::IBig>::from(from.0).neg())
-                }
-            }
-            impl From<&mut [<$from_p$from_b>]> for $for {
-                #[inline]
-                fn from(from: &mut [<$from_p$from_b>]) -> Self {
-                    Self(<dashu_int::IBig>::from(from.0).neg())
-                }
-            }
+            $crate::all::impl_from!(for: $for, from: @$from+$from_b, arg:f, body: {
+                Self(<dashu_int::IBig>::from(f.0).neg())
+            });
         }
     };
 
@@ -595,75 +322,27 @@ macro_rules! for_big {
     // when `from` is a non-zero integer
     //
     // - from: N0z, Pz
-    (non0int
-     for: $for:ident,
-     from: $from_p:ident + $( $from_b:expr ),+
-    ) => {
-        $(
-            for_big![@non0int for: $for, from: $from_p + $from_b];
-        )+
+    (non0int for: $for:ident, from: $from:ident + $( $from_b:expr ),+) => {
+        $( for_big![@non0int for: $for, from: $from + $from_b]; )+
     };
-    (@non0int
-     for: $for:ident,
-     from: $from_p:ident + $from_b:expr
-    ) => {
-        devela::paste! {
-            impl From<[<$from_p$from_b>]> for $for {
-                #[inline]
-                fn from(from: [<$from_p$from_b>]) -> Self {
-                    Self(from.0.get().into())
-                }
-            }
-            impl From<&[<$from_p$from_b>]> for $for {
-                #[inline]
-                fn from(from: &[<$from_p$from_b>]) -> Self {
-                    Self(from.0.get().into())
-                }
-            }
-            impl From<&mut [<$from_p$from_b>]> for $for {
-                #[inline]
-                fn from(from: &mut [<$from_p$from_b>]) -> Self {
-                    Self(from.0.get().into())
-                }
-            }
-        }
+    (@non0int for: $for:ident, from: $from:ident + $from_b:expr) => {
+        $crate::all::impl_from!(for: $for, from: @$from+$from_b, arg:f, body: {
+            Self(f.0.get().into())
+        });
     };
 
     // for_big!
     // when `from` is a non-zero negative integer
     //
     // - from: Nz
-    (non0intneg
-     for: $for:ident,
-     from: $from_p:ident + $( $from_b:expr ),+
-    ) => {
-        $(
-            for_big![@non0intneg for: $for, from: $from_p + $from_b];
-        )+
+    (non0intneg for: $for:ident, from: $from:ident + $( $from_b:expr ),+) => {
+        $( for_big![@non0intneg for: $for, from: $from + $from_b]; )+
     };
-    (@non0intneg
-     for: $for:ident,
-     from: $from_p:ident + $from_b:expr
-    ) => {
+    (@non0intneg for: $for:ident, from: $from:ident + $from_b:expr) => {
         devela::paste! {
-            impl From<[<$from_p$from_b>]> for $for {
-                #[inline]
-                fn from(from: [<$from_p$from_b>]) -> Self {
-                    Self(<dashu_int::IBig>::from(from.0.get()).neg())
-                }
-            }
-            impl From<&[<$from_p$from_b>]> for $for {
-                #[inline]
-                fn from(from: &[<$from_p$from_b>]) -> Self {
-                    Self(<dashu_int::IBig>::from(from.0.get()).neg())
-                }
-            }
-            impl From<&mut [<$from_p$from_b>]> for $for {
-                #[inline]
-                fn from(from: &mut [<$from_p$from_b>]) -> Self {
-                    Self(<dashu_int::IBig>::from(from.0.get()).neg())
-                }
-            }
+            $crate::all::impl_from!(for: $for, from: @$from+$from_b, arg:f, body: {
+                Self(<dashu_int::IBig>::from(f.0.get()).neg())
+            });
         }
     };
 
@@ -671,37 +350,17 @@ macro_rules! for_big {
     // when `from` is a primitive
     //
     // - from: i, u
-    (prim
-     for: $for:ident,
-     from: $from_p:ident + $( $from_b:expr ),+
-    ) => {
-        $(
-            for_big![@prim for: $for, from: $from_p + $from_b];
-        )+
+    (prim for: $for:ident, from: $from:ident + $( $from_b:expr ),+) => {
+        $( for_big![@prim for: $for, from: $from + $from_b]; )+
     };
-    (@prim
-     for: $for:ident,
-     from: $from_p:ident + $from_b:expr
-    ) => {
+    (@prim for: $for:ident, from: $from:ident + $from_b:expr) => {
         devela::paste! {
-            impl From<[<$from_p$from_b>]> for $for {
-                #[inline]
-                fn from(from: [<$from_p$from_b>]) -> Self {
-                    Self(from.into())
-                }
-            }
-            impl From<&[<$from_p$from_b>]> for $for {
-                #[inline]
-                fn from(from: &[<$from_p$from_b>]) -> Self {
-                    Self(<dashu_int::IBig>::from(*from))
-                }
-            }
-            impl From<&mut [<$from_p$from_b>]> for $for {
-                #[inline]
-                fn from(from: &mut [<$from_p$from_b>]) -> Self {
-                    Self(<dashu_int::IBig>::from(*from))
-                }
-            }
+            $crate::all::impl_from!(for: $for, from: $from+$from_b, arg:f, body: {
+                Self(f.into())
+            });
+            $crate::all::impl_from!(for: $for, from: &$from+$from_b, arg:f, body: {
+                Self(<dashu_int::IBig>::from(*f))
+            });
         }
     };
 
@@ -709,37 +368,19 @@ macro_rules! for_big {
     // when `from` is a non-zero primitive
     //
     // - from: NonZeroI, NonZeroU
-    (non0prim
-     for: $for:ident,
-     from: $from_p:ident + $( $from_b:expr ),+
-    ) => {
-        $(
-            for_big![@non0prim for: $for, from: $from_p + $from_b];
-        )+
+    (non0prim for: $for:ident, from: $from:ident + $( $from_b:expr ),+) => {
+        $( for_big![@non0prim for: $for, from: $from + $from_b]; )+
     };
-    (@non0prim
-     for: $for:ident,
-     from: $from_p:ident + $from_b:expr
-    ) => {
+    (@non0prim for: $for:ident, from: $from:ident + $from_b:expr) => {
         devela::paste! {
-            impl From<core::num::[<$from_p$from_b>]> for $for {
-                #[inline]
-                fn from(from: core::num::[<$from_p$from_b>]) -> Self {
-                    Self(from.get().into())
-                }
-            }
-            impl From<&core::num::[<$from_p$from_b>]> for $for {
-                #[inline]
-                fn from(from: &core::num::[<$from_p$from_b>]) -> Self {
-                    Self(<dashu_int::IBig>::from(from.get()))
-                }
-            }
-            impl From<&mut core::num::[<$from_p$from_b>]> for $for {
-                #[inline]
-                fn from(from: &mut core::num::[<$from_p$from_b>]) -> Self {
-                    Self(<dashu_int::IBig>::from(from.get()))
-                }
-            }
+            use core::num::[<$from$from_b>];
+
+            $crate::all::impl_from!(for: $for, from: $from+$from_b, arg:f, body: {
+                Self(f.get().into())
+            });
+            $crate::all::impl_from!(for: $for, from: &$from+$from_b, arg:f, body: {
+                Self(<dashu_int::IBig>::from(f.get()))
+            });
         }
     };
 }
