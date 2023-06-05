@@ -1,8 +1,9 @@
-// numera::number::real::float::f::sized::external_16
+// numera::number::real::float::f::sized
 //
 //!
 //
 // TOC
+//
 // - macro
 // - separate implementations
 // - definitions
@@ -13,8 +14,10 @@ use half::{bf16, f16};
 #[cfg(feature = "twofloat")]
 use twofloat::TwoFloat;
 
+#[cfg(not(feature = "std"))]
+use crate::number::real::float::fns::{abs32, abs64};
 use crate::{
-    error::{NumeraError, NumeraResult},
+    error::{NumeraResult, RealError},
     number::traits::{
         Bound, ConstLowerBounded, ConstNegOne, ConstOne, ConstUpperBounded, ConstZero, Count,
         Countable, Ident, LowerBounded, NegOne, Negative, Numbers, One, Positive, Sign,
@@ -141,21 +144,6 @@ macro_rules! define_float_sized {
                 #[inline]
                 fn is_countable(&self) -> bool { true }
             }
-            /// Unimplemented.
-            impl Countable for [<$name $b>] {
-                /// Not implemented.
-                ///
-                /// # Errors
-                /// Returns [`NotImplemented`][NumeraError::NotImplemented].
-                #[inline]
-                fn next(&self) -> NumeraResult<Self> { Err(NumeraError::NotImplemented) }
-                /// Not implemented.
-                ///
-                /// # Errors
-                /// Returns [`NotImplemented`][NumeraError::NotImplemented].
-                #[inline]
-                fn previous(&self) -> NumeraResult<Self> { Err(NumeraError::NotImplemented) }
-            }
 
             /* ident */
 
@@ -220,11 +208,147 @@ macro_rules! define_float_sized {
 
 /* separate implementations */
 
+impl Countable for Float32 {
+    // implementation based on:
+    // https://doc.rust-lang.org/std/primitive.f32.html#method.next_up
+    #[inline]
+    fn next(&self) -> NumeraResult<Self> {
+        const TINY_BITS: u32 = 0x1; // Smallest positive f32.
+        const CLEAR_SIGN_MASK: u32 = 0x7fff_ffff;
+
+        let bits = self.0.to_bits();
+        if self.0.is_nan() || bits == f32::INFINITY.to_bits() {
+            return Err(RealError::NaN.into());
+        }
+
+        let abs = bits & CLEAR_SIGN_MASK;
+        let next_bits = if abs == 0 {
+            TINY_BITS
+        } else if bits == abs {
+            bits + 1
+        } else {
+            bits - 1
+        };
+        Ok(Self(f32::from_bits(next_bits)))
+    }
+
+    // implementation based on:
+    // https://doc.rust-lang.org/std/primitive.f32.html#method.next_down
+    #[inline]
+    fn previous(&self) -> NumeraResult<Self> {
+        const NEG_TINY_BITS: u32 = 0x8000_0001; // Smallest (in magnitude) negative f32.
+        const CLEAR_SIGN_MASK: u32 = 0x7fff_ffff;
+
+        let bits = self.0.to_bits();
+        if self.0.is_nan() || bits == f32::NEG_INFINITY.to_bits() {
+            return Err(RealError::NaN.into());
+        }
+
+        let abs = bits & CLEAR_SIGN_MASK;
+        let next_bits = if abs == 0 {
+            NEG_TINY_BITS
+        } else if bits == abs {
+            bits - 1
+        } else {
+            bits + 1
+        };
+        Ok(Self(f32::from_bits(next_bits)))
+    }
+}
+
+impl Countable for Float64 {
+    // implementation based on:
+    // https://doc.rust-lang.org/std/primitive.f64.html#method.next_up
+    #[inline]
+    fn next(&self) -> NumeraResult<Self> {
+        const TINY_BITS: u64 = 0x1; // Smallest positive f64.
+        const CLEAR_SIGN_MASK: u64 = 0x7fff_ffff_ffff_ffff;
+
+        let bits = self.0.to_bits();
+        if self.0.is_nan() || bits == f64::INFINITY.to_bits() {
+            return Err(RealError::NaN.into());
+        }
+
+        let abs = bits & CLEAR_SIGN_MASK;
+        let next_bits = if abs == 0 {
+            TINY_BITS
+        } else if bits == abs {
+            bits + 1
+        } else {
+            bits - 1
+        };
+        Ok(Self(f64::from_bits(next_bits)))
+    }
+
+    // implementation based on:
+    // https://doc.rust-lang.org/std/primitive.f64.html#method.next_down
+    #[inline]
+    fn previous(&self) -> NumeraResult<Self> {
+        const NEG_TINY_BITS: u64 = 0x8000_0000_0000_0001; // Smallest (in magnitude) negative f64.
+        const CLEAR_SIGN_MASK: u64 = 0x7fff_ffff_ffff_ffff;
+
+        let bits = self.0.to_bits();
+        if self.0.is_nan() || bits == f64::NEG_INFINITY.to_bits() {
+            return Err(RealError::NaN.into());
+        }
+
+        let abs = bits & CLEAR_SIGN_MASK;
+        let next_bits = if abs == 0 {
+            NEG_TINY_BITS
+        } else if bits == abs {
+            bits - 1
+        } else {
+            bits + 1
+        };
+        Ok(Self(f64::from_bits(next_bits)))
+    }
+}
+
+// Checks whether the inner primitive values are within a certain error margin.
+#[inline]
+fn approx_eq_f32(a: f32, b: f32, epsilon: f32) -> bool {
+    #[cfg(feature = "std")]
+    return (a - b).abs() <= epsilon;
+
+    #[cfg(not(feature = "std"))]
+    return abs32(a - b) <= epsilon;
+}
+// Checks whether the inner primitive values are within a certain error margin.
+#[inline]
+fn approx_eq_f64(a: f64, b: f64, epsilon: f64) -> bool {
+    #[cfg(feature = "std")]
+    return (a - b).abs() <= epsilon;
+
+    #[cfg(not(feature = "std"))]
+    return abs64(a - b) <= epsilon;
+}
+impl ConstZero for Float32 {
+    const ZERO: Self = Self(f32::ZERO);
+}
+impl ConstOne for Float32 {
+    const ONE: Self = Self(f32::ONE);
+}
+impl ConstNegOne for Float32 {
+    const NEG_ONE: Self = Self(f32::NEG_ONE);
+}
+impl ConstZero for Float64 {
+    const ZERO: Self = Self(f64::ZERO);
+}
+impl ConstOne for Float64 {
+    const ONE: Self = Self(f64::ONE);
+}
+impl ConstNegOne for Float64 {
+    const NEG_ONE: Self = Self(f64::NEG_ONE);
+}
+
 #[cfg(feature = "half")]
 use impl_f16::{approx_eq_bf16, approx_eq_f16};
 #[cfg(feature = "half")]
 mod impl_f16 {
-    use super::{bf16, f16, BFloat16, ConstNegOne, ConstOne, ConstZero, Float16};
+    use super::{
+        bf16, f16, BFloat16, ConstNegOne, ConstOne, ConstZero, Countable, Float16, NumeraResult,
+    };
+    use crate::error::NumeraError;
     #[cfg(not(feature = "std"))]
     use crate::number::real::float::fns::abs32;
 
@@ -246,6 +370,46 @@ mod impl_f16 {
     }
     impl ConstNegOne for BFloat16 {
         const NEG_ONE: Self = Self(bf16::NEG_ONE);
+    }
+
+    /// Unimplemented.
+    impl Countable for Float16 {
+        /// Not implemented.
+        ///
+        /// # Errors
+        /// Returns [`NotImplemented`][NumeraError::NotImplemented].
+        #[inline]
+        fn next(&self) -> NumeraResult<Self> {
+            Err(NumeraError::NotImplemented)
+        }
+        /// Not implemented.
+        ///
+        /// # Errors
+        /// Returns [`NotImplemented`][NumeraError::NotImplemented].
+        #[inline]
+        fn previous(&self) -> NumeraResult<Self> {
+            Err(NumeraError::NotImplemented)
+        }
+    }
+
+    /// Unimplemented.
+    impl Countable for BFloat16 {
+        /// Not implemented.
+        ///
+        /// # Errors
+        /// Returns [`NotImplemented`][NumeraError::NotImplemented].
+        #[inline]
+        fn next(&self) -> NumeraResult<Self> {
+            Err(NumeraError::NotImplemented)
+        }
+        /// Not implemented.
+        ///
+        /// # Errors
+        /// Returns [`NotImplemented`][NumeraError::NotImplemented].
+        #[inline]
+        fn previous(&self) -> NumeraResult<Self> {
+            Err(NumeraError::NotImplemented)
+        }
     }
 
     // Checks whether the inner primitive values are within a certain error margin.
@@ -272,7 +436,8 @@ mod impl_f16 {
 use impl_twofloat::approx_eq_TwoFloat;
 #[cfg(feature = "twofloat")]
 mod impl_twofloat {
-    use super::{ConstNegOne, ConstOne, ConstZero, Float128, TwoFloat};
+    use super::{ConstNegOne, ConstOne, ConstZero, Countable, Float128, NumeraResult, TwoFloat};
+    use crate::error::NumeraError;
 
     impl ConstZero for Float128 {
         const ZERO: Self = Self(TwoFloat::from_f64(0.0));
@@ -284,6 +449,26 @@ mod impl_twofloat {
         const NEG_ONE: Self = Self(TwoFloat::from_f64(-1.0));
     }
 
+    /// Unimplemented.
+    impl Countable for Float128 {
+        /// Not implemented.
+        ///
+        /// # Errors
+        /// Returns [`NotImplemented`][NumeraError::NotImplemented].
+        #[inline]
+        fn next(&self) -> NumeraResult<Self> {
+            Err(NumeraError::NotImplemented)
+        }
+        /// Not implemented.
+        ///
+        /// # Errors
+        /// Returns [`NotImplemented`][NumeraError::NotImplemented].
+        #[inline]
+        fn previous(&self) -> NumeraResult<Self> {
+            Err(NumeraError::NotImplemented)
+        }
+    }
+
     // Checks whether the inner primitive values are within a certain error margin.
     #[inline]
     #[allow(non_snake_case)]
@@ -293,6 +478,20 @@ mod impl_twofloat {
 }
 
 /* definitions */
+
+define_float_sized![Float, F, f32,
+    "floating-point number", ", from the set $\\R$",
+    "",
+    "", MIN, MAX,
+    ("A", 32, larger: true, 64, smaller: false, 32)
+];
+
+define_float_sized![Float, F, f64,
+    "floating-point number", ", from the set $\\R$",
+    "",
+    "", MIN, MAX,
+    ("A", 64, larger: false, 64, smaller: true, 32)
+];
 
 #[cfg(feature = "half")]
 define_float_sized![Float, F, f16,
