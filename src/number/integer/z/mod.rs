@@ -24,10 +24,7 @@ pub use family::Integer;
 pub use sized::{Integer128, Integer16, Integer32, Integer64, Integer8};
 
 #[cfg(feature = "dashu-int")]
-#[cfg_attr(
-    feature = "nightly",
-    doc(cfg(any(feature = "big", feature = "dashu-int")))
-)]
+#[cfg_attr(feature = "nightly", doc(cfg(feature = "big")))]
 pub use big::IntegerBig;
 
 use crate::number::macros::define_abbreviations;
@@ -35,8 +32,5 @@ define_abbreviations![Z, Integer, 8, 16, 32, 64, 128];
 
 /// Abbreviation of [`IntegerBig`].
 #[cfg(feature = "dashu-int")]
-#[cfg_attr(
-    feature = "nightly",
-    doc(cfg(any(feature = "big", feature = "dashu-int")))
-)]
+#[cfg_attr(feature = "nightly", doc(cfg(feature = "big")))]
 pub type ZBig = IntegerBig;

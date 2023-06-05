@@ -26,10 +26,7 @@ use dashu_int::{ops::BitTest, UBig};
 /// ```
 #[inline]
 #[cfg(feature = "dashu-int")]
-#[cfg_attr(
-    feature = "nightly",
-    doc(cfg(any(feature = "big", feature = "dashu-int")))
-)]
+#[cfg_attr(feature = "nightly", doc(cfg(feature = "big")))]
 pub fn bit_len(base: u8, integer: &str) -> Option<usize> {
     Some(UBig::from_str_radix(integer, base.into()).ok()?.bit_len())
 }
@@ -54,10 +51,7 @@ pub fn bit_len(base: u8, integer: &str) -> Option<usize> {
 /// ```
 #[inline]
 #[cfg(feature = "dashu-int")]
-#[cfg_attr(
-    feature = "nightly",
-    doc(cfg(any(feature = "big", feature = "dashu-int")))
-)]
+#[cfg_attr(feature = "nightly", doc(cfg(feature = "big")))]
 pub fn bit_len_next_power(base: u8, integer: &str) -> Option<(usize, usize)> {
     let min = bit_len(base, integer)?;
     Some((min, min.checked_next_power_of_two()?))

@@ -216,8 +216,7 @@ pub fn prime_pi_sieve(n: usize) -> usize {
 
 /* data extraction */
 
-/// Returns a big integer containing the largest prime just less the power of
-/// two represented by $2^{3+i)}$.
+/// Returns a big integer containing the largest prime just less a power of two.
 ///
 /// Valid `i` values are between 0 and 13 inclusive, which corresponds to
 /// bit-sizes between 8 and 65,536.
@@ -235,10 +234,7 @@ pub fn prime_pi_sieve(n: usize) -> usize {
 /// ```
 #[inline]
 #[cfg(feature = "big")]
-#[cfg_attr(
-    feature = "nightly",
-    doc(cfg(any(feature = "big", feature = "dashu-int")))
-)]
+#[cfg_attr(feature = "nightly", doc(cfg(feature = "big")))]
 pub fn largest_prime_pow2_doublings(i: usize) -> Option<IntegerBig> {
     if i > 13 {
         None
@@ -281,10 +277,7 @@ pub fn largest_prime_pow2_doublings(i: usize) -> Option<IntegerBig> {
 /// ```
 #[inline]
 #[cfg(feature = "big")]
-#[cfg_attr(
-    feature = "nightly",
-    doc(cfg(any(feature = "big", feature = "dashu-int")))
-)]
+#[cfg_attr(feature = "nightly", doc(cfg(feature = "big")))]
 pub fn ten_primes_less_pow2(bitsize: usize, index: usize) -> Option<IntegerBig> {
     if (8..=400).contains(&bitsize) && index < 10 {
         Some(

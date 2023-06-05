@@ -9,7 +9,7 @@ use crate::all::{
     NonNegative, NonOne, NonZero, Numbers, NumeraResult, Positive, Sign, UpperBounded,
 };
 
-/// The family of [prime][super] integer numbers.
+/// The family of [prime][super] numbers, also known as [`P`][super::P].
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub enum Prime {
     _8(Prime8),

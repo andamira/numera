@@ -480,15 +480,21 @@ mod impl_twofloat {
 /* definitions */
 
 define_float_sized![Float, F, f32,
-    "floating-point number", ", from the set $\\R$",
-    "",
+    "floating-point number ([w][0w])", ", from the set $\\R$",
+    "It is comprised of 1 sign bit, 8 exponent bits, and 23 mantissa bits.
+
+[0w]: https://en.wikipedia.org/wiki/Single-precision_floating-point_format
+",
     "", MIN, MAX,
     ("A", 32, larger: true, 64, smaller: false, 32)
 ];
 
 define_float_sized![Float, F, f64,
     "floating-point number", ", from the set $\\R$",
-    "",
+    "It is comprised of 1 sign bit, 11 exponent bits, and 52 mantissa bits.
+
+[0w]: https://en.wikipedia.org/wiki/Double-precision_floating-point_format
+",
     "", MIN, MAX,
     ("A", 64, larger: false, 64, smaller: true, 32)
 ];
@@ -496,7 +502,7 @@ define_float_sized![Float, F, f64,
 #[cfg(feature = "half")]
 define_float_sized![Float, F, f16,
     "floating-point number ([w][0w])", ", from the set $\\R$",
-    "It is comprised of one sign bit, 5 exponent bits, and 10 mantissa bits.
+    "It is comprised of 1 sign bit, 5 exponent bits, and 10 mantissa bits.
 
 [0w]: https://en.wikipedia.org/wiki/Half-precision_floating-point_format
     ",
@@ -505,8 +511,8 @@ define_float_sized![Float, F, f16,
 ];
 #[cfg(feature = "half")]
 define_float_sized![BFloat, Bf, bf16,
-    "*brain floating-point* ([w][0w]) number", ", from the set $\\R$",
-    "It is comprised of one sign bit, 8 exponent bits, and 7 mantissa bits.
+    "*brain* floating-point ([w][0w]) number", ", from the set $\\R$",
+    "It is comprised of 1 sign bit, 8 exponent bits, and 7 mantissa bits.
 
 [0w]: https://en.wikipedia.org/wiki/Bfloat16_floating-point_format",
     "", MIN, MAX,
@@ -516,7 +522,7 @@ define_float_sized![BFloat, Bf, bf16,
 #[cfg(feature = "twofloat")]
 define_float_sized![Float, F, TwoFloat,
     "floating-point number", ", from the set $\\R$",
-    "",
+    "It is internally represented as the sum of two non-overlapping f64 values.",
     "", MIN, MAX,
     ("A", 128, larger: false, 128, smaller: true, 64)
 ];
