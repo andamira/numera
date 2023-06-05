@@ -85,13 +85,13 @@ macro_rules! define_rational_family {
         }
 
         /// This implementation is no-op.
-        impl crate::all::Numbers for $tname {
+        impl $crate::all::Numbers for $tname {
             type Parts = Self;
 
             /// Returns `value` unchanged.
             #[inline]
             #[allow(clippy::missing_errors_doc)]
-            fn from_parts(value: $tname) -> crate::all::NumeraResult<Self> { Ok(value) }
+            fn from_parts(value: $tname) -> $crate::all::NumeraResult<Self> { Ok(value) }
 
             /// Returns `value` unchanged.
             ///
@@ -105,7 +105,7 @@ macro_rules! define_rational_family {
         }
 
         /// This implementation defers to the actual rational variant.
-        impl crate::all::Bound for $tname {
+        impl $crate::all::Bound for $tname {
             fn is_lower_bounded(&self) -> bool {
                 define_rational_family! { match_variants_0:
                     $tname, self, is_lower_bounded,
@@ -131,22 +131,22 @@ macro_rules! define_rational_family {
                 }
             }
         }
-        impl crate::all::Count for $tname {
+        impl $crate::all::Count for $tname {
             /// All rationals are countable.
             #[inline]
             fn is_countable(&self) -> bool { true }
         }
         /// This implementation defers to the actual rational variant.
-        impl crate::all::Countable for $tname {
+        impl $crate::all::Countable for $tname {
             #[allow(clippy::missing_errors_doc)]
-            fn next(&self) -> crate::all::NumeraResult<Self> {
+            fn next(&self) -> $crate::all::NumeraResult<Self> {
                 define_rational_family! { match_variants_0_rewrap:
                     $tname, self, next,
                     common: $($vtype+$vbit),+ ; depending: $($dep_vname, $dep_vtype, $dependency)+
                 }
             }
             #[allow(clippy::missing_errors_doc)]
-            fn previous(&self) -> crate::all::NumeraResult<Self> {
+            fn previous(&self) -> $crate::all::NumeraResult<Self> {
                 define_rational_family! { match_variants_0_rewrap:
                     $tname, self, previous,
                     common: $($vtype+$vbit),+ ; depending: $($dep_vname, $dep_vtype, $dependency)+
@@ -154,7 +154,7 @@ macro_rules! define_rational_family {
             }
         }
         /// This implementation defers to the actual rational variant.
-        impl crate::all::Sign for $tname {
+        impl $crate::all::Sign for $tname {
             fn can_positive(&self) -> bool {
                 define_rational_family! { match_variants_0:
                     $tname, self, can_positive,
@@ -181,7 +181,7 @@ macro_rules! define_rational_family {
             }
         }
         /// This implementation defers to the actual rational variant.
-        impl crate::all::Ident for $tname {
+        impl $crate::all::Ident for $tname {
             fn can_zero(&self) -> bool {
                 define_rational_family! { match_variants_0:
                     $tname, self, can_zero,
@@ -242,7 +242,7 @@ macro_rules! define_rational_family {
 
         $(
         impl TryFrom<$tname> for [<$vtype$vbit>] {
-            type Error = crate::error::NumeraError;
+            type Error = $crate::error::NumeraError;
             fn try_from(z: $tname) -> core::result::Result<[<$vtype$vbit>], Self::Error> {
                 match z {
                     $tname::[<_$vbit>](z) => Ok(z),
@@ -254,7 +254,7 @@ macro_rules! define_rational_family {
 
         $( #[cfg(feature = $dependency)]
         impl TryFrom<$tname> for $dep_vtype {
-            type Error = crate::error::NumeraError;
+            type Error = $crate::error::NumeraError;
             fn try_from(z: $tname) -> core::result::Result<$dep_vtype, Self::Error> {
                 match z {
                     $tname::$dep_vname(z) => Ok(z),
@@ -318,12 +318,12 @@ macro_rules! define_any_rational_family {
         }
 
         /// This implementation is no-op.
-        impl crate::all::Numbers for $tname {
+        impl $crate::all::Numbers for $tname {
             type Parts = Self;
 
             /// Returns `value` unchanged.
             #[inline]
-            fn from_parts(value: $tname) -> crate::all::NumeraResult<Self> { Ok(value) }
+            fn from_parts(value: $tname) -> $crate::all::NumeraResult<Self> { Ok(value) }
 
             /// Returns `value` unchanged.
             #[inline]
@@ -333,7 +333,7 @@ macro_rules! define_any_rational_family {
         }
 
         /// This implementation defers to the actual rational variant.
-        impl crate::all::Bound for $tname {
+        impl $crate::all::Bound for $tname {
             fn is_lower_bounded(&self) -> bool {
                 define_any_rational_family! { match_variants_0:
                     $tname, self, is_lower_bounded,
@@ -359,20 +359,20 @@ macro_rules! define_any_rational_family {
                 }
             }
         }
-        impl crate::all::Count for $tname {
+        impl $crate::all::Count for $tname {
             /// All rationals are countable.
             #[inline]
             fn is_countable(&self) -> bool { true }
         }
         /// This implementation defers to the actual rational variant.
-        impl crate::all::Countable for $tname {
-            fn next(&self) -> crate::all::NumeraResult<Self> {
+        impl $crate::all::Countable for $tname {
+            fn next(&self) -> $crate::all::NumeraResult<Self> {
                 define_any_rational_family! { match_variants_0_rewrap:
                     $tname, self, next,
                     common: $($vname),+ // ; depending: $($dep_vtype, $dependency)+
                 }
             }
-            fn previous(&self) -> crate::all::NumeraResult<Self> {
+            fn previous(&self) -> $crate::all::NumeraResult<Self> {
                 define_any_rational_family! { match_variants_0_rewrap:
                     $tname, self, previous,
                     common: $($vname),+ // ; depending: $($dep_vtype, $dependency)+
@@ -380,7 +380,7 @@ macro_rules! define_any_rational_family {
             }
         }
         /// This implementation defers to the actual rational variant.
-        impl crate::all::Sign for $tname {
+        impl $crate::all::Sign for $tname {
             fn can_positive(&self) -> bool {
                 define_any_rational_family! { match_variants_0:
                     $tname, self, can_positive,
@@ -407,7 +407,7 @@ macro_rules! define_any_rational_family {
             }
         }
         /// This implementation defers to the actual rational variant.
-        impl crate::all::Ident for $tname {
+        impl $crate::all::Ident for $tname {
             fn can_zero(&self) -> bool {
                 define_any_rational_family! { match_variants_0:
                     $tname, self, can_zero,
@@ -467,7 +467,7 @@ macro_rules! define_any_rational_family {
 
         $(
         impl TryFrom<$tname> for $vtype {
-            type Error = crate::error::NumeraError;
+            type Error = $crate::error::NumeraError;
             fn try_from(z: $tname) -> core::result::Result<$vtype, Self::Error> {
                 match z {
                     $tname::$vname(z) => Ok(z),
@@ -479,7 +479,7 @@ macro_rules! define_any_rational_family {
 
         // $( #[cfg(feature = $dependency)]
         // impl TryFrom<$tname> for $dep_vtype {
-        //     type Error = crate::error::NumeraError;
+        //     type Error = $crate::error::NumeraError;
         //     fn try_from(z: $tname) -> core::result::Result<$dep_vtype, Self::Error> {
         //         match z {
         //             $tname::$vname_dep(z) => Ok(z),
