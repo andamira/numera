@@ -2,6 +2,10 @@
 //
 //!
 //
+// TOC
+// - macro
+// - separate implementations
+// - definitions
 
 // #[cfg(feature = "try_from")]
 // use crate::number::real::Reals;
@@ -230,23 +234,7 @@ macro_rules! define_float_sized {
     }};
 }
 
-/* definitions */
-
-define_float_sized![multi Float, F, f,
-    "floating-point number", ", from the set $\\R$",
-    // "",
-    "", MIN, MAX,
-    // ("An", 8, larger: true, 16, smaller: false, 8),
-    // ("A", 16, larger: true, 32, smaller: false, 16),
-    // ("A", 32, larger: true, 64, smaller: true, 16),
-    // ("A", 64, larger: true, 128, smaller: true, 32),
-    // ("A", 128, larger: false, 128, smaller: true, 64)
-
-    ("A", 32, larger: true, 64, smaller: false, 32),
-    ("A", 64, larger: false, 64, smaller: true, 32)
-];
-
-/* specific separate implementations */
+/* separate implementations */
 
 impl Countable for Float32 {
     // implementation based on:
@@ -343,3 +331,14 @@ impl Countable for Float64 {
         Ok(Self(f64::from_bits(next_bits)))
     }
 }
+
+/* definitions */
+
+define_float_sized![multi Float, F, f,
+    "floating-point number", ", from the set $\\R$",
+    // "",
+    "", MIN, MAX,
+
+    ("A", 32, larger: true, 64, smaller: false, 32),
+    ("A", 64, larger: false, 64, smaller: true, 32)
+];

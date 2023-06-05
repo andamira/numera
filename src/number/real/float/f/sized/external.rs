@@ -2,6 +2,10 @@
 //
 //!
 //
+// TOC
+// - macro
+// - separate implementations
+// - definitions
 
 #[cfg(feature = "half")]
 use half::{bf16, f16};
@@ -34,7 +38,7 @@ use devela::paste;
 ///
 /// - `$doc_num`: the type of number.
 /// - `$doc_type`: adds to the type doc-comment.
-// - `$doc_new`: adds to the `new` constructor doc-comment.
+/// - `$doc_extra`: extra doc-comment paragraph.
 ///
 /// - `$doc_sign`: an optional negative sign
 /// - `$doc_lower`: the lower bound of the number type.
@@ -45,7 +49,7 @@ use devela::paste;
 macro_rules! define_float_sized {
     // defines a single float type, with an inner primitive.
     ($name:ident, $abbr:ident, $pname:ident,
-     $doc_num:literal, $doc_type:literal, // $doc_new:literal,
+     $doc_num:literal, $doc_type:literal, $doc_extra:literal,
      $doc_sign:literal, $doc_lower:expr, $doc_upper:expr,
      (
       $doc_det:literal, $b:expr,
@@ -59,7 +63,8 @@ macro_rules! define_float_sized {
             #[doc = "\n\nThe range of valid numeric values is $\\lbrack"
             $doc_sign "$[`" $pname "::" $doc_lower "`] $\\dots$ [`"
             $pname "::" $doc_upper "`]$\\rbrack$."]
-            #[doc = "\n\nIt is equivalent to the [`" $pname "`] external primitive."]
+            ///
+            #[doc = $doc_extra ]
             #[derive(Clone, Copy, Default, PartialEq, PartialOrd)]
             pub struct [<$name $b>](pub $pname);
 
@@ -213,32 +218,7 @@ macro_rules! define_float_sized {
     };
 }
 
-/* definitions */
-
-#[cfg(feature = "half")]
-define_float_sized![Float, F, f16,
-    "floating-point number", ", from the set $\\R$",
-    // "",
-    "", MIN, MAX,
-    ("A", 16, larger: true, 32, smaller: false, 16)
-];
-#[cfg(feature = "half")]
-define_float_sized![BFloat, Bf, bf16,
-    "floating-point number", ", from the set $\\R$",
-    // "",
-    "", MIN, MAX,
-    ("A", 16, larger: true, 32, smaller: false, 16)
-];
-
-#[cfg(feature = "twofloat")]
-define_float_sized![Float, F, TwoFloat,
-    "floating-point number", ", from the set $\\R$",
-    // "",
-    "", MIN, MAX,
-    ("A", 128, larger: false, 128, smaller: true, 64)
-];
-
-/* specific separate implementations */
+/* separate implementations */
 
 #[cfg(feature = "half")]
 use impl_f16::{approx_eq_bf16, approx_eq_f16};
@@ -311,3 +291,33 @@ mod impl_twofloat {
         return (a - b).abs() <= epsilon;
     }
 }
+
+/* definitions */
+
+#[cfg(feature = "half")]
+define_float_sized![Float, F, f16,
+    "floating-point number ([w][0w])", ", from the set $\\R$",
+    "It is comprised of one sign bit, 5 exponent bits, and 10 mantissa bits.
+
+[0w]: https://en.wikipedia.org/wiki/Half-precision_floating-point_format
+    ",
+    "", MIN, MAX,
+    ("A", 16, larger: true, 32, smaller: false, 16)
+];
+#[cfg(feature = "half")]
+define_float_sized![BFloat, Bf, bf16,
+    "*brain floating-point* ([w][0w]) number", ", from the set $\\R$",
+    "It is comprised of one sign bit, 8 exponent bits, and 7 mantissa bits.
+
+[0w]: https://en.wikipedia.org/wiki/Bfloat16_floating-point_format",
+    "", MIN, MAX,
+    ("A", 16, larger: true, 32, smaller: false, 16)
+];
+
+#[cfg(feature = "twofloat")]
+define_float_sized![Float, F, TwoFloat,
+    "floating-point number", ", from the set $\\R$",
+    "",
+    "", MIN, MAX,
+    ("A", 128, larger: false, 128, smaller: true, 64)
+];
