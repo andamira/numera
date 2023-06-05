@@ -27,6 +27,6 @@ define_abbreviations![sized F, Float, 64];
 #[cfg(feature = "half")]
 define_abbreviations![sized F, Float, 16];
 #[cfg(feature = "half")]
-define_abbreviations![sized Bf, BFloat, 16]; // better name?
+define_abbreviations![sized Bf, BFloat, 16];
 #[cfg(feature = "twofloat")]
 define_abbreviations![sized F, Float, 128];

@@ -12,13 +12,9 @@
 mod core;
 pub use self::core::{Float32, Float64};
 
-#[cfg(feature = "half")]
-mod f16;
-#[cfg(feature = "half")]
-// pub use external::Float16;
-pub use f16::{BFloat16, Float16};
-
+#[cfg(any(feature = "half", feature = "twofloat"))]
+mod external;
 #[cfg(feature = "twofloat")]
-mod f128;
-#[cfg(feature = "twofloat")]
-pub use f128::Float128;
+pub use external::Float128;
+#[cfg(feature = "half")]
+pub use external::{BFloat16, Float16};
