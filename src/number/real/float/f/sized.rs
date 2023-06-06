@@ -346,7 +346,7 @@ use impl_f16::{approx_eq_bf16, approx_eq_f16};
 #[cfg(feature = "half")]
 mod impl_f16 {
     use super::{
-        bf16, f16, BFloat16, ConstNegOne, ConstOne, ConstZero, Countable, Float16, NumeraResult,
+        bf16, f16, BrainFloat16, ConstNegOne, ConstOne, ConstZero, Countable, Float16, NumeraResult,
     };
     use crate::error::NumeraError;
     #[cfg(not(feature = "std"))]
@@ -362,13 +362,13 @@ mod impl_f16 {
         const NEG_ONE: Self = Self(f16::NEG_ONE);
     }
 
-    impl ConstZero for BFloat16 {
+    impl ConstZero for BrainFloat16 {
         const ZERO: Self = Self(bf16::ZERO);
     }
-    impl ConstOne for BFloat16 {
+    impl ConstOne for BrainFloat16 {
         const ONE: Self = Self(bf16::ONE);
     }
-    impl ConstNegOne for BFloat16 {
+    impl ConstNegOne for BrainFloat16 {
         const NEG_ONE: Self = Self(bf16::NEG_ONE);
     }
 
@@ -393,7 +393,7 @@ mod impl_f16 {
     }
 
     /// Unimplemented.
-    impl Countable for BFloat16 {
+    impl Countable for BrainFloat16 {
         /// Not implemented.
         ///
         /// # Errors
@@ -436,21 +436,21 @@ mod impl_f16 {
 use impl_twofloat::approx_eq_TwoFloat;
 #[cfg(feature = "twofloat")]
 mod impl_twofloat {
-    use super::{ConstNegOne, ConstOne, ConstZero, Countable, Float128, NumeraResult, TwoFloat};
+    use super::{ConstNegOne, ConstOne, ConstZero, Countable, NumeraResult, TwoFloat, TwoFloat128};
     use crate::error::NumeraError;
 
-    impl ConstZero for Float128 {
+    impl ConstZero for TwoFloat128 {
         const ZERO: Self = Self(TwoFloat::from_f64(0.0));
     }
-    impl ConstOne for Float128 {
+    impl ConstOne for TwoFloat128 {
         const ONE: Self = Self(TwoFloat::from_f64(1.0));
     }
-    impl ConstNegOne for Float128 {
+    impl ConstNegOne for TwoFloat128 {
         const NEG_ONE: Self = Self(TwoFloat::from_f64(-1.0));
     }
 
     /// Unimplemented.
-    impl Countable for Float128 {
+    impl Countable for TwoFloat128 {
         /// Not implemented.
         ///
         /// # Errors
@@ -480,7 +480,7 @@ mod impl_twofloat {
 /* definitions */
 
 define_float_sized![Float, F, f32,
-    "floating-point number ([w][0w])", ", from the set $\\R$",
+    "ieee-754 single-precision binary floating-point number ([w][0w])", ", from the set $\\R$",
     "It is comprised of 1 sign bit, 8 exponent bits, and 23 mantissa bits.
 
 [0w]: https://en.wikipedia.org/wiki/Single-precision_floating-point_format
@@ -490,7 +490,7 @@ define_float_sized![Float, F, f32,
 ];
 
 define_float_sized![Float, F, f64,
-    "floating-point number", ", from the set $\\R$",
+    "ieee-754 double-precision binary floating-point number", ", from the set $\\R$",
     "It is comprised of 1 sign bit, 11 exponent bits, and 52 mantissa bits.
 
 [0w]: https://en.wikipedia.org/wiki/Double-precision_floating-point_format
@@ -501,7 +501,7 @@ define_float_sized![Float, F, f64,
 
 #[cfg(feature = "half")]
 define_float_sized![Float, F, f16,
-    "floating-point number ([w][0w])", ", from the set $\\R$",
+    "ieee-754 half-precision binary floating-point number ([w][0w])", ", from the set $\\R$",
     "It is comprised of 1 sign bit, 5 exponent bits, and 10 mantissa bits.
 
 [0w]: https://en.wikipedia.org/wiki/Half-precision_floating-point_format
@@ -510,7 +510,7 @@ define_float_sized![Float, F, f16,
     ("A", 16, larger: true, 32, smaller: false, 16)
 ];
 #[cfg(feature = "half")]
-define_float_sized![BFloat, Bf, bf16,
+define_float_sized![BrainFloat, Bf, bf16,
     "*brain* floating-point ([w][0w]) number", ", from the set $\\R$",
     "It is comprised of 1 sign bit, 8 exponent bits, and 7 mantissa bits.
 
@@ -520,9 +520,15 @@ define_float_sized![BFloat, Bf, bf16,
 ];
 
 #[cfg(feature = "twofloat")]
-define_float_sized![Float, F, TwoFloat,
-    "floating-point number", ", from the set $\\R$",
-    "It is internally represented as the sum of two non-overlapping f64 values.",
+define_float_sized![TwoFloat, Tf, TwoFloat,
+    "*two double-precision* binary floating-point number ([w][0w])", ", from the set $\\R$",
+    "It is comprised of 1 sign bit, 11 exponent bits and 106 mantissa bits.
+
+So its range essentially the same as [`Float64`], and its precision slightly
+less than `Float128` *(not yet implemented)*.
+
+[0w]: https://en.wikipedia.org/wiki/Quadruple-precision_floating-point_format#Double-double_arithmetic
+",
     "", MIN, MAX,
     ("A", 128, larger: false, 128, smaller: true, 64)
 ];

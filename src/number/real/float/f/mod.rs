@@ -18,9 +18,9 @@ mod sized;
 pub use sized::{Float32, Float64};
 
 #[cfg(feature = "twofloat")]
-pub use sized::Float128;
+pub use sized::TwoFloat128;
 #[cfg(feature = "half")]
-pub use sized::{BFloat16, Float16};
+pub use sized::{BrainFloat16, Float16};
 
 use crate::number::macros::define_abbreviations;
 
@@ -31,6 +31,6 @@ define_abbreviations![sized F, Float, 64];
 #[cfg(feature = "half")]
 define_abbreviations![sized F, Float, 16];
 #[cfg(feature = "half")]
-define_abbreviations![sized Bf, BFloat, 16];
+define_abbreviations![sized Bf, BrainFloat, 16];
 #[cfg(feature = "twofloat")]
-define_abbreviations![sized F, Float, 128];
+define_abbreviations![sized Tf, TwoFloat, 128];
