@@ -24,32 +24,45 @@ default = ["std", "safe", "all_fast"]
 
 #* standard features *#
 
-std = ["devela/std", "half?/std", "dashu-base?/std", "dashu-int?/std", "primal-sieve"]
+std = [
+	"devela/std",
+	"primal-sieve",
+	"dashu-base?/std",
+	"dashu-int?/std",
+	"half?/std",
+	"twofloat?/std",
+	"twofloat?/math_funcs",
+]
 safe = ["devela/safe"]
 unsafe = [] # unsafe alternatives
 nightly = [] # used only for docs
 
 #* extra features *#
 
-all = ["big", "float", "try_from"] # all possible features
-all_nostd = ["float", "try_from"] # all except std dependent
-all_fast = ["big"] # all except those slow to compile
+all = ["big", "all_float", "try_from"] # all possible features
+all_nostd = ["all_float", "try_from"] # all no-std features
+all_fast = ["big", "all_float"] # all except slowest to compile
 
 big = ["dashu-base", "dashu-int"] # big numbers
-float = ["half", "twofloat"] # extra floating-point dependencies
+all_float = ["half", "twofloat"] # all extra floating-point deps
 try_from = [] # TryFrom conversions (slow +3s)
 
 
 [dependencies]
-devela = { version = "0.4.0", default-features = false }
+devela = { version = "0.4.1", default-features = false }
 
 #* optional dependencies *#
 
+# *std*
+primal-sieve = { version = "0.3.6", optional = true, default-features = false }
+
+# big
 dashu-int = { version = "0.3.1", optional = true, default-features = false }
 dashu-base = { version = "0.3.1", optional = true, default-features = false }
+
+# all_float
 half = { version = "2.2.1", optional = true, default-features = false  }
-primal-sieve = { version = "0.3.6", optional = true }
-twofloat = { version = "0.6.1", optional = true, default-features = false }
+twofloat = { version = "0.7.0", optional = true, default-features = false }
 
 [dev-dependencies]
 static_assertions = "1.1.0"
