@@ -8,6 +8,7 @@
 
 // mod family;
 pub(crate) mod fns;
+pub(crate) mod macros;
 // mod reals;
 
 // pub mod n0f;

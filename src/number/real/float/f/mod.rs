@@ -8,7 +8,7 @@
 //! [0w]: https://en.wikipedia.org/wiki/Floating-point_arithmetic#Floating-point_numbers
 //
 
-// mod convert;
+mod convert;
 // mod family;
 // mod ops;
 // mod real;
