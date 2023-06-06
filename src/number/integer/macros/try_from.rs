@@ -267,7 +267,7 @@ pub(crate) use try_from_integer;
 ///
 /// # Examples
 /// ```ignore
-/// try_from_primitive![many for: Integer + 8, from: u + 8, 16, 32, 64, 128];
+/// try_from_primitive![for: Integer + 8, from: u + 8, 16, 32, 64, 128];
 /// ```
 ///
 /// # Branches ids
@@ -404,7 +404,7 @@ pub(crate) use try_from_primitive;
 ///
 /// # Examples
 /// ```ignore
-/// try_for_primitive![many for: Integer + 8, from: u + 8, 16, 32, 64, 128];
+/// try_for_primitive![for: Integer + 8, from: u + 8, 16, 32, 64, 128];
 /// ```
 ///
 /// # Branches ids

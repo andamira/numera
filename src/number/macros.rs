@@ -214,7 +214,7 @@ macro_rules! impl_from {
         $crate::all::impl_from!(try for: $for, from: $from+$from_b, arg:$arg, body: $body);
         $crate::all::impl_from!(try for: $for, from: &$from+$from_b, arg:$arg, body: $body);
     };
-    // implements `TryFrom` from: owned.
+    // implements `TryFrom` from: owned, when `for` is not sized.
     (try
         for: $for:ident,
         from: $from:ident + $from_b:literal,

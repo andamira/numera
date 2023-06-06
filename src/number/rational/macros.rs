@@ -26,7 +26,7 @@
 ///
 /// # Examples
 /// ```ignore
-/// from_rational![signed for:Q+16, num:Z16, den:N0z16, from:Q + 8, 16];
+/// from_rational![for:Q+16, num:Z16, den:N0z16, from:Q + 8, 16];
 /// ```
 macro_rules! from_rational {
     // default
@@ -64,10 +64,14 @@ pub(crate) use from_rational;
 ///
 /// # Examples
 /// ```ignore
-/// from_integer![prim for:Q+16, num:Z16, den:N0z16, from:i + 8, 16];
+/// from_integer![primint for:Q+16, num:Z16, den:N0z16, from:i + 8, 16];
 /// from_integer![nonzero for:Q+16, num:Z16, den:N0z16, from:NonZeroI + 8, 16];
 /// from_integer![integer for:Q+16, num:Z16, den:N0z16, from:Integer + 8, 16];
 /// ```
+///
+/// # Branches ids
+/// - `primint`
+/// - `non0`
 macro_rules! from_integer {
     // from signed & unsigned primitives or integers
     (primint
@@ -102,17 +106,17 @@ macro_rules! from_integer {
     };
 
     // from NonZero* primitives
-    (nonzero
+    (non0
      for: $for:ident + $for_b:expr,
      num: $num:ident, den: $den:ident,
      from: $from:ident + $( $from_b:expr ),+
     ) => {
         $(
-            from_integer![@nonzero for: $for + $for_b, num: $num, den: $den,
+            from_integer![@non0 for: $for + $for_b, num: $num, den: $den,
             from: $from + $from_b];
         )+
     };
-    (@nonzero
+    (@non0
      for: $for:ident + $for_b:expr,
      num: $num:ident, den: $den:ident,
      from: $from:ident + $from_b:expr
@@ -190,6 +194,10 @@ pub(crate) use try_from_rational;
 /// ```ignore
 /// try_from_integer![prim for:Q+16, num:Z16, den:N0z16, from:i + 8, 16];
 /// ```
+///
+/// # Branches ids
+/// - `primint`
+/// - `non0`
 #[cfg(feature = "try_from")]
 macro_rules! try_from_integer {
     // from signed & unsigned primitives or integers
@@ -225,19 +233,19 @@ macro_rules! try_from_integer {
     };
 
     // from NonZero* primitives
-    (nonzero
+    (non0
      for: $for:ident + $for_b:expr,
      num: $num:ident, den: $den:ident,
      from: $from:ident + $( $from_b:expr ),+
     ) => {
         $(
-            try_from_integer![@nonzero for: $for + $for_b, num: $num, den: $den,
+            try_from_integer![@non0 for: $for + $for_b, num: $num, den: $den,
             from: $from + $from_b];
         )+
     };
 
     // having to convert from nonzero to core primitive
-    (@nonzero
+    (@non0
      for: $for:ident + $for_b:expr,
      num: $num:ident, den: $den:ident,
      from: $from:ident + $from_b:expr

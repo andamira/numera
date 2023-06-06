@@ -147,8 +147,8 @@ pub(crate) use from_integer;
 ///
 /// # Examples
 /// ```ignore
-/// from_primitive![many for: Integer + 16, from: u + 8];
-/// from_primitive![many for: Integer + 16, from: i + 8, 16];
+/// from_primitive![for: Integer + 16, from: u + 8];
+/// from_primitive![for: Integer + 16, from: i + 8, 16];
 /// ```
 ///
 /// # Branches ids
@@ -225,8 +225,8 @@ pub(crate) use from_primitive;
 ///
 /// # Examples
 /// ```ignore
-/// for_primitive![many for: i+16, from: Integer+8];
-/// for_primitive![many for: i+16, from: Integer+8,16];
+/// for_primitive![for: i+16, from: Integer+8];
+/// for_primitive![for: i+16, from: Integer+8,16];
 /// ```
 ///
 /// # Branches ids
@@ -277,8 +277,8 @@ pub(crate) use for_primitive;
 /// # Examples
 /// ```ignore
 /// TODO
-/// for_big![many for: IntegerBig, from: Integer+8];
-/// for_big![many for: IntegerBig, from: Integer+8,16];
+/// for_big![for: IntegerBig, from: Integer+8];
+/// for_big![for: IntegerBig, from: Integer+8,16];
 /// ```
 ///
 /// # Branches ids
