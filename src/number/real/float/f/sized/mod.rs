@@ -8,6 +8,11 @@
 // - separate implementations
 // - definitions
 
+#[cfg(feature = "decstr")]
+mod decstr;
+#[cfg(feature = "decstr")]
+pub use self::decstr::*;
+
 #[cfg(feature = "half")]
 use half::{bf16, f16};
 
@@ -49,6 +54,8 @@ use devela::paste;
 ///
 /// - `$doc_det`: the determinant before the bit size. e.g. "An" (8-bit) or "A" 16-bit.
 /// - `$b`: the size in bits of the primitive used.
+//
+// TODO: IMPROVE: modularize, receive countable bool
 macro_rules! define_float_sized {
     // defines a single float type, with an inner primitive.
     ($name:ident, $abbr:ident, $pname:ident,
@@ -119,7 +126,7 @@ macro_rules! define_float_sized {
                 #[inline]
                 fn is_upper_bounded(&self) -> bool { true }
                 #[inline]
-                fn lower_bound(&self) -> Option<Self> { Some([<$name $b>]::MAX) }
+                fn lower_bound(&self) -> Option<Self> { Some([<$name $b>]::MIN) }
                 #[inline]
                 fn upper_bound(&self) -> Option<Self> { Some([<$name $b>]::MAX) }
             }
@@ -205,6 +212,7 @@ macro_rules! define_float_sized {
         }
     };
 }
+pub(crate) use define_float_sized;
 
 /* separate implementations */
 
@@ -479,19 +487,29 @@ mod impl_twofloat {
 
 /* definitions */
 
+// /* ieee 754 binary */
+#[cfg(feature = "half")]
+define_float_sized![Float, F, f16,
+    "ieee-754 half-precision binary floating-point number ([w][0w])", ", from the set $\\R$",
+    "It is comprised of 1 sign bit, 5 exponent bits, and 10 significand bits.
+
+[0w]: https://en.wikipedia.org/wiki/Half-precision_floating-point_format
+",
+    "", MIN, MAX,
+    ("A", 16, larger: true, 32, smaller: false, 16)
+];
 define_float_sized![Float, F, f32,
     "ieee-754 single-precision binary floating-point number ([w][0w])", ", from the set $\\R$",
-    "It is comprised of 1 sign bit, 8 exponent bits, and 23 mantissa bits.
+    "It is comprised of 1 sign bit, 8 exponent bits, and 23 significand bits.
 
 [0w]: https://en.wikipedia.org/wiki/Single-precision_floating-point_format
 ",
     "", MIN, MAX,
     ("A", 32, larger: true, 64, smaller: false, 32)
 ];
-
 define_float_sized![Float, F, f64,
-    "ieee-754 double-precision binary floating-point number", ", from the set $\\R$",
-    "It is comprised of 1 sign bit, 11 exponent bits, and 52 mantissa bits.
+    "ieee-754 double-precision *binary* floating-point number ([w][0w])", ", from the set $\\R$",
+    "It is comprised of 1 sign bit, 11 exponent bits, and 52 significand bits.
 
 [0w]: https://en.wikipedia.org/wiki/Double-precision_floating-point_format
 ",
@@ -499,22 +517,14 @@ define_float_sized![Float, F, f64,
     ("A", 64, larger: false, 64, smaller: true, 32)
 ];
 
-#[cfg(feature = "half")]
-define_float_sized![Float, F, f16,
-    "ieee-754 half-precision binary floating-point number ([w][0w])", ", from the set $\\R$",
-    "It is comprised of 1 sign bit, 5 exponent bits, and 10 mantissa bits.
-
-[0w]: https://en.wikipedia.org/wiki/Half-precision_floating-point_format
-    ",
-    "", MIN, MAX,
-    ("A", 16, larger: true, 32, smaller: false, 16)
-];
+// /* other */
 #[cfg(feature = "half")]
 define_float_sized![BrainFloat, Bf, bf16,
     "*brain* floating-point ([w][0w]) number", ", from the set $\\R$",
-    "It is comprised of 1 sign bit, 8 exponent bits, and 7 mantissa bits.
+    "It is comprised of 1 sign bit, 8 exponent bits, and 7 significand bits.
 
-[0w]: https://en.wikipedia.org/wiki/Bfloat16_floating-point_format",
+[0w]: https://en.wikipedia.org/wiki/Bfloat16_floating-point_format
+",
     "", MIN, MAX,
     ("A", 16, larger: true, 32, smaller: false, 16)
 ];
@@ -522,7 +532,7 @@ define_float_sized![BrainFloat, Bf, bf16,
 #[cfg(feature = "twofloat")]
 define_float_sized![TwoFloat, Tf, TwoFloat,
     "*two double-precision* binary floating-point number ([w][0w])", ", from the set $\\R$",
-    "It is comprised of 1 sign bit, 11 exponent bits and 106 mantissa bits.
+    "It is comprised of 1 sign bit, 11 exponent bits and 106 significand bits.
 
 So its range essentially the same as [`Float64`], and its precision slightly
 less than `Float128` *(not yet implemented)*.

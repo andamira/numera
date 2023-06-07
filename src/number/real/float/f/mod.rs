@@ -17,6 +17,8 @@ mod sized;
 // pub use family::Float;
 pub use sized::{Float32, Float64};
 
+#[cfg(feature = "decstr")]
+pub use sized::DecFloat32;
 #[cfg(feature = "twofloat")]
 pub use sized::TwoFloat128;
 #[cfg(feature = "half")]
@@ -32,5 +34,7 @@ define_abbreviations![sized F, Float, 64];
 define_abbreviations![sized F, Float, 16];
 #[cfg(feature = "half")]
 define_abbreviations![sized Bf, BrainFloat, 16];
+#[cfg(feature = "decstr")]
+define_abbreviations![sized Df, DecFloat, 32];
 #[cfg(feature = "twofloat")]
 define_abbreviations![sized Tf, TwoFloat, 128];
