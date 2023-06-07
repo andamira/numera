@@ -33,7 +33,7 @@ std = [
 	"half?/std", # + alloc
 	"twofloat?/math_funcs", # + std
 ]
-safe = ["devela/safe", "primal-sieve/safe"]
+safe = ["devela/safe"]
 unsafe = [] # enable unsafe alternatives
 nightly = [] # used only for better docs
 
