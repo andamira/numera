@@ -9,12 +9,13 @@ ca = "check --features=all"
 cna = "check --no-default-features --features=safe,all_nostd"
 cnau = "check --no-default-features --features=all_nostd"
 # no-alloc
+cN = "check --target thumbv7m-none-eabi --no-default-features --features=safe"
+cNu = "check --target thumbv7m-none-eabi --no-default-features"
 cNa = "check --target thumbv7m-none-eabi --no-default-features --features=safe,all_nostd"
 cNau = "check --target thumbv7m-none-eabi --no-default-features --features=all_nostd"
 # Fast
 cF = "check --no-default-features --features=std,safe"
 cuF = "check --no-default-features --features=std"
-## Fast all
 caF = "check --no-default-features --features=std,safe,all_fast"
 craF = "check --release --no-default-features --features=std,safe,all_fast"
 cauF = "check --no-default-features --features=std,all"
@@ -24,39 +25,46 @@ cnuF = "check --no-default-features"
 cnaF = "check --no-default-features --features=safe,all_nostd"
 cnauF = "check --no-default-features --features=all_nostd"
 ## Fast no-alloc
-cNF = "check --target thumbv7m-none-eabi --no-default-features --features=safe"
-cNuF = "check --target thumbv7m-none-eabi --no-default-features"
-cNaF = "check --target thumbv7m-none-eabi --no-default-features --features=safe,all_nostd"
-cNauF = "check --target thumbv7m-none-eabi --no-default-features --features=all_nostd"
+cNF = "cN"
+cNuF = "cN"
+cNaF = "check --target thumbv7m-none-eabi --no-default-features --features=safe,all_nostd_fast"
+cNauF = "check --target thumbv7m-none-eabi --no-default-features --features=all_nostd_fast"
 
 # CLIPPY
 # std
 cl = "clippy"
 clr = "clippy --release"
 clu = "clippy --no-default-features --features=std"
-# all
 cla = "clippy --features=all"
-clra = "clippy --release --features=all"
 clau = "clippy --no-default-features --features=std,all"
+clra = "clippy --release --features=all"
 clru = "clippy --release --no-default-features --features=std"
 clrau = "clippy --release --no-default-features --features=std,all"
 # no-std
 cln = "clippy --no-default-features --features=safe"
-clrn = "clippy --release --no-default-features --features=safe"
 clnu = "clippy --no-default-features"
+clrn = "clippy --release --no-default-features --features=safe"
 clrnu = "clippy --release --no-default-features"
 # no-alloc
-clNF = "clippy --target thumbv7m-none-eabi --no-default-features --features=safe"
-clNuF = "clippy --target thumbv7m-none-eabi --no-default-features"
-clNaF = "clippy --target thumbv7m-none-eabi --no-default-features --features=safe,all_nostd"
-clNauF = "clippy --target thumbv7m-none-eabi --no-default-features --features=all_nostd"
+clN = "clippy --target thumbv7m-none-eabi --no-default-features --features=safe"
+clNu = "clippy --target thumbv7m-none-eabi --no-default-features"
 # Fast
 clF = "clippy --no-default-features --features=std,safe"
 cluF = "clippy --no-default-features --features=std"
 claF = "clippy --no-default-features --features=std,safe,all_fast"
 clauF = "clippy --no-default-features --features=std,all_fast"
+clraF = "clippy --release --no-default-features --features=std,safe,all_fast"
+clrauF = "clippy --release --no-default-features --features=std,all_fast"
+# Fast no-std
 clnF = "cln"
 clnuF = "clnu"
+clnaF = "clippy --no-default-features --features=safe,all_nostd_fast"
+clnauF = "clippy --no-default-features --features=all_nostd_fast"
+# Fast no-alloc
+clNF = "clN"
+clNuF = "clNu"
+clNaF = "clippy --target thumbv7m-none-eabi --no-default-features --features=safe,all_nostd_fast"
+clNauF = "clippy --target thumbv7m-none-eabi --no-default-features --features=all_nostd_fast"
 
 # CLEAN PACKAGE
 cp = "clean --package"
