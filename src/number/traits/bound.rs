@@ -39,7 +39,7 @@ use core::num::{
 /// - [`LowerBounded`], [`UpperBounded`], [`Bounded`].
 /// - [`ConstLowerBounded`], [`ConstUpperBounded`], [`ConstBounded`].
 /// - [`NonLowerBounded`], [`NonUpperBounded`], [`NonBounded`].
-pub trait Bound: PartialEq {
+pub trait Bound {
     /// Returns true if the number is lower bounded.
     fn is_lower_bounded(&self) -> bool;
 
