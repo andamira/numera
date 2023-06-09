@@ -1,6 +1,6 @@
 // numera::number::integer::z::ops::sub
 //
-//! Implement the substraction operations.
+//! Implement the subtraction operations.
 //
 
 use crate::number::integer::*;
@@ -20,7 +20,7 @@ macro_rules! impl_integer_sub {
         )+
     };
 
-    // substraction operations
+    // subtraction operations
     //
     // impl variants:
     // - sub
@@ -55,9 +55,9 @@ macro_rules! impl_integer_sub {
                 *self = self.add(rhs);
             }
         }
-        /// # Substraction
+        /// # Subtraction
         impl [<$t$b>] {
-            /// Integer substraction.
+            /// Integer subtraction.
             ///
             /// # Panics
             /// Panics in debug, on overflow.
@@ -68,7 +68,7 @@ macro_rules! impl_integer_sub {
                 Self(self.0 - rhs.0)
             }
 
-            /// Checked substraction.
+            /// Checked subtraction.
             #[inline]
             #[must_use]
             pub const fn checked_sub(self, rhs: [<$t$b>]) -> Option<[<$t$b>]> {
@@ -79,7 +79,7 @@ macro_rules! impl_integer_sub {
                 }
             }
 
-            /// Saturating substraction.
+            /// Saturating subtraction.
             /// Computes `self + rhs`, saturating at the numeric bounds instead of overflowing.
             #[inline]
             #[must_use]
@@ -87,7 +87,7 @@ macro_rules! impl_integer_sub {
                 Self(self.0.saturating_sub(rhs.0))
             }
 
-            /// Wrapping (modular) substraction.
+            /// Wrapping (modular) subtraction.
             /// Computes `self + rhs`, wrapping around at the boundary of the type.
             #[inline]
             #[must_use]
@@ -95,9 +95,9 @@ macro_rules! impl_integer_sub {
                 Self(self.0.wrapping_sub(rhs.0))
             }
 
-            /// Overflowing substraction.
+            /// Overflowing subtraction.
             ///
-            /// Returns a tuple of the substraction along with a boolean indicating
+            /// Returns a tuple of the subtraction along with a boolean indicating
             /// whether an arithmetic overflow would occur. If an overflow would
             /// have occurred then the wrapped value is returned.
             #[inline]

@@ -1,6 +1,6 @@
 // numera::number::integer::z::ops::sqrt
 //
-//! Implement the substraction operations.
+//! Implement the square root operations.
 //
 
 use crate::number::{integer::*, traits::Sign};
@@ -20,7 +20,7 @@ macro_rules! impl_integer_sub {
         )+
     };
 
-    // substraction operations
+    // square root operations
     //
     // impl variants:
     // - sqrt_floor

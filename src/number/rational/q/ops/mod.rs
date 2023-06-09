@@ -63,7 +63,7 @@ macro_rules! impl_rational_ops {
         impl Sub for [<$t$b>] {
             type Output = Self;
 
-            /// The substraction operator `-`.
+            /// The subtraction operator `-`.
             ///
             /// The operands are upcasted for this operation to the next larger
             /// bit-size (except for 128-bit), and the result is reduced before

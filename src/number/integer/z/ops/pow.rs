@@ -1,6 +1,6 @@
 // numera::number::integer::z::ops::pow
 //
-//! Implement the substraction operations.
+//! Implement the exponent operations.
 //
 
 use crate::number::integer::*;
@@ -19,7 +19,7 @@ macro_rules! impl_integer_sub {
         )+
     };
 
-    // substraction operations
+    // exponent operations
     //
     // impl variants:
     // - pow
