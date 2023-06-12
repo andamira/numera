@@ -22,18 +22,34 @@ pub type NoNumber = ();
 #[rustfmt::skip]
 impl Numbers for NoNumber {
     /// Itself.
-    type Parts = NoNumber;
+    type InnerRepr = NoNumber;
+    /// Itself.
+    type InnermostRepr = NoNumber;
     /// Returns itself.
     #[inline]
-    fn from_parts(value: NoNumber) -> NumeraResult<Self> { Ok(value) }
+    fn from_inner_repr(value: NoNumber) -> NumeraResult<Self> { Ok(value) }
     /// Returns itself.
     #[inline]
     #[cfg(not(feature = "safe"))]
     #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
-    unsafe fn from_parts_unchecked(value: NoNumber) -> Self { value }
+    unsafe fn from_inner_repr_unchecked(value: NoNumber) -> Self { value }
     /// Returns itself.
     #[inline]
-    fn try_from_parts(_value: impl Into<Self::Parts>) -> NumeraResult<Self> { Ok(()) }
+    fn try_from_inner_repr(_value: impl Into<Self::InnerRepr>) -> NumeraResult<Self> { Ok(()) }
+    /// Returns itself.
+    #[inline]
+    fn from_innermost_repr(value: NoNumber) -> NumeraResult<Self> { Ok(value) }
+    /// Returns itself.
+    #[inline]
+    #[cfg(not(feature = "safe"))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+    unsafe fn from_innermost_repr_unchecked(value: NoNumber) -> Self { value }
+    /// Returns itself.
+    #[inline]
+    fn into_inner_repr(self) -> Self::InnerRepr { self }
+    /// Returns itself.
+    #[inline]
+    fn into_innermost_repr(self) -> Self::InnermostRepr { self }
 }
 
 /* Bound */
@@ -189,8 +205,8 @@ impl NonNegative for NoNumber {}
 #[rustfmt::skip]
 impl NonPositive for NoNumber {
     /// Itself.
-    type Parts = NoNumber;
+    type InnerRepr = NoNumber;
     /// Returns itself.
     #[inline]
-    fn new_neg(value: Self::Parts) -> NumeraResult<Self::Parts> { Ok(value) }
+    fn new_neg(value: Self::InnerRepr) -> NumeraResult<Self::InnerRepr> { Ok(value) }
 }

@@ -24,20 +24,44 @@ pub enum Prime {
 
 /// This implementation is no-op.
 impl Numbers for Prime {
-    type Parts = Self;
+    type InnerRepr = Self;
+    type InnermostRepr = Self;
 
     /// Returns `value` unchanged.
     #[inline]
-    fn from_parts(value: Prime) -> NumeraResult<Self> {
+    fn from_inner_repr(value: Prime) -> NumeraResult<Self> {
         Ok(value)
     }
-
     /// Returns `value` unchanged.
     #[inline]
     #[cfg(not(feature = "safe"))]
     #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
-    unsafe fn from_parts_unchecked(value: Prime) -> Self {
+    unsafe fn from_inner_repr_unchecked(value: Prime) -> Self {
         value
+    }
+
+    /// Returns `value` unchanged.
+    #[inline]
+    fn from_innermost_repr(value: Prime) -> NumeraResult<Self> {
+        Ok(value)
+    }
+    /// Returns `value` unchanged.
+    #[inline]
+    #[cfg(not(feature = "safe"))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+    unsafe fn from_innermost_repr_unchecked(value: Prime) -> Self {
+        value
+    }
+
+    /// Returns `self`.
+    #[inline]
+    fn into_inner_repr(self) -> Self {
+        self
+    }
+    /// Returns `self`.
+    #[inline]
+    fn into_innermost_repr(self) -> Self {
+        self
     }
 }
 

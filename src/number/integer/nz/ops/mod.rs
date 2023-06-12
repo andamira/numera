@@ -53,6 +53,19 @@ macro_rules! impl_integer_ops {
             }
         }
     };
+
+    // impl open negation
+    //
+    // $t: integer type. e.g. Integer8
+    (un_op: $t:ident, $inner:ident, $op:ident, $fn:ident) => {
+        impl $op for $t {
+            type Output = $t;
+
+            fn $fn(self) -> Self::Output {
+                $t($inner::new(self.0.get().$fn()).expect("Invalid value 0."))
+            }
+        }
+    };
 }
 impl_integer_ops![
     NegativeInteger8,

@@ -32,11 +32,11 @@ impl Negative for NegativeInteger {}
 
 /// This implementation is a no-op.
 impl NonPositive for NegativeInteger {
-    type Parts = Self;
+    type InnerRepr = Self;
 
     /// Returns `value` unchanged.
     #[inline]
-    fn new_neg(value: Self::Parts) -> NumeraResult<Self> {
+    fn new_neg(value: Self::InnerRepr) -> NumeraResult<Self> {
         Ok(value)
     }
 }

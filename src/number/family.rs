@@ -9,7 +9,6 @@ use super::{
     traits::{self, Numbers},
     NoNumber,
 };
-use crate::error::NumeraResult as Result;
 
 /// The family of *non-custom* numbers.
 ///
@@ -74,16 +73,38 @@ macro_rules! define_numbers {
 
         /// This implementation is no-op.
         impl<N: Numbers> Numbers for AnyNumber<N> {
-            type Parts = Self;
+            type InnerRepr = Self;
+            type InnermostRepr = Self;
+
             /// Returns `value` unchanged.
             #[inline]
-            fn from_parts(value: AnyNumber<N>) -> Result<Self> { Ok(value) }
+            fn from_inner_repr(value: Self) -> $crate::all::NumeraResult<Self> { Ok(value) }
 
             /// Returns `value` unchanged.
             #[inline]
             #[cfg(not(feature = "safe"))]
             #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
-            unsafe fn from_parts_unchecked(value: AnyNumber<N>) -> Self { value }
+            unsafe fn from_inner_repr_unchecked(value: AnyNumber<N>) -> Self { value }
+
+            /// Returns `value` unchanged.
+            #[inline]
+            fn from_innermost_repr(value: Self) -> $crate::all::NumeraResult<Self> { Ok(value) }
+
+            /// Returns `value` unchanged.
+            ///
+            /// # Safety
+            /// This is safe
+            #[inline]
+            #[cfg(not(feature = "safe"))]
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+            unsafe fn from_innermost_repr_unchecked(value: Self) -> Self { value }
+
+            /// Returns `self`.
+            #[inline]
+            fn into_inner_repr(self) -> Self::InnerRepr { self }
+            /// Returns `self`.
+            #[inline]
+            fn into_innermost_repr(self) -> Self::InnermostRepr { self }
         }
 
         /// This implementation defers to the actual number variant.

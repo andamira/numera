@@ -130,9 +130,9 @@ macro_rules! define_nonpositive_integer_sized {
         }
         impl Negative for [<$name$b>] {}
         impl NonPositive for [<$name$b>] {
-            type Parts = [<$p$b>];
+            type InnerRepr = [<$p$b>];
             #[inline]
-            fn new_neg(value: Self::Parts) -> NumeraResult<Self> {
+            fn new_neg(value: Self::InnerRepr) -> NumeraResult<Self> {
                 Ok(Self(value))
             }
         }
@@ -213,32 +213,20 @@ macro_rules! define_nonpositive_integer_sized {
         /* number */
 
         impl Numbers for [<$name$b>] {
-            type Parts = [<$p$b>];
+            type InnerRepr = [<$p$b>];
+            type InnermostRepr = [<$p$b>];
 
-            #[doc = "Returns a new `" [<$name$b>] "` from the constituent parts."]
+            #[doc = "Returns a new `" [<$name$b>] "` from the inner representation."]
             ///
             /// Please note that the given `value` will be interpreted as negative.
             ///
             /// # Errors
             /// This function can't fail.
-            //
-            // ALTERNATIVE:
-            // For `value`s other than 0, please use the
-            // [`new_neg`][NonPositive#method.new_neg] method from the
-            // [`NonPositive`] trait.
             #[inline]
-            fn from_parts(value: Self::Parts) -> NumeraResult<Self> {
+            fn from_inner_repr(value: Self::InnerRepr) -> NumeraResult<Self> {
                 Ok(Self(value))
-
-                // IMPROVE number constructor
-                // ALTERNATIVE:
-                // if value == 0 {
-                //     Ok(Self(value))
-                // } else {
-                //     Err(IntegerError::MoreThanZero.into())
-                // }
             }
-            #[doc = "Returns a new `" [<$name$b>] "` from the constituent parts."]
+            #[doc = "Returns a new `" [<$name$b>] "` from the inner representation."]
             ///
             /// Please note that the given `value` will be interpreted as negative.
             ///
@@ -247,7 +235,33 @@ macro_rules! define_nonpositive_integer_sized {
             #[inline]
             #[cfg(not(feature = "safe"))]
             #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
-            unsafe fn from_parts_unchecked(value: Self::Parts) -> Self { Self(value) }
+            unsafe fn from_inner_repr_unchecked(value: Self::InnerRepr) -> Self { Self(value) }
+
+            #[doc = "Returns a new `" [<$name$b>] "` from the innermost representation."]
+            ///
+            /// # Errors
+            /// This function can't fail.
+            #[inline]
+            fn from_innermost_repr(value: Self::InnermostRepr) -> NumeraResult<Self> {
+                Ok(Self(value))
+            }
+
+            #[doc = "Returns a new `" [<$name$b>] "` from the innermost representation."]
+            ///
+            /// # Safety
+            /// # This function is safe.
+            #[inline]
+            #[cfg(not(feature = "safe"))]
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+            unsafe fn from_innermost_repr_unchecked(value: Self::InnermostRepr) -> Self {
+                Self(value)
+            }
+
+            #[inline]
+            fn into_inner_repr(self) -> Self::InnerRepr { self.0 }
+
+            #[inline]
+            fn into_innermost_repr(self) -> Self::InnermostRepr { self.0 }
         }
     }};
 }

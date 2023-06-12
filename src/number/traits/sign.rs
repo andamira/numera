@@ -83,7 +83,7 @@ pub trait NonNegative: Sign {}
 /// This trait is mutually exclusive with [`Signed`] and [`Positive`].
 pub trait NonPositive: Sign {
     /// The number's inner constituent parts.
-    type Parts;
+    type InnerRepr;
 
     /// Returns a new number that contains the negation of the `value`.
     ///
@@ -92,7 +92,7 @@ pub trait NonPositive: Sign {
     /// # Errors
     /// If the given `value` doesn't maintain the expected invariances for
     /// the concrete type.
-    fn new_neg(value: Self::Parts) -> NumeraResult<Self>
+    fn new_neg(value: Self::InnerRepr) -> NumeraResult<Self>
     where
         Self: Sized;
 }

@@ -83,11 +83,11 @@ macro_rules! from_integer {
     (@non0 for: $for:ident + $for_b:expr, from: $from:ident + $from_b:expr) => {
         $crate::all::impl_from!(for: $for+$for_b, from: @$from+$from_b, arg:f, body: {
             #[cfg(feature = "safe")]
-            return Self::from_parts(f.0.get().into()).unwrap();
+            return Self::from_inner_repr(f.0.get().into()).unwrap();
 
             #[cfg(not(feature = "safe"))]
             // SAFETY: coming from a type that respects the invariant of not having 0
-            return unsafe { Self::from_parts_unchecked(f.0.get().into()) };
+            return unsafe { Self::from_inner_repr_unchecked(f.0.get().into()) };
         });
     };
 
@@ -124,12 +124,12 @@ macro_rules! from_integer {
         devela::paste! {
             $crate::all::impl_from!(for: $for+$for_b, from: @$from+$from_b, arg:f, body: {
                 #[cfg(feature = "safe")]
-                return Self::from_parts(Into::<[<$p$for_b>]>::into(f.0.get()).neg()).unwrap();
+                return Self::from_inner_repr(Into::<[<$p$for_b>]>::into(f.0.get()).neg()).unwrap();
 
                 #[cfg(not(feature = "safe"))]
                 // SAFETY: coming from a type that respects the invariant of not having 0
                 return unsafe {
-                    Self::from_parts_unchecked(Into::<[<$p$for_b>]>::into(f.0.get()).neg())
+                    Self::from_inner_repr_unchecked(Into::<[<$p$for_b>]>::into(f.0.get()).neg())
                 };
             });
         }
@@ -166,20 +166,20 @@ macro_rules! from_primitive {
     (@int for: $for:ident + $for_b:expr, from: $from:ident + $from_b:expr) => {
         $crate::all::impl_from!(for: $for+$for_b, from: $from+$from_b, arg:f, body: {
             #[cfg(feature = "safe")]
-            return Self::from_parts(f.into()).unwrap();
+            return Self::from_inner_repr(f.into()).unwrap();
 
             #[cfg(not(feature = "safe"))]
             // SAFETY: all values should be valid
-            return unsafe { Self::from_parts_unchecked(f.into()) };
+            return unsafe { Self::from_inner_repr_unchecked(f.into()) };
         });
 
         $crate::all::impl_from!(for: $for+$for_b, from: &$from+$from_b, arg:f, body: {
             #[cfg(feature = "safe")]
-            return Self::from_parts((*f).into()).unwrap();
+            return Self::from_inner_repr((*f).into()).unwrap();
 
             #[cfg(not(feature = "safe"))]
             // SAFETY: all values should be valid
-            return unsafe { Self::from_parts_unchecked((*f).into()) };
+            return unsafe { Self::from_inner_repr_unchecked((*f).into()) };
         });
     };
 
@@ -196,20 +196,20 @@ macro_rules! from_primitive {
     (@non0 for: $for:ident + $for_b:expr, from: $from:ident + $from_b:expr) => {
         $crate::all::impl_from!(for: $for+$for_b, from: $from+$from_b, arg:f, body: {
             #[cfg(feature = "safe")]
-            return Self::from_parts(f.get().into()).unwrap();
+            return Self::from_inner_repr(f.get().into()).unwrap();
 
             #[cfg(not(feature = "safe"))]
             // SAFETY: coming from a type that respects the invariant of not having 0
-            return unsafe { Self::from_parts_unchecked(f.get().into()) };
+            return unsafe { Self::from_inner_repr_unchecked(f.get().into()) };
         });
 
         $crate::all::impl_from!(for: $for+$for_b, from: &$from+$from_b, arg:f, body: {
             #[cfg(feature = "safe")]
-            return Self::from_parts((*f).get().into()).unwrap();
+            return Self::from_inner_repr((*f).get().into()).unwrap();
 
             #[cfg(not(feature = "safe"))]
             // SAFETY: coming from a type that respects the invariant of not having 0
-            return unsafe { Self::from_parts_unchecked((*f).get().into()) };
+            return unsafe { Self::from_inner_repr_unchecked((*f).get().into()) };
         });
     };
 }

@@ -73,13 +73,13 @@ mod tests {
 
     #[test]
     fn pz_ops() -> NumeraResult<()> {
-        let _5 = PositiveInteger8::from_parts(5)?;
-        let _7 = PositiveInteger8::from_parts(7)?;
+        let _5 = PositiveInteger8::new(5)?;
+        let _7 = PositiveInteger8::new(7)?;
 
-        assert_eq![_7 + _5, PositiveInteger8::from_parts(12)?];
-        assert_eq![_7 - _5, PositiveInteger8::from_parts(2)?];
-        assert_eq![_7 * _5, PositiveInteger8::from_parts(35)?];
-        assert_eq![_7 / _5, PositiveInteger8::from_parts(1)?];
+        assert_eq![_7 + _5, PositiveInteger8::new(12)?];
+        assert_eq![_7 - _5, PositiveInteger8::new(2)?];
+        assert_eq![_7 * _5, PositiveInteger8::new(35)?];
+        assert_eq![_7 / _5, PositiveInteger8::new(1)?];
 
         #[cfg(feature = "std")]
         {

@@ -28,18 +28,36 @@ use crate::{
 
 /// Common trait for all numbers.
 pub trait Numbers: Bound + Count + Ident + Sign {
-    /// The inner value representation of the number.
-    type Parts;
+    /// The inner primitive representation of the number.
+    ///
+    /// May be the same as `InnermostRepr`.
+    ///
+    /// For example a `NonNegativeInteger8` would have `InnerRepr = NonZeroU8`,
+    /// and `InnermostRepr = u8`, while an `Integer8` and an `i8` would both
+    /// have an `i8` in both cases.
+    type InnerRepr;
 
-    /// Forms a new number from its constituent parts.
+    /// The innermost primitive representation of the number.
+    ///
+    /// May be the same as `InnerRepr`.
+    ///
+    /// For example a `NonNegativeInteger8` would have `InnerRepr = NonZeroU8`,
+    /// and `InnermostRepr = u8`, while an `Integer8` and an `i8` would both
+    /// have an `i8` in both cases.
+    type InnermostRepr;
+
+    /// Forms a new number from its inner representation.
     ///
     /// # Errors
     /// Returns an error if the `value` does not conform to the invariants
     /// of what's considered a valid state for this type of number.
+    ///
+    /// For example a `NonNegativeInteger8` would have `InnerRepr = NonZeroU8`,
+    /// and `InnermostRepr = u8`, while an `Integer8` would have i8 in both cases.
     #[rustfmt::skip]
-    fn from_parts(value: Self::Parts) -> Result<Self> where Self: Sized;
+    fn from_inner_repr(value: Self::InnerRepr) -> Result<Self> where Self: Sized;
 
-    /// Forms a new number from its constituent parts.
+    /// Forms a new number from its inner representation.
     ///
     /// # Panics
     /// Could panic (specially in debug) if the `value` does not conform to the
@@ -50,21 +68,51 @@ pub trait Numbers: Bound + Count + Ident + Sign {
     #[must_use]
     #[cfg(not(feature = "safe"))]
     #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
-    unsafe fn from_parts_unchecked(value: Self::Parts) -> Self;
+    unsafe fn from_inner_repr_unchecked(value: Self::InnerRepr) -> Self;
+
+    /// Forms a new number from its innermost representation.
+    ///
+    /// # Errors
+    /// Returns an error if the `value` does not conform to the invariants
+    /// of what's considered a valid state for this type of number.
+    ///
+    /// For example a `NonNegativeInteger8` would have `InnerRepr = NonZeroU8`,
+    /// and `InnermostRepr = u8`, while an `Integer8` would have i8 in both cases.
+    #[rustfmt::skip]
+    fn from_innermost_repr(value: Self::InnermostRepr) -> Result<Self> where Self: Sized;
+
+    /// Forms a new number from its innermost representation.
+    ///
+    /// # Panics
+    /// Could panic (specially in debug) if the `value` does not conform to the
+    /// invariants of what's considered a valid state for this number.
+    ///
+    /// # Safety
+    /// The invariants inherent to the specific number type must be maintained.
+    #[must_use]
+    #[cfg(not(feature = "safe"))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+    unsafe fn from_innermost_repr_unchecked(value: Self::InnermostRepr) -> Self;
+
+    /// Deconstructs the number to its inner representation.
+    fn into_inner_repr(self) -> Self::InnerRepr;
+
+    /// Deconstructs the number to its innermost representation.
+    fn into_innermost_repr(self) -> Self::InnermostRepr;
 
     /* auto */
 
-    /// Forms a new number from its converted constituent parts.
+    /// Forms a new number from its converted inner representation.
     ///
     /// # Errors
     /// Returns an error if the converted `value` does not conform to the
     /// invariants of what's considered a valid state for this number.
     #[inline]
-    fn try_from_parts(value: impl Into<Self::Parts>) -> Result<Self>
+    fn try_from_inner_repr(value: impl Into<Self::InnerRepr>) -> Result<Self>
     where
         Self: Sized,
     {
-        Numbers::from_parts(value.into())
+        Numbers::from_inner_repr(value.into())
     }
 }
 
@@ -77,14 +125,25 @@ macro_rules! impl_numbers {
     };
     (single: $t:ty) => {
         impl Numbers for $t {
-            type Parts = $t;
+            type InnerRepr = $t;
+            type InnermostRepr = $t;
 
             #[inline]
-            fn from_parts(value: $t) -> Result<Self> { Ok(value) }
-
+            fn from_inner_repr(value: Self::InnerRepr) -> Result<Self> { Ok(value) }
             #[inline]
             #[cfg(not(feature = "safe"))]
-            unsafe fn from_parts_unchecked(value: Self::Parts) -> Self { value }
+            unsafe fn from_inner_repr_unchecked(value: Self::InnerRepr) -> Self { value }
+
+            #[inline]
+            fn from_innermost_repr(value: Self::InnermostRepr) -> Result<Self> { Ok(value) }
+            #[inline]
+            #[cfg(not(feature = "safe"))]
+            unsafe fn from_innermost_repr_unchecked(value: Self::InnermostRepr) -> Self { value }
+
+            #[inline]
+            fn into_inner_repr(self) -> Self::InnerRepr { self }
+            #[inline]
+            fn into_innermost_repr(self) -> Self::InnermostRepr { self }
         }
     };
 }

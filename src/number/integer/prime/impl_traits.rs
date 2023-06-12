@@ -67,9 +67,9 @@ impl Countable for Prime8 {
     /// use numera::all::{Countable, Numbers, Prime8};
     /// # use numera::error::NumeraResult;
     /// # fn main() -> NumeraResult<()> {
-    /// assert_eq![Prime8::from_parts(2)?.next()?, Prime8::from_parts(3)?];
-    /// assert_eq![Prime8::from_parts(241)?.next()?, Prime8::from_parts(251)?];
-    /// assert![Prime8::from_parts(251)?.next().is_err()];
+    /// assert_eq![Prime8::from_inner_repr(2)?.next()?, Prime8::from_inner_repr(3)?];
+    /// assert_eq![Prime8::from_inner_repr(241)?.next()?, Prime8::from_inner_repr(251)?];
+    /// assert![Prime8::from_inner_repr(251)?.next().is_err()];
     /// # Ok(()) }
     /// ```
     #[inline]
@@ -87,9 +87,9 @@ impl Countable for Prime8 {
     /// use numera::all::{Countable, Numbers, Prime8};
     /// # use numera::error::NumeraResult;
     /// # fn main() -> NumeraResult<()> {
-    /// assert_eq![Prime8::from_parts(3)?.previous()?, Prime8::from_parts(2)?, ];
-    /// assert_eq![Prime8::from_parts(251)?.previous()?, Prime8::from_parts(241)?];
-    /// assert![Prime8::from_parts(2)?.previous().is_err()];
+    /// assert_eq![Prime8::from_inner_repr(3)?.previous()?, Prime8::from_inner_repr(2)?, ];
+    /// assert_eq![Prime8::from_inner_repr(251)?.previous()?, Prime8::from_inner_repr(241)?];
+    /// assert![Prime8::from_inner_repr(2)?.previous().is_err()];
     /// # Ok(()) }
     /// ```
     #[inline]
@@ -135,22 +135,46 @@ impl NonNegative for Prime8 {}
 impl Positive for Prime8 {}
 
 impl Numbers for Prime8 {
-    type Parts = u8;
+    type InnerRepr = u8;
+    type InnermostRepr = u8;
 
     #[inline]
-    fn from_parts(value: Self::Parts) -> NumeraResult<Self> {
+    fn from_inner_repr(value: Self::InnerRepr) -> NumeraResult<Self> {
         if is_prime(value.into()) {
-            Ok(Prime8(value))
+            Ok(Self(value))
         } else {
             Err(IntegerError::NotPrime.into())
         }
     }
-
     #[inline]
     #[cfg(not(feature = "safe"))]
     #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
-    unsafe fn from_parts_unchecked(value: Self::Parts) -> Self {
+    unsafe fn from_inner_repr_unchecked(value: Self::InnerRepr) -> Self {
         Self(value)
+    }
+
+    #[inline]
+    fn from_innermost_repr(value: Self::InnermostRepr) -> NumeraResult<Self> {
+        if is_prime(value.into()) {
+            Ok(Self(value))
+        } else {
+            Err(IntegerError::NotPrime.into())
+        }
+    }
+    #[inline]
+    #[cfg(not(feature = "safe"))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+    unsafe fn from_innermost_repr_unchecked(value: Self::InnermostRepr) -> Self {
+        Self(value)
+    }
+
+    #[inline]
+    fn into_inner_repr(self) -> Self::InnerRepr {
+        self.0
+    }
+    #[inline]
+    fn into_innermost_repr(self) -> Self::InnermostRepr {
+        self.0
     }
 }
 
@@ -201,11 +225,11 @@ impl Countable for Prime16 {
     /// use numera::all::{Countable, Numbers, Prime16};
     /// # use numera::error::NumeraResult;
     /// # fn main() -> NumeraResult<()> {
-    /// assert_eq![Prime16::from_parts(5)?.next()?, Prime16::from_parts(7)?];
-    /// assert_eq![Prime16::from_parts(251)?.next()?, Prime16::from_parts(257)?];
-    /// assert_eq![Prime16::from_parts(257)?.next()?, Prime16::from_parts(263)?];
-    /// assert_eq![Prime16::from_parts(65_519)?.next()?, Prime16::from_parts(65_521)?];
-    /// assert![Prime16::from_parts(65_521)?.next().is_err()];
+    /// assert_eq![Prime16::from_inner_repr(5)?.next()?, Prime16::from_inner_repr(7)?];
+    /// assert_eq![Prime16::from_inner_repr(251)?.next()?, Prime16::from_inner_repr(257)?];
+    /// assert_eq![Prime16::from_inner_repr(257)?.next()?, Prime16::from_inner_repr(263)?];
+    /// assert_eq![Prime16::from_inner_repr(65_519)?.next()?, Prime16::from_inner_repr(65_521)?];
+    /// assert![Prime16::from_inner_repr(65_521)?.next().is_err()];
     /// # Ok(()) }
     /// ```
     #[inline]
@@ -235,11 +259,11 @@ impl Countable for Prime16 {
     /// use numera::all::{Countable, Numbers, Prime16};
     /// # use numera::error::NumeraResult;
     /// # fn main() -> NumeraResult<()> {
-    /// assert_eq![Prime16::from_parts(7)?.previous()?, Prime16::from_parts(5)?];
-    /// assert_eq![Prime16::from_parts(251)?.previous()?, Prime16::from_parts(241)?];
-    /// assert_eq![Prime16::from_parts(257)?.previous()?, Prime16::from_parts(251)?];
-    /// assert_eq![Prime16::from_parts(65_521)?.previous()?, Prime16::from_parts(65_519)?];
-    /// assert![Prime16::from_parts(2)?.previous().is_err()];
+    /// assert_eq![Prime16::from_inner_repr(7)?.previous()?, Prime16::from_inner_repr(5)?];
+    /// assert_eq![Prime16::from_inner_repr(251)?.previous()?, Prime16::from_inner_repr(241)?];
+    /// assert_eq![Prime16::from_inner_repr(257)?.previous()?, Prime16::from_inner_repr(251)?];
+    /// assert_eq![Prime16::from_inner_repr(65_521)?.previous()?, Prime16::from_inner_repr(65_519)?];
+    /// assert![Prime16::from_inner_repr(2)?.previous().is_err()];
     /// # Ok(()) }
     /// ```
     #[inline]
@@ -295,22 +319,46 @@ impl NonNegative for Prime16 {}
 impl Positive for Prime16 {}
 
 impl Numbers for Prime16 {
-    type Parts = u16;
+    type InnerRepr = u16;
+    type InnermostRepr = u16;
 
     #[inline]
-    fn from_parts(value: Self::Parts) -> NumeraResult<Self> {
+    fn from_inner_repr(value: Self::InnerRepr) -> NumeraResult<Self> {
         if is_prime(value.into()) {
-            Ok(Prime16(value))
+            Ok(Self(value))
         } else {
             Err(IntegerError::NotPrime.into())
         }
     }
-
     #[inline]
     #[cfg(not(feature = "safe"))]
     #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
-    unsafe fn from_parts_unchecked(value: Self::Parts) -> Self {
+    unsafe fn from_inner_repr_unchecked(value: Self::InnerRepr) -> Self {
         Self(value)
+    }
+
+    #[inline]
+    fn from_innermost_repr(value: Self::InnermostRepr) -> NumeraResult<Self> {
+        if is_prime(value.into()) {
+            Ok(Self(value))
+        } else {
+            Err(IntegerError::NotPrime.into())
+        }
+    }
+    #[inline]
+    #[cfg(not(feature = "safe"))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+    unsafe fn from_innermost_repr_unchecked(value: Self::InnermostRepr) -> Self {
+        Self(value)
+    }
+
+    #[inline]
+    fn into_inner_repr(self) -> Self::InnerRepr {
+        self.0
+    }
+    #[inline]
+    fn into_innermost_repr(self) -> Self::InnermostRepr {
+        self.0
     }
 }
 
@@ -375,11 +423,11 @@ impl Countable for Prime32 {
     /// use numera::all::{Countable, Numbers, Prime32};
     /// # use numera::error::NumeraResult;
     /// # fn main() -> NumeraResult<()> {
-    /// assert_eq![Prime32::from_parts(5)?.next()?, Prime32::from_parts(7)?];
-    /// assert_eq![Prime32::from_parts(251)?.next()?, Prime32::from_parts(257)?];
-    /// assert_eq![Prime32::from_parts(65_521)?.next()?, Prime32::from_parts(65_537)?];
-    /// assert_eq![Prime32::from_parts(50_000_017)?.next()?, Prime32::from_parts(50_000_021)?];
-    /// // assert![Prime32::from_parts(4_294_967_291)?.next().is_err()]; // SLOW
+    /// assert_eq![Prime32::from_inner_repr(5)?.next()?, Prime32::from_inner_repr(7)?];
+    /// assert_eq![Prime32::from_inner_repr(251)?.next()?, Prime32::from_inner_repr(257)?];
+    /// assert_eq![Prime32::from_inner_repr(65_521)?.next()?, Prime32::from_inner_repr(65_537)?];
+    /// assert_eq![Prime32::from_inner_repr(50_000_017)?.next()?, Prime32::from_inner_repr(50_000_021)?];
+    /// // assert![Prime32::from_inner_repr(4_294_967_291)?.next().is_err()]; // SLOW
     /// # Ok(()) }
     /// ```
     #[inline]
@@ -402,11 +450,11 @@ impl Countable for Prime32 {
     /// use numera::all::{Countable, Numbers, Prime32};
     /// # use numera::error::NumeraResult;
     /// # fn main() -> NumeraResult<()> {
-    /// assert_eq![Prime32::from_parts(7)?.previous()?, Prime32::from_parts(5)?];
-    /// assert_eq![Prime32::from_parts(257)?.previous()?, Prime32::from_parts(251)?];
-    /// assert_eq![Prime32::from_parts(65_537)?.previous()?, Prime32::from_parts(65_521)?];
-    /// assert_eq![Prime32::from_parts(50_000_021)?.previous()?, Prime32::from_parts(50_000_017)?];
-    /// // assert![Prime32::from_parts(4_294_967_291)?.previous().is_err()]; // SLOW
+    /// assert_eq![Prime32::from_inner_repr(7)?.previous()?, Prime32::from_inner_repr(5)?];
+    /// assert_eq![Prime32::from_inner_repr(257)?.previous()?, Prime32::from_inner_repr(251)?];
+    /// assert_eq![Prime32::from_inner_repr(65_537)?.previous()?, Prime32::from_inner_repr(65_521)?];
+    /// assert_eq![Prime32::from_inner_repr(50_000_021)?.previous()?, Prime32::from_inner_repr(50_000_017)?];
+    /// // assert![Prime32::from_inner_repr(4_294_967_291)?.previous().is_err()]; // SLOW
     /// # Ok(()) }
     /// ```
     #[inline]
@@ -455,31 +503,66 @@ impl NonNegative for Prime32 {}
 impl Positive for Prime32 {}
 
 impl Numbers for Prime32 {
-    type Parts = u32;
+    type InnerRepr = u32;
+    type InnermostRepr = u32;
+
     #[inline]
     #[cfg(not(feature = "std"))]
-    fn from_parts(value: Self::Parts) -> NumeraResult<Self> {
+    fn from_inner_repr(value: Self::InnerRepr) -> NumeraResult<Self> {
         if is_prime(value) {
-            Ok(Prime32(value))
+            Ok(Self(value))
         } else {
             Err(IntegerError::NotPrime.into())
         }
     }
     #[inline]
     #[cfg(feature = "std")]
-    fn from_parts(value: Self::Parts) -> NumeraResult<Self> {
+    fn from_inner_repr(value: Self::InnerRepr) -> NumeraResult<Self> {
         if is_prime_sieve(value.checked_as::<usize>().ok_or(IntegerError::Overflow)?) {
-            Ok(Prime32(value))
+            Ok(Self(value))
         } else {
             Err(IntegerError::NotPrime.into())
         }
     }
-
     #[inline]
     #[cfg(not(feature = "safe"))]
     #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
-    unsafe fn from_parts_unchecked(value: Self::Parts) -> Self {
+    unsafe fn from_inner_repr_unchecked(value: Self::InnerRepr) -> Self {
         Self(value)
+    }
+
+    #[inline]
+    #[cfg(not(feature = "std"))]
+    fn from_innermost_repr(value: Self::InnermostRepr) -> NumeraResult<Self> {
+        if is_prime(value) {
+            Ok(Self(value))
+        } else {
+            Err(IntegerError::NotPrime.into())
+        }
+    }
+    #[inline]
+    #[cfg(feature = "std")]
+    fn from_innermost_repr(value: Self::InnermostRepr) -> NumeraResult<Self> {
+        if is_prime_sieve(value.checked_as::<usize>().ok_or(IntegerError::Overflow)?) {
+            Ok(Self(value))
+        } else {
+            Err(IntegerError::NotPrime.into())
+        }
+    }
+    #[inline]
+    #[cfg(not(feature = "safe"))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+    unsafe fn from_innermost_repr_unchecked(value: Self::InnermostRepr) -> Self {
+        Self(value)
+    }
+
+    #[inline]
+    fn into_inner_repr(self) -> Self::InnerRepr {
+        self.0
+    }
+    #[inline]
+    fn into_innermost_repr(self) -> Self::InnermostRepr {
+        self.0
     }
 }
 
@@ -566,10 +649,12 @@ impl NonNegative for Prime64 {}
 impl Positive for Prime64 {}
 
 impl Numbers for Prime64 {
-    type Parts = u64;
+    type InnerRepr = u64;
+    type InnermostRepr = u64;
+
     #[inline]
     #[cfg(not(feature = "std"))]
-    fn from_parts(value: Self::Parts) -> NumeraResult<Self> {
+    fn from_inner_repr(value: Self::InnerRepr) -> NumeraResult<Self> {
         // IMPROVE
         if is_prime(value.try_into()?) {
             Ok(Prime64(value))
@@ -579,19 +664,52 @@ impl Numbers for Prime64 {
     }
     #[inline]
     #[cfg(feature = "std")]
-    fn from_parts(value: Self::Parts) -> NumeraResult<Self> {
+    fn from_inner_repr(value: Self::InnerRepr) -> NumeraResult<Self> {
         if is_prime_sieve(value.checked_as::<usize>().ok_or(IntegerError::Overflow)?) {
             Ok(Prime64(value))
         } else {
             Err(IntegerError::NotPrime.into())
         }
     }
-
     #[inline]
     #[cfg(not(feature = "safe"))]
     #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
-    unsafe fn from_parts_unchecked(value: Self::Parts) -> Self {
+    unsafe fn from_inner_repr_unchecked(value: Self::InnerRepr) -> Self {
         Self(value)
+    }
+
+    #[inline]
+    #[cfg(not(feature = "std"))]
+    fn from_innermost_repr(value: Self::InnermostRepr) -> NumeraResult<Self> {
+        if is_prime(value.try_into()?) {
+            Ok(Self(value))
+        } else {
+            Err(IntegerError::NotPrime.into())
+        }
+    }
+    #[inline]
+    #[cfg(feature = "std")]
+    fn from_innermost_repr(value: Self::InnermostRepr) -> NumeraResult<Self> {
+        if is_prime_sieve(value.checked_as::<usize>().ok_or(IntegerError::Overflow)?) {
+            Ok(Self(value))
+        } else {
+            Err(IntegerError::NotPrime.into())
+        }
+    }
+    #[inline]
+    #[cfg(not(feature = "safe"))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+    unsafe fn from_innermost_repr_unchecked(value: Self::InnermostRepr) -> Self {
+        Self(value)
+    }
+
+    #[inline]
+    fn into_inner_repr(self) -> Self::InnerRepr {
+        self.0
+    }
+    #[inline]
+    fn into_innermost_repr(self) -> Self::InnermostRepr {
+        self.0
     }
 }
 
@@ -678,11 +796,12 @@ impl NonNegative for Prime128 {}
 impl Positive for Prime128 {}
 
 impl Numbers for Prime128 {
-    type Parts = u128;
+    type InnerRepr = u128;
+    type InnermostRepr = u128;
+
     #[inline]
     #[cfg(not(feature = "std"))]
-    fn from_parts(value: Self::Parts) -> NumeraResult<Self> {
-        // IMPROVE
+    fn from_inner_repr(value: Self::InnerRepr) -> NumeraResult<Self> {
         if is_prime(value.try_into()?) {
             Ok(Prime128(value))
         } else {
@@ -691,18 +810,51 @@ impl Numbers for Prime128 {
     }
     #[inline]
     #[cfg(feature = "std")]
-    fn from_parts(value: Self::Parts) -> NumeraResult<Self> {
+    fn from_inner_repr(value: Self::InnerRepr) -> NumeraResult<Self> {
         if is_prime_sieve(value.checked_as::<usize>().ok_or(IntegerError::Overflow)?) {
             Ok(Prime128(value))
         } else {
             Err(IntegerError::NotPrime.into())
         }
     }
-
     #[inline]
     #[cfg(not(feature = "safe"))]
     #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
-    unsafe fn from_parts_unchecked(value: Self::Parts) -> Self {
+    unsafe fn from_inner_repr_unchecked(value: Self::InnerRepr) -> Self {
         Self(value)
+    }
+
+    #[inline]
+    #[cfg(not(feature = "std"))]
+    fn from_innermost_repr(value: Self::InnermostRepr) -> NumeraResult<Self> {
+        if is_prime(value.try_into()?) {
+            Ok(Self(value))
+        } else {
+            Err(IntegerError::NotPrime.into())
+        }
+    }
+    #[inline]
+    #[cfg(feature = "std")]
+    fn from_innermost_repr(value: Self::InnermostRepr) -> NumeraResult<Self> {
+        if is_prime_sieve(value.checked_as::<usize>().ok_or(IntegerError::Overflow)?) {
+            Ok(Self(value))
+        } else {
+            Err(IntegerError::NotPrime.into())
+        }
+    }
+    #[inline]
+    #[cfg(not(feature = "safe"))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+    unsafe fn from_innermost_repr_unchecked(value: Self::InnermostRepr) -> Self {
+        Self(value)
+    }
+
+    #[inline]
+    fn into_inner_repr(self) -> Self::InnerRepr {
+        self.0
+    }
+    #[inline]
+    fn into_innermost_repr(self) -> Self::InnermostRepr {
+        self.0
     }
 }

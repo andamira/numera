@@ -85,12 +85,16 @@ macro_rules! define_integer_family {
 
         /// This implementation is no-op.
         impl $crate::all::Numbers for $tname {
-            type Parts = Self;
+            type InnerRepr = Self;
+            type InnermostRepr = Self;
 
             /// Returns `value` unchanged.
+            ///
+            /// # Errors
+            /// This function can't fail.
             #[inline]
             #[allow(clippy::missing_errors_doc)]
-            fn from_parts(value: $tname) -> $crate::all::NumeraResult<Self> { Ok(value) }
+            fn from_inner_repr(value: $tname) -> $crate::all::NumeraResult<Self> { Ok(value) }
 
             /// Returns `value` unchanged.
             ///
@@ -100,7 +104,30 @@ macro_rules! define_integer_family {
             #[cfg(not(feature = "safe"))]
             #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
             #[allow(clippy::missing_errors_doc)]
-            unsafe fn from_parts_unchecked(value: $tname) -> Self { value }
+            unsafe fn from_inner_repr_unchecked(value: $tname) -> Self { value }
+
+            /// Returns `value` unchanged.
+            ///
+            /// # Errors
+            /// This function can't fail.
+            #[inline]
+            fn from_innermost_repr(value: $tname) -> $crate::all::NumeraResult<Self> { Ok(value) }
+
+            /// Returns `value` unchanged.
+            ///
+            /// # Safety
+            /// This is safe
+            #[inline]
+            #[cfg(not(feature = "safe"))]
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+            unsafe fn from_innermost_repr_unchecked(value: $tname) -> Self { value }
+
+            /// Returns `self`.
+            #[inline]
+            fn into_inner_repr(self) -> Self::InnerRepr { self }
+            /// Returns `self`.
+            #[inline]
+            fn into_innermost_repr(self) -> Self::InnermostRepr { self }
         }
 
         /// This implementation defers to the actual integer variant.
@@ -322,15 +349,27 @@ macro_rules! define_any_integer_family {
 
         /// This implementation is no-op.
         impl $crate::all::Numbers for $tname {
-            type Parts = Self;
+            type InnerRepr = Self;
+            type InnermostRepr = Self;
 
             #[inline]
-            fn from_parts(value: $tname) -> $crate::all::NumeraResult<Self> { Ok(value) }
-
+            fn from_inner_repr(value: $tname) -> $crate::all::NumeraResult<Self> { Ok(value) }
             #[inline]
             #[cfg(not(feature = "safe"))]
             #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
-            unsafe fn from_parts_unchecked(value: $tname) -> Self { value }
+            unsafe fn from_inner_repr_unchecked(value: $tname) -> Self { value }
+
+            #[inline]
+            fn from_innermost_repr(value: $tname) -> $crate::all::NumeraResult<Self> { Ok(value) }
+            #[inline]
+            #[cfg(not(feature = "safe"))]
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+            unsafe fn from_innermost_repr_unchecked(value: $tname) -> Self { value }
+
+            #[inline]
+            fn into_inner_repr(self) -> Self::InnerRepr { self }
+            #[inline]
+            fn into_innermost_repr(self) -> Self::InnermostRepr { self }
         }
 
         /// This implementation defers to the actual integer variant.

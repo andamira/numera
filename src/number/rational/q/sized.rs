@@ -358,18 +358,19 @@ macro_rules! define_rational_sized {
         /* Numbers */
 
         impl Numbers for [<$name$b>] {
-            type Parts = ([<$p$b>], [<$p$b>]);
+            type InnerRepr = ([<$p$b>], [<$p$b>]); // FIXME: integers
+            type InnermostRepr = ([<$p$b>], [<$p$b>]);
 
             /// Forms a new rational from a numerator and denominator.
             ///
             /// # Errors
             /// If the denominator (`value.1`) equals 0.
             #[inline]
-            fn from_parts(value: Self::Parts) -> NumeraResult<Self> {
+            fn from_inner_repr(value: Self::InnerRepr) -> NumeraResult<Self> {
                 Ok(
                     Self {
-                        num: [<$num$b>]::from_parts(value.0)?,
-                        den: [<$den$b>]::from_parts(value.1)
+                        num: [<$num$b>]::from_inner_repr(value.0)?,
+                        den: [<$den$b>]::from_inner_repr(value.1)
                             .map_err(|_| RationalError::ZeroDenominator)?,
                     }
                 )
@@ -379,13 +380,46 @@ macro_rules! define_rational_sized {
             #[inline]
             #[cfg(not(feature = "safe"))]
             #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
-            unsafe fn from_parts_unchecked(value: Self::Parts) -> Self {
+            unsafe fn from_inner_repr_unchecked(value: Self::InnerRepr) -> Self {
                 debug_assert![value.1 != [<$p$b>]::ZERO];
                 Self {
-                    num: [<$num$b>]::from_parts_unchecked(value.0),
-                    den: [<$den$b>]::from_parts_unchecked(value.1),
+                    num: [<$num$b>]::from_inner_repr_unchecked(value.0),
+                    den: [<$den$b>]::from_inner_repr_unchecked(value.1),
                 }
             }
+
+            /// Forms a new rational from a numerator and denominator.
+            ///
+            /// # Errors
+            /// If the denominator (`value.1`) equals 0.
+            #[inline]
+            fn from_innermost_repr(value: Self::InnermostRepr) -> NumeraResult<Self> {
+                Ok(
+                    Self {
+                        num: [<$num$b>]::from_inner_repr(value.0)?,
+                        den: [<$den$b>]::from_inner_repr(value.1)
+                            .map_err(|_| RationalError::ZeroDenominator)?,
+                    }
+                )
+            }
+
+            /// Forms a new rational from a numerator and denominator.
+            #[inline]
+            #[cfg(not(feature = "safe"))]
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+            unsafe fn from_innermost_repr_unchecked(value: Self::InnermostRepr) -> Self {
+                debug_assert![value.1 != [<$p$b>]::ZERO];
+                Self {
+                    num: [<$num$b>]::from_inner_repr_unchecked(value.0),
+                    den: [<$den$b>]::from_inner_repr_unchecked(value.1),
+                }
+            }
+
+            #[inline]
+            fn into_inner_repr(self) -> Self::InnerRepr { (self.num.into(), self.den.into()) }
+
+            #[inline]
+            fn into_innermost_repr(self) -> Self::InnermostRepr { (self.num.into(), self.den.into()) }
         }
     }};
 }
@@ -411,11 +445,11 @@ mod tests {
     #[test]
     fn q_define_sized() -> NumeraResult<()> {
         assert_eq![
-            Rational8::from_parts((5, 0)),
+            Rational8::from_inner_repr((5, 0)),
             Err(RationalError::ZeroDenominator.into())
         ];
 
-        let _q5 = Rational8::from_parts((5, 1))?;
+        let _q5 = Rational8::from_inner_repr((5, 1))?;
 
         // Display
         #[cfg(feature = "std")]
@@ -439,7 +473,7 @@ mod tests {
         // {
         //     use std::panic::catch_unwind;
         //     // 0 denominator
-        //     assert![catch_unwind(|| Rational8::from_parts((5, 0)).unwrap()).is_err()];
+        //     assert![catch_unwind(|| Rational8::from_inner_repr((5, 0)).unwrap()).is_err()];
         // }
 
         Ok(())

@@ -205,23 +205,50 @@ macro_rules! define_float_sized {
             /* Numbers */
 
             impl Numbers for [<$name $b>] {
-                type Parts = $pname;
+                type InnerRepr = $pname;
+                type InnermostRepr = $pname; // IMPROVE: [u8; 4…16] | u32…u128?
 
-                #[doc = "Returns a new `" [<$name $b>] " from the constituent parts`."]
+                #[doc = "Returns a new `" [<$name $b>] " from the inner representation`."]
                 ///
                 /// # Errors
                 /// This function can't fail.
                 #[inline]
-                fn from_parts(value: Self::Parts) -> NumeraResult<Self> { Ok(Self(value)) }
+                fn from_inner_repr(value: Self::InnerRepr) -> NumeraResult<Self> { Ok(Self(value)) }
 
-                #[doc = "Returns a new `" [<$name $b>] "` from the constituent parts`."]
+                #[doc = "Returns a new `" [<$name $b>] "` from the inner representation`."]
                 ///
                 /// # Safety
                 /// This function is safe.
                 #[inline]
                 #[cfg(not(feature = "safe"))]
                 #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
-                unsafe fn from_parts_unchecked(value: Self::Parts) -> Self { Self(value) }
+                unsafe fn from_inner_repr_unchecked(value: Self::InnerRepr) -> Self { Self(value) }
+
+                #[doc = "Returns a new `" [<$name $b>] "` from the innermost representation."]
+                ///
+                /// # Errors
+                /// This function can't fail.
+                #[inline]
+                fn from_innermost_repr(value: Self::InnermostRepr) -> NumeraResult<Self> {
+                    Ok(Self(value))
+                }
+
+                #[doc = "Returns a new `" [<$name $b>] "` from the innermost representation."]
+                ///
+                /// # Safety
+                /// # This function is safe.
+                #[inline]
+                #[cfg(not(feature = "safe"))]
+                #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+                unsafe fn from_innermost_repr_unchecked(value: Self::InnermostRepr) -> Self {
+                    Self(value)
+                }
+
+                #[inline]
+                fn into_inner_repr(self) -> Self::InnerRepr { self.0 }
+
+                #[inline]
+                fn into_innermost_repr(self) -> Self::InnermostRepr { self.0 }
             }
         }
     };

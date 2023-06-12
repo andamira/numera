@@ -182,25 +182,56 @@ impl NegOne for IntegerBig {
 /* Numbers */
 
 impl Numbers for IntegerBig {
-    type Parts = IBig;
+    type InnerRepr = IBig;
+    type InnermostRepr = IBig;
 
-    /// Returns a new `IntegerBig` from the constituent parts.
+    /// Returns a new `IntegerBig` from the inner representation.
     ///
     /// # Errors
     /// This function can't fail.
     #[inline]
-    fn from_parts(value: Self::Parts) -> NumeraResult<Self> {
+    fn from_inner_repr(value: Self::InnerRepr) -> NumeraResult<Self> {
         Ok(Self(value))
     }
 
-    /// Returns a new `IntegerBig` from the constituent parts.
+    /// Returns a new `IntegerBig` from the inner representation.
     ///
     /// # Safety
     /// This function is safe.
     #[inline]
     #[cfg(not(feature = "safe"))]
     #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
-    unsafe fn from_parts_unchecked(value: Self::Parts) -> Self {
+    unsafe fn from_inner_repr_unchecked(value: Self::InnerRepr) -> Self {
         Self(value)
+    }
+
+    /// Returns a new `IntegerBig` from the innermost representation.
+    ///
+    /// # Errors
+    /// This function can't fail.
+    #[inline]
+    fn from_innermost_repr(value: Self::InnermostRepr) -> NumeraResult<Self> {
+        Ok(Self(value))
+    }
+
+    /// Returns a new `IntegerBig` from the innermost representation.
+    ///
+    /// # Safety
+    /// This function is safe.
+    #[inline]
+    #[cfg(not(feature = "safe"))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+    unsafe fn from_innermost_repr_unchecked(value: Self::InnermostRepr) -> Self {
+        Self(value)
+    }
+
+    #[inline]
+    fn into_inner_repr(self) -> Self::InnerRepr {
+        self.0
+    }
+
+    #[inline]
+    fn into_innermost_repr(self) -> Self::InnermostRepr {
+        self.0
     }
 }

@@ -139,11 +139,11 @@ macro_rules! try_from_integer {
     (@non0 for: $for:ident + $for_b:expr, from: $from:ident + $from_b:expr) => {
         $crate::all::impl_from!(try for: $for+$for_b, from: @$from+$from_b, arg:f, body: {
             #[cfg(feature = "safe")]
-            return Self::from_parts(f.0.get().try_into()?);
+            return Self::from_inner_repr(f.0.get().try_into()?);
 
             #[cfg(not(feature = "safe"))]
             // SAFETY: all ok results of try_from should be valid
-            return Ok(unsafe { Self::from_parts_unchecked(f.0.get().try_into()?) });
+            return Ok(unsafe { Self::from_inner_repr_unchecked(f.0.get().try_into()?) });
         });
     };
 
@@ -162,12 +162,12 @@ macro_rules! try_from_integer {
         devela::paste! {
             $crate::all::impl_from!(try for: $for+$for_b, from: @$from+$from_b, arg:f, body: {
                 #[cfg(feature = "safe")]
-                return Self::from_parts(TryInto::<[<$p$for_b>]>::try_into(f.0.get())?.neg());
+                return Self::from_inner_repr(TryInto::<[<$p$for_b>]>::try_into(f.0.get())?.neg());
 
                 #[cfg(not(feature = "safe"))]
                 // SAFETY: all ok results of try_from should be valid
                 return unsafe {
-                    Ok(Self::from_parts_unchecked(
+                    Ok(Self::from_inner_repr_unchecked(
                         TryInto::<[<$p$for_b>]>::try_into(f.0.get())?.neg()
                     ))
                 };
@@ -214,11 +214,11 @@ macro_rules! try_from_integer {
     (@non0_pos for: $for:ident + $for_b:expr, from: $from:ident + $from_b:expr) => {
         $crate::all::impl_from!(try for: $for+$for_b, from: @$from+$from_b, arg:f, body: {
             #[cfg(feature = "safe")]
-            return Self::from_parts((-f.0.get()).try_into()?);
+            return Self::from_inner_repr((-f.0.get()).try_into()?);
 
             #[cfg(not(feature = "safe"))]
             // SAFETY: all ok results of try_from should be valid
-            return Ok(unsafe { Self::from_parts_unchecked((-f.0.get()).try_into()?) });
+            return Ok(unsafe { Self::from_inner_repr_unchecked((-f.0.get()).try_into()?) });
         });
     };
 
@@ -291,10 +291,10 @@ macro_rules! try_from_primitive {
     };
     (@int for: $for:ident + $for_b:expr, from: $from:ident + $from_b:expr) => {
         $crate::all::impl_from!(try for: $for+$for_b, from: $from+$from_b, arg:f, body: {
-            Self::from_parts(f.try_into()?)
+            Self::from_inner_repr(f.try_into()?)
         });
         $crate::all::impl_from!(try for: $for+$for_b, from: &$from+$from_b, arg:f, body: {
-            Self::from_parts((*f).try_into()?)
+            Self::from_inner_repr((*f).try_into()?)
         });
     };
 
@@ -312,11 +312,11 @@ macro_rules! try_from_primitive {
     (@non0 for: $for:ident + $for_b:expr, from: $from:ident + $from_b:expr) => {
         $crate::all::impl_from!(try for: $for+$for_b, from: @$from+$from_b, arg:f, body: {
             #[cfg(feature = "safe")]
-            return Self::from_parts(f.get().try_into()?);
+            return Self::from_inner_repr(f.get().try_into()?);
 
             #[cfg(not(feature = "safe"))]
             // SAFETY: all ok results of try_from should be valid
-            return Ok(unsafe { Self::from_parts_unchecked(f.get().try_into()?) });
+            return Ok(unsafe { Self::from_inner_repr_unchecked(f.get().try_into()?) });
         });
     };
 
@@ -331,11 +331,11 @@ macro_rules! try_from_primitive {
     (@non0_pos for: $for:ident + $for_b:expr, from: $from:ident + $from_b:expr) => {
         $crate::all::impl_from!(try for: $for+$for_b, from: @$from+$from_b, arg:f, body: {
             #[cfg(feature = "safe")]
-            return Self::from_parts((-f.get()).try_into()?);
+            return Self::from_inner_repr((-f.get()).try_into()?);
 
             #[cfg(not(feature = "safe"))]
             // SAFETY: all ok results of try_from should be valid
-            return Ok(unsafe { Self::from_parts_unchecked((-f.get()).try_into()?) });
+            return Ok(unsafe { Self::from_inner_repr_unchecked((-f.get()).try_into()?) });
         });
     };
 
@@ -349,10 +349,10 @@ macro_rules! try_from_primitive {
     };
     (@neg_int for: $for:ident + $for_b:expr, from: $from:ident + $from_b:expr) => {
         $crate::all::impl_from!(try for: $for+$for_b, from: $from+$from_b, arg:f, body: {
-            Self::from_parts((-f).try_into()?)
+            Self::from_inner_repr((-f).try_into()?)
         });
         $crate::all::impl_from!(try for: $for+$for_b, from: &$from+$from_b, arg:f, body: {
-            Self::from_parts((-*f).try_into()?)
+            Self::from_inner_repr((-*f).try_into()?)
         });
     };
 

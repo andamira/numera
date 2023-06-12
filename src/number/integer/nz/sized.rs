@@ -139,9 +139,9 @@ macro_rules! define_negative_integer_sized {
         }
         impl Negative for [<$name$b>] {}
         impl NonPositive for [<$name$b>] {
-            type Parts = [<u$b>];
+            type InnerRepr = [<u$b>];
             #[inline]
-            fn new_neg(value: Self::Parts) -> NumeraResult<Self> {
+            fn new_neg(value: Self::InnerRepr) -> NumeraResult<Self> {
                 Ok(Self([<$p$b>]::new(value).ok_or(IntegerError::Zero)?))
             }
         }
@@ -247,28 +247,21 @@ macro_rules! define_negative_integer_sized {
         /* number */
 
         impl Numbers for [<$name$b>] {
-            type Parts = [<u$b>];
+            type InnerRepr = [<u$b>]; // FIXME: NonZeroU
+            type InnermostRepr = [<u$b>];
 
-            #[doc = "Returns a new `" [<$name$b>] "` from the constituent parts."]
+            #[doc = "Returns a new `" [<$name$b>] "` from the inner representation."]
             ///
             /// Please note that the given `value` will be interpreted as negative.
             ///
             /// # Errors
             /// If the given `value` is `0`.
-            //
-            // ALTERNATIVE:
-            // This constructur always return an error. Please use the
-            // [`new_neg`][NonPositive#method.new_neg] method from the
-            // [`NonPositive`] trait.
             #[inline]
-            fn from_parts(value: Self::Parts) -> NumeraResult<Self> {
+            fn from_inner_repr(value: Self::InnerRepr) -> NumeraResult<Self> {
                 Ok(Self([<$p$b>]::new(value).ok_or(IntegerError::Zero)?))
-
-                // ALTERNATIVE:
-                // Err(IntegerError::ZeroOrMore.into())
             }
 
-            #[doc = "Returns a new `" [<$name$b>] "` from the constituent parts."]
+            #[doc = "Returns a new `" [<$name$b>] "` from the inner representation."]
             ///
             /// Please note that the given `value` will interpreted as negative.
             ///
@@ -280,10 +273,40 @@ macro_rules! define_negative_integer_sized {
             #[inline]
             #[cfg(not(feature = "safe"))]
             #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
-            unsafe fn from_parts_unchecked(value: Self::Parts) -> Self {
+            unsafe fn from_inner_repr_unchecked(value: Self::InnerRepr) -> Self {
                 debug_assert![value != 0];
                 Self([<$p$b>]::new_unchecked(value))
             }
+
+            #[doc = "Returns a new `" [<$name$b>] "` from the innermost representation."]
+            ///
+            /// # Errors
+            /// If the given `value` is `0`.
+            #[inline]
+            fn from_innermost_repr(value: Self::InnermostRepr) -> NumeraResult<Self> {
+                Ok(Self([<$p$b>]::new(value).ok_or(IntegerError::Zero)?))
+            }
+
+            #[doc = "Returns a new `" [<$name$b>] "` from the innermost representation."]
+            ///
+            /// # Panics
+            /// In debug if the given `value` is `0`.
+            ///
+            /// # Safety
+            /// The given `value` must not be `0`.
+            #[inline]
+            #[cfg(not(feature = "safe"))]
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+            unsafe fn from_innermost_repr_unchecked(value: Self::InnermostRepr) -> Self {
+                debug_assert![value != 0];
+                Self([<$p$b>]::new_unchecked(value))
+            }
+
+            #[inline]
+            fn into_inner_repr(self) -> Self::InnerRepr { self.0.get() }
+
+            #[inline]
+            fn into_innermost_repr(self) -> Self::InnermostRepr { self.0.get() }
         }
     }};
 }
