@@ -27,6 +27,7 @@ use core::{
     cmp::Ordering,
     fmt,
     hash::{Hash, Hasher},
+    num::{NonZeroI128, NonZeroI16, NonZeroI32, NonZeroI64, NonZeroI8},
 };
 use devela::paste;
 
@@ -40,7 +41,11 @@ use devela::paste;
 /// # Args
 /// - `$name`: the base name of the rational. e.g. `Rational`.
 /// - `$abbr`: the base abbreviated name, E.g. `Q`.
-/// - `$p`: the primitive prefix (i or u).
+///
+/// - `$numi`: the base name of the inner representation of the numerator.
+/// - `$numim`: the base name of the innermost representation of the numerator.
+/// - `$deni`: the base name of the inner representation of the numerator.
+/// - `$denim`: the base name of the innermost representation of the numerator.
 ///
 /// - `$doc_num`: the type of number.
 /// - `$doc_type`: adds to the type doc-comment.
@@ -58,7 +63,8 @@ use devela::paste;
 /// - `$b`: the size in bits of the primitive used.
 macro_rules! define_rational_sized {
     // defines multiple integer types, with an inner primitive.
-    (multi $name:ident, $abbr:ident, $p:ident,
+    (multi $name:ident, $abbr:ident,
+     $numi:ident, $numim:ident, $deni:ident, $denim:ident,
      $doc_num:literal, $doc_type:literal, // $doc_new:literal,
      $doc_sign:literal, $doc_lower:expr, $doc_upper:expr,
      $num:ident, $den:ident,
@@ -71,7 +77,8 @@ macro_rules! define_rational_sized {
         ),+
      ) => {
         $(
-            define_rational_sized![single $name, $abbr, $p,
+            define_rational_sized![single $name, $abbr,
+               $numi, $numim, $deni, $denim,
                $doc_num, $doc_type, // $doc_new,
                $doc_sign, $doc_lower, $doc_upper,
                $num, $den,
@@ -82,7 +89,8 @@ macro_rules! define_rational_sized {
         )+
     };
     // defines a single integer type, with an inner primitive.
-    (single $name:ident, $abbr:ident, $p:ident,
+    (single $name:ident, $abbr:ident,
+     $numi:ident, $numim:ident, $deni:ident, $denim:ident,
      $doc_num:literal, $doc_type:literal, // $doc_new:literal,
      $doc_sign:literal, $doc_lower:expr, $doc_upper:expr,
      $num:ident, $den:ident,
@@ -95,8 +103,8 @@ macro_rules! define_rational_sized {
         #[doc = $doc_det " "$b "-bit " $doc_num $doc_type ","]
         #[doc = "also known as [`" [<$abbr$b>] "`][super::" [<$abbr$b>] "]."]
         #[doc = "\n\nThe range of valid numeric values is $\\lbrack"
-        $doc_sign "$[`" $p$b "::" $doc_lower "`] $\\dots$ [`"
-        $p$b "::" $doc_upper "`]$\\rbrack$."]
+        $doc_sign "$[`" $numim$b "::" $doc_lower "`] $\\dots$ [`"
+        $denim$b "::" $doc_upper "`]$\\rbrack$."]
 
         #[derive(Clone, Copy)]
         pub struct [<$name$b>] {
@@ -358,8 +366,8 @@ macro_rules! define_rational_sized {
         /* Numbers */
 
         impl Numbers for [<$name$b>] {
-            type InnerRepr = ([<$p$b>], [<$p$b>]); // FIXME: integers
-            type InnermostRepr = ([<$p$b>], [<$p$b>]);
+            type InnerRepr = ([<$numi$b>], [<$deni$b>]);
+            type InnermostRepr = ([<$numim$b>], [<$denim$b>]);
 
             /// Forms a new rational from a numerator and denominator.
             ///
@@ -381,7 +389,6 @@ macro_rules! define_rational_sized {
             #[cfg(not(feature = "safe"))]
             #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
             unsafe fn from_inner_repr_unchecked(value: Self::InnerRepr) -> Self {
-                debug_assert![value.1 != [<$p$b>]::ZERO];
                 Self {
                     num: [<$num$b>]::from_inner_repr_unchecked(value.0),
                     den: [<$den$b>]::from_inner_repr_unchecked(value.1),
@@ -396,22 +403,28 @@ macro_rules! define_rational_sized {
             fn from_innermost_repr(value: Self::InnermostRepr) -> NumeraResult<Self> {
                 Ok(
                     Self {
-                        num: [<$num$b>]::from_inner_repr(value.0)?,
-                        den: [<$den$b>]::from_inner_repr(value.1)
+                        num: [<$num$b>]::from_innermost_repr(value.0)?,
+                        den: [<$den$b>]::from_innermost_repr(value.1)
                             .map_err(|_| RationalError::ZeroDenominator)?,
                     }
                 )
             }
 
             /// Forms a new rational from a numerator and denominator.
+            ///
+            /// # Panics
+            /// Panics in debug if the given `value` is `0`.
+            ///
+            /// # Safety
+            /// The given `value` must not be `0`.
             #[inline]
             #[cfg(not(feature = "safe"))]
             #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
             unsafe fn from_innermost_repr_unchecked(value: Self::InnermostRepr) -> Self {
-                debug_assert![value.1 != [<$p$b>]::ZERO];
+                debug_assert![value.1 != [<$numim$b>]::ZERO];
                 Self {
-                    num: [<$num$b>]::from_inner_repr_unchecked(value.0),
-                    den: [<$den$b>]::from_inner_repr_unchecked(value.1),
+                    num: [<$num$b>]::from_innermost_repr_unchecked(value.0),
+                    den: [<$den$b>]::from_innermost_repr_unchecked(value.1),
                 }
             }
 
@@ -426,7 +439,8 @@ macro_rules! define_rational_sized {
 
 /* definitions */
 
-define_rational_sized![multi Rational, Q, i,
+define_rational_sized![multi Rational, Q,
+    i, i, NonZeroI, i,
     "rational number", ", from the set $\\Bbb{Q}$",
     // "",
     "", MIN, MAX,
@@ -445,11 +459,11 @@ mod tests {
     #[test]
     fn q_define_sized() -> NumeraResult<()> {
         assert_eq![
-            Rational8::from_inner_repr((5, 0)),
+            Rational8::from_innermost_repr((5, 0)),
             Err(RationalError::ZeroDenominator.into())
         ];
 
-        let _q5 = Rational8::from_inner_repr((5, 1))?;
+        let _q5 = Rational8::from_innermost_repr((5, 1))?;
 
         // Display
         #[cfg(feature = "std")]

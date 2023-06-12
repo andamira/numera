@@ -294,31 +294,27 @@ macro_rules! define_nonzero_integer_sized {
         /* number */
 
         impl Numbers for [<$name$b>] {
-            type InnerRepr = [<i$b>]; // FIXME: NonZeroI
+            type InnerRepr = [<NonZeroI$b>];
             type InnermostRepr = [<i$b>];
 
             #[doc = "Returns a new `" [<$name$b>] "` from the inner representation."]
             ///
             /// # Errors
-            /// If the given `value` is `0`.
+            /// This function can't fail.
             #[inline]
             fn from_inner_repr(value: Self::InnerRepr) -> NumeraResult<Self> {
-                Ok(Self([<$p$b>]::new(value).ok_or(IntegerError::Zero)?))
+                Ok(Self(value))
             }
 
             #[doc = "Returns a new `" [<$name$b>] "` from the inner representation."]
             ///
-            /// # Panics
-            /// In debug if the given `value` is `0`.
-            ///
             /// # Safety
-            /// The given `value` must not be `0`.
+            /// This function is safe.
             #[inline]
             #[cfg(not(feature = "safe"))]
             #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
             unsafe fn from_inner_repr_unchecked(value: Self::InnerRepr) -> Self {
-                debug_assert![value != 0];
-                Self([<$p$b>]::new_unchecked(value))
+                Self(value)
             }
 
             #[doc = "Returns a new `" [<$name$b>] "` from the innermost representation."]
@@ -333,7 +329,7 @@ macro_rules! define_nonzero_integer_sized {
             #[doc = "Returns a new `" [<$name$b>] "` from the innermost representation."]
             ///
             /// # Panics
-            /// In debug if the given `value` is `0`.
+            /// Panics in debug if the given `value` is `0`.
             ///
             /// # Safety
             /// The given `value` must not be `0`.
@@ -346,7 +342,7 @@ macro_rules! define_nonzero_integer_sized {
             }
 
             #[inline]
-            fn into_inner_repr(self) -> Self::InnerRepr { self.0.get() }
+            fn into_inner_repr(self) -> Self::InnerRepr { self.0 }
 
             #[inline]
             fn into_innermost_repr(self) -> Self::InnermostRepr { self.0.get() }
