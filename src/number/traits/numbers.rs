@@ -20,7 +20,7 @@ use core::num::{
 };
 
 use crate::{
-    error::NumeraResult as Result,
+    error::{NumeraError, NumeraResult},
     number::traits::{Bound, Count, Ident, Sign},
 };
 
@@ -55,7 +55,7 @@ pub trait Numbers: Bound + Count + Ident + Sign {
     /// For example a `NonNegativeInteger8` would have `InnerRepr = NonZeroU8`,
     /// and `InnermostRepr = u8`, while an `Integer8` would have i8 in both cases.
     #[rustfmt::skip]
-    fn from_inner_repr(value: Self::InnerRepr) -> Result<Self> where Self: Sized;
+    fn from_inner_repr(value: Self::InnerRepr) -> NumeraResult<Self> where Self: Sized;
 
     /// Forms a new number from its inner representation.
     ///
@@ -79,7 +79,7 @@ pub trait Numbers: Bound + Count + Ident + Sign {
     /// For example a `NonNegativeInteger8` would have `InnerRepr = NonZeroU8`,
     /// and `InnermostRepr = u8`, while an `Integer8` would have i8 in both cases.
     #[rustfmt::skip]
-    fn from_innermost_repr(value: Self::InnermostRepr) -> Result<Self> where Self: Sized;
+    fn from_innermost_repr(value: Self::InnermostRepr) -> NumeraResult<Self> where Self: Sized;
 
     /// Forms a new number from its innermost representation.
     ///
@@ -108,7 +108,7 @@ pub trait Numbers: Bound + Count + Ident + Sign {
     /// Returns an error if the converted `value` does not conform to the
     /// invariants of what's considered a valid state for this number.
     #[inline]
-    fn try_from_inner_repr(value: impl Into<Self::InnerRepr>) -> Result<Self>
+    fn try_from_inner_repr(value: impl Into<Self::InnerRepr>) -> NumeraResult<Self>
     where
         Self: Sized,
     {
@@ -118,24 +118,23 @@ pub trait Numbers: Bound + Count + Ident + Sign {
 
 /* macros */
 
-/// impl the `Numbers` trait for values that already has the required trait bounds.
+/// impl the `Numbers` trait for primitives.
 macro_rules! impl_numbers {
-    (many: $($t:ty ),+) => {
-        $( impl_numbers![single: $t]; )+
-    };
-    (single: $t:ty) => {
+    // $t: outer type == inner type
+    ($($t:ty ),+) => { $( impl_numbers![@$t]; )+ };
+    (@$t:ty) => {
         impl Numbers for $t {
             type InnerRepr = $t;
             type InnermostRepr = $t;
 
             #[inline]
-            fn from_inner_repr(value: Self::InnerRepr) -> Result<Self> { Ok(value) }
+            fn from_inner_repr(value: Self::InnerRepr) -> NumeraResult<Self> { Ok(value) }
             #[inline]
             #[cfg(not(feature = "safe"))]
             unsafe fn from_inner_repr_unchecked(value: Self::InnerRepr) -> Self { value }
 
             #[inline]
-            fn from_innermost_repr(value: Self::InnermostRepr) -> Result<Self> { Ok(value) }
+            fn from_innermost_repr(value: Self::InnermostRepr) -> NumeraResult<Self> { Ok(value) }
             #[inline]
             #[cfg(not(feature = "safe"))]
             unsafe fn from_innermost_repr_unchecked(value: Self::InnermostRepr) -> Self { value }
@@ -146,22 +145,58 @@ macro_rules! impl_numbers {
             fn into_innermost_repr(self) -> Self::InnermostRepr { self }
         }
     };
+
+    // $t: outer type
+    // $i: inner repr type
+    (non0 $($t:ident + $i:ident ),+) => { $( impl_numbers![@non0 $t+$i]; )+ };
+    (@non0 $t:ident + $i:ident) => {
+        impl Numbers for $t {
+            type InnerRepr = $i;
+            type InnermostRepr = $i;
+
+            #[inline]
+            fn from_inner_repr(value: Self::InnerRepr) -> NumeraResult<Self> {
+                $t::new(value).ok_or(NumeraError::Conversion)
+            }
+            #[inline]
+            #[cfg(not(feature = "safe"))]
+            unsafe fn from_inner_repr_unchecked(value: Self::InnerRepr) -> Self {
+                $t::new_unchecked(value)
+            }
+
+            #[inline]
+            fn from_innermost_repr(value: Self::InnermostRepr) -> NumeraResult<Self> {
+                $t::new(value).ok_or(NumeraError::Conversion)
+            }
+            #[inline]
+            #[cfg(not(feature = "safe"))]
+            unsafe fn from_innermost_repr_unchecked(value: Self::InnermostRepr) -> Self {
+                $t::new_unchecked(value)
+            }
+
+            #[inline]
+            fn into_inner_repr(self) -> Self::InnerRepr { self.get() }
+            #[inline]
+            fn into_innermost_repr(self) -> Self::InnermostRepr { self.get() }
+        }
+    };
 }
 
 #[rustfmt::skip]
-impl_numbers![many:
-    f32, f64,
-    i8, i16, i32, i64, i128, isize,
-    u8, u16, u32, u64, u128, usize,
-    NonZeroI8, NonZeroI16, NonZeroI32, NonZeroI64, NonZeroI128, NonZeroIsize,
-    NonZeroU8, NonZeroU16, NonZeroU32, NonZeroU64, NonZeroU128, NonZeroUsize
+impl_numbers![f32, f64, i8, i16, i32, i64, i128, isize, u8, u16, u32, u64, u128, usize];
+#[rustfmt::skip]
+impl_numbers![non0
+    NonZeroI8+i8, NonZeroI16+i16, NonZeroI32+i32, NonZeroI64+i64,
+    NonZeroI128+i128, NonZeroIsize+isize,
+    NonZeroU8+u8, NonZeroU16+u16, NonZeroU32+u32, NonZeroU64+u64,
+    NonZeroU128+u128, NonZeroUsize+usize
 ];
 
 #[cfg(feature = "twofloat")]
-impl_numbers![single: twofloat::TwoFloat];
+impl_numbers![@twofloat::TwoFloat];
 
 #[cfg(feature = "half")]
-impl_numbers![many: half::bf16, half::f16];
+impl_numbers![half::bf16, half::f16];
 
 #[cfg(feature = "dashu-int")]
-impl_numbers![many: dashu_int::IBig, dashu_int::UBig];
+impl_numbers![dashu_int::IBig, dashu_int::UBig];
