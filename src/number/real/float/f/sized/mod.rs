@@ -517,7 +517,7 @@ mod impl_twofloat {
 // /* ieee 754 binary */
 #[cfg(feature = "half")]
 define_float_sized![Float, F, f16,
-    "ieee-754 half-precision binary floating-point number ([w][0w])", ", from the set $\\R$",
+    "ieee-754 half-precision *binary* floating-point number ([w][0w])", ", from the set $\\R$",
     "It is comprised of 1 sign bit, 5 exponent bits, and 10 significand bits.
 
 [0w]: https://en.wikipedia.org/wiki/Half-precision_floating-point_format
@@ -526,7 +526,7 @@ define_float_sized![Float, F, f16,
     ("A", 16, larger: true, 32, smaller: false, 16)
 ];
 define_float_sized![Float, F, f32,
-    "ieee-754 single-precision binary floating-point number ([w][0w])", ", from the set $\\R$",
+    "ieee-754 single-precision *binary* floating-point number ([w][0w])", ", from the set $\\R$",
     "It is comprised of 1 sign bit, 8 exponent bits, and 23 significand bits.
 
 [0w]: https://en.wikipedia.org/wiki/Single-precision_floating-point_format
