@@ -5,6 +5,8 @@
 c = "check"
 cr = "check --release"
 ca = "check --features=all"
+cu = "check --no-default-features --features=std"
+cau = "check --no-default-features --features=std,all"
 # no-std
 cna = "check --no-default-features --features=safe,all_nostd"
 cnau = "check --no-default-features --features=all_nostd"
@@ -18,7 +20,7 @@ cF = "check --no-default-features --features=std,safe"
 cuF = "check --no-default-features --features=std"
 caF = "check --no-default-features --features=std,safe,all_fast"
 craF = "check --release --no-default-features --features=std,safe,all_fast"
-cauF = "check --no-default-features --features=std,all"
+cauF = "check --no-default-features --features=std,all_fast"
 ## Fast no-std
 cnF = "check --no-default-features --features=safe"
 cnuF = "check --no-default-features"
