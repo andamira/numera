@@ -46,21 +46,21 @@ pub trait Numbers: Bound + Count + Ident + Sign {
     /// have an `i8` in both cases.
     type InnermostRepr;
 
-    /// Forms a new number from its inner representation.
+    /// Forms a new number from its given `inner` representation.
     ///
     /// # Errors
-    /// Returns an error if the `value` does not conform to the invariants
+    /// Returns an error if `inner` does not conform to the invariants
     /// of what's considered a valid state for this type of number.
     ///
     /// For example a `NonNegativeInteger8` would have `InnerRepr = NonZeroU8`,
     /// and `InnermostRepr = u8`, while an `Integer8` would have i8 in both cases.
     #[rustfmt::skip]
-    fn from_inner_repr(value: Self::InnerRepr) -> NumeraResult<Self> where Self: Sized;
+    fn from_inner_repr(inner: Self::InnerRepr) -> NumeraResult<Self> where Self: Sized;
 
-    /// Forms a new number from its inner representation.
+    /// Forms a new number from its given `inner` representation.
     ///
     /// # Panics
-    /// Could panic (specially in debug) if the `value` does not conform to the
+    /// Could panic (specially in debug) if `inner` does not conform to the
     /// invariants of what's considered a valid state for this number.
     ///
     /// # Safety
@@ -68,23 +68,23 @@ pub trait Numbers: Bound + Count + Ident + Sign {
     #[must_use]
     #[cfg(not(feature = "safe"))]
     #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
-    unsafe fn from_inner_repr_unchecked(value: Self::InnerRepr) -> Self;
+    unsafe fn from_inner_repr_unchecked(inner: Self::InnerRepr) -> Self;
 
-    /// Forms a new number from its innermost representation.
+    /// Forms a new number from its `innermost` representation.
     ///
     /// # Errors
-    /// Returns an error if the `value` does not conform to the invariants
+    /// Returns an error if `innermost` does not conform to the invariants
     /// of what's considered a valid state for this type of number.
     ///
     /// For example a `NonNegativeInteger8` would have `InnerRepr = NonZeroU8`,
     /// and `InnermostRepr = u8`, while an `Integer8` would have i8 in both cases.
     #[rustfmt::skip]
-    fn from_innermost_repr(value: Self::InnermostRepr) -> NumeraResult<Self> where Self: Sized;
+    fn from_innermost_repr(innermost: Self::InnermostRepr) -> NumeraResult<Self> where Self: Sized;
 
-    /// Forms a new number from its innermost representation.
+    /// Forms a new number from its `innermost` representation.
     ///
     /// # Panics
-    /// Could panic (specially in debug) if the `value` does not conform to the
+    /// Could panic (specially in debug) if `innermost` does not conform to the
     /// invariants of what's considered a valid state for this number.
     ///
     /// # Safety
@@ -92,7 +92,7 @@ pub trait Numbers: Bound + Count + Ident + Sign {
     #[must_use]
     #[cfg(not(feature = "safe"))]
     #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
-    unsafe fn from_innermost_repr_unchecked(value: Self::InnermostRepr) -> Self;
+    unsafe fn from_innermost_repr_unchecked(innermost: Self::InnermostRepr) -> Self;
 
     /// Deconstructs the number to its inner representation.
     fn into_inner_repr(self) -> Self::InnerRepr;
@@ -102,17 +102,17 @@ pub trait Numbers: Bound + Count + Ident + Sign {
 
     /* auto */
 
-    /// Forms a new number from its converted inner representation.
+    /// Forms a new number from its converted given `inner` representation.
     ///
     /// # Errors
-    /// Returns an error if the converted `value` does not conform to the
+    /// Returns an error if the converted `inner` does not conform to the
     /// invariants of what's considered a valid state for this number.
     #[inline]
-    fn try_from_inner_repr(value: impl Into<Self::InnerRepr>) -> NumeraResult<Self>
+    fn try_from_inner_repr(inner: impl Into<Self::InnerRepr>) -> NumeraResult<Self>
     where
         Self: Sized,
     {
-        Numbers::from_inner_repr(value.into())
+        Numbers::from_inner_repr(inner.into())
     }
 }
 
