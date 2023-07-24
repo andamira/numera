@@ -20,12 +20,13 @@ keywords = ["math", "mathematics", "number", "numeral", "numeric"]
 publish = true
 
 [features]
-default = ["std", "safe", "all_fast"] # MAYBE all
+default = ["std", "safe", "all_fast"]
 
 #* standard features *#
 
-# avoid using cargo add until rust v1.72 because of a bug that reformats the [features] section:
+# avoid using `cargo add` until rust v1.72 because of a bug that reformats the [features] section:
 std = [
+	"alloc",
 	"devela/std",
 	"primal-sieve",
 	"dashu-base?/std",
@@ -34,25 +35,31 @@ std = [
 	"half?/std", # + alloc
 	"twofloat?/math_funcs", # + std
 ]
-safe = ["devela/safe"]
-unsafe = [] # enable unsafe alternatives
+alloc = ["half?/alloc"] # allocating no-std
+no-std = [] # non-allocating no-std. incompatible with "std" (unused)
+
+safe = [] # disables unsafe in this crate
+safest = ["safe", "devela/safe"] # disables unsafe in dependencies too
+unsafe = [] # enables unsafe alternatives. incompatible with "safe" (unused)
+
 nightly = [] # used only for better docs
 
 #* extra features *#
 
-all = ["big", "all_float", "try_from"] # all features
-all_fast = ["big", "all_float"] # all features except slowest
-all_nostd = ["all_float", "try_from"] # all no-std features
-all_nostd_fast = ["all_float"] # all no-std features except slowest
+all = ["big", "float", "try_from"] # all features
+all_fast = ["big", "float"] # all features except slowest
+all_nostd = ["float", "try_from"] # all no-std features
+all_nostd_fast = ["float"] # all no-std features except slowest
 
 # features that increases compilation time
 try_from = [] # TryFrom conversions
 
+# extra numbers
 big = ["dashu-base", "dashu-int"] # big numbers
-all_float = ["decstr", "half", "twofloat"] # all extra floating-point
+float = ["decstr", "half", "twofloat"] # floating-point
 
 [dependencies]
-devela = { version = "0.4.1", default-features = false }
+devela = { version = "0.5.2", default-features = false }
 
 #* optional dependencies *#
 
@@ -63,9 +70,9 @@ primal-sieve = { version = "0.3.6", optional = true, default-features = false }
 dashu-int = { version = "0.3.1", optional = true, default-features = false }
 dashu-base = { version = "0.3.1", optional = true, default-features = false }
 
-# all_float
-decstr = { version = "0.1.3", optional = true, default-features = false }
-half = { version = "2.2.1", optional = true, default-features = false  }
+# float
+decstr = { version = "0.2.0", optional = true, default-features = false }
+half = { version = "2.3", optional = true, default-features = false  }
 twofloat = { version = "0.7.0", optional = true, default-features = false }
 
 [dev-dependencies]
