@@ -17,12 +17,12 @@ mod sized;
 // pub use family::Float;
 pub use sized::{Float32, Float64};
 
-#[cfg(feature = "decstr")]
-pub use sized::{DecFloat32, DecFloat64, DecFloat128};
 #[cfg(feature = "twofloat")]
 pub use sized::TwoFloat128;
 #[cfg(feature = "half")]
 pub use sized::{BrainFloat16, Float16};
+#[cfg(feature = "decstr")]
+pub use sized::{DecFloat128, DecFloat32, DecFloat64};
 
 use crate::number::macros::define_abbreviations;
 

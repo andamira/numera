@@ -3,7 +3,7 @@
 //! Implement the division operations.
 //
 
-use crate::number::integer::z::{*, ops::div_rem::*};
+use crate::number::integer::z::{ops::div_rem::*, *};
 use core::ops::{Div, DivAssign};
 use devela::paste;
 
