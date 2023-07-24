@@ -162,7 +162,7 @@ impl Prime8 {
     /// Panics in debug if the given `value` is not a prime number.
     #[inline]
     #[cfg(all(debug_assertions, not(feature = "safe")))]
-    #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "not(safe)")))]
     pub unsafe fn new_unchecked(value: u8) -> Self {
         debug_assert![is_prime(value.into())];
         Self(value)
@@ -173,7 +173,7 @@ impl Prime8 {
     /// The given `value` must be a prime number.
     #[inline]
     #[cfg(all(not(debug_assertions), not(feature = "safe")))]
-    #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "not(safe)")))]
     pub const unsafe fn new_unchecked(value: u8) -> Self {
         Self(value)
     }
@@ -257,7 +257,7 @@ impl Prime16 {
     /// Panics in debug if the given `value` is not a prime number.
     #[inline]
     #[cfg(all(debug_assertions, not(feature = "safe")))]
-    #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "not(safe)")))]
     pub unsafe fn new_unchecked(value: u16) -> Self {
         debug_assert![is_prime(value.into())];
         Self(value)
@@ -268,7 +268,7 @@ impl Prime16 {
     /// The given `value` must be a prime number.
     #[inline]
     #[cfg(all(not(debug_assertions), not(feature = "safe")))]
-    #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "not(safe)")))]
     pub const unsafe fn new_unchecked(value: u16) -> Self {
         Self(value)
     }
@@ -408,7 +408,7 @@ impl Prime32 {
     /// can't fit in a `usize`.
     #[inline]
     #[cfg(all(debug_assertions, not(feature = "safe"), feature = "std"))]
-    #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "not(safe)")))]
     pub unsafe fn new_unchecked(value: u32) -> Self {
         debug_assert![is_prime_sieve(value.checked_as::<usize>().unwrap())];
         Self(value)
@@ -419,7 +419,7 @@ impl Prime32 {
     /// The given `value` must be a prime number.
     #[inline]
     #[cfg(all(not(debug_assertions), not(feature = "safe")))]
-    #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "not(safe)")))]
     pub const unsafe fn new_unchecked(value: u32) -> Self {
         Self(value)
     }
@@ -558,7 +558,7 @@ impl Prime64 {
     /// can't fit in a `usize`.
     #[inline]
     #[cfg(all(debug_assertions, not(feature = "safe"), feature = "std"))]
-    #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "not(safe)")))]
     pub unsafe fn new_unchecked(value: u64) -> Self {
         debug_assert![is_prime_sieve(value.checked_as::<usize>().unwrap())];
         Self(value)
@@ -569,7 +569,7 @@ impl Prime64 {
     /// The given `value` must be a prime number.
     #[inline]
     #[cfg(all(not(debug_assertions), not(feature = "safe")))]
-    #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "not(safe)")))]
     pub const unsafe fn new_unchecked(value: u64) -> Self {
         Self(value)
     }
@@ -710,7 +710,7 @@ impl Prime128 {
     /// can't fit in a `usize`.
     #[inline]
     #[cfg(all(debug_assertions, not(feature = "safe"), feature = "std"))]
-    #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "not(safe)")))]
     pub unsafe fn new_unchecked(value: u128) -> Self {
         debug_assert![is_prime_sieve(value.checked_as::<usize>().unwrap())];
         Self(value)
@@ -721,7 +721,7 @@ impl Prime128 {
     /// The given `value` must be a prime number.
     #[inline]
     #[cfg(all(not(debug_assertions), not(feature = "safe")))]
-    #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "not(safe)")))]
     pub const unsafe fn new_unchecked(value: u128) -> Self {
         Self(value)
     }

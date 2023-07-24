@@ -210,7 +210,7 @@ macro_rules! define_rational_sized {
             /// Panics in debug if the `denominator` is 0.
             #[inline]
             #[cfg(not(feature = "safe"))]
-            #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "not(safe)")))]
             pub const unsafe fn new_unchecked(numerator: [<i$b>], denominator: [<i$b>])
                 -> Self {
                 debug_assert![denominator != 0];
@@ -387,7 +387,7 @@ macro_rules! define_rational_sized {
             /// Forms a new rational from a numerator and denominator.
             #[inline]
             #[cfg(not(feature = "safe"))]
-            #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "not(safe)")))]
             unsafe fn from_inner_repr_unchecked(value: Self::InnerRepr) -> Self {
                 Self {
                     num: [<$num$b>]::from_inner_repr_unchecked(value.0),
@@ -419,7 +419,7 @@ macro_rules! define_rational_sized {
             /// The given `value` must not be `0`.
             #[inline]
             #[cfg(not(feature = "safe"))]
-            #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "not(safe)")))]
             unsafe fn from_innermost_repr_unchecked(value: Self::InnermostRepr) -> Self {
                 debug_assert![value.1 != [<$numim$b>]::ZERO];
                 Self {

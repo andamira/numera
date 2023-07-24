@@ -31,7 +31,7 @@ impl Numbers for NoNumber {
     /// Returns itself.
     #[inline]
     #[cfg(not(feature = "safe"))]
-    #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "not(safe)")))]
     unsafe fn from_inner_repr_unchecked(value: NoNumber) -> Self { value }
     /// Returns itself.
     #[inline]
@@ -42,7 +42,7 @@ impl Numbers for NoNumber {
     /// Returns itself.
     #[inline]
     #[cfg(not(feature = "safe"))]
-    #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "not(safe)")))]
     unsafe fn from_innermost_repr_unchecked(value: NoNumber) -> Self { value }
     /// Returns itself.
     #[inline]

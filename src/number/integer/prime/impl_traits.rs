@@ -148,7 +148,7 @@ impl Numbers for Prime8 {
     }
     #[inline]
     #[cfg(not(feature = "safe"))]
-    #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "not(safe)")))]
     unsafe fn from_inner_repr_unchecked(value: Self::InnerRepr) -> Self {
         Self(value)
     }
@@ -163,7 +163,7 @@ impl Numbers for Prime8 {
     }
     #[inline]
     #[cfg(not(feature = "safe"))]
-    #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "not(safe)")))]
     unsafe fn from_innermost_repr_unchecked(value: Self::InnermostRepr) -> Self {
         Self(value)
     }
@@ -332,7 +332,7 @@ impl Numbers for Prime16 {
     }
     #[inline]
     #[cfg(not(feature = "safe"))]
-    #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "not(safe)")))]
     unsafe fn from_inner_repr_unchecked(value: Self::InnerRepr) -> Self {
         Self(value)
     }
@@ -347,7 +347,7 @@ impl Numbers for Prime16 {
     }
     #[inline]
     #[cfg(not(feature = "safe"))]
-    #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "not(safe)")))]
     unsafe fn from_innermost_repr_unchecked(value: Self::InnermostRepr) -> Self {
         Self(value)
     }
@@ -526,7 +526,7 @@ impl Numbers for Prime32 {
     }
     #[inline]
     #[cfg(not(feature = "safe"))]
-    #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "not(safe)")))]
     unsafe fn from_inner_repr_unchecked(value: Self::InnerRepr) -> Self {
         Self(value)
     }
@@ -551,7 +551,7 @@ impl Numbers for Prime32 {
     }
     #[inline]
     #[cfg(not(feature = "safe"))]
-    #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "not(safe)")))]
     unsafe fn from_innermost_repr_unchecked(value: Self::InnermostRepr) -> Self {
         Self(value)
     }
@@ -673,7 +673,7 @@ impl Numbers for Prime64 {
     }
     #[inline]
     #[cfg(not(feature = "safe"))]
-    #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "not(safe)")))]
     unsafe fn from_inner_repr_unchecked(value: Self::InnerRepr) -> Self {
         Self(value)
     }
@@ -698,7 +698,7 @@ impl Numbers for Prime64 {
     }
     #[inline]
     #[cfg(not(feature = "safe"))]
-    #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "not(safe)")))]
     unsafe fn from_innermost_repr_unchecked(value: Self::InnermostRepr) -> Self {
         Self(value)
     }
@@ -819,7 +819,7 @@ impl Numbers for Prime128 {
     }
     #[inline]
     #[cfg(not(feature = "safe"))]
-    #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "not(safe)")))]
     unsafe fn from_inner_repr_unchecked(value: Self::InnerRepr) -> Self {
         Self(value)
     }
@@ -844,7 +844,7 @@ impl Numbers for Prime128 {
     }
     #[inline]
     #[cfg(not(feature = "safe"))]
-    #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "not(safe)")))]
     unsafe fn from_innermost_repr_unchecked(value: Self::InnermostRepr) -> Self {
         Self(value)
     }

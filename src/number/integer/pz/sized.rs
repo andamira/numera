@@ -131,7 +131,7 @@ macro_rules! define_positive_integer_sized {
             /// Panics in debug if the `value` is 0.
             #[inline]
             #[cfg(not(feature = "safe"))]
-            #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "not(safe)")))]
             pub const unsafe fn new_unchecked(value: [<u$b>]) -> Self {
                 debug_assert![value != 0];
                 Self([<$p$b>]::new_unchecked(value))
@@ -288,7 +288,7 @@ macro_rules! define_positive_integer_sized {
             /// This function is safe.
             #[inline]
             #[cfg(not(feature = "safe"))]
-            #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "not(safe)")))]
             unsafe fn from_inner_repr_unchecked(value: Self::InnerRepr) -> Self {
                 Self(value)
             }
@@ -311,7 +311,7 @@ macro_rules! define_positive_integer_sized {
             /// The given `value` must not be `0`.
             #[inline]
             #[cfg(not(feature = "safe"))]
-            #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "not(safe)")))]
             unsafe fn from_innermost_repr_unchecked(value: Self::InnermostRepr) -> Self {
                 debug_assert![value != 0];
                 Self([<$p$b>]::new_unchecked(value))

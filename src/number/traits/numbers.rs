@@ -67,7 +67,7 @@ pub trait Numbers: Bound + Count + Ident + Sign {
     /// The invariants inherent to the specific number type must be maintained.
     #[must_use]
     #[cfg(not(feature = "safe"))]
-    #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "not(safe)")))]
     unsafe fn from_inner_repr_unchecked(inner: Self::InnerRepr) -> Self;
 
     /// Forms a new number from its `innermost` representation.
@@ -91,7 +91,7 @@ pub trait Numbers: Bound + Count + Ident + Sign {
     /// The invariants inherent to the specific number type must be maintained.
     #[must_use]
     #[cfg(not(feature = "safe"))]
-    #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "not(safe)")))]
     unsafe fn from_innermost_repr_unchecked(innermost: Self::InnermostRepr) -> Self;
 
     /// Deconstructs the number to its inner representation.

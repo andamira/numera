@@ -83,7 +83,7 @@ macro_rules! define_numbers {
             /// Returns `value` unchanged.
             #[inline]
             #[cfg(not(feature = "safe"))]
-            #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "not(safe)")))]
             unsafe fn from_inner_repr_unchecked(value: AnyNumber<N>) -> Self { value }
 
             /// Returns `value` unchanged.
@@ -96,7 +96,7 @@ macro_rules! define_numbers {
             /// This is safe
             #[inline]
             #[cfg(not(feature = "safe"))]
-            #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "not(safe)")))]
             unsafe fn from_innermost_repr_unchecked(value: Self) -> Self { value }
 
             /// Returns `self`.

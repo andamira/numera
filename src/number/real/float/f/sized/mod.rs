@@ -207,7 +207,7 @@ macro_rules! define_float_sized {
                 /// This function is safe.
                 #[inline]
                 #[cfg(not(feature = "safe"))]
-                #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+                #[cfg_attr(feature = "nightly", doc(cfg(feature = "not(safe)")))]
                 unsafe fn from_inner_repr_unchecked(value: Self::InnerRepr) -> Self { Self(value) }
 
                 #[doc = "Returns a new `" [<$name $b>] "` from the innermost representation."]
@@ -225,7 +225,7 @@ macro_rules! define_float_sized {
                 /// # This function is safe.
                 #[inline]
                 #[cfg(not(feature = "safe"))]
-                #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+                #[cfg_attr(feature = "nightly", doc(cfg(feature = "not(safe)")))]
                 unsafe fn from_innermost_repr_unchecked(value: Self::InnermostRepr) -> Self {
                     Self(value)
                 }

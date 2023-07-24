@@ -102,7 +102,7 @@ macro_rules! define_integer_family {
             /// This is safe
             #[inline]
             #[cfg(not(feature = "safe"))]
-            #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "not(safe)")))]
             #[allow(clippy::missing_errors_doc)]
             unsafe fn from_inner_repr_unchecked(value: $tname) -> Self { value }
 
@@ -119,7 +119,7 @@ macro_rules! define_integer_family {
             /// This is safe
             #[inline]
             #[cfg(not(feature = "safe"))]
-            #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "not(safe)")))]
             unsafe fn from_innermost_repr_unchecked(value: $tname) -> Self { value }
 
             /// Returns `self`.
@@ -356,14 +356,14 @@ macro_rules! define_any_integer_family {
             fn from_inner_repr(value: $tname) -> $crate::all::NumeraResult<Self> { Ok(value) }
             #[inline]
             #[cfg(not(feature = "safe"))]
-            #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "not(safe)")))]
             unsafe fn from_inner_repr_unchecked(value: $tname) -> Self { value }
 
             #[inline]
             fn from_innermost_repr(value: $tname) -> $crate::all::NumeraResult<Self> { Ok(value) }
             #[inline]
             #[cfg(not(feature = "safe"))]
-            #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "not(safe)")))]
             unsafe fn from_innermost_repr_unchecked(value: $tname) -> Self { value }
 
             #[inline]

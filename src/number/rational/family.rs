@@ -103,7 +103,7 @@ macro_rules! define_rational_family {
             /// This is safe
             #[inline]
             #[cfg(not(feature = "safe"))]
-            #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "not(safe)")))]
             #[allow(clippy::missing_errors_doc)]
             unsafe fn from_inner_repr_unchecked(value: $tname) -> Self { value }
 
@@ -120,7 +120,7 @@ macro_rules! define_rational_family {
             /// This is safe
             #[inline]
             #[cfg(not(feature = "safe"))]
-            #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "not(safe)")))]
             unsafe fn from_innermost_repr_unchecked(value: Self) -> Self { value }
 
             /// Returns `self`.
@@ -356,7 +356,7 @@ macro_rules! define_any_rational_family {
             /// Returns `value` unchanged.
             #[inline]
             #[cfg(not(feature = "safe"))]
-            #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "not(safe)")))]
             unsafe fn from_inner_repr_unchecked(value: $tname) -> Self { value }
 
             /// Returns `value` unchanged.
@@ -369,7 +369,7 @@ macro_rules! define_any_rational_family {
             /// This is safe
             #[inline]
             #[cfg(not(feature = "safe"))]
-            #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+            #[cfg_attr(feature = "nightly", doc(cfg(feature = "not(safe)")))]
             unsafe fn from_innermost_repr_unchecked(value: Self) -> Self { value }
 
             /// Returns `self`.

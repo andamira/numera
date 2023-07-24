@@ -35,7 +35,7 @@ impl Numbers for Prime {
     /// Returns `value` unchanged.
     #[inline]
     #[cfg(not(feature = "safe"))]
-    #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "not(safe)")))]
     unsafe fn from_inner_repr_unchecked(value: Prime) -> Self {
         value
     }
@@ -48,7 +48,8 @@ impl Numbers for Prime {
     /// Returns `value` unchanged.
     #[inline]
     #[cfg(not(feature = "safe"))]
-    #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "not(safe)")))]
     unsafe fn from_innermost_repr_unchecked(value: Prime) -> Self {
         value
     }

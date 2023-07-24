@@ -200,7 +200,7 @@ impl Numbers for IntegerBig {
     /// This function is safe.
     #[inline]
     #[cfg(not(feature = "safe"))]
-    #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "not(safe)")))]
     unsafe fn from_inner_repr_unchecked(value: Self::InnerRepr) -> Self {
         Self(value)
     }
@@ -220,7 +220,7 @@ impl Numbers for IntegerBig {
     /// This function is safe.
     #[inline]
     #[cfg(not(feature = "safe"))]
-    #[cfg_attr(feature = "nightly", doc(cfg(feature = "unsafe")))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "not(safe)")))]
     unsafe fn from_innermost_repr_unchecked(value: Self::InnermostRepr) -> Self {
         Self(value)
     }
