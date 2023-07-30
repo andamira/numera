@@ -17,48 +17,97 @@ mod between_primes {
 
     /* infallible */
 
-    impl From<Prime8> for Prime16 { fn from(p: Prime8) -> Prime16 { Prime16(p.0.into()) } }
-    impl From<Prime8> for Prime32 { fn from(p: Prime8) -> Prime32 { Prime32(p.0.into()) } }
-    impl From<Prime8> for Prime64 { fn from(p: Prime8) -> Prime64 { Prime64(p.0.into()) } }
-    impl From<Prime8> for Prime128 { fn from(p: Prime8) -> Prime128 { Prime128(p.0.into()) } }
-    impl From<Prime8> for Prime { fn from(p: Prime8) -> Prime { Prime::_8(p) } }
+    impl From<Prime8> for Prime16 {
+        #[inline]
+        fn from(p: Prime8) -> Prime16 { Prime16(p.0.into()) }
+    }
+    impl From<Prime8> for Prime32 {
+        #[inline]
+        fn from(p: Prime8) -> Prime32 { Prime32(p.0.into()) }
+    }
+    impl From<Prime8> for Prime64 {
+        #[inline]
+        fn from(p: Prime8) -> Prime64 { Prime64(p.0.into()) }
+    }
+    impl From<Prime8> for Prime128 {
+        #[inline]
+        fn from(p: Prime8) -> Prime128 { Prime128(p.0.into()) }
+    }
+    impl From<Prime8> for Prime {
+        #[inline]
+        fn from(p: Prime8) -> Prime { Prime::_8(p) }
+    }
 
-    impl From<Prime16> for Prime32 { fn from(p: Prime16) -> Prime32 { Prime32(p.0.into()) } }
-    impl From<Prime16> for Prime64 { fn from(p: Prime16) -> Prime64 { Prime64(p.0.into()) } }
-    impl From<Prime16> for Prime128 { fn from(p: Prime16) -> Prime128 { Prime128(p.0.into()) } }
-    impl From<Prime16> for Prime { fn from(p: Prime16) -> Prime { Prime::_16(p) } }
+    impl From<Prime16> for Prime32 {
+        #[inline]
+        fn from(p: Prime16) -> Prime32 { Prime32(p.0.into()) }
+    }
+    impl From<Prime16> for Prime64 {
+        #[inline]
+        fn from(p: Prime16) -> Prime64 { Prime64(p.0.into()) }
+    }
+    impl From<Prime16> for Prime128 {
+        #[inline]
+        fn from(p: Prime16) -> Prime128 { Prime128(p.0.into()) }
+    }
+    impl From<Prime16> for Prime {
+        #[inline]
+        fn from(p: Prime16) -> Prime { Prime::_16(p) }
+    }
 
-    impl From<Prime32> for Prime64 { fn from(p: Prime32) -> Prime64 { Prime64(p.0.into()) } }
-    impl From<Prime32> for Prime128 { fn from(p: Prime32) -> Prime128 { Prime128(p.0.into()) } }
-    impl From<Prime32> for Prime { fn from(p: Prime32) -> Prime { Prime::_32(p) } }
+    impl From<Prime32> for Prime64 {
+        #[inline]
+        fn from(p: Prime32) -> Prime64 { Prime64(p.0.into()) }
+    }
+    impl From<Prime32> for Prime128 {
+        #[inline]
+        fn from(p: Prime32) -> Prime128 { Prime128(p.0.into()) }
+    }
+    impl From<Prime32> for Prime {
+        #[inline]
+        fn from(p: Prime32) -> Prime { Prime::_32(p) }
+    }
 
-    impl From<Prime64> for Prime128 { fn from(p: Prime64) -> Prime128 { Prime128(p.0.into()) } }
-    impl From<Prime64> for Prime { fn from(p: Prime64) -> Prime { Prime::_64(p) } }
+    impl From<Prime64> for Prime128 {
+        #[inline]
+        fn from(p: Prime64) -> Prime128 { Prime128(p.0.into()) }
+    }
+    impl From<Prime64> for Prime {
+        #[inline]
+        fn from(p: Prime64) -> Prime { Prime::_64(p) }
+    }
 
-    impl From<Prime128> for Prime { fn from(p: Prime128) -> Prime { Prime::_128(p) } }
+    impl From<Prime128> for Prime {
+        #[inline]
+        fn from(p: Prime128) -> Prime { Prime::_128(p) }
+    }
 
     /* fallible */
 
     impl TryFrom<Prime16> for Prime8 {
         type Error = NumeraError;
+        #[inline]
         fn try_from(value: Prime16) -> NumeraResult<Prime8> {
             Ok(Prime8(u8::try_from(value.0)?))
         }
     }
     impl TryFrom<Prime32> for Prime8 {
         type Error = NumeraError;
+        #[inline]
         fn try_from(value: Prime32) -> NumeraResult<Prime8> {
             Ok(Prime8(u8::try_from(value.0)?))
         }
     }
     impl TryFrom<Prime64> for Prime8 {
         type Error = NumeraError;
+        #[inline]
         fn try_from(value: Prime64) -> NumeraResult<Prime8> {
             Ok(Prime8(u8::try_from(value.0)?))
         }
     }
     impl TryFrom<Prime128> for Prime8 {
         type Error = NumeraError;
+        #[inline]
         fn try_from(value: Prime128) -> NumeraResult<Prime8> {
             Ok(Prime8(u8::try_from(value.0)?))
         }
@@ -66,18 +115,21 @@ mod between_primes {
 
     impl TryFrom<Prime32> for Prime16 {
         type Error = NumeraError;
+        #[inline]
         fn try_from(value: Prime32) -> NumeraResult<Prime16> {
             Ok(Prime16(u16::try_from(value.0)?))
         }
     }
     impl TryFrom<Prime64> for Prime16 {
         type Error = NumeraError;
+        #[inline]
         fn try_from(value: Prime64) -> NumeraResult<Prime16> {
             Ok(Prime16(u16::try_from(value.0)?))
         }
     }
     impl TryFrom<Prime128> for Prime16 {
         type Error = NumeraError;
+        #[inline]
         fn try_from(value: Prime128) -> NumeraResult<Prime16> {
             Ok(Prime16(u16::try_from(value.0)?))
         }
@@ -85,12 +137,14 @@ mod between_primes {
 
     impl TryFrom<Prime64> for Prime32 {
         type Error = NumeraError;
+        #[inline]
         fn try_from(value: Prime64) -> NumeraResult<Prime32> {
             Ok(Prime32(u32::try_from(value.0)?))
         }
     }
     impl TryFrom<Prime128> for Prime32 {
         type Error = NumeraError;
+        #[inline]
         fn try_from(value: Prime128) -> NumeraResult<Prime32> {
             Ok(Prime32(u32::try_from(value.0)?))
         }
@@ -98,6 +152,7 @@ mod between_primes {
 
     impl TryFrom<Prime128> for Prime64 {
         type Error = NumeraError;
+        #[inline]
         fn try_from(value: Prime128) -> NumeraResult<Prime64> {
             Ok(Prime64(u64::try_from(value.0)?))
         }
@@ -105,6 +160,7 @@ mod between_primes {
 
     impl TryFrom<Prime> for Prime8 {
         type Error = NumeraError;
+        #[inline]
         fn try_from(value: Prime) -> NumeraResult<Prime8> {
             use Prime::*;
             match value {
@@ -147,6 +203,7 @@ macro_rules! try_from_prime_to_primitive {
     (@ $Prime:ident, $primitive:ty) => {
         impl TryFrom<$Prime> for $primitive {
             type Error = NumeraError;
+            #[inline]
             fn try_from(p: $Prime) -> NumeraResult<$primitive> {
                 Ok(<$primitive>::try_from(p.0)?)
             }
@@ -169,6 +226,7 @@ macro_rules! try_from_primitive_to_prime {
     (@ $Prime:ident, $PrimeInnerRepr:ty; $primitive:ty) => {
         impl TryFrom<$primitive> for $Prime {
             type Error = NumeraError;
+            #[inline]
             fn try_from(p: $primitive) -> NumeraResult<$Prime> {
                 let arg = p.checked_as::<$PrimeInnerRepr>().ok_or(IntegerError::Overflow)?;
                 $Prime::from_inner_repr(arg)
