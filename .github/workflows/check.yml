@@ -77,8 +77,7 @@ jobs:
     # https://docs.github.com/en/actions/learn-github-actions/contexts#context-availability
     strategy:
       matrix:
-        # NOTE: custom
-        msrv: [1.70.0]
+        msrv: [1.71.1] # sync with ../../{readme, Cargo.toml, check.sh}
     steps:
       - name: "checkout"
         uses: actions/checkout@v3
