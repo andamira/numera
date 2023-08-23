@@ -7,8 +7,8 @@
 // - LARGEST_PRIME_POW2_DOUBLINGS
 // - TEN_PRIMES_LESS_POW2
 
-/// The list of the largest primes that fit in the bits of consecutive doublings
-/// of powers of two.
+/// The largest primes that fit in the bits of consecutive doublings of
+/// powers of two.
 ///
 /// They are stored as $k$ at index $i$, such as $2^{i8}-k$ is the prime number.
 ///
