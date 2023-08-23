@@ -41,8 +41,10 @@ no-std = [] # non-allocating no-std. incompatible with "std" (unused)
 safe = [] # disables unsafe in this crate
 safest = ["safe", "devela/safe"] # disables unsafe in dependencies too
 unsafe = [] # enables unsafe alternatives. incompatible with "safe" (unused)
+unsafest = ["unsafe", "devela/unsafe"] # enables unsafe in dependencies too
 
 nightly = [] # used only for better docs
+nightly_docs = ["nightly", "std", "all"]
 
 #* extra features *#
 
@@ -83,7 +85,7 @@ opt-level = 3 # for faster prime testing
 
 [package.metadata.docs.rs]
 no-default-features = true
-features = ["nightly", "std", "all"]
+features = ["nightly_docs"]
 rustdoc-args = [ "--html-in-header", "./res/rustdoc-header.html" ]
 
 [badges]
