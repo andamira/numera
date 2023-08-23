@@ -7,7 +7,7 @@ use crate::{
     error::{IntegerError, NumeraError, NumeraResult},
     number::{integer::prime::all::*, traits::Numbers},
 };
-use devela::az::CheckedAs;
+use devela::convert::az::CheckedAs;
 
 /* conversions between primes */
 

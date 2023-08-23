@@ -270,21 +270,21 @@ macro_rules! impl_larger_smaller {
                 /// Returns the current number as the next larger bit-size.
                 ///
                 /// This method is not implemented for the largest available bit-size.
-                #[devela::compile($larger)]
+                #[devela::codegen::compile($larger)]
                 pub fn as_larger(&self) -> [<$name $larger_b>] {
                     [<$name $larger_b>]::from(self)
                 }
 
                 /// Returns the current number as the next larger bit-size,
                 /// or the same if there's no larger one available.
-                #[devela::compile($larger)]
+                #[devela::codegen::compile($larger)]
                 pub fn as_larger_or_same(&self) -> [<$name $larger_b>] {
                     [<$name $larger_b>]::from(self)
                 }
                 /// Returns the current number as the next larger bit-size,
                 /// or the same if there's no larger one available.
                 #[must_use]
-                #[devela::compile(not($larger))]
+                #[devela::codegen::compile(not($larger))]
                 pub fn as_larger_or_same(&self) -> [<$name $b>] {
                     *self
                 }
@@ -292,14 +292,14 @@ macro_rules! impl_larger_smaller {
                 /// Tries to return the current number as the next larger bit-size.
                 /// # Errors
                 /// If there's no larger bit-size available.
-                #[devela::compile($larger)]
+                #[devela::codegen::compile($larger)]
                 pub fn try_as_larger(&self) -> NumeraResult<[<$name $larger_b>]> {
                     Ok([<$name $larger_b>]::from(self))
                 }
                 /// Tries to return the current number as the next larger bit-size.
                 /// # Errors
                 /// If there's no larger bit-size available.
-                #[devela::compile(not($larger))]
+                #[devela::codegen::compile(not($larger))]
                 pub fn try_as_larger(&self) -> NumeraResult<[<$name $b>]> {
                     Err($crate::error::NumeraError::Conversion)
                 }
@@ -309,7 +309,7 @@ macro_rules! impl_larger_smaller {
                 /// Returns the current number as the next smaller bit-size,
                 /// or the same if the value can't fit in the smaller bit-size,
                 /// or if there's no smaller bit-size available.
-                #[devela::compile($smaller)]
+                #[devela::codegen::compile($smaller)]
                 #[cfg(feature = "try_from")]
                 #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
                 pub fn as_smaller_or_same(&self) -> $family {
@@ -322,7 +322,7 @@ macro_rules! impl_larger_smaller {
                 /// Returns the current number as the next smaller bit-size,
                 /// or the same if the value can't fit in the smaller bit-size,
                 /// or if there's no smaller bit-size available.
-                #[devela::compile(not($smaller))]
+                #[devela::codegen::compile(not($smaller))]
                 #[cfg(feature = "try_from")]
                 #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
                 pub fn as_smaller_or_same(&self) -> $family {
@@ -333,7 +333,7 @@ macro_rules! impl_larger_smaller {
                 /// # Errors
                 /// If the value can't fit in the smaller bit-size,
                 /// or if there's no smaller bit-size available.
-                #[devela::compile($smaller)]
+                #[devela::codegen::compile($smaller)]
                 #[cfg(feature = "try_from")]
                 #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
                 pub fn try_as_smaller(&self) -> NumeraResult<[<$name $smaller_b>]> {
@@ -343,7 +343,7 @@ macro_rules! impl_larger_smaller {
                 /// # Errors
                 /// If the value can't fit in the smaller bit-size,
                 /// or if there's no smaller bit-size available.
-                #[devela::compile(not($smaller))]
+                #[devela::codegen::compile(not($smaller))]
                 #[cfg(feature = "try_from")]
                 #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
                 pub fn try_as_smaller(&self) -> NumeraResult<[<$name $b>]> {

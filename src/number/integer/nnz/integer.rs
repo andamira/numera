@@ -7,7 +7,7 @@ use crate::number::{
     integer::{nnz::*, Integers},
     traits::ConstOne,
 };
-use devela::az::CheckedAs;
+use devela::convert::az::CheckedAs;
 
 #[cfg(not(feature = "std"))]
 use crate::all::is_prime;

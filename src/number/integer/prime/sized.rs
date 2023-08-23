@@ -15,7 +15,7 @@ use crate::number::integer::prime::fns::nth_prime;
 #[cfg(feature = "std")]
 use {
     crate::number::integer::prime::fns::{is_prime_sieve, nth_prime_sieve},
-    devela::az::CheckedAs,
+    devela::convert::az::CheckedAs,
     primal_sieve::Sieve,
 };
 

@@ -59,7 +59,7 @@ big = ["dashu-base", "dashu-int"] # big numbers
 float = ["decstr", "half", "twofloat"] # floating-point
 
 [dependencies]
-devela = { version = "0.5.2", default-features = false }
+devela = { version = "0.7.1", default-features = false }
 
 #* optional dependencies *#
 
