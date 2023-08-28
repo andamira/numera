@@ -24,18 +24,10 @@ pub(crate) mod all {
     pub use super::{
         data::*,
         family::Prime,
-        fns::{is_prime, is_prime_brute, nth_prime, prime_pi},
+        fns::*,
         primes::Primes,
         sized::{Prime128, Prime16, Prime32, Prime64, Prime8},
     };
-
-    #[doc(inline)]
-    #[cfg(feature = "std")]
-    pub use super::fns::{is_prime_sieve, nth_prime_sieve, prime_number_theorem, prime_pi_sieve};
-
-    #[doc(inline)]
-    #[cfg(feature = "dashu-int")]
-    pub use super::fns::{largest_prime_pow2_doublings, ten_primes_less_pow2};
 }
 
 use crate::number::macros::define_abbreviations;

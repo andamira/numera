@@ -48,7 +48,18 @@ pub struct Prime32(pub(crate) u32);
 /// also known as [`P64`][super::P64].
 ///
 /// Can represent the first 425,656,284,035,217,743 prime numbers.
-/// This is calculated using the *prime number theorem* formula.
+#[cfg_attr(
+    not(feature = "std"),
+    doc = "This is calculated using the *prime number theorem* formula."
+)]
+#[cfg_attr(
+    feature = "std",
+    doc = "This is calculated using the [*prime number theorem*][0]
+    <span class='stab portability'
+    title='Available on crate feature `std` only'><code>std</code></span>
+    formula."
+)]
+#[cfg_attr(feature = "std", doc = "\n\n[0]: crate::all::prime_number_theorem")]
 #[derive(Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
 // pub struct Prime64(PositiveInteger64);
 pub struct Prime64(pub(crate) u64);
@@ -595,6 +606,9 @@ impl Prime64 {
     /// # Ok(()) }
     /// ```
     ///
+    /// # Panics
+    /// Panics in `std` if `self` can't fit in a `usize`.
+    ///
     /// # Links
     /// - <https://mathworld.wolfram.com/PrimeCountingFunction.html>.
     /// - <https://en.wikipedia.org/wiki/Prime-counting_function>.
@@ -617,6 +631,7 @@ impl Prime64 {
             // this can be slow for high 64-bit numbers:
             #[cfg(feature = "std")]
             {
+                // IMPROVE: do not depend on usize
                 let value = usize::try_from(self.0).expect("usize overflow");
                 let sieve = Sieve::new(value);
                 return sieve.prime_pi(value);
@@ -627,6 +642,7 @@ impl Prime64 {
                 nth_prime(core::num::NonZeroU64::new(self.0).unwrap())
             }
         }
+        #[allow(overflowing_literals)] // TEMP FIX when usize < 64
         return 425_656_284_035_217_743;
     }
 }
