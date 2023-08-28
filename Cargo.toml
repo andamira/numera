@@ -3,7 +3,7 @@ name = "numera"
 description = "numbers"
 version = "0.3.0"
 edition = "2021"
-rust-version = "1.71.1" # sync with readme, check.sh & .github/workflows/check.yml
+rust-version = "1.72.0" # sync with readme, check.sh & .github/workflows/check.yml
 authors = ["José Luis Cruz <joseluis@andamira.net>"]
 repository = "https://github.com/andamira/numera"
 documentation = "https://docs.rs/numera"
@@ -15,16 +15,15 @@ include = [
 	"/LICENSE-*.md",
 	"/README.md",
 ]
-categories = ["mathematics"]
+categories = ["mathematics", "no-std::no-alloc"]
 keywords = ["math", "mathematics", "number", "numeral", "numeric"]
 publish = true
 
 [features]
-default = ["std", "safe", "all_fast"]
+default = ["std", "all_fast"]
 
-#* standard features *#
-
-# avoid using `cargo add` until rust v1.72 because of a bug that reformats the [features] section:
+# environment features
+# (not enabling "std" declares the library as "no_std")
 std = [
 	"alloc",
 	"devela/std",
@@ -35,33 +34,46 @@ std = [
 	"half?/std", # + alloc
 	"twofloat?/math_funcs", # + std
 ]
-alloc = ["half?/alloc"] # allocating no-std
-no-std = [] # non-allocating no-std. incompatible with "std" (unused)
+alloc = ["half?/alloc"]
+no_std = ["devela/no_std"]
 
-safe = [] # disables unsafe in this crate
-safest = ["safe", "devela/safe"] # disables unsafe in dependencies too
-unsafe = [] # enables unsafe alternatives. incompatible with "safe" (unused)
-unsafest = ["unsafe", "devela/unsafe"] # enables unsafe in dependencies too
+# safety features
+safe = [] # forbid unsafe at the crate level
+safest = ["safe", "devela/safest"] # forbid unsafe recursively
+unsafe = [] # enable the unsafe features
+unsafest = ["unsafe", "devela/unsafest"] # enable unsafe recursively
 
+# nightly features
 nightly = [] # used only for better docs
-nightly_docs = ["nightly", "std", "all"]
+nightly_docs = [
+	"nightly",
+	"std",
+	"all",
+	"devela/nightly_docs",
+]
 
-#* extra features *#
+# deprecated features
+no-std = ["no_std"]
+
+#/ other features /#
 
 all = ["big", "float", "try_from"] # all features
 all_fast = ["big", "float"] # all features except slowest
-all_nostd = ["float", "try_from"] # all no-std features
-all_nostd_fast = ["float"] # all no-std features except slowest
+all_nostd = ["float", "try_from"] # all no_std features
+all_nostd_fast = ["float"] # all no_std features except slowest
 
 # features that increases compilation time
 try_from = [] # TryFrom conversions
 
 # extra numbers
-big = ["dashu-base", "dashu-int"] # big numbers
+big = ["alloc", "dashu-base", "dashu-int"] # big numbers
 float = ["decstr", "half", "twofloat"] # floating-point
 
+dashu-int = ["dep:dashu-int", "std"]
+
+
 [dependencies]
-devela = { version = "0.7.1", default-features = false }
+devela = { version = "0.8.0", default-features = false }
 
 #* optional dependencies *#
 
@@ -84,9 +96,9 @@ static_assertions = "1.1.0"
 opt-level = 3 # for faster prime testing
 
 [package.metadata.docs.rs]
+rustdoc-args = [ "--html-in-header", "./res/rustdoc-header.html" ]
 no-default-features = true
 features = ["nightly_docs"]
-rustdoc-args = [ "--html-in-header", "./res/rustdoc-header.html" ]
 
 [badges]
 maintenance = { status = "experimental" }
