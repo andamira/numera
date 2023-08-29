@@ -54,6 +54,7 @@ nightly_docs = [
 
 # deprecated features
 no-std = ["no_std"]
+non-safe = ["unsafe"]
 
 #/ other features /#
 
