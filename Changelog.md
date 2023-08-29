@@ -7,7 +7,11 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ## [Unreleased]
 
-## [0.3.0] - 2023-08-29
+## [0.4.0] - 2023-08-29
+
+Too many changes!
+
+## [0.3.0] - 2023-04-27
 
 ## [0.2.0] - 2023-04-23
 
@@ -27,8 +31,9 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ## [0.0.1] - 2021-12-30
 
-[unreleased]: https://github.com/andamira/numera/compare/v0.3.0...HEAD
-[0.2.0]: https://github.com/andamira/numera/releases/tag/v0.3.0
+[unreleased]: https://github.com/andamira/numera/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/andamira/numera/releases/tag/v0.4.0
+[0.3.0]: https://github.com/andamira/numera/releases/tag/v0.3.0
 [0.2.0]: https://github.com/andamira/numera/releases/tag/v0.2.0
 [0.1.0]: https://github.com/andamira/numera/releases/tag/v0.1.0
 [0.0.7]: https://github.com/andamira/numera/releases/tag/v0.0.7
