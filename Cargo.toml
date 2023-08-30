@@ -9,8 +9,9 @@ repository = "https://github.com/andamira/numera"
 documentation = "https://docs.rs/numera"
 license = "MIT OR Apache-2.0"
 include = [
-	"/src/**/*.rs",
 	"/Cargo.toml",
+	"/src/**/*.rs",
+	"/src/**/*.md",
 	"/res/*.html",
 	"/LICENSE-*.md",
 	"/README.md",

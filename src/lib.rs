@@ -1,7 +1,6 @@
 // numera::lib
 //
-//! Numbers allows us to express and compare magnitudes and quantities.
-//!
+#![doc = include_str!("./Lib.md")]
 //
 
 // warnings
@@ -38,7 +37,7 @@ pub mod number;
 #[doc(inline)]
 pub use number::{integer::Integer, traits::Numbers};
 
-/// Everything is directly available in here.
+/// All items are reexported here.
 pub mod all {
     #[doc(inline)]
     pub use super::{error::*, number::all::*};
