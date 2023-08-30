@@ -19,12 +19,14 @@ categories = ["mathematics", "no-std::no-alloc"]
 keywords = ["math", "mathematics", "number", "numeral", "numeric"]
 publish = true
 
+# ------------------------------------------------------------------------------
+
 [features]
 default = ["std", "all_fast"]
 
-# environment features
+#* environment features *#
 # (not enabling "std" declares the library as "no_std")
-std = [
+std = [ # enables functionality that depend on the standard library
 	"alloc",
 	"devela/std",
 	"primal-sieve",
@@ -34,36 +36,35 @@ std = [
 	"half?/std", # + alloc
 	"twofloat?/math_funcs", # + std
 ]
-alloc = ["half?/alloc"]
-no_std = ["devela/no_std"]
+alloc = ["half?/alloc"] # enables functionality that depend on allocation
+no_std = ["devela/no_std"] # enables functionality incompatible with the standard library
 
-# safety features
-safe = [] # forbid unsafe at the crate level
-safest = ["safe", "devela/safest"] # forbid unsafe recursively
-unsafe = [] # enable the unsafe features
-unsafest = ["unsafe", "devela/unsafest"] # enable unsafe recursively
+#* safety features *#
+safe = [] # forbids unsafe at the crate level
+safest = ["safe", "devela/safest"] # forbids unsafe recursively
+unsafe = [] # enables the unsafe features
+unsafest = ["unsafe", "devela/unsafest"] # enables unsafe recursively
 
-# nightly features
-nightly = [] # used only for better docs
-nightly_docs = [
+#* nightly features *#
+nightly = [] # enables the nightly features
+nightly_docs = [ # features for docs.rs
 	"nightly",
 	"std",
 	"all",
 	"devela/nightly_docs",
 ]
 
-# deprecated features
-no-std = ["no_std"]
-non-safe = ["unsafe"]
+#* deprecated features *#
+no-std = ["no_std"] # since 0.4.0
+non-safe = ["unsafe"] # since 0.4.0
 
-#/ other features /#
-
+#* other features *#
 all = ["big", "float", "try_from"] # all features
 all_fast = ["big", "float"] # all features except slowest
 all_nostd = ["float", "try_from"] # all no_std features
 all_nostd_fast = ["float"] # all no_std features except slowest
 
-# features that increases compilation time
+# features that increase compilation time
 try_from = [] # TryFrom conversions
 
 # extra numbers
@@ -72,6 +73,7 @@ float = ["decstr", "half", "twofloat"] # floating-point
 
 dashu-int = ["dep:dashu-int", "std"]
 
+# ------------------------------------------------------------------------------
 
 [dependencies]
 devela = { version = "0.8.0", default-features = false }
@@ -93,8 +95,12 @@ twofloat = { version = "0.7.0", optional = true, default-features = false }
 [dev-dependencies]
 static_assertions = "1.1.0"
 
+# ------------------------------------------------------------------------------
+
 [profile.dev]
 opt-level = 3 # for faster prime testing
+
+# ------------------------------------------------------------------------------
 
 [package.metadata.docs.rs]
 rustdoc-args = [ "--html-in-header", "./res/rustdoc-header.html" ]
