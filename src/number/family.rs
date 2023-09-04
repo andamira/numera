@@ -4,32 +4,32 @@
 //
 
 use super::{
-    integer::AnyInteger,
-    rational::AnyRational, // real::AnyReal, complex::AnyComplex,
+    integer::AllIntegers,
+    rational::AllRationals, // real::AllReals, complex::AllComplexes,
     traits::{self, Numbers},
     NoNumber,
 };
 
 /// The family of *non-custom* numbers.
 ///
-/// This is an alias of [`AnyNumber`] which allows to concisely use variants
+/// This is an alias of [`AllNumbers`] which allows to concisely use variants
 /// other than `Any`, without having to specify a type.
-pub type Number = AnyNumber<NoNumber>;
+pub type Number = AllNumbers<NoNumber>;
 
-/// Abbreviation of [`AnyNumber`] family.
-pub type AnyN<N> = AnyNumber<N>;
+/// Abbreviation of [`AllNumbers`] family.
+pub type AllN<N> = AllNumbers<N>;
 
-/// Defines the `AnyNumber` family and implements `Numbers` on it.
+/// Defines the `AllNumbers` family and implements `Numbers` on it.
 macro_rules! define_numbers {
     // applies a method to each variant
     (match_variants:
         $self:ident,
         $method:ident,
-        no_std: $($v:ident),+
+        no_std: $($v:ident),+ $(,)?
     ) => {
         match $self {
-            $( AnyNumber::$v(n) => n.$method(), )+
-            AnyNumber::Any(n) => n.$method(),
+            $( AllNumbers::$v(n) => n.$method(), )+
+            AllNumbers::Any(n) => n.$method(),
         }
     };
 
@@ -37,20 +37,20 @@ macro_rules! define_numbers {
     (match_variants_rewrap:
         $self:ident,
         $method:ident,
-        no_std: $($v:ident),+
+        no_std: $($v:ident),+ $(,)?
     ) => {
         match $self {
-            $( AnyNumber::$v(n) => n.$method().map(|n| AnyNumber::$v(n)), )+
-            AnyNumber::Any(n) => n.$method().map(|n| AnyNumber::Any(n)),
+            $( AllNumbers::$v(n) => n.$method().map(|n| AllNumbers::$v(n)), )+
+            AllNumbers::Any(n) => n.$method().map(|n| AllNumbers::Any(n)),
         }
     };
 
     // $v: variant name
     // $t: variant data type
     (build_variants:
-        no_std: $($v:ident, $t:ident),+
+        no_std: $($v:ident, $t:ident),+ $(,)?
     ) => {
-        /// The family of [any kind of number][super], also known as [`AnyN`].
+        /// The family of [any kind of number][super], also known as [`AllN`].
         ///
         /// # Notes
         /// Note that it wont have several specific traits implemented, like for
@@ -58,11 +58,11 @@ macro_rules! define_numbers {
         /// since they are mutually exclusive, and don't apply to all cases.
         ///
         /// The [`Number`] alias is more convenient to use unless you need to
-        /// refer to custom numbers via the [`Any`][AnyNumber::Any] variant.
+        /// refer to custom numbers via the [`Any`][AllNumbers::Any] variant.
         #[derive(Clone, Debug, PartialEq)]
         #[non_exhaustive]
         #[allow(clippy::derive_partial_eq_without_eq)]
-        pub enum AnyNumber<N: Numbers> {
+        pub enum AllNumbers<N: Numbers> {
             $( $v($t),)+
 
             /// Any kind of number.
@@ -72,7 +72,7 @@ macro_rules! define_numbers {
         /* impl Numbers */
 
         /// This implementation is no-op.
-        impl<N: Numbers> Numbers for AnyNumber<N> {
+        impl<N: Numbers> Numbers for AllNumbers<N> {
             type InnerRepr = Self;
             type InnermostRepr = Self;
 
@@ -84,7 +84,7 @@ macro_rules! define_numbers {
             #[inline]
             #[cfg(not(feature = "safe"))]
             #[cfg_attr(feature = "nightly", doc(cfg(feature = "not(safe)")))]
-            unsafe fn from_inner_repr_unchecked(value: AnyNumber<N>) -> Self { value }
+            unsafe fn from_inner_repr_unchecked(value: AllNumbers<N>) -> Self { value }
 
             /// Returns `value` unchanged.
             #[inline]
@@ -108,7 +108,7 @@ macro_rules! define_numbers {
         }
 
         /// This implementation defers to the actual number variant.
-        impl<N: Numbers> traits::Bound for AnyNumber<N> {
+        impl<N: Numbers> traits::Bound for AllNumbers<N> {
             fn is_lower_bounded(&self) -> bool {
                 define_numbers! { match_variants: self, is_lower_bounded, no_std: $($v),+ }
             }
@@ -124,14 +124,14 @@ macro_rules! define_numbers {
         }
 
         /// This implementation defers to the actual number variant.
-        impl<N: Numbers> traits::Count for AnyNumber<N> {
+        impl<N: Numbers> traits::Count for AllNumbers<N> {
             fn is_countable(&self) -> bool {
                 define_numbers! { match_variants: self, is_countable, no_std: $($v),+ }
             }
         }
 
         /// This implementation defers to the actual number variant.
-        impl<N: Numbers> traits::Sign for AnyNumber<N> {
+        impl<N: Numbers> traits::Sign for AllNumbers<N> {
             fn can_positive(&self) -> bool {
                 define_numbers! { match_variants: self, can_positive, no_std: $($v),+ }
             }
@@ -147,7 +147,7 @@ macro_rules! define_numbers {
         }
 
         /// This implementation defers to the actual number variant.
-        impl<N: Numbers> traits::Ident for AnyNumber<N> {
+        impl<N: Numbers> traits::Ident for AllNumbers<N> {
             fn can_zero(&self) -> bool {
                 define_numbers! { match_variants: self, can_zero, no_std: $($v),+ }
             }
@@ -171,18 +171,18 @@ macro_rules! define_numbers {
         /* impl From & TryFrom */
 
         $(
-        impl<N: Numbers> From<$t> for AnyNumber<N> {
+        impl<N: Numbers> From<$t> for AllNumbers<N> {
             #[inline]
-            fn from(n: $t) -> AnyNumber<N> { AnyNumber::$v(n) }
+            fn from(n: $t) -> AllNumbers<N> { AllNumbers::$v(n) }
         }
         )+
 
         $(
-        impl<N: Numbers> TryFrom<AnyNumber<N>> for $t {
+        impl<N: Numbers> TryFrom<AllNumbers<N>> for $t {
             type Error = crate::error::NumeraError;
-            fn try_from(n: AnyNumber<N>) -> core::result::Result<$t, Self::Error> {
+            fn try_from(n: AllNumbers<N>) -> core::result::Result<$t, Self::Error> {
                 match n {
-                    AnyNumber::$v(n) => Ok(n),
+                    AllNumbers::$v(n) => Ok(n),
                     _ => Err(Self::Error::Conversion)
                 }
             }
@@ -194,8 +194,8 @@ macro_rules! define_numbers {
 #[rustfmt::skip]
 define_numbers![build_variants:
     no_std:
-    Integer, AnyInteger,
-    Rational, AnyRational
-    // Real, AnyReals,
-    // Complex, AnyComplex,
+    Integer, AllIntegers,
+    Rational, AllRationals
+    // Real, AllReals,
+    // Complex, AllComplex,
 ];

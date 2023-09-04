@@ -534,8 +534,8 @@ macro_rules! define_any_integer_family {
 #[rustfmt::skip]
 define_any_integer_family![
     build_variants:
-        AnyInteger,
-        "The family of [any kind of integer][super] numbers, also known as [`AnyZ`][super::AnyZ].",
+        AllIntegers,
+        "The family of [all kinds of integers][super], also known as [`AllZ`][super::AllZ].",
     common:
         Integer, Integer,
         NonZeroInteger, NonZero,
@@ -547,4 +547,4 @@ define_any_integer_family![
 ];
 
 use crate::number::macros::define_abbreviations;
-define_abbreviations![family AnyZ, AnyInteger];
+define_abbreviations![family AllZ, AllIntegers];

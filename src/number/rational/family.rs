@@ -542,8 +542,8 @@ macro_rules! define_any_rational_family {
 #[rustfmt::skip]
 define_any_rational_family![
     build_variants:
-        AnyRational,
-        "The family of [any kind of rational][super] numbers, also known as [`AnyQ`]",
+        AllRationals,
+        "The family of [all kinds of rationals][super], also known as [`AllQ`]",
     common:
         Rational, Rational
         // TODO
@@ -555,7 +555,7 @@ define_any_rational_family![
 ];
 
 use crate::number::macros::define_abbreviations;
-define_abbreviations![family AnyQ, AnyRational];
+define_abbreviations![family AllQ, AllRationals];
 
 // #[cfg(test)]
 // mod tests {
@@ -566,12 +566,12 @@ define_abbreviations![family AnyQ, AnyRational];
 //     #[test]
 //     fn sizes() {
 //         // 24 because of the enum discriminant
-//         assert_eq![24, size_of::<super::AnyRational>()];
+//         assert_eq![24, size_of::<super::AllRationals>()];
 //     }
 //
 //     #[test]
 //     #[cfg(feature = "deps_all")]
 //     fn size_all_features() {
-//         assert_eq![32, size_of::<super::AnyRational>()];
+//         assert_eq![32, size_of::<super::AllRationals>()];
 //     }
 // }

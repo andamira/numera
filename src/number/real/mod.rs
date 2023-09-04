@@ -8,6 +8,6 @@ pub mod float;
 pub use all::*;
 pub(crate) mod all {
     #[doc(inline)]
-    // pub use super::{family::AnyReals, trait_real::Real};
+    // pub use super::{family::AllReals, trait_real::Real};
     pub use super::float::all::*;
 }
