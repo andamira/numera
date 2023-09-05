@@ -13,7 +13,7 @@
 //   - Number
 
 use crate::{
-    error::{NumeraError, NumeraResult},
+    error::{NumeraErrors, NumeraResult},
     number::traits::{
         Bound, ConstNegOne, ConstOne, ConstZero, Count, Countable, Ident, NegOne, Negative,
         NonLowerBounded, NonUpperBounded, Numbers, One, Positive, Sign, Zero,
@@ -77,7 +77,7 @@ impl IntegerBig {
 }
 
 impl FromStr for IntegerBig {
-    type Err = NumeraError;
+    type Err = NumeraErrors;
 
     fn from_str(s: &str) -> NumeraResult<IntegerBig> {
         Self::from_string(s)

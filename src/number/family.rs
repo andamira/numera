@@ -179,7 +179,7 @@ macro_rules! define_numbers {
 
         $(
         impl<N: Numbers> TryFrom<AllNumbers<N>> for $t {
-            type Error = crate::error::NumeraError;
+            type Error = crate::error::NumeraErrors;
             fn try_from(n: AllNumbers<N>) -> core::result::Result<$t, Self::Error> {
                 match n {
                     AllNumbers::$v(n) => Ok(n),

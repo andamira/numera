@@ -9,7 +9,7 @@ use super::{
     is_prime, Prime128, Prime16, Prime32, Prime64, Prime8,
 };
 use crate::{
-    error::{IntegerError, NumeraResult},
+    error::{IntegerErrors, NumeraResult},
     number::traits::{
         Bound, ConstLowerBounded, ConstUpperBounded, Count, Countable, Ident, LowerBounded,
         NonNegative, NonOne, NonZero, Numbers, Positive, Sign, UpperBounded,
@@ -78,7 +78,7 @@ impl Countable for Prime8 {
     fn next(&self) -> NumeraResult<Self> {
         let nth = self.pi();
         match nth {
-            54 => Err(IntegerError::Overflow.into()),
+            54 => Err(IntegerErrors::Overflow.into()),
             _ => Ok(Prime8(PRIMES_U8[nth])),
         }
     }
@@ -98,7 +98,7 @@ impl Countable for Prime8 {
     fn previous(&self) -> NumeraResult<Self> {
         let nth = self.pi();
         match nth {
-            1 => Err(IntegerError::Underflow.into()),
+            1 => Err(IntegerErrors::Underflow.into()),
             _ => Ok(Prime8(PRIMES_U8[nth - 2])),
         }
     }
@@ -145,7 +145,7 @@ impl Numbers for Prime8 {
         if is_prime(value.into()) {
             Ok(Self(value))
         } else {
-            Err(IntegerError::NotPrime.into())
+            Err(IntegerErrors::NotPrime.into())
         }
     }
     #[inline]
@@ -160,7 +160,7 @@ impl Numbers for Prime8 {
         if is_prime(value.into()) {
             Ok(Self(value))
         } else {
-            Err(IntegerError::NotPrime.into())
+            Err(IntegerErrors::NotPrime.into())
         }
     }
     #[inline]
@@ -242,11 +242,11 @@ impl Countable for Prime16 {
             1..=53 => Ok(Prime16(u16::from(PRIMES_U8[nth]))),
             54..=6_541 => Ok(Prime16(PRIMES_U16[nth - 54])),
             // otherwise it can only be 6_542
-            _ => Err(IntegerError::Overflow.into()),
+            _ => Err(IntegerErrors::Overflow.into()),
         }
 
         // ALTERNATIVE:
-        // if self.0 == 65_521 { Err(IntegerError::Overflow.into()) } else {
+        // if self.0 == 65_521 { Err(IntegerErrors::Overflow.into()) } else {
         //     let sieve = Sieve::new(min(self.0.saturating_add(1000), u16::MAX) as usize);
         //     let nth = sieve.prime_pi(self.0 as usize);
         //     let next_prime = sieve.nth_prime(nth + 1);
@@ -275,11 +275,11 @@ impl Countable for Prime16 {
             2..=55 => Ok(Prime16(u16::from(PRIMES_U8[nth - 2]))),
             56..=6_542 => Ok(Prime16(PRIMES_U16[nth - 54 - 2])),
             // otherwise it can only be 1
-            _ => Err(IntegerError::Underflow.into()),
+            _ => Err(IntegerErrors::Underflow.into()),
         }
 
         // ALTERNATIVE:
-        // if self.0 == 2 { Err(IntegerError::Underflow.into()) } else {
+        // if self.0 == 2 { Err(IntegerErrors::Underflow.into()) } else {
         //     let sieve = Sieve::new(min(self.0.saturating_add(1000), u16::MAX) as usize);
         //     let nth = sieve.prime_pi(self.0 as usize);
         //     let prev_prime = sieve.nth_prime(nth - 1);
@@ -329,7 +329,7 @@ impl Numbers for Prime16 {
         if is_prime(value.into()) {
             Ok(Self(value))
         } else {
-            Err(IntegerError::NotPrime.into())
+            Err(IntegerErrors::NotPrime.into())
         }
     }
     #[inline]
@@ -344,7 +344,7 @@ impl Numbers for Prime16 {
         if is_prime(value.into()) {
             Ok(Self(value))
         } else {
-            Err(IntegerError::NotPrime.into())
+            Err(IntegerErrors::NotPrime.into())
         }
     }
     #[inline]
@@ -409,9 +409,9 @@ impl Count for Prime32 {
 #[cfg(not(feature = "std"))]
 impl Countable for Prime32 {
     /// Not implemented for no-std.
-    fn next(&self) -> NumeraResult<Self> { Err(crate::all::NumeraError::NotImplemented) }
+    fn next(&self) -> NumeraResult<Self> { Err(crate::all::NumeraErrors::NotImplemented) }
     /// Not implemented for no-std.
-    fn previous(&self) -> NumeraResult<Self> { Err(crate::all::NumeraError::NotImplemented) }
+    fn previous(&self) -> NumeraResult<Self> { Err(crate::all::NumeraErrors::NotImplemented) }
 }
 #[cfg(feature = "std")]
 #[cfg_attr(feature = "nightly", doc(cfg(feature = "std")))]
@@ -435,7 +435,7 @@ impl Countable for Prime32 {
     #[inline]
     fn next(&self) -> NumeraResult<Self> {
         if self.0 == 4_294_967_291 {
-            Err(IntegerError::Overflow.into())
+            Err(IntegerErrors::Overflow.into())
         } else {
             let sieve = Sieve::new(min(self.0.saturating_add(1000), u32::MAX) as usize);
             let nth = sieve.prime_pi(self.0 as usize);
@@ -462,7 +462,7 @@ impl Countable for Prime32 {
     #[inline]
     fn previous(&self) -> NumeraResult<Self> {
         if self.0 == 2 {
-            Err(IntegerError::Underflow.into())
+            Err(IntegerErrors::Underflow.into())
         } else {
             let sieve = Sieve::new(min(self.0.saturating_add(1000), u32::MAX) as usize);
             let nth = sieve.prime_pi(self.0 as usize);
@@ -514,16 +514,16 @@ impl Numbers for Prime32 {
         if is_prime(value) {
             Ok(Self(value))
         } else {
-            Err(IntegerError::NotPrime.into())
+            Err(IntegerErrors::NotPrime.into())
         }
     }
     #[inline]
     #[cfg(feature = "std")]
     fn from_inner_repr(value: Self::InnerRepr) -> NumeraResult<Self> {
-        if is_prime_sieve(value.checked_as::<usize>().ok_or(IntegerError::Overflow)?) {
+        if is_prime_sieve(value.checked_as::<usize>().ok_or(IntegerErrors::Overflow)?) {
             Ok(Self(value))
         } else {
-            Err(IntegerError::NotPrime.into())
+            Err(IntegerErrors::NotPrime.into())
         }
     }
     #[inline]
@@ -539,16 +539,16 @@ impl Numbers for Prime32 {
         if is_prime(value) {
             Ok(Self(value))
         } else {
-            Err(IntegerError::NotPrime.into())
+            Err(IntegerErrors::NotPrime.into())
         }
     }
     #[inline]
     #[cfg(feature = "std")]
     fn from_innermost_repr(value: Self::InnermostRepr) -> NumeraResult<Self> {
-        if is_prime_sieve(value.checked_as::<usize>().ok_or(IntegerError::Overflow)?) {
+        if is_prime_sieve(value.checked_as::<usize>().ok_or(IntegerErrors::Overflow)?) {
             Ok(Self(value))
         } else {
-            Err(IntegerError::NotPrime.into())
+            Err(IntegerErrors::NotPrime.into())
         }
     }
     #[inline]
@@ -661,16 +661,16 @@ impl Numbers for Prime64 {
         if is_prime(value.try_into()?) {
             Ok(Prime64(value))
         } else {
-            Err(IntegerError::NotPrime.into())
+            Err(IntegerErrors::NotPrime.into())
         }
     }
     #[inline]
     #[cfg(feature = "std")]
     fn from_inner_repr(value: Self::InnerRepr) -> NumeraResult<Self> {
-        if is_prime_sieve(value.checked_as::<usize>().ok_or(IntegerError::Overflow)?) {
+        if is_prime_sieve(value.checked_as::<usize>().ok_or(IntegerErrors::Overflow)?) {
             Ok(Prime64(value))
         } else {
-            Err(IntegerError::NotPrime.into())
+            Err(IntegerErrors::NotPrime.into())
         }
     }
     #[inline]
@@ -686,16 +686,16 @@ impl Numbers for Prime64 {
         if is_prime(value.try_into()?) {
             Ok(Self(value))
         } else {
-            Err(IntegerError::NotPrime.into())
+            Err(IntegerErrors::NotPrime.into())
         }
     }
     #[inline]
     #[cfg(feature = "std")]
     fn from_innermost_repr(value: Self::InnermostRepr) -> NumeraResult<Self> {
-        if is_prime_sieve(value.checked_as::<usize>().ok_or(IntegerError::Overflow)?) {
+        if is_prime_sieve(value.checked_as::<usize>().ok_or(IntegerErrors::Overflow)?) {
             Ok(Self(value))
         } else {
-            Err(IntegerError::NotPrime.into())
+            Err(IntegerErrors::NotPrime.into())
         }
     }
     #[inline]
@@ -807,16 +807,16 @@ impl Numbers for Prime128 {
         if is_prime(value.try_into()?) {
             Ok(Prime128(value))
         } else {
-            Err(IntegerError::NotPrime.into())
+            Err(IntegerErrors::NotPrime.into())
         }
     }
     #[inline]
     #[cfg(feature = "std")]
     fn from_inner_repr(value: Self::InnerRepr) -> NumeraResult<Self> {
-        if is_prime_sieve(value.checked_as::<usize>().ok_or(IntegerError::Overflow)?) {
+        if is_prime_sieve(value.checked_as::<usize>().ok_or(IntegerErrors::Overflow)?) {
             Ok(Prime128(value))
         } else {
-            Err(IntegerError::NotPrime.into())
+            Err(IntegerErrors::NotPrime.into())
         }
     }
     #[inline]
@@ -832,16 +832,16 @@ impl Numbers for Prime128 {
         if is_prime(value.try_into()?) {
             Ok(Self(value))
         } else {
-            Err(IntegerError::NotPrime.into())
+            Err(IntegerErrors::NotPrime.into())
         }
     }
     #[inline]
     #[cfg(feature = "std")]
     fn from_innermost_repr(value: Self::InnermostRepr) -> NumeraResult<Self> {
-        if is_prime_sieve(value.checked_as::<usize>().ok_or(IntegerError::Overflow)?) {
+        if is_prime_sieve(value.checked_as::<usize>().ok_or(IntegerErrors::Overflow)?) {
             Ok(Self(value))
         } else {
-            Err(IntegerError::NotPrime.into())
+            Err(IntegerErrors::NotPrime.into())
         }
     }
     #[inline]

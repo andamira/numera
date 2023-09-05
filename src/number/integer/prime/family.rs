@@ -142,7 +142,7 @@ impl Countable for Prime {
             // IMPROVE for bigger sized
             // IMPROVE for no-std
             // #[cfg(not(feature = "std"))]
-            _ => Err(crate::all::NumeraError::NotImplemented),
+            _ => Err(crate::all::NumeraErrors::NotImplemented),
         }
     }
     fn previous(&self) -> NumeraResult<Self> {
@@ -155,7 +155,7 @@ impl Countable for Prime {
             // IMPROVE for bigger sized
             // IMPROVE for no-std
             // #[cfg(not(feature = "std"))]
-            _ => Err(crate::all::NumeraError::NotImplemented),
+            _ => Err(crate::all::NumeraErrors::NotImplemented),
         }
     }
 }

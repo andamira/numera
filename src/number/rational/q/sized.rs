@@ -12,7 +12,7 @@
 #[cfg(feature = "try_from")]
 use crate::number::rational::Rational;
 use crate::{
-    error::{NumeraError, NumeraResult, RationalError},
+    error::{NumeraErrors, NumeraResult, RationalErrors},
     number::{
         integer::*,
         macros::impl_larger_smaller,
@@ -197,7 +197,7 @@ macro_rules! define_rational_sized {
                     let num = [<$num$b>]::new(numerator);
                     Ok(Self{ num, den })
                 } else {
-                    Err(NumeraError::Rational(RationalError::ZeroDenominator))
+                    Err(NumeraErrors::Rational(RationalErrors::ZeroDenominator))
                 }
             }
 
@@ -299,7 +299,7 @@ macro_rules! define_rational_sized {
             fn next(&self) -> NumeraResult<Self> {
                 Ok(Self {
                     num: self.num.0.checked_add(1)
-                        .ok_or(RationalError::NumeratorOverflow)?.into(),
+                        .ok_or(RationalErrors::NumeratorOverflow)?.into(),
                     den: self.den,
                 })
             }
@@ -309,7 +309,7 @@ macro_rules! define_rational_sized {
             fn previous(&self) -> NumeraResult<Self> {
                 Ok(Self {
                     num: self.num.0.checked_sub(1)
-                        .ok_or(RationalError::NumeratorUnderflow)?.into(),
+                        .ok_or(RationalErrors::NumeratorUnderflow)?.into(),
                     den: self.den,
                 })
             }
@@ -379,7 +379,7 @@ macro_rules! define_rational_sized {
                     Self {
                         num: [<$num$b>]::from_inner_repr(value.0)?,
                         den: [<$den$b>]::from_inner_repr(value.1)
-                            .map_err(|_| RationalError::ZeroDenominator)?,
+                            .map_err(|_| RationalErrors::ZeroDenominator)?,
                     }
                 )
             }
@@ -405,7 +405,7 @@ macro_rules! define_rational_sized {
                     Self {
                         num: [<$num$b>]::from_innermost_repr(value.0)?,
                         den: [<$den$b>]::from_innermost_repr(value.1)
-                            .map_err(|_| RationalError::ZeroDenominator)?,
+                            .map_err(|_| RationalErrors::ZeroDenominator)?,
                     }
                 )
             }
@@ -460,7 +460,7 @@ mod tests {
     fn q_define_sized() -> NumeraResult<()> {
         assert_eq![
             Rational8::from_innermost_repr((5, 0)),
-            Err(RationalError::ZeroDenominator.into())
+            Err(RationalErrors::ZeroDenominator.into())
         ];
 
         let _q5 = Rational8::from_innermost_repr((5, 1))?;

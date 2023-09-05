@@ -4,7 +4,7 @@
 //
 
 use crate::{
-    error::{IntegerError, NumeraError, NumeraResult},
+    error::{IntegerErrors, NumeraErrors, NumeraResult},
     number::{integer::prime::all::*, traits::Numbers},
 };
 use devela::convert::az::CheckedAs;
@@ -85,28 +85,28 @@ mod between_primes {
     /* fallible */
 
     impl TryFrom<Prime16> for Prime8 {
-        type Error = NumeraError;
+        type Error = NumeraErrors;
         #[inline]
         fn try_from(value: Prime16) -> NumeraResult<Prime8> {
             Ok(Prime8(u8::try_from(value.0)?))
         }
     }
     impl TryFrom<Prime32> for Prime8 {
-        type Error = NumeraError;
+        type Error = NumeraErrors;
         #[inline]
         fn try_from(value: Prime32) -> NumeraResult<Prime8> {
             Ok(Prime8(u8::try_from(value.0)?))
         }
     }
     impl TryFrom<Prime64> for Prime8 {
-        type Error = NumeraError;
+        type Error = NumeraErrors;
         #[inline]
         fn try_from(value: Prime64) -> NumeraResult<Prime8> {
             Ok(Prime8(u8::try_from(value.0)?))
         }
     }
     impl TryFrom<Prime128> for Prime8 {
-        type Error = NumeraError;
+        type Error = NumeraErrors;
         #[inline]
         fn try_from(value: Prime128) -> NumeraResult<Prime8> {
             Ok(Prime8(u8::try_from(value.0)?))
@@ -114,21 +114,21 @@ mod between_primes {
     }
 
     impl TryFrom<Prime32> for Prime16 {
-        type Error = NumeraError;
+        type Error = NumeraErrors;
         #[inline]
         fn try_from(value: Prime32) -> NumeraResult<Prime16> {
             Ok(Prime16(u16::try_from(value.0)?))
         }
     }
     impl TryFrom<Prime64> for Prime16 {
-        type Error = NumeraError;
+        type Error = NumeraErrors;
         #[inline]
         fn try_from(value: Prime64) -> NumeraResult<Prime16> {
             Ok(Prime16(u16::try_from(value.0)?))
         }
     }
     impl TryFrom<Prime128> for Prime16 {
-        type Error = NumeraError;
+        type Error = NumeraErrors;
         #[inline]
         fn try_from(value: Prime128) -> NumeraResult<Prime16> {
             Ok(Prime16(u16::try_from(value.0)?))
@@ -136,14 +136,14 @@ mod between_primes {
     }
 
     impl TryFrom<Prime64> for Prime32 {
-        type Error = NumeraError;
+        type Error = NumeraErrors;
         #[inline]
         fn try_from(value: Prime64) -> NumeraResult<Prime32> {
             Ok(Prime32(u32::try_from(value.0)?))
         }
     }
     impl TryFrom<Prime128> for Prime32 {
-        type Error = NumeraError;
+        type Error = NumeraErrors;
         #[inline]
         fn try_from(value: Prime128) -> NumeraResult<Prime32> {
             Ok(Prime32(u32::try_from(value.0)?))
@@ -151,7 +151,7 @@ mod between_primes {
     }
 
     impl TryFrom<Prime128> for Prime64 {
-        type Error = NumeraError;
+        type Error = NumeraErrors;
         #[inline]
         fn try_from(value: Prime128) -> NumeraResult<Prime64> {
             Ok(Prime64(u64::try_from(value.0)?))
@@ -159,7 +159,7 @@ mod between_primes {
     }
 
     impl TryFrom<Prime> for Prime8 {
-        type Error = NumeraError;
+        type Error = NumeraErrors;
         #[inline]
         fn try_from(value: Prime) -> NumeraResult<Prime8> {
             match value {
@@ -201,7 +201,7 @@ macro_rules! try_from_prime_to_primitive {
     };
     (@ $Prime:ident, $primitive:ty) => {
         impl TryFrom<$Prime> for $primitive {
-            type Error = NumeraError;
+            type Error = NumeraErrors;
             #[inline]
             fn try_from(p: $Prime) -> NumeraResult<$primitive> {
                 Ok(<$primitive>::try_from(p.0)?)
@@ -224,10 +224,10 @@ macro_rules! try_from_primitive_to_prime {
     };
     (@ $Prime:ident, $PrimeInnerRepr:ty; $primitive:ty) => {
         impl TryFrom<$primitive> for $Prime {
-            type Error = NumeraError;
+            type Error = NumeraErrors;
             #[inline]
             fn try_from(p: $primitive) -> NumeraResult<$Prime> {
-                let arg = p.checked_as::<$PrimeInnerRepr>().ok_or(IntegerError::Overflow)?;
+                let arg = p.checked_as::<$PrimeInnerRepr>().ok_or(IntegerErrors::Overflow)?;
                 $Prime::from_inner_repr(arg)
             }
         }

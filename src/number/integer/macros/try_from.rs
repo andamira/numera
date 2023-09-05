@@ -572,7 +572,7 @@ macro_rules! try_from_any {
                 if f.is_zero() {
                     Ok([<$for$for_b>]::ZERO)
                 } else {
-                    Err($crate::error::NumeraError::Conversion)
+                    Err($crate::error::NumeraErrors::Conversion)
                 }
             });
         }
@@ -593,7 +593,7 @@ macro_rules! try_from_any {
     };
     (@error for: $for:ident + $for_b:expr, from: $from:ident + $from_b:expr) => {
         $crate::all::impl_from!(try for: $for+$for_b, from: @$from+$from_b, arg:_f, body: {
-            Err($crate::error::NumeraError::Conversion)
+            Err($crate::error::NumeraErrors::Conversion)
         });
     };
 }

@@ -12,7 +12,7 @@
 #[cfg(feature = "try_from")]
 use crate::number::integer::NonNegativeInteger;
 use crate::{
-    error::{IntegerError, NumeraResult},
+    error::{IntegerErrors, NumeraResult},
     number::{
         macros::impl_larger_smaller,
         traits::{
@@ -170,11 +170,11 @@ macro_rules! define_nonnegative_integer_sized {
         impl Countable for [<$name$b>] {
             #[inline]
             fn next(&self) -> NumeraResult<Self> {
-                Ok(Self(self.0.checked_add(1).ok_or(IntegerError::Overflow)?))
+                Ok(Self(self.0.checked_add(1).ok_or(IntegerErrors::Overflow)?))
             }
             #[inline]
             fn previous(&self) -> NumeraResult<Self> {
-                Ok(Self(self.0.checked_sub(1).ok_or(IntegerError::Underflow)?))
+                Ok(Self(self.0.checked_sub(1).ok_or(IntegerErrors::Underflow)?))
             }
         }
 

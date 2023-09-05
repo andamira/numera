@@ -20,7 +20,7 @@ use core::num::{
 };
 
 use crate::{
-    error::{NumeraError, NumeraResult},
+    error::{NumeraErrors, NumeraResult},
     number::traits::{Bound, Count, Ident, Sign},
 };
 
@@ -156,7 +156,7 @@ macro_rules! impl_numbers {
 
             #[inline]
             fn from_inner_repr(value: Self::InnerRepr) -> NumeraResult<Self> {
-                $t::new(value).ok_or(NumeraError::Conversion)
+                $t::new(value).ok_or(NumeraErrors::Conversion)
             }
             #[inline]
             #[cfg(not(feature = "safe"))]
@@ -166,7 +166,7 @@ macro_rules! impl_numbers {
 
             #[inline]
             fn from_innermost_repr(value: Self::InnermostRepr) -> NumeraResult<Self> {
-                $t::new(value).ok_or(NumeraError::Conversion)
+                $t::new(value).ok_or(NumeraErrors::Conversion)
             }
             #[inline]
             #[cfg(not(feature = "safe"))]

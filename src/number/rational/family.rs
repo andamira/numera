@@ -269,7 +269,7 @@ macro_rules! define_rational_family {
 
         $(
         impl TryFrom<$tname> for [<$vtype$vbit>] {
-            type Error = $crate::error::NumeraError;
+            type Error = $crate::error::NumeraErrors;
             fn try_from(z: $tname) -> core::result::Result<[<$vtype$vbit>], Self::Error> {
                 match z {
                     $tname::[<_$vbit>](z) => Ok(z),
@@ -281,7 +281,7 @@ macro_rules! define_rational_family {
 
         $( #[cfg(feature = $dependency)]
         impl TryFrom<$tname> for $dep_vtype {
-            type Error = $crate::error::NumeraError;
+            type Error = $crate::error::NumeraErrors;
             fn try_from(z: $tname) -> core::result::Result<$dep_vtype, Self::Error> {
                 match z {
                     $tname::$dep_vname(z) => Ok(z),
@@ -515,7 +515,7 @@ macro_rules! define_any_rational_family {
 
         $(
         impl TryFrom<$tname> for $vtype {
-            type Error = $crate::error::NumeraError;
+            type Error = $crate::error::NumeraErrors;
             fn try_from(z: $tname) -> core::result::Result<$vtype, Self::Error> {
                 match z {
                     $tname::$vname(z) => Ok(z),
@@ -527,7 +527,7 @@ macro_rules! define_any_rational_family {
 
         // $( #[cfg(feature = $dependency)]
         // impl TryFrom<$tname> for $dep_vtype {
-        //     type Error = $crate::error::NumeraError;
+        //     type Error = $crate::error::NumeraErrors;
         //     fn try_from(z: $tname) -> core::result::Result<$dep_vtype, Self::Error> {
         //         match z {
         //             $tname::$vname_dep(z) => Ok(z),

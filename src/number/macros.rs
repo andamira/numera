@@ -172,7 +172,7 @@ macro_rules! impl_from {
      ) => { devela::paste! {
         #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
         impl TryFrom<[<$from$from_b>]> for [<$for$for_b>] {
-            type Error = $crate::error::NumeraError;
+            type Error = $crate::error::NumeraErrors;
             #[inline]
             fn try_from($arg: [<$from$from_b>]) -> $crate::error::NumeraResult<[<$for$for_b>]> {
                 $body
@@ -187,7 +187,7 @@ macro_rules! impl_from {
     ) => { devela::paste! {
         #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
         impl TryFrom<&[<$from$from_b>]> for [<$for$for_b>] {
-            type Error = $crate::error::NumeraError;
+            type Error = $crate::error::NumeraErrors;
             #[inline]
             fn try_from($arg: &[<$from$from_b>]) -> $crate::error::NumeraResult<[<$for$for_b>]> {
                 $body
@@ -195,7 +195,7 @@ macro_rules! impl_from {
         }
         #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
         impl TryFrom<&mut [<$from$from_b>]> for [<$for$for_b>] {
-            type Error = $crate::error::NumeraError;
+            type Error = $crate::error::NumeraErrors;
             #[inline]
             fn try_from($arg: &mut [<$from$from_b>]) -> $crate::error::NumeraResult<[<$for$for_b>]> {
                 $body
@@ -222,7 +222,7 @@ macro_rules! impl_from {
      ) => { devela::paste! {
         #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
         impl TryFrom<[<$from$from_b>]> for $for {
-            type Error = $crate::error::NumeraError;
+            type Error = $crate::error::NumeraErrors;
             #[inline]
             fn try_from($arg: [<$from$from_b>]) -> $crate::error::NumeraResult<$for> {
                 $body
@@ -237,7 +237,7 @@ macro_rules! impl_from {
     ) => { devela::paste! {
         #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
         impl TryFrom<&[<$from$from_b>]> for $for {
-            type Error = $crate::error::NumeraError;
+            type Error = $crate::error::NumeraErrors;
             #[inline]
             fn try_from($arg: &[<$from$from_b>]) -> $crate::error::NumeraResult<$for> {
                 $body
@@ -245,7 +245,7 @@ macro_rules! impl_from {
         }
         #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
         impl TryFrom<&mut [<$from$from_b>]> for $for {
-            type Error = $crate::error::NumeraError;
+            type Error = $crate::error::NumeraErrors;
             #[inline]
             fn try_from($arg: &mut [<$from$from_b>]) -> $crate::error::NumeraResult<$for> {
                 $body
@@ -301,7 +301,7 @@ macro_rules! impl_larger_smaller {
                 /// If there's no larger bit-size available.
                 #[devela::codegen::compile(not($larger))]
                 pub fn try_as_larger(&self) -> NumeraResult<[<$name $b>]> {
-                    Err($crate::error::NumeraError::Conversion)
+                    Err($crate::error::NumeraErrors::Conversion)
                 }
 
                 /* as_smaller */
@@ -347,7 +347,7 @@ macro_rules! impl_larger_smaller {
                 #[cfg(feature = "try_from")]
                 #[cfg_attr(feature = "nightly", doc(cfg(feature = "try_from")))]
                 pub fn try_as_smaller(&self) -> NumeraResult<[<$name $b>]> {
-                    Err($crate::error::NumeraError::Conversion)
+                    Err($crate::error::NumeraErrors::Conversion)
                 }
             }
         }

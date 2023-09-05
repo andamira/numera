@@ -12,7 +12,7 @@
 #[cfg(feature = "try_from")]
 use crate::number::integer::NegativeInteger;
 use crate::{
-    error::{IntegerError, NumeraError, NumeraResult},
+    error::{IntegerErrors, NumeraErrors, NumeraResult},
     number::{
         macros::impl_larger_smaller,
         traits::{
@@ -114,7 +114,7 @@ macro_rules! define_negative_integer_sized {
                 if let Some(n) = [<$p$b>]::new(value) {
                     Ok(Self(n))
                 } else {
-                    Err(NumeraError::Integer(IntegerError::Zero))
+                    Err(NumeraErrors::Integer(IntegerErrors::Zero))
                 }
             }
         }
@@ -142,7 +142,7 @@ macro_rules! define_negative_integer_sized {
             type InnerRepr = [<u$b>];
             #[inline]
             fn new_neg(value: Self::InnerRepr) -> NumeraResult<Self> {
-                Ok(Self([<$p$b>]::new(value).ok_or(IntegerError::Zero)?))
+                Ok(Self([<$p$b>]::new(value).ok_or(IntegerErrors::Zero)?))
             }
         }
 
@@ -183,7 +183,7 @@ macro_rules! define_negative_integer_sized {
             /// Errors if the operation results in overflow.
             #[inline]
             fn next(&self) -> NumeraResult<Self> {
-                let next = self.0.get().checked_add(1).ok_or(IntegerError::Overflow)?;
+                let next = self.0.get().checked_add(1).ok_or(IntegerErrors::Overflow)?;
 
                 #[cfg(feature = "safe")]
                 return Ok(Self([<$p$b>]::new(next).unwrap()));
@@ -198,8 +198,8 @@ macro_rules! define_negative_integer_sized {
             /// Errors if the operation results in underflow.
             #[inline]
             fn previous(&self) -> NumeraResult<Self> {
-                let prev = self.0.get().checked_sub(1).ok_or(IntegerError::Underflow)?;
-                Ok(Self([<$p$b>]::new(prev).ok_or(IntegerError::Zero)?))
+                let prev = self.0.get().checked_sub(1).ok_or(IntegerErrors::Underflow)?;
+                Ok(Self([<$p$b>]::new(prev).ok_or(IntegerErrors::Zero)?))
             }
         }
 
@@ -280,7 +280,7 @@ macro_rules! define_negative_integer_sized {
             /// If the given `value` is `0`.
             #[inline]
             fn from_innermost_repr(value: Self::InnermostRepr) -> NumeraResult<Self> {
-                Ok(Self([<$p$b>]::new(value).ok_or(IntegerError::Zero)?))
+                Ok(Self([<$p$b>]::new(value).ok_or(IntegerErrors::Zero)?))
             }
 
             #[doc = "Returns a new `" [<$name$b>] "` from the innermost representation."]

@@ -22,7 +22,7 @@ use twofloat::TwoFloat;
 #[cfg(not(feature = "std"))]
 use crate::number::real::float::fns::{abs32, abs64};
 use crate::{
-    error::{NumeraResult, RealError},
+    error::{NumeraResult, RealErrors},
     number::traits::{
         Bound, ConstLowerBounded, ConstNegOne, ConstOne, ConstUpperBounded, ConstZero, Count,
         Countable, Ident, LowerBounded, NegOne, Negative, Numbers, One, Positive, Sign,
@@ -253,7 +253,7 @@ impl Countable for Float32 {
 
         let bits = self.0.to_bits();
         if self.0.is_nan() || bits == f32::INFINITY.to_bits() {
-            return Err(RealError::NaN.into());
+            return Err(RealErrors::NaN.into());
         }
 
         let abs = bits & CLEAR_SIGN_MASK;
@@ -276,7 +276,7 @@ impl Countable for Float32 {
 
         let bits = self.0.to_bits();
         if self.0.is_nan() || bits == f32::NEG_INFINITY.to_bits() {
-            return Err(RealError::NaN.into());
+            return Err(RealErrors::NaN.into());
         }
 
         let abs = bits & CLEAR_SIGN_MASK;
@@ -301,7 +301,7 @@ impl Countable for Float64 {
 
         let bits = self.0.to_bits();
         if self.0.is_nan() || bits == f64::INFINITY.to_bits() {
-            return Err(RealError::NaN.into());
+            return Err(RealErrors::NaN.into());
         }
 
         let abs = bits & CLEAR_SIGN_MASK;
@@ -324,7 +324,7 @@ impl Countable for Float64 {
 
         let bits = self.0.to_bits();
         if self.0.is_nan() || bits == f64::NEG_INFINITY.to_bits() {
-            return Err(RealError::NaN.into());
+            return Err(RealErrors::NaN.into());
         }
 
         let abs = bits & CLEAR_SIGN_MASK;
@@ -383,7 +383,7 @@ mod impl_f16 {
     use super::{
         bf16, f16, BrainFloat16, ConstNegOne, ConstOne, ConstZero, Countable, Float16, NumeraResult,
     };
-    use crate::error::NumeraError;
+    use crate::error::NumeraErrors;
     #[cfg(not(feature = "std"))]
     use crate::number::real::float::fns::abs32;
 
@@ -412,18 +412,18 @@ mod impl_f16 {
         /// Not implemented.
         ///
         /// # Errors
-        /// Returns [`NotImplemented`][NumeraError::NotImplemented].
+        /// Returns [`NotImplemented`][NumeraErrors::NotImplemented].
         #[inline]
         fn next(&self) -> NumeraResult<Self> {
-            Err(NumeraError::NotImplemented)
+            Err(NumeraErrors::NotImplemented)
         }
         /// Not implemented.
         ///
         /// # Errors
-        /// Returns [`NotImplemented`][NumeraError::NotImplemented].
+        /// Returns [`NotImplemented`][NumeraErrors::NotImplemented].
         #[inline]
         fn previous(&self) -> NumeraResult<Self> {
-            Err(NumeraError::NotImplemented)
+            Err(NumeraErrors::NotImplemented)
         }
     }
 
@@ -432,18 +432,18 @@ mod impl_f16 {
         /// Not implemented.
         ///
         /// # Errors
-        /// Returns [`NotImplemented`][NumeraError::NotImplemented].
+        /// Returns [`NotImplemented`][NumeraErrors::NotImplemented].
         #[inline]
         fn next(&self) -> NumeraResult<Self> {
-            Err(NumeraError::NotImplemented)
+            Err(NumeraErrors::NotImplemented)
         }
         /// Not implemented.
         ///
         /// # Errors
-        /// Returns [`NotImplemented`][NumeraError::NotImplemented].
+        /// Returns [`NotImplemented`][NumeraErrors::NotImplemented].
         #[inline]
         fn previous(&self) -> NumeraResult<Self> {
-            Err(NumeraError::NotImplemented)
+            Err(NumeraErrors::NotImplemented)
         }
     }
 
@@ -472,7 +472,7 @@ use impl_twofloat::approx_eq_TwoFloat;
 #[cfg(feature = "twofloat")]
 mod impl_twofloat {
     use super::{ConstNegOne, ConstOne, ConstZero, Countable, NumeraResult, TwoFloat, TwoFloat128};
-    use crate::error::NumeraError;
+    use crate::error::NumeraErrors;
 
     impl ConstZero for TwoFloat128 {
         const ZERO: Self = Self(TwoFloat::from_f64(0.0));
@@ -489,18 +489,18 @@ mod impl_twofloat {
         /// Not implemented.
         ///
         /// # Errors
-        /// Returns [`NotImplemented`][NumeraError::NotImplemented].
+        /// Returns [`NotImplemented`][NumeraErrors::NotImplemented].
         #[inline]
         fn next(&self) -> NumeraResult<Self> {
-            Err(NumeraError::NotImplemented)
+            Err(NumeraErrors::NotImplemented)
         }
         /// Not implemented.
         ///
         /// # Errors
-        /// Returns [`NotImplemented`][NumeraError::NotImplemented].
+        /// Returns [`NotImplemented`][NumeraErrors::NotImplemented].
         #[inline]
         fn previous(&self) -> NumeraResult<Self> {
-            Err(NumeraError::NotImplemented)
+            Err(NumeraErrors::NotImplemented)
         }
     }
 

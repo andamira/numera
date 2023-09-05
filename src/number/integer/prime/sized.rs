@@ -3,9 +3,9 @@
 //!
 //
 
-// use crate::all::{IntegerError, NumeraError, NumeraResult};
+// use crate::all::{IntegerErrors, NumeraErrors, NumeraResult};
 use crate::{
-    error::{IntegerError, NumeraError, NumeraResult},
+    error::{IntegerErrors, NumeraErrors, NumeraResult},
     number::integer::prime::all::{is_prime, PRIMES_U16, PRIMES_U8},
 };
 use core::fmt;
@@ -135,7 +135,7 @@ impl Prime8 {
         if is_prime(value.into()) {
             Ok(Prime8(value))
         } else {
-            Err(IntegerError::NotPrime.into())
+            Err(IntegerErrors::NotPrime.into())
         }
     }
 
@@ -158,7 +158,7 @@ impl Prime8 {
     pub const fn new_nth(nth: u8) -> NumeraResult<Self> {
         match nth {
             0..=53 => Ok(Self(PRIMES_U8[nth as usize])),
-            _ => Err(NumeraError::Integer(IntegerError::Overflow)),
+            _ => Err(NumeraErrors::Integer(IntegerErrors::Overflow)),
         }
     }
 
@@ -227,7 +227,7 @@ impl Prime16 {
         if is_prime(value.into()) {
             Ok(Prime16(value))
         } else {
-            Err(IntegerError::NotPrime.into())
+            Err(IntegerErrors::NotPrime.into())
         }
     }
 
@@ -253,7 +253,7 @@ impl Prime16 {
             #[allow(clippy::cast_possible_truncation)]
             0..=53 => Ok(Self(PRIMES_U8[nth as usize] as u16)),
             54..=6541 => Ok(Self(PRIMES_U16[(nth - 54) as usize])),
-            _ => Err(NumeraError::Integer(IntegerError::Overflow)),
+            _ => Err(NumeraErrors::Integer(IntegerErrors::Overflow)),
         }
     }
 
@@ -342,7 +342,7 @@ impl Prime32 {
         if is_prime(value) {
             Ok(Prime32(value))
         } else {
-            Err(IntegerError::NotPrime.into())
+            Err(IntegerErrors::NotPrime.into())
         }
     }
     /// Returns a new `Prime32`.
@@ -355,10 +355,10 @@ impl Prime32 {
     #[inline]
     #[cfg(feature = "std")]
     pub fn new(value: u32) -> NumeraResult<Self> {
-        if is_prime_sieve(value.checked_as::<usize>().ok_or(IntegerError::Overflow)?) {
+        if is_prime_sieve(value.checked_as::<usize>().ok_or(IntegerErrors::Overflow)?) {
             Ok(Prime32(value))
         } else {
-            Err(IntegerError::NotPrime.into())
+            Err(IntegerErrors::NotPrime.into())
         }
     }
 
@@ -403,7 +403,7 @@ impl Prime32 {
                 #[cfg(not(feature = "std"))]
                 return Ok(Self(nth_prime(nth)));
             }
-            _ => Err(NumeraError::Integer(IntegerError::Overflow)),
+            _ => Err(NumeraErrors::Integer(IntegerErrors::Overflow)),
         }
     }
 
@@ -502,10 +502,10 @@ impl Prime64 {
     #[inline]
     #[cfg(feature = "std")]
     pub fn new(value: u64) -> NumeraResult<Self> {
-        if is_prime_sieve(value.checked_as::<usize>().ok_or(IntegerError::Overflow)?) {
+        if is_prime_sieve(value.checked_as::<usize>().ok_or(IntegerErrors::Overflow)?) {
             Ok(Prime64(value))
         } else {
-            Err(IntegerError::NotPrime.into())
+            Err(IntegerErrors::NotPrime.into())
         }
     }
 
@@ -551,9 +551,9 @@ impl Prime64 {
                 return Ok(Self(u64::from(nth_prime(nth as u32))));
             }
             203_280_221..=425_656_284_035_217_742 => {
-                Err(NumeraError::NotImplemented) // TODO
+                Err(NumeraErrors::NotImplemented) // TODO
             }
-            _ => Err(NumeraError::Integer(IntegerError::Overflow)),
+            _ => Err(NumeraErrors::Integer(IntegerErrors::Overflow)),
         }
     }
 
@@ -657,10 +657,10 @@ impl Prime128 {
     #[inline]
     #[cfg(feature = "std")]
     pub fn new(value: u128) -> NumeraResult<Self> {
-        if is_prime_sieve(value.checked_as::<usize>().ok_or(IntegerError::Overflow)?) {
+        if is_prime_sieve(value.checked_as::<usize>().ok_or(IntegerErrors::Overflow)?) {
             Ok(Prime128(value))
         } else {
-            Err(IntegerError::NotPrime.into())
+            Err(IntegerErrors::NotPrime.into())
         }
     }
 
@@ -704,13 +704,13 @@ impl Prime128 {
                 return Ok(Self(u128::from(nth_prime(nth as u32))));
             }
             203_280_221..=425_656_284_035_217_742 => {
-                Err(NumeraError::NotImplemented) // TODO
+                Err(NumeraErrors::NotImplemented) // TODO
             }
             // a roughly approximated upper limit:
             425_656_284_035_217_743..=3_835_341_275_459_348_115_779_911_081_237_938_175 => {
-                Err(NumeraError::NotImplemented) // TODO
+                Err(NumeraErrors::NotImplemented) // TODO
             }
-            _ => Err(NumeraError::Integer(IntegerError::Overflow)),
+            _ => Err(NumeraErrors::Integer(IntegerErrors::Overflow)),
         }
     }
 

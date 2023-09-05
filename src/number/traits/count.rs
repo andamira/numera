@@ -24,7 +24,7 @@ use core::num::{
     NonZeroU16, NonZeroU32, NonZeroU64, NonZeroU8, NonZeroUsize,
 };
 
-use crate::error::{IntegerError, NumeraError, NumeraResult};
+use crate::error::{IntegerErrors, NumeraErrors, NumeraResult};
 
 /// The countability properties of a number.
 ///
@@ -79,10 +79,10 @@ macro_rules! impl_countable {
         }
         impl Countable for $t {
             fn next(&self) -> NumeraResult<Self> {
-                self.checked_add(1).ok_or(IntegerError::Overflow.into())
+                self.checked_add(1).ok_or(IntegerErrors::Overflow.into())
             }
             fn previous(&self) -> NumeraResult<Self> {
-                self.checked_sub(1).ok_or(IntegerError::Underflow.into())
+                self.checked_sub(1).ok_or(IntegerErrors::Underflow.into())
             }
         }
     };
@@ -96,10 +96,10 @@ macro_rules! impl_countable {
         impl Countable for $t {
             fn next(&self) -> NumeraResult<Self> {
                 let mut value = self.get().checked_add(1)
-                    .ok_or::<NumeraError>(IntegerError::Overflow.into())?;
+                    .ok_or::<NumeraErrors>(IntegerErrors::Overflow.into())?;
                 if value == 0 {
                     value = value.checked_add(1)
-                        .ok_or::<NumeraError>(IntegerError::Overflow.into())?;
+                        .ok_or::<NumeraErrors>(IntegerErrors::Overflow.into())?;
                 }
 
                 #[cfg(feature = "safe")]
@@ -111,10 +111,10 @@ macro_rules! impl_countable {
             }
             fn previous(&self) -> NumeraResult<Self> {
                 let mut value = self.get().checked_sub(1)
-                    .ok_or::<NumeraError>(IntegerError::Underflow.into())?;
+                    .ok_or::<NumeraErrors>(IntegerErrors::Underflow.into())?;
                 if value == 0 {
                     value = value.checked_sub(1)
-                        .ok_or::<NumeraError>(IntegerError::Underflow.into())?;
+                        .ok_or::<NumeraErrors>(IntegerErrors::Underflow.into())?;
                 }
 
                 #[cfg(feature = "safe")]
@@ -164,7 +164,7 @@ mod impl_big {
     use core::ops::{Add, Sub};
     use super::{Count, Countable};
     use dashu_int::{IBig, UBig, ops::BitTest};
-    use crate::error::{IntegerError, NumeraResult};
+    use crate::error::{IntegerErrors, NumeraResult};
 
     impl Count for IBig {
         fn is_countable(&self) -> bool { true }
@@ -181,7 +181,7 @@ mod impl_big {
         fn next(&self) -> NumeraResult<Self> { Ok(self.add(1_u8)) }
         fn previous(&self) -> NumeraResult<Self> {
             if self.bit_len() > 0 { Ok(self.sub(1_u8)) }
-            else { Err(IntegerError::LessThanZero.into()) }
+            else { Err(IntegerErrors::LessThanZero.into()) }
         }
     }
 }
