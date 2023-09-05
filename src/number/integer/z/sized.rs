@@ -10,14 +10,14 @@
 //   - Integer[8|16|32|64|128]
 
 #[cfg(feature = "try_from")]
-use crate::number::integer::Integer;
+use crate::number::integer::Integers;
 use crate::{
     error::{IntegerErrors, NumeraResult},
     number::{
         macros::impl_larger_smaller,
         traits::{
             Bound, ConstLowerBounded, ConstNegOne, ConstOne, ConstUpperBounded, ConstZero, Count,
-            Countable, Ident, LowerBounded, NegOne, Negative, Numbers, One, Positive, Sign,
+            Countable, Ident, LowerBounded, NegOne, Negative, Number, One, Positive, Sign,
             UpperBounded, Zero,
         },
     },
@@ -29,7 +29,7 @@ use devela::paste;
 
 /// # What it does
 /// - defines an Integer of a concrete size.
-/// - implements Numbers: Bound + Count + Ident + Sign
+/// - implements Number: Bound + Count + Ident + Sign
 /// - implements Default → 0
 ///
 /// # Args
@@ -109,7 +109,8 @@ macro_rules! define_integer_sized {
 
         /* resizing */
 
-        impl_larger_smaller![$name, $b, Integer,
+        // uses "try_from"
+        impl_larger_smaller![$name, $b, Integers,
             larger: $larger, $larger_b, smaller: $smaller, $smaller_b
         ];
 
@@ -208,7 +209,7 @@ macro_rules! define_integer_sized {
 
         /* number */
 
-        impl Numbers for [<$name$b>] {
+        impl Number for [<$name$b>] {
             type InnerRepr = [<$p$b>];
             type InnermostRepr = [<$p$b>];
 
@@ -302,21 +303,21 @@ mod tests {
         // min
         assert_eq![
             Z8::new(100).as_smaller_or_same(),
-            Integers::Integer8(Z8::new(100))
+            Integers::_8(Z8::new(100))
         ];
         assert![Z8::new(100).try_as_smaller().is_err()];
 
         // can't fit
         assert_eq![
             Z16::new(3_000).as_smaller_or_same(),
-            Integers::Integer16(Z16::new(3_000))
+            Integers::_16(Z16::new(3_000))
         ];
         assert![Z16::new(3_000).try_as_smaller().is_err()];
 
         // max
         assert_eq![
             Z128::new(100).as_smaller_or_same(),
-            Integers::Integer64(Z64::new(100))
+            Integers::_64(Z64::new(100))
         ];
         assert_eq![Z128::new(100).try_as_smaller(), Ok(Z64::new(100))];
 

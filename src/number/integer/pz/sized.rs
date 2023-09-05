@@ -10,14 +10,14 @@
 //   - PositiveInteger[8|16|32|64|128]
 
 #[cfg(feature = "try_from")]
-use crate::number::integer::PositiveInteger;
+use crate::number::integer::PositiveIntegers;
 use crate::{
     error::{IntegerErrors, NumeraErrors, NumeraResult},
     number::{
         macros::impl_larger_smaller,
         traits::{
             Bound, ConstLowerBounded, ConstOne, ConstUpperBounded, Count, Countable, Ident,
-            LowerBounded, NonNegative, NonZero, Numbers, One, Positive, Sign, UpperBounded,
+            LowerBounded, NonNegative, NonZero, Number, One, Positive, Sign, UpperBounded,
         },
     },
 };
@@ -31,7 +31,7 @@ use devela::paste;
 
 /// # What it does
 /// - defines an Integer of a concrete size.
-/// - implements Numbers: Bound + Count + Ident + Sign
+/// - implements Number: Bound + Count + Ident + Sign
 ///
 /// # Args
 /// - `$name`: the base name of the integer. E.g. `PositiveInteger`.
@@ -140,7 +140,8 @@ macro_rules! define_positive_integer_sized {
 
         /* resizing */
 
-        impl_larger_smaller![$name, $b, PositiveInteger,
+        // uses "try_from"
+        impl_larger_smaller![$name, $b, PositiveIntegers,
             larger: $larger, $larger_b, smaller: $smaller, $smaller_b
         ];
 
@@ -269,7 +270,7 @@ macro_rules! define_positive_integer_sized {
 
         /* number */
 
-        impl Numbers for [<$name$b>] {
+        impl Number for [<$name$b>] {
             type InnerRepr = [<NonZeroU$b>];
             type InnermostRepr = [<u$b>];
 

@@ -196,7 +196,7 @@ impl Prime8 {
     ///
     /// # Example
     /// ```
-    /// use numera::all::{Number, Prime8};
+    /// use numera::all::{Numbers, Prime8};
     ///
     /// # fn main() -> numera::error::NumeraResult<()> {
     /// assert_eq![1, Prime8::new(2)?.pi()];
@@ -291,7 +291,7 @@ impl Prime16 {
     ///
     /// # Example
     /// ```
-    /// use numera::all::{Number, Prime16};
+    /// use numera::all::{Numbers, Prime16};
     ///
     /// # fn main() -> numera::error::NumeraResult<()> {
     /// assert_eq![1, Prime16::new(2)?.pi()];
@@ -445,7 +445,7 @@ impl Prime32 {
     ///
     /// # Examples
     /// ```
-    /// use numera::all::{Number, Prime32};
+    /// use numera::all::{Numbers, Prime32};
     ///
     /// # fn main() -> numera::error::NumeraResult<()> {
     /// assert_eq![1, Prime32::new(2)?.pi()];
@@ -594,7 +594,7 @@ impl Prime64 {
     ///
     /// # Examples
     /// ```
-    /// use numera::all::{Number, Prime64};
+    /// use numera::all::{Numbers, Prime64};
     ///
     /// # fn main() -> numera::error::NumeraResult<()> {
     /// assert_eq![1, Prime64::new(2)?.pi()];
@@ -751,7 +751,7 @@ impl Prime128 {
     ///
     /// # Examples
     /// ```
-    /// use numera::all::{Number, Prime128};
+    /// use numera::all::{Numbers, Prime128};
     ///
     /// # fn main() -> numera::error::NumeraResult<()> {
     /// assert_eq![1, Prime128::new(2)?.pi()];

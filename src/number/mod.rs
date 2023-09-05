@@ -21,8 +21,8 @@ mod no;
 
 #[doc(inline)]
 pub use all::{
-    AllIntegers, AllNumbers, AllRationals, Bound, Count, Ident, Integer, Integer32, Integer64,
-    NoNumber, Number, Numbers, Prime, Prime16, Prime32, Rational, Rational32, Rational64, Sign,
+    AllIntegers, AllNumbers, AllRationals, Bound, Count, Ident, Integer32, Integer64, Integers,
+    NoNumber, Number, Numbers, Prime16, Prime32, Primes, Rational32, Rational64, Rationals, Sign,
 };
 pub(crate) mod all {
     pub(crate) use super::macros::*;

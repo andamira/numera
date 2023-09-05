@@ -1,13 +1,13 @@
-// numera::number::integer::integers
+// numera::number::integer::trait
 //
 //!
 //
 // TOC
 //
-// - define the `Integers` trait
+// - define the `Integer` trait
 // - impl for integer primitives
 
-use crate::number::traits::{ConstZero, Numbers};
+use crate::number::traits::{ConstZero, Number};
 use core::num::{
     NonZeroI128, NonZeroI16, NonZeroI32, NonZeroI64, NonZeroI8, NonZeroIsize, NonZeroU128,
     NonZeroU16, NonZeroU32, NonZeroU64, NonZeroU8, NonZeroUsize,
@@ -20,7 +20,7 @@ use crate::all::is_prime;
 use crate::all::is_prime_sieve;
 
 /// Common trait for all integers.
-pub trait Integers: Numbers {
+pub trait Integer: Number {
     /// Returns `true` if this integer is even.
     fn integer_is_even(&self) -> bool;
     /// Returns `true` if this integer is odd.
@@ -66,14 +66,14 @@ pub trait Integers: Numbers {
     fn integer_digits(&self) -> usize;
 }
 
-/// Implements `Integers` for integer primitives.
+/// Implements `Integer` for integer primitives.
 ///
 /// # Args
 /// - `$t`:
 macro_rules! impl_integer {
     (many $($t:ident),+) => { $( impl_integer![$t]; )+ };
     ($t:ident) => {
-        impl Integers for $t {
+        impl Integer for $t {
             #[inline]
             fn integer_is_even(&self) -> bool {
                 *self & 1 == 0
@@ -114,7 +114,7 @@ macro_rules! impl_integer {
 
     (many_nonzero $($t:ident),+) => { $( impl_integer![nonzero $t]; )+ };
     (nonzero $t:ident) => {
-        impl Integers for $t {
+        impl Integer for $t {
             #[inline]
             fn integer_is_even(&self) -> bool {
                 self.get() & 1 == 0

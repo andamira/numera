@@ -16,7 +16,7 @@ use crate::{
     error::{NumeraErrors, NumeraResult},
     number::traits::{
         Bound, ConstNegOne, ConstOne, ConstZero, Count, Countable, Ident, NegOne, Negative,
-        NonLowerBounded, NonUpperBounded, Numbers, One, Positive, Sign, Zero,
+        NonLowerBounded, NonUpperBounded, Number, One, Positive, Sign, Zero,
     },
 };
 use core::{fmt, str::FromStr};
@@ -179,9 +179,9 @@ impl NegOne for IntegerBig {
     }
 }
 
-/* Numbers */
+/* Number */
 
-impl Numbers for IntegerBig {
+impl Number for IntegerBig {
     type InnerRepr = IBig;
     type InnermostRepr = IBig;
 

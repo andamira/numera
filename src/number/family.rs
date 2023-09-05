@@ -6,7 +6,7 @@
 use super::{
     integer::AllIntegers,
     rational::AllRationals, // real::AllReals, complex::AllComplexes,
-    traits::{self, Numbers},
+    traits::{self, Number},
     NoNumber,
 };
 
@@ -14,12 +14,15 @@ use super::{
 ///
 /// This is an alias of [`AllNumbers`] which allows to concisely use variants
 /// other than `Any`, without having to specify a type.
-pub type Number = AllNumbers<NoNumber>;
+pub type Numbers = AllNumbers<NoNumber>;
+
+/// Abbreviation of [`Numbers`] family.
+pub type N = Numbers;
 
 /// Abbreviation of [`AllNumbers`] family.
 pub type AllN<N> = AllNumbers<N>;
 
-/// Defines the `AllNumbers` family and implements `Numbers` on it.
+/// Defines the `AllNumbers` family and implements `Number` on it.
 macro_rules! define_numbers {
     // applies a method to each variant
     (match_variants:
@@ -57,22 +60,22 @@ macro_rules! define_numbers {
         /// example [`Zero`][traits::Zero] or [`NonZero`][traits::NonZero],
         /// since they are mutually exclusive, and don't apply to all cases.
         ///
-        /// The [`Number`] alias is more convenient to use unless you need to
+        /// The [`Numbers`] alias is more convenient to use unless you need to
         /// refer to custom numbers via the [`Any`][AllNumbers::Any] variant.
         #[derive(Clone, Debug, PartialEq)]
         #[non_exhaustive]
         #[allow(clippy::derive_partial_eq_without_eq)]
-        pub enum AllNumbers<N: Numbers> {
+        pub enum AllNumbers<N: Number> {
             $( $v($t),)+
 
-            /// Any kind of number.
+            /// Any other kind of number.
             Any(N)
         }
 
-        /* impl Numbers */
+        /* impl Number */
 
         /// This implementation is no-op.
-        impl<N: Numbers> Numbers for AllNumbers<N> {
+        impl<N: Number> Number for AllNumbers<N> {
             type InnerRepr = Self;
             type InnermostRepr = Self;
 
@@ -108,7 +111,7 @@ macro_rules! define_numbers {
         }
 
         /// This implementation defers to the actual number variant.
-        impl<N: Numbers> traits::Bound for AllNumbers<N> {
+        impl<N: Number> traits::Bound for AllNumbers<N> {
             fn is_lower_bounded(&self) -> bool {
                 define_numbers! { match_variants: self, is_lower_bounded, no_std: $($v),+ }
             }
@@ -124,14 +127,14 @@ macro_rules! define_numbers {
         }
 
         /// This implementation defers to the actual number variant.
-        impl<N: Numbers> traits::Count for AllNumbers<N> {
+        impl<N: Number> traits::Count for AllNumbers<N> {
             fn is_countable(&self) -> bool {
                 define_numbers! { match_variants: self, is_countable, no_std: $($v),+ }
             }
         }
 
         /// This implementation defers to the actual number variant.
-        impl<N: Numbers> traits::Sign for AllNumbers<N> {
+        impl<N: Number> traits::Sign for AllNumbers<N> {
             fn can_positive(&self) -> bool {
                 define_numbers! { match_variants: self, can_positive, no_std: $($v),+ }
             }
@@ -147,7 +150,7 @@ macro_rules! define_numbers {
         }
 
         /// This implementation defers to the actual number variant.
-        impl<N: Numbers> traits::Ident for AllNumbers<N> {
+        impl<N: Number> traits::Ident for AllNumbers<N> {
             fn can_zero(&self) -> bool {
                 define_numbers! { match_variants: self, can_zero, no_std: $($v),+ }
             }
@@ -171,14 +174,14 @@ macro_rules! define_numbers {
         /* impl From & TryFrom */
 
         $(
-        impl<N: Numbers> From<$t> for AllNumbers<N> {
+        impl<N: Number> From<$t> for AllNumbers<N> {
             #[inline]
             fn from(n: $t) -> AllNumbers<N> { AllNumbers::$v(n) }
         }
         )+
 
         $(
-        impl<N: Numbers> TryFrom<AllNumbers<N>> for $t {
+        impl<N: Number> TryFrom<AllNumbers<N>> for $t {
             type Error = crate::error::NumeraErrors;
             fn try_from(n: AllNumbers<N>) -> core::result::Result<$t, Self::Error> {
                 match n {

@@ -10,9 +10,9 @@
 
 // TODO
 // NegativeRational, NonNegativeRational, NonPositiveRational, NonZeroRational, PositiveRational,
-use crate::number::rational::Rational;
+use crate::number::rational::Rationals;
 
-/// Defines a subfamily of rational numbers and implements `Numbers` on it.
+/// Defines a subfamily of rational numbers and implements `Number` on it.
 //
 // For now it doesn't implement `Rationals`.
 macro_rules! define_rational_family {
@@ -85,7 +85,7 @@ macro_rules! define_rational_family {
         }
 
         /// This implementation is no-op.
-        impl $crate::all::Numbers for $tname {
+        impl $crate::all::Number for $tname {
             type InnerRepr = Self;
             type InnermostRepr = Self;
 
@@ -294,7 +294,7 @@ macro_rules! define_rational_family {
 }
 pub(crate) use define_rational_family;
 
-/// Defines the family of all rationals and implements `Numbers` on it.
+/// Defines the family of all rationals and implements `Number` on it.
 macro_rules! define_any_rational_family {
     // applies a method to each variant (0 args)
     (match_variants_0:
@@ -345,7 +345,7 @@ macro_rules! define_any_rational_family {
         }
 
         /// This implementation is no-op.
-        impl $crate::all::Numbers for $tname {
+        impl $crate::all::Number for $tname {
             type InnerRepr = Self;
             type InnermostRepr = Self;
 
@@ -545,7 +545,7 @@ define_any_rational_family![
         AllRationals,
         "The family of [all kinds of rationals][super], also known as [`AllQ`]",
     common:
-        Rational, Rational
+        Rationals, Rational
         // TODO
         // NonZeroRational, NonZero,
         // PositiveRational, Positive,

@@ -23,11 +23,13 @@ mod integer;
 mod ops;
 mod sized;
 
-pub use family::PositiveInteger;
+pub use family::PositiveIntegers;
 pub use sized::{
     PositiveInteger128, PositiveInteger16, PositiveInteger32, PositiveInteger64, PositiveInteger8,
 };
 
 use crate::number::macros::{define_abbreviations, define_aliases};
-define_abbreviations![Pz, PositiveInteger, 8, 16, 32, 64, 128];
-define_aliases![Counting, PositiveInteger, 8, 16, 32, 64, 128];
+define_abbreviations![sized Pz, PositiveInteger, 8, 16, 32, 64, 128];
+define_abbreviations![family Pz, PositiveIntegers];
+define_aliases![sized Counting, PositiveInteger, 8, 16, 32, 64, 128];
+define_aliases![family Counting, PositiveIntegers];

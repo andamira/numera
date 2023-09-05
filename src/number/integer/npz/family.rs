@@ -13,7 +13,7 @@ use crate::{
 };
 
 define_integer_family![build_variants:
-    NonPositiveInteger,
+    NonPositiveIntegers,
     "The family of [non-positive integers][super], also known as [`Npz`][super::Npz].",
     common:
         NonPositiveInteger+8, NonPositiveInteger+16, NonPositiveInteger+32, NonPositiveInteger+64,
@@ -28,10 +28,10 @@ define_integer_family![build_variants:
 
 /* sign */
 
-impl Negative for NonPositiveInteger {}
+impl Negative for NonPositiveIntegers {}
 
 /// This implementation is a no-op.
-impl NonPositive for NonPositiveInteger {
+impl NonPositive for NonPositiveIntegers {
     type InnerRepr = Self;
 
     /// Returns `value` unchanged.
@@ -43,50 +43,50 @@ impl NonPositive for NonPositiveInteger {
 
 /* ident */
 
-impl Zero for NonPositiveInteger {
+impl Zero for NonPositiveIntegers {
     /// Returns a [`NonPositiveInteger8::new_zero()`][NonPositiveInteger8#method.new_zero].
     #[inline]
     fn new_zero() -> Self {
         NonPositiveInteger8::new_zero().into()
     }
 }
-impl NegOne for NonPositiveInteger {
+impl NegOne for NonPositiveIntegers {
     /// Returns a [`NonPositiveInteger8::new_neg_one()`][NonPositiveInteger8#method.new_neg_one].
     #[inline]
     fn new_neg_one() -> Self {
         NonPositiveInteger8::new_neg_one().into()
     }
 }
-impl ConstZero for NonPositiveInteger {
+impl ConstZero for NonPositiveIntegers {
     /// Returns a [`NonPositiveInteger8::ZERO`][NonPositiveInteger8#associatedconstant.ZERO].
-    const ZERO: Self = NonPositiveInteger::_8(NonPositiveInteger8::ZERO);
+    const ZERO: Self = NonPositiveIntegers::_8(NonPositiveInteger8::ZERO);
 }
-impl ConstNegOne for NonPositiveInteger {
+impl ConstNegOne for NonPositiveIntegers {
     /// Returns a [`NonPositiveInteger8::NEG_ONE`][NonPositiveInteger8#associatedconstant.NEG_ONE].
-    const NEG_ONE: Self = NonPositiveInteger::_8(NonPositiveInteger8::NEG_ONE);
+    const NEG_ONE: Self = NonPositiveIntegers::_8(NonPositiveInteger8::NEG_ONE);
 }
 
 /* bound */
 
-impl LowerBounded for NonPositiveInteger {
+impl LowerBounded for NonPositiveIntegers {
     /// Returns a [`NonPositiveInteger128::new_min()`][NonPositiveInteger128#method.new_min].
     #[inline]
     fn new_min() -> Self {
         NonPositiveInteger128::new_min().into()
     }
 }
-impl UpperBounded for NonPositiveInteger {
+impl UpperBounded for NonPositiveIntegers {
     /// Returns a [`NonPositiveInteger8::new_max()`][NonPositiveInteger8#method.new_max].
     #[inline]
     fn new_max() -> Self {
         NonPositiveInteger8::new_max().into()
     }
 }
-impl ConstLowerBounded for NonPositiveInteger {
+impl ConstLowerBounded for NonPositiveIntegers {
     /// Returns a [`NonPositiveInteger128::MIN`][NonPositiveInteger128#associatedconstant.MIN].
-    const MIN: Self = NonPositiveInteger::_128(NonPositiveInteger128::MIN);
+    const MIN: Self = NonPositiveIntegers::_128(NonPositiveInteger128::MIN);
 }
-impl ConstUpperBounded for NonPositiveInteger {
+impl ConstUpperBounded for NonPositiveIntegers {
     /// Returns a [`NonPositiveInteger8::MAX`][NonPositiveInteger8#associatedconstant.MAX].
-    const MAX: Self = NonPositiveInteger::_8(NonPositiveInteger8::MAX);
+    const MAX: Self = NonPositiveIntegers::_8(NonPositiveInteger8::MAX);
 }

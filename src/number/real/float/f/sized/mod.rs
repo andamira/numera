@@ -25,7 +25,7 @@ use crate::{
     error::{NumeraResult, RealErrors},
     number::traits::{
         Bound, ConstLowerBounded, ConstNegOne, ConstOne, ConstUpperBounded, ConstZero, Count,
-        Countable, Ident, LowerBounded, NegOne, Negative, Numbers, One, Positive, Sign,
+        Countable, Ident, LowerBounded, NegOne, Negative, Number, One, Positive, Sign,
         UpperBounded, Zero,
     },
 };
@@ -36,7 +36,7 @@ use devela::paste;
 
 /// # What it does
 /// - defines a Float of a concrete size.
-/// - implements Numbers: Bound + Count + Ident + Sign
+/// - implements Number: Bound + Count + Ident + Sign
 /// - implements Default → 0
 ///
 /// # Args
@@ -188,9 +188,9 @@ macro_rules! define_float_sized {
                 fn new_neg_one() -> Self { Self::NEG_ONE }
             }
 
-            /* Numbers */
+            /* Number */
 
-            impl Numbers for [<$name $b>] {
+            impl Number for [<$name $b>] {
                 type InnerRepr = $pname;
                 type InnermostRepr = $pname;
 

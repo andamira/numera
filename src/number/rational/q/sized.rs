@@ -10,7 +10,7 @@
 //   - Rational[8|16|32|64|128]
 
 #[cfg(feature = "try_from")]
-use crate::number::rational::Rational;
+use crate::number::rational::Rationals;
 use crate::{
     error::{NumeraErrors, NumeraResult, RationalErrors},
     number::{
@@ -18,7 +18,7 @@ use crate::{
         macros::impl_larger_smaller,
         traits::{
             Bound, ConstLowerBounded, ConstNegOne, ConstOne, ConstUpperBounded, ConstZero, Count,
-            Countable, Ident, LowerBounded, NegOne, Negative, Numbers, One, Positive, Sign,
+            Countable, Ident, LowerBounded, NegOne, Negative, Number, One, Positive, Sign,
             UpperBounded, Zero,
         },
     },
@@ -35,7 +35,7 @@ use devela::paste;
 
 /// # What it does
 /// - defines a Rational of a concrete size.
-/// - implements Numbers: Bound + Count + Ident + Sign
+/// - implements Number: Bound + Count + Ident + Sign
 /// - implements Default → 0
 ///
 /// # Args
@@ -223,7 +223,8 @@ macro_rules! define_rational_sized {
 
         /* resizing */
 
-        impl_larger_smaller![$name, $b, Rational,
+        // uses try_from
+        impl_larger_smaller![$name, $b, Rationals,
             larger: $larger, $larger_b, smaller: $smaller, $smaller_b
         ];
 
@@ -363,9 +364,9 @@ macro_rules! define_rational_sized {
             fn new_neg_one() -> Self { <Self as ConstNegOne>::NEG_ONE }
         }
 
-        /* Numbers */
+        /* Number */
 
-        impl Numbers for [<$name$b>] {
+        impl Number for [<$name$b>] {
             type InnerRepr = ([<$numi$b>], [<$deni$b>]);
             type InnermostRepr = ([<$numim$b>], [<$denim$b>]);
 

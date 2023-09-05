@@ -10,14 +10,14 @@
 //   - NonZeroInteger[8|16|32|64|128]
 
 #[cfg(feature = "try_from")]
-use crate::number::integer::NonZeroInteger;
+use crate::number::integer::NonZeroIntegers;
 use crate::{
     error::{IntegerErrors, NumeraErrors, NumeraResult},
     number::{
         macros::impl_larger_smaller,
         traits::{
             Bound, ConstLowerBounded, ConstNegOne, ConstOne, ConstUpperBounded, Count, Countable,
-            Ident, LowerBounded, NegOne, Negative, NonZero, Numbers, One, Positive, Sign,
+            Ident, LowerBounded, NegOne, Negative, NonZero, Number, One, Positive, Sign,
             UpperBounded,
         },
     },
@@ -32,7 +32,7 @@ use devela::paste;
 
 /// # What it does
 /// - defines an Integer of a concrete size.
-/// - implements Numbers: Bound + Count + Ident + Sign
+/// - implements Number: Bound + Count + Ident + Sign
 ///
 /// # Args
 /// - `$name`: the base name of the integer. E.g. `NonZeroInteger`.
@@ -136,7 +136,8 @@ macro_rules! define_nonzero_integer_sized {
 
         /* resizing */
 
-        impl_larger_smaller![$name, $b, NonZeroInteger,
+        // uses "try_from"
+        impl_larger_smaller![$name, $b, NonZeroIntegers,
             larger: $larger, $larger_b, smaller: $smaller, $smaller_b
         ];
 
@@ -293,7 +294,7 @@ macro_rules! define_nonzero_integer_sized {
 
         /* number */
 
-        impl Numbers for [<$name$b>] {
+        impl Number for [<$name$b>] {
             type InnerRepr = [<NonZeroI$b>];
             type InnermostRepr = [<i$b>];
 

@@ -13,7 +13,7 @@ use crate::number::traits::{
 };
 
 define_rational_family![build_variants:
-    Rational,
+    Rationals,
     "The family of [rational][super] numbers, also known as [`Q`][super::Q].",
     common:
         Rational+8, Rational+16, Rational+32, Rational+64, Rational+128
@@ -28,66 +28,66 @@ define_rational_family![build_variants:
 
 /* sign */
 
-impl Positive for Rational {}
-impl Negative for Rational {}
+impl Positive for Rationals {}
+impl Negative for Rationals {}
 
 /* ident */
 
-impl Zero for Rational {
+impl Zero for Rationals {
     /// Returns a [`Rational8::new_zero()`][Rational8#method.new_zero].
     #[inline]
     fn new_zero() -> Self {
         Rational8::new_zero().into()
     }
 }
-impl One for Rational {
+impl One for Rationals {
     /// Returns a [`Rational8::new_one()`][Rational8#method.new_one].
     #[inline]
     fn new_one() -> Self {
         Rational8::new_one().into()
     }
 }
-impl NegOne for Rational {
+impl NegOne for Rationals {
     /// Returns a [`Rational8::new_neg_one()`][Rational8#method.new_neg_one].
     #[inline]
     fn new_neg_one() -> Self {
         Rational8::new_neg_one().into()
     }
 }
-impl ConstZero for Rational {
+impl ConstZero for Rationals {
     /// Returns a [`Rational8::ZERO`][Rational8#associatedconstant.ZERO].
-    const ZERO: Self = Rational::_8(Rational8::ZERO);
+    const ZERO: Self = Rationals::_8(Rational8::ZERO);
 }
-impl ConstOne for Rational {
+impl ConstOne for Rationals {
     /// Returns a [`Rational8::ONE`][Rational8#associatedconstant.ONE].
-    const ONE: Self = Rational::_8(Rational8::ONE);
+    const ONE: Self = Rationals::_8(Rational8::ONE);
 }
-impl ConstNegOne for Rational {
+impl ConstNegOne for Rationals {
     /// Returns a [`Rational8::NEG_ONE`][Rational8#associatedconstant.NEG_ONE].
-    const NEG_ONE: Self = Rational::_8(Rational8::NEG_ONE);
+    const NEG_ONE: Self = Rationals::_8(Rational8::NEG_ONE);
 }
 
 /* bound */
 
-impl LowerBounded for Rational {
+impl LowerBounded for Rationals {
     /// Returns a [`Rational8::new_min()`][Rational8#method.new_min].
     #[inline]
     fn new_min() -> Self {
         Rational8::new_min().into()
     }
 }
-impl UpperBounded for Rational {
+impl UpperBounded for Rationals {
     /// Returns a [`Rational128::new_max()`][Rational128#method.new_max].
     #[inline]
     fn new_max() -> Self {
         Rational128::new_max().into()
     }
 }
-impl ConstLowerBounded for Rational {
+impl ConstLowerBounded for Rationals {
     /// Returns a [`Rational128::MIN`][Rational128#associatedconstant.MIN].
-    const MIN: Self = Rational::_128(Rational128::MIN);
+    const MIN: Self = Rationals::_128(Rational128::MIN);
 }
-impl ConstUpperBounded for Rational {
+impl ConstUpperBounded for Rationals {
     /// Returns a [`Rational128::MAX`][Rational128#associatedconstant.MAX].
-    const MAX: Self = Rational::_128(Rational128::MAX);
+    const MAX: Self = Rationals::_128(Rational128::MAX);
 }

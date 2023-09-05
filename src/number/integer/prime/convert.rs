@@ -5,7 +5,7 @@
 
 use crate::{
     error::{IntegerErrors, NumeraErrors, NumeraResult},
-    number::{integer::prime::all::*, traits::Numbers},
+    number::{integer::prime::all::*, traits::Number},
 };
 use devela::convert::az::CheckedAs;
 
@@ -33,9 +33,9 @@ mod between_primes {
         #[inline]
         fn from(p: Prime8) -> Prime128 { Prime128(p.0.into()) }
     }
-    impl From<Prime8> for Prime {
+    impl From<Prime8> for Primes {
         #[inline]
-        fn from(p: Prime8) -> Prime { Prime::_8(p) }
+        fn from(p: Prime8) -> Primes { Primes::_8(p) }
     }
 
     impl From<Prime16> for Prime32 {
@@ -50,9 +50,9 @@ mod between_primes {
         #[inline]
         fn from(p: Prime16) -> Prime128 { Prime128(p.0.into()) }
     }
-    impl From<Prime16> for Prime {
+    impl From<Prime16> for Primes {
         #[inline]
-        fn from(p: Prime16) -> Prime { Prime::_16(p) }
+        fn from(p: Prime16) -> Primes { Primes::_16(p) }
     }
 
     impl From<Prime32> for Prime64 {
@@ -63,23 +63,23 @@ mod between_primes {
         #[inline]
         fn from(p: Prime32) -> Prime128 { Prime128(p.0.into()) }
     }
-    impl From<Prime32> for Prime {
+    impl From<Prime32> for Primes {
         #[inline]
-        fn from(p: Prime32) -> Prime { Prime::_32(p) }
+        fn from(p: Prime32) -> Primes { Primes::_32(p) }
     }
 
     impl From<Prime64> for Prime128 {
         #[inline]
         fn from(p: Prime64) -> Prime128 { Prime128(p.0.into()) }
     }
-    impl From<Prime64> for Prime {
+    impl From<Prime64> for Primes {
         #[inline]
-        fn from(p: Prime64) -> Prime { Prime::_64(p) }
+        fn from(p: Prime64) -> Primes { Primes::_64(p) }
     }
 
-    impl From<Prime128> for Prime {
+    impl From<Prime128> for Primes {
         #[inline]
-        fn from(p: Prime128) -> Prime { Prime::_128(p) }
+        fn from(p: Prime128) -> Primes { Primes::_128(p) }
     }
 
     /* fallible */
@@ -158,16 +158,16 @@ mod between_primes {
         }
     }
 
-    impl TryFrom<Prime> for Prime8 {
+    impl TryFrom<Primes> for Prime8 {
         type Error = NumeraErrors;
         #[inline]
-        fn try_from(value: Prime) -> NumeraResult<Prime8> {
+        fn try_from(value: Primes) -> NumeraResult<Prime8> {
             match value {
-                Prime::_8(p) => Ok(p),
-                Prime::_16(p) => Ok(p.try_into()?),
-                Prime::_32(p) => Ok(p.try_into()?),
-                Prime::_64(p) => Ok(p.try_into()?),
-                Prime::_128(p) => Ok(p.try_into()?),
+                Primes::_8(p) => Ok(p),
+                Primes::_16(p) => Ok(p.try_into()?),
+                Primes::_32(p) => Ok(p.try_into()?),
+                Primes::_64(p) => Ok(p.try_into()?),
+                Primes::_128(p) => Ok(p.try_into()?),
             }
         }
     }

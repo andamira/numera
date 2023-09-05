@@ -4,7 +4,7 @@
 //
 
 use super::*;
-use crate::number::integer::Integers;
+use crate::number::integer::Integer;
 
 macro_rules! impl_integer {
     (many: $($t:ident),+) => {
@@ -51,7 +51,7 @@ macro_rules! impl_integer {
             }
         }
 
-        impl Integers for $t {
+        impl Integer for $t {
             #[inline]
             fn integer_is_even(&self) -> bool {
                 self.is_even()

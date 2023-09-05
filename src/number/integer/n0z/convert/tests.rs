@@ -34,6 +34,7 @@ fn n0z_from() -> NumeraResult<()> {
 #[test]
 #[cfg(feature = "try_from")]
 fn n0z_try_from() -> NumeraResult<()> {
+    use crate::all::*;
     use core::num::{NonZeroI16, NonZeroU16};
 
     /* complementary primitive conversions */

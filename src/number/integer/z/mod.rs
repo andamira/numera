@@ -20,7 +20,7 @@ mod sized;
 #[cfg(feature = "dashu-int")]
 mod big;
 
-pub use family::Integer;
+pub use family::Integers;
 pub use sized::{Integer128, Integer16, Integer32, Integer64, Integer8};
 
 #[cfg(feature = "dashu-int")]
@@ -28,7 +28,8 @@ pub use sized::{Integer128, Integer16, Integer32, Integer64, Integer8};
 pub use big::IntegerBig;
 
 use crate::number::macros::define_abbreviations;
-define_abbreviations![Z, Integer, 8, 16, 32, 64, 128];
+define_abbreviations![sized Z, Integer, 8, 16, 32, 64, 128];
+define_abbreviations![family Z, Integers];
 
 /// Abbreviation of [`IntegerBig`].
 #[cfg(feature = "dashu-int")]

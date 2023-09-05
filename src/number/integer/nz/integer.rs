@@ -3,7 +3,7 @@
 //!
 //
 
-use crate::number::integer::{nz::*, Integers};
+use crate::number::integer::{nz::*, Integer};
 use devela::paste;
 
 macro_rules! impl_nonzero_integer {
@@ -80,7 +80,7 @@ macro_rules! impl_nonzero_integer {
             // }
         }
 
-        impl Integers for [<$t$b>] {
+        impl Integer for [<$t$b>] {
             #[inline]
             fn integer_is_even(&self) -> bool {
                 self.is_even()

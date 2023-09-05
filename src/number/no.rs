@@ -17,10 +17,10 @@ use crate::{error::NumeraResult, number::traits::*};
 /// be used wherever a generic number is expected.
 pub type NoNumber = ();
 
-/* Numbers */
+/* Number */
 
 #[rustfmt::skip]
-impl Numbers for NoNumber {
+impl Number for NoNumber {
     /// Itself.
     type InnerRepr = NoNumber;
     /// Itself.

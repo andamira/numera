@@ -10,14 +10,14 @@
 //   - NegativeInteger[8|16|32|64|128]
 
 #[cfg(feature = "try_from")]
-use crate::number::integer::NegativeInteger;
+use crate::number::integer::NegativeIntegers;
 use crate::{
     error::{IntegerErrors, NumeraErrors, NumeraResult},
     number::{
         macros::impl_larger_smaller,
         traits::{
             Bound, ConstLowerBounded, ConstNegOne, ConstUpperBounded, Count, Countable, Ident,
-            LowerBounded, NegOne, Negative, NonPositive, NonZero, Numbers, Sign, UpperBounded,
+            LowerBounded, NegOne, Negative, NonPositive, NonZero, Number, Sign, UpperBounded,
         },
     },
 };
@@ -31,7 +31,7 @@ use devela::paste;
 
 /// # What it does
 /// - defines an Integer of a concrete size.
-/// - implements Numbers: Bound + Count + Ident + Sign
+/// - implements Number: Bound + Count + Ident + Sign
 ///
 /// # Args
 /// - `$name`: the base name of the integer e.g. `NegativeInteger`.
@@ -121,7 +121,8 @@ macro_rules! define_negative_integer_sized {
 
         /* resizing */
 
-        impl_larger_smaller![$name, $b, NegativeInteger,
+        // uses "try_from"
+        impl_larger_smaller![$name, $b, NegativeIntegers,
             larger: $larger, $larger_b, smaller: $smaller, $smaller_b
         ];
 
@@ -246,7 +247,7 @@ macro_rules! define_negative_integer_sized {
 
         /* number */
 
-        impl Numbers for [<$name$b>] {
+        impl Number for [<$name$b>] {
             type InnerRepr = [<NonZeroU$b>];
             type InnermostRepr = [<u$b>];
 

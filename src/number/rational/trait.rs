@@ -1,14 +1,14 @@
-// numera::number::integer::rationals
+// numera::number::integer::trait
 //
 //!
 //
 // TOC
-// - define the `Rationals` trait
+// - define the `Rational` trait
 
-use crate::number::traits::Numbers;
+use crate::number::traits::Number;
 
 /// Common trait for all rationals.
-pub trait Rationals: Numbers {
+pub trait Rational: Number {
     /// Is fraction an integer?
     ///
     /// Retuns `true` if the denominator 1 or the numerator is a multiple of the

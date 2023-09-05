@@ -15,7 +15,7 @@
 pub(crate) mod macros;
 
 mod family;
-mod rationals;
+mod r#trait;
 
 // pub mod n0q;
 // pub mod nnq;
@@ -27,5 +27,5 @@ pub mod q;
 pub use all::*;
 pub(crate) mod all {
     #[doc(inline)]
-    pub use super::{family::*, q::*, rationals::Rationals};
+    pub use super::{family::*, q::*, r#trait::Rational};
 }

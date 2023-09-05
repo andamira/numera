@@ -1,11 +1,11 @@
-// numera::number::traits::numbers
+// numera::number::traits::number
 //
-//! Defines the `Numbers` trait.
+//! Defines the `Number` trait.
 //!
 //! Also implements it for all the supported primitives and external types.
 //
 // TOC
-// - definition of `Numbers`
+// - definition of `Number`
 //
 // - macros
 //   - impl_numbers
@@ -27,7 +27,7 @@ use crate::{
 /* definitions */
 
 /// Common trait for all numbers.
-pub trait Numbers: Bound + Count + Ident + Sign {
+pub trait Number: Bound + Count + Ident + Sign {
     /// The inner primitive representation of the number.
     ///
     /// May be the same as `InnermostRepr`.
@@ -112,18 +112,18 @@ pub trait Numbers: Bound + Count + Ident + Sign {
     where
         Self: Sized,
     {
-        Numbers::from_inner_repr(inner.into())
+        Number::from_inner_repr(inner.into())
     }
 }
 
 /* macros */
 
-/// impl the `Numbers` trait for primitives.
+/// impl the `Number` trait for primitives.
 macro_rules! impl_numbers {
     // $t: outer type == inner type
     ($($t:ty ),+) => { $( impl_numbers![@$t]; )+ };
     (@$t:ty) => {
-        impl Numbers for $t {
+        impl Number for $t {
             type InnerRepr = $t;
             type InnermostRepr = $t;
 
@@ -150,7 +150,7 @@ macro_rules! impl_numbers {
     // $i: inner repr type
     (non0 $($t:ident + $i:ident ),+) => { $( impl_numbers![@non0 $t+$i]; )+ };
     (@non0 $t:ident + $i:ident) => {
-        impl Numbers for $t {
+        impl Number for $t {
             type InnerRepr = $i;
             type InnermostRepr = $i;
 

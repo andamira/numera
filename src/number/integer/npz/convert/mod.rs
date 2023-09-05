@@ -12,7 +12,7 @@ use crate::number::{
         },
         *,
     },
-    traits::Numbers,
+    traits::Number,
 };
 #[cfg(feature = "try_from")]
 use core::{

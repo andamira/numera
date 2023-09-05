@@ -18,14 +18,12 @@
 /// )*
 macro_rules! define_abbreviations {
     // multiple sized
-    ($a:ident, $name:ident, $( $b:expr ),+) => {
-        $( define_abbreviations![sized $a, $name, $b]; )+
-
-        define_abbreviations![family $a, $name];
+    (sized $a:ident, $name:ident, $( $b:expr ),+) => {
+        $( define_abbreviations![@sized $a, $name, $b]; )+
     };
 
     // single sized
-    (sized $a:ident, $name:ident, $b:expr) => {
+    (@sized $a:ident, $name:ident, $b:expr) => {
         devela::paste!{
             #[doc = "Abbreviation of [`" $name $b "`]." ]
             pub type [<$a$b>] = [<$name $b>];
@@ -39,6 +37,7 @@ macro_rules! define_abbreviations {
             pub type $a = $name;
         }
     };
+
 }
 pub(crate) use define_abbreviations;
 
@@ -49,14 +48,24 @@ pub(crate) use define_abbreviations;
 /// - `$name`: the name of the type.
 /// - `$b`: the size in bits.
 macro_rules! define_aliases {
-    ($a:ident, $name:ident, $( $b:expr ),+) => {
-        $( define_aliases![sized $a, $name, $b]; )+
+    // multiple sized
+    (sized $a:ident, $name:ident, $( $b:expr ),+) => {
+        $( define_aliases![@sized $a, $name, $b]; )+
     };
 
-    (sized $a:ident, $name:ident, $b:expr) => {
+    // single sized
+    (@sized $a:ident, $name:ident, $b:expr) => {
         devela::paste!{
             #[doc = "Alias of [`" $name $b "`]." ]
             pub type [<$a$b>] = [<$name $b>];
+        }
+    };
+
+    // single family
+    (family $a:ident, $name:ident) => {
+        devela::paste!{
+            #[doc = "Alias of [`" $name "`] family." ]
+            pub type $a = $name;
         }
     };
 }

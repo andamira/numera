@@ -11,24 +11,31 @@
 //
 
 mod convert;
-pub mod data;
 mod family;
 mod fns;
 mod impl_traits;
-mod primes;
 mod sized;
+mod r#trait;
+
+pub mod data;
 
 pub use all::*;
 pub(crate) mod all {
     #[doc(inline)]
     pub use super::{
+        abbr::*,
         data::*,
-        family::Prime,
+        family::Primes,
         fns::*,
-        primes::Primes,
+        r#trait::Prime,
         sized::{Prime128, Prime16, Prime32, Prime64, Prime8},
     };
 }
 
-use crate::number::macros::define_abbreviations;
-define_abbreviations![P, Prime, 8, 16, 32, 64, 128];
+mod abbr {
+    use super::{family::*, sized::*};
+
+    use crate::number::macros::define_abbreviations;
+    define_abbreviations![sized P, Prime, 8, 16, 32, 64, 128];
+    define_abbreviations![family P, Primes];
+}

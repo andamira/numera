@@ -8,6 +8,8 @@
 //! [0w]: https://en.wikipedia.org/wiki/Floating-point_arithmetic#Floating-point_numbers
 //
 
+use crate::number::macros::define_abbreviations;
+
 mod convert;
 // mod family;
 // mod ops;
@@ -24,11 +26,7 @@ pub use sized::{BrainFloat16, Float16};
 #[cfg(feature = "decstr")]
 pub use sized::{DecFloat128, DecFloat32, DecFloat64};
 
-use crate::number::macros::define_abbreviations;
-
-// define_abbreviations![F, Float, 32, 64]; // TODO: needs family
-define_abbreviations![sized F, Float, 32];
-define_abbreviations![sized F, Float, 64];
+define_abbreviations![sized F, Float, 32, 64];
 
 #[cfg(feature = "half")]
 define_abbreviations![sized F, Float, 16];

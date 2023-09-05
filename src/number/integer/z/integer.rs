@@ -4,7 +4,7 @@
 //
 
 use crate::number::{
-    integer::{z::*, Integers},
+    integer::{z::*, Integer},
     traits::ConstOne,
 };
 use devela::convert::az::CheckedAs;
@@ -106,7 +106,7 @@ macro_rules! impl_integer {
             }
         }
 
-        impl Integers for $t {
+        impl Integer for $t {
             #[inline]
             fn integer_is_even(&self) -> bool {
                 self.is_even()
@@ -138,7 +138,7 @@ impl_integer![many: Integer8, Integer16, Integer32, Integer64, Integer128];
 
 #[cfg(feature = "dashu-int")]
 mod big {
-    use crate::number::integer::{is_prime_sieve, z::IntegerBig, Integers};
+    use crate::number::integer::{is_prime_sieve, z::IntegerBig, Integer};
     use dashu_int::{ops::Gcd, IBig, UBig};
 
     /// # Methods for all integers
@@ -216,7 +216,7 @@ mod big {
         }
     }
 
-    impl Integers for IntegerBig {
+    impl Integer for IntegerBig {
         #[inline]
         fn integer_is_even(&self) -> bool {
             self.is_even()

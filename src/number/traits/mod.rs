@@ -6,7 +6,7 @@
 pub mod bound;
 pub mod count;
 pub mod ident;
-pub mod numbers;
+pub mod number;
 pub mod sign;
 
 pub use all::*;
@@ -21,7 +21,7 @@ pub(crate) mod all {
         ident::{
             ConstNegOne, ConstOne, ConstZero, Ident, NegOne, NonNegOne, NonOne, NonZero, One, Zero,
         },
-        numbers::Numbers,
+        number::Number,
         sign::{Negative, NonNegative, NonPositive, Positive, Sign, Signed},
     };
 }

@@ -7,11 +7,11 @@
 // - define_any_integer_family!
 
 use crate::number::integer::{
-    Integer, NegativeInteger, NonNegativeInteger, NonPositiveInteger, NonZeroInteger,
-    PositiveInteger, Prime,
+    Integers, NegativeIntegers, NonNegativeIntegers, NonPositiveIntegers, NonZeroIntegers,
+    PositiveIntegers, Primes,
 };
 
-/// Defines a subfamily of integers and implements `Numbers` on it.
+/// Defines a subfamily of integers and implements `Number` on it.
 //
 // For now it doesn't implement `Integers`.
 macro_rules! define_integer_family {
@@ -84,7 +84,7 @@ macro_rules! define_integer_family {
         }
 
         /// This implementation is no-op.
-        impl $crate::all::Numbers for $tname {
+        impl $crate::all::Number for $tname {
             type InnerRepr = Self;
             type InnermostRepr = Self;
 
@@ -293,7 +293,7 @@ macro_rules! define_integer_family {
 }
 pub(crate) use define_integer_family;
 
-/// Defines the family of all integers and implements `Numbers` on it.
+/// Defines the family of all integers and implements `Number` on it.
 macro_rules! define_any_integer_family {
     // applies a method to each variant (0 args)
     (match_variants_0:
@@ -348,7 +348,7 @@ macro_rules! define_any_integer_family {
         }
 
         /// This implementation is no-op.
-        impl $crate::all::Numbers for $tname {
+        impl $crate::all::Number for $tname {
             type InnerRepr = Self;
             type InnermostRepr = Self;
 
@@ -537,13 +537,13 @@ define_any_integer_family![
         AllIntegers,
         "The family of [all kinds of integers][super], also known as [`AllZ`][super::AllZ].",
     common:
-        Integer, Integer,
-        NonZeroInteger, NonZero,
-        PositiveInteger, Positive,
-        NonNegativeInteger, NonNegative,
-        NegativeInteger, Negative,
-        NonPositiveInteger, NonPositive,
-        Prime, Prime
+        Integers, Integer,
+        NonZeroIntegers, NonZero,
+        PositiveIntegers, Positive,
+        NonNegativeIntegers, NonNegative,
+        NegativeIntegers, Negative,
+        NonPositiveIntegers, NonPositive,
+        Primes, Prime
 ];
 
 use crate::number::macros::define_abbreviations;

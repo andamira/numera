@@ -11,14 +11,14 @@
 //
 
 #[cfg(feature = "try_from")]
-use crate::number::integer::NonPositiveInteger;
+use crate::number::integer::NonPositiveIntegers;
 use crate::{
     error::{IntegerErrors, NumeraResult},
     number::{
         macros::impl_larger_smaller,
         traits::{
             Bound, ConstLowerBounded, ConstNegOne, ConstUpperBounded, ConstZero, Count, Countable,
-            Ident, LowerBounded, NegOne, Negative, NonPositive, Numbers, Sign, UpperBounded, Zero,
+            Ident, LowerBounded, NegOne, Negative, NonPositive, Number, Sign, UpperBounded, Zero,
         },
     },
 };
@@ -29,7 +29,7 @@ use devela::paste;
 
 /// # What it does
 /// - defines an Integer of a concrete size.
-/// - implements Numbers: Bound + Count + Ident + Sign
+/// - implements Number: Bound + Count + Ident + Sign
 /// - implements Default → 0
 ///
 /// # Args
@@ -112,7 +112,8 @@ macro_rules! define_nonpositive_integer_sized {
 
         /* resizing */
 
-        impl_larger_smaller![$name, $b, NonPositiveInteger,
+        // uses "try_from"
+        impl_larger_smaller![$name, $b, NonPositiveIntegers,
             larger: $larger, $larger_b, smaller: $smaller, $smaller_b
         ];
 
@@ -212,7 +213,7 @@ macro_rules! define_nonpositive_integer_sized {
 
         /* number */
 
-        impl Numbers for [<$name$b>] {
+        impl Number for [<$name$b>] {
             type InnerRepr = [<$p$b>];
             type InnermostRepr = [<$p$b>];
 

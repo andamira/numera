@@ -12,7 +12,7 @@ use crate::{
     error::{IntegerErrors, NumeraResult},
     number::traits::{
         Bound, ConstLowerBounded, ConstUpperBounded, Count, Countable, Ident, LowerBounded,
-        NonNegative, NonOne, NonZero, Numbers, Positive, Sign, UpperBounded,
+        NonNegative, NonOne, NonZero, Number, Positive, Sign, UpperBounded,
     },
 };
 
@@ -66,7 +66,7 @@ impl Countable for Prime8 {
     ///
     /// # Examples
     /// ```
-    /// use numera::all::{Countable, Numbers, Prime8};
+    /// use numera::all::{Countable, Number, Prime8};
     /// # use numera::error::NumeraResult;
     /// # fn main() -> NumeraResult<()> {
     /// assert_eq![Prime8::from_inner_repr(2)?.next()?, Prime8::from_inner_repr(3)?];
@@ -86,7 +86,7 @@ impl Countable for Prime8 {
     ///
     /// # Examples
     /// ```
-    /// use numera::all::{Countable, Numbers, Prime8};
+    /// use numera::all::{Countable, Number, Prime8};
     /// # use numera::error::NumeraResult;
     /// # fn main() -> NumeraResult<()> {
     /// assert_eq![Prime8::from_inner_repr(3)?.previous()?, Prime8::from_inner_repr(2)?, ];
@@ -136,7 +136,7 @@ impl Sign for Prime8 {
 impl NonNegative for Prime8 {}
 impl Positive for Prime8 {}
 
-impl Numbers for Prime8 {
+impl Number for Prime8 {
     type InnerRepr = u8;
     type InnermostRepr = u8;
 
@@ -224,7 +224,7 @@ impl Countable for Prime16 {
     ///
     /// # Examples
     /// ```
-    /// use numera::all::{Countable, Numbers, Prime16};
+    /// use numera::all::{Countable, Number, Prime16};
     /// # use numera::error::NumeraResult;
     /// # fn main() -> NumeraResult<()> {
     /// assert_eq![Prime16::from_inner_repr(5)?.next()?, Prime16::from_inner_repr(7)?];
@@ -258,7 +258,7 @@ impl Countable for Prime16 {
     ///
     /// # Examples
     /// ```
-    /// use numera::all::{Countable, Numbers, Prime16};
+    /// use numera::all::{Countable, Number, Prime16};
     /// # use numera::error::NumeraResult;
     /// # fn main() -> NumeraResult<()> {
     /// assert_eq![Prime16::from_inner_repr(7)?.previous()?, Prime16::from_inner_repr(5)?];
@@ -320,7 +320,7 @@ impl Sign for Prime16 {
 impl NonNegative for Prime16 {}
 impl Positive for Prime16 {}
 
-impl Numbers for Prime16 {
+impl Number for Prime16 {
     type InnerRepr = u16;
     type InnermostRepr = u16;
 
@@ -422,7 +422,7 @@ impl Countable for Prime32 {
     ///
     /// # Examples
     /// ```
-    /// use numera::all::{Countable, Numbers, Prime32};
+    /// use numera::all::{Countable, Number, Prime32};
     /// # use numera::error::NumeraResult;
     /// # fn main() -> NumeraResult<()> {
     /// assert_eq![Prime32::from_inner_repr(5)?.next()?, Prime32::from_inner_repr(7)?];
@@ -449,7 +449,7 @@ impl Countable for Prime32 {
     ///
     /// # Examples
     /// ```
-    /// use numera::all::{Countable, Numbers, Prime32};
+    /// use numera::all::{Countable, Number, Prime32};
     /// # use numera::error::NumeraResult;
     /// # fn main() -> NumeraResult<()> {
     /// assert_eq![Prime32::from_inner_repr(7)?.previous()?, Prime32::from_inner_repr(5)?];
@@ -504,7 +504,7 @@ impl Sign for Prime32 {
 impl NonNegative for Prime32 {}
 impl Positive for Prime32 {}
 
-impl Numbers for Prime32 {
+impl Number for Prime32 {
     type InnerRepr = u32;
     type InnermostRepr = u32;
 
@@ -650,7 +650,7 @@ impl Sign for Prime64 {
 impl NonNegative for Prime64 {}
 impl Positive for Prime64 {}
 
-impl Numbers for Prime64 {
+impl Number for Prime64 {
     type InnerRepr = u64;
     type InnermostRepr = u64;
 
@@ -797,7 +797,7 @@ impl Sign for Prime128 {
 impl NonNegative for Prime128 {}
 impl Positive for Prime128 {}
 
-impl Numbers for Prime128 {
+impl Number for Prime128 {
     type InnerRepr = u128;
     type InnermostRepr = u128;
 

@@ -14,8 +14,9 @@ mod ops;
 mod rational;
 mod sized;
 
-pub use family::Rational;
+pub use family::Rationals;
 pub use sized::{Rational128, Rational16, Rational32, Rational64, Rational8};
 
 use crate::number::macros::define_abbreviations;
-define_abbreviations![Q, Rational, 8, 16, 32, 64, 128];
+define_abbreviations![sized Q, Rational, 8, 16, 32, 64, 128];
+define_abbreviations![family Q, Rationals];
