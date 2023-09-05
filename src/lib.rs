@@ -34,9 +34,6 @@ devela::deprecate_feature![old: "non-safe", new: "unsafe", since: "0.4.0"];
 pub mod error;
 pub mod number;
 
-#[doc(inline)]
-pub use number::{integer::Integer, traits::Numbers};
-
 /// All items are reexported here.
 pub mod all {
     #[doc(inline)]
