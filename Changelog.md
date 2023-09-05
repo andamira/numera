@@ -7,6 +7,23 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ## [Unreleased]
 
+### Added
+- reexport prime abbreviations to `::all`.
+- add `N` abbreviation for `Numbers`.
+
+### Remove
+- remove reexported items at the root.
+
+### Changed
+- rename traits in plural form to singular form.
+- rename enums in singular form to plural form.
+- rename enums prefixed by `Any` to `All`.
+
+### Fixed
+- avoid destructuring enums.
+- misc. internal refactoring.
+- fix some tests.
+
 ## [0.4.0] - 2023-08-29
 
 Too many changes!
