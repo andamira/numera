@@ -68,43 +68,39 @@ impl Numbers for Prime {
 /// This implementation defers to the actual integer variant.
 impl Bound for Prime {
     fn is_lower_bounded(&self) -> bool {
-        use Prime::*;
         match self {
-            _8(p) => p.is_lower_bounded(),
-            _16(p) => p.is_lower_bounded(),
-            _32(p) => p.is_lower_bounded(),
-            _64(p) => p.is_lower_bounded(),
-            _128(p) => p.is_lower_bounded(),
+            Prime::_8(p) => p.is_lower_bounded(),
+            Prime::_16(p) => p.is_lower_bounded(),
+            Prime::_32(p) => p.is_lower_bounded(),
+            Prime::_64(p) => p.is_lower_bounded(),
+            Prime::_128(p) => p.is_lower_bounded(),
         }
     }
     fn is_upper_bounded(&self) -> bool {
-        use Prime::*;
         match self {
-            _8(p) => p.is_upper_bounded(),
-            _16(p) => p.is_upper_bounded(),
-            _32(p) => p.is_upper_bounded(),
-            _64(p) => p.is_upper_bounded(),
-            _128(p) => p.is_upper_bounded(),
+            Prime::_8(p) => p.is_upper_bounded(),
+            Prime::_16(p) => p.is_upper_bounded(),
+            Prime::_32(p) => p.is_upper_bounded(),
+            Prime::_64(p) => p.is_upper_bounded(),
+            Prime::_128(p) => p.is_upper_bounded(),
         }
     }
     fn lower_bound(&self) -> Option<Self> {
-        use Prime::*;
         match self {
-            _8(p) => p.lower_bound().map(|p| p.into()),
-            _16(p) => p.lower_bound().map(|p| p.into()),
-            _32(p) => p.lower_bound().map(|p| p.into()),
-            _64(p) => p.lower_bound().map(|p| p.into()),
-            _128(p) => p.lower_bound().map(|p| p.into()),
+            Prime::_8(p) => p.lower_bound().map(|p| p.into()),
+            Prime::_16(p) => p.lower_bound().map(|p| p.into()),
+            Prime::_32(p) => p.lower_bound().map(|p| p.into()),
+            Prime::_64(p) => p.lower_bound().map(|p| p.into()),
+            Prime::_128(p) => p.lower_bound().map(|p| p.into()),
         }
     }
     fn upper_bound(&self) -> Option<Self> {
-        use Prime::*;
         match self {
-            _8(p) => p.upper_bound().map(|p| p.into()),
-            _16(p) => p.upper_bound().map(|p| p.into()),
-            _32(p) => p.upper_bound().map(|p| p.into()),
-            _64(p) => p.upper_bound().map(|p| p.into()),
-            _128(p) => p.upper_bound().map(|p| p.into()),
+            Prime::_8(p) => p.upper_bound().map(|p| p.into()),
+            Prime::_16(p) => p.upper_bound().map(|p| p.into()),
+            Prime::_32(p) => p.upper_bound().map(|p| p.into()),
+            Prime::_64(p) => p.upper_bound().map(|p| p.into()),
+            Prime::_128(p) => p.upper_bound().map(|p| p.into()),
         }
     }
 }
@@ -138,12 +134,11 @@ impl Count for Prime {
 }
 impl Countable for Prime {
     fn next(&self) -> NumeraResult<Self> {
-        use Prime::*;
         match self {
-            _8(p) => p.next().map(|p| p.into()),
-            _16(p) => p.next().map(|p| p.into()),
+            Prime::_8(p) => p.next().map(|p| p.into()),
+            Prime::_16(p) => p.next().map(|p| p.into()),
             #[cfg(feature = "std")]
-            _32(p) => p.next().map(|p| p.into()),
+            Prime::_32(p) => p.next().map(|p| p.into()),
             // IMPROVE for bigger sized
             // IMPROVE for no-std
             // #[cfg(not(feature = "std"))]
@@ -151,13 +146,12 @@ impl Countable for Prime {
         }
     }
     fn previous(&self) -> NumeraResult<Self> {
-        use Prime::*;
         match self {
             // Prime8(p) => Prime8(p.),
-            _8(p) => p.previous().map(|p| p.into()),
-            _16(p) => p.previous().map(|p| p.into()),
+            Prime::_8(p) => p.previous().map(|p| p.into()),
+            Prime::_16(p) => p.previous().map(|p| p.into()),
             #[cfg(feature = "std")]
-            _32(p) => p.previous().map(|p| p.into()),
+            Prime::_32(p) => p.previous().map(|p| p.into()),
             // IMPROVE for bigger sized
             // IMPROVE for no-std
             // #[cfg(not(feature = "std"))]

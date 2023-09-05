@@ -162,13 +162,12 @@ mod between_primes {
         type Error = NumeraError;
         #[inline]
         fn try_from(value: Prime) -> NumeraResult<Prime8> {
-            use Prime::*;
             match value {
-                _8(p) => Ok(p),
-                _16(p) => Ok(p.try_into()?),
-                _32(p) => Ok(p.try_into()?),
-                _64(p) => Ok(p.try_into()?),
-                _128(p) => Ok(p.try_into()?),
+                Prime::_8(p) => Ok(p),
+                Prime::_16(p) => Ok(p.try_into()?),
+                Prime::_32(p) => Ok(p.try_into()?),
+                Prime::_64(p) => Ok(p.try_into()?),
+                Prime::_128(p) => Ok(p.try_into()?),
             }
         }
     }
