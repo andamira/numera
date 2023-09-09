@@ -23,11 +23,24 @@ publish = true
 # ------------------------------------------------------------------------------
 
 [features]
+
+#* capability features *#
 default = ["all_fast"]
+#
+all = ["big", "float", "try_from"] # all features
+all_fast = ["big", "float"] # all features except slowest
+all_nostd = ["float", "try_from"] # all no_std features
+all_nostd_fast = ["float"] # all no_std features except slowest
+# features that increase compilation time
+try_from = [] # TryFrom conversions
+# extra numbers
+big = ["alloc", "dashu-base", "dashu-int"] # big numbers
+float = ["decstr", "half", "twofloat"] # floating-point
+
+dashu-int = ["dep:dashu-int", "std"]
 
 #* environment features *#
-# (not enabling "std" declares the library as "no_std")
-std = [ # enables functionality that depend on the standard library
+std = [ # disables `no_std` mode and enables `std` functionality
 	"alloc",
 	"devela/std",
 	"primal-sieve",
@@ -37,42 +50,24 @@ std = [ # enables functionality that depend on the standard library
 	"half?/std", # + alloc
 	"twofloat?/math_funcs", # + std
 ]
-alloc = ["half?/alloc"] # enables functionality that depend on allocation
-no_std = ["devela/no_std"] # enables functionality incompatible with the standard library
+alloc = ["half?/alloc"] # enables `alloc` functionality
+no_std = ["devela/no_std"] # enables functionality incompatible with `std`
 
 #* safety features *#
-safe = [] # forbids unsafe at the crate level
+unsafest = ["unsafe", "devela/unsafest"] # enables unsafe features recursively
+unsafe = [] # enables all the unsafe sub-features
+safe = [] # forbids unsafe in this crate
 safest = ["safe", "devela/safest"] # forbids unsafe recursively
-unsafe = [] # enables the unsafe features
-unsafest = ["unsafe", "devela/unsafest"] # enables unsafe recursively
 
 #* nightly features *#
-nightly = [] # enables the nightly features
-nightly_docs = [ # features for docs.rs
-	"nightly",
-	"std",
-	"all",
-	"devela/nightly_docs",
+nightly = [] # enables nightly features
+nightly_docs = [ # enables features for docs.rs
+	"nightly", "std", "all",
 ]
 
 #* deprecated features *#
 no-std = ["no_std"] # since 0.4.0
 non-safe = ["unsafe"] # since 0.4.0
-
-#* other features *#
-all = ["big", "float", "try_from"] # all features
-all_fast = ["big", "float"] # all features except slowest
-all_nostd = ["float", "try_from"] # all no_std features
-all_nostd_fast = ["float"] # all no_std features except slowest
-
-# features that increase compilation time
-try_from = [] # TryFrom conversions
-
-# extra numbers
-big = ["alloc", "dashu-base", "dashu-int"] # big numbers
-float = ["decstr", "half", "twofloat"] # floating-point
-
-dashu-int = ["dep:dashu-int", "std"]
 
 # ------------------------------------------------------------------------------
 
