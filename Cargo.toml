@@ -23,7 +23,7 @@ publish = true
 # ------------------------------------------------------------------------------
 
 [features]
-default = ["std", "all_fast"]
+default = ["all_fast"]
 
 #* environment features *#
 # (not enabling "std" declares the library as "no_std")
