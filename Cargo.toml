@@ -25,17 +25,13 @@ publish = true
 [features]
 
 #* capability features *#
-default = ["all_fast"]
-full = ["big", "float", "try_from"]
-
-all_fast = ["big", "float"] # all features except slowest
-all_nostd = ["float", "try_from"] # all no_std features
-all_nostd_fast = ["float"] # all no_std features except slowest
-# features that increase compilation time
-try_from = [] # TryFrom conversions
-# extra numbers
-big = ["alloc", "dashu-base", "dashu-int"] # big numbers
-float = ["decstr", "half", "twofloat"] # floating-point
+default = []
+full = ["full_fast", "try_from"] # enables all the capabilities
+full_fast = ["big", "float"] # enables all the fast capabilities
+# thematic capabilities:
+big = ["alloc", "dashu-base", "dashu-int"] # adds support for big numbers
+float = ["decstr", "half", "twofloat"] # adds extra floating-point formats
+try_from = [] # adds many TryFrom conversions (increases compilation time)
 
 #* environment features *#
 std = [ # disables `no_std` mode and enables `std` functionality
@@ -67,6 +63,9 @@ nightly_docs = [ # enables features for docs.rs
 no-std = ["no_std"] # since 0.4.0
 non-safe = ["unsafe"] # since 0.4.0
 all = ["full"] # since 0.5.0
+all_fast = ["full_fast"] # since 0.5.0
+all_nostd = ["float", "try_from"] # since 0.5.0
+all_nostd_fast = ["float"] # since 0.5.0
 
 # ------------------------------------------------------------------------------
 

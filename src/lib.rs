@@ -31,6 +31,9 @@ compile_error!("You can't enable the `safe` and `unsafe` features at the same ti
 devela::deprecate_feature![old: "no-std", new: "no_std", since: "0.4.0"];
 devela::deprecate_feature![old: "non-safe", new: "unsafe", since: "0.4.0"];
 devela::deprecate_feature![old: "all", new: "full", since: "0.5.0"];
+devela::deprecate_feature![old: "all_fast", new: "full_fast",since: "0.5.0"];
+devela::deprecate_feature![old: "all_nostd", since: "0.5.0"];
+devela::deprecate_feature![old: "all_nostd_fast", since: "0.5.0"];
 
 pub mod error;
 pub mod number;
