@@ -37,8 +37,6 @@ try_from = [] # TryFrom conversions
 big = ["alloc", "dashu-base", "dashu-int"] # big numbers
 float = ["decstr", "half", "twofloat"] # floating-point
 
-dashu-int = ["dep:dashu-int", "std"]
-
 #* environment features *#
 std = [ # disables `no_std` mode and enables `std` functionality
 	"alloc",
