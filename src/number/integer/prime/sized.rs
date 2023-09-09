@@ -377,8 +377,12 @@ impl Prime32 {
     /// assert_eq![Prime32::MIN, Prime32::new_nth(0)?];
     /// assert_eq![Prime32::from(Prime8::MAX), Prime32::new_nth(53)?];
     /// assert_eq![Prime32::from(Prime16::MAX), Prime32::new_nth(6_541)?];
-    /// assert_eq![Prime32::MAX, Prime32::new_nth(203_280_220)?];
-    /// assert![Prime32::new_nth(203_280_221).is_err()];
+    ///
+    /// #[cfg(feature = "std")] // too slow otherwise
+    /// {
+    ///     assert_eq![Prime32::MAX, Prime32::new_nth(203_280_220)?];
+    ///     assert![Prime32::new_nth(203_280_221).is_err()];
+    /// }
     /// # Ok(()) }
     /// ```
     #[inline]
@@ -525,8 +529,12 @@ impl Prime64 {
     /// assert_eq![Prime64::MIN, Prime64::new_nth(0)?];
     /// assert_eq![Prime64::from(Prime8::MAX), Prime64::new_nth(53)?];
     /// assert_eq![Prime64::from(Prime16::MAX), Prime64::new_nth(6_541)?];
-    /// assert_eq![Prime64::from(Prime32::MAX), Prime64::new_nth(203_280_220)?];
-    /// assert![Prime64::new_nth(203_280_221).is_err()];
+    ///
+    /// #[cfg(feature = "std")] // too slow otherwise
+    /// {
+    ///     assert_eq![Prime64::from(Prime32::MAX), Prime64::new_nth(203_280_220)?];
+    ///     assert![Prime64::new_nth(203_280_221).is_err()];
+    /// }
     /// # Ok(()) }
     /// ```
     #[inline]
@@ -679,8 +687,12 @@ impl Prime128 {
     /// assert_eq![Prime128::MIN, Prime128::new_nth(0)?];
     /// assert_eq![Prime128::from(Prime8::MAX), Prime128::new_nth(53)?];
     /// assert_eq![Prime128::from(Prime16::MAX), Prime128::new_nth(6_541)?];
-    /// assert_eq![Prime128::from(Prime32::MAX), Prime128::new_nth(203_280_220)?];
-    /// assert![Prime128::new_nth(203_280_221).is_err()];
+    ///
+    /// #[cfg(feature = "std")] // too slow otherwise
+    /// {
+    ///     assert_eq![Prime128::from(Prime32::MAX), Prime128::new_nth(203_280_220)?];
+    ///     assert![Prime128::new_nth(203_280_221).is_err()];
+    /// }
     /// # Ok(()) }
     /// ```
     #[inline]
