@@ -26,8 +26,8 @@ publish = true
 
 #* capability features *#
 default = ["all_fast"]
-#
-all = ["big", "float", "try_from"] # all features
+full = ["big", "float", "try_from"]
+
 all_fast = ["big", "float"] # all features except slowest
 all_nostd = ["float", "try_from"] # all no_std features
 all_nostd_fast = ["float"] # all no_std features except slowest
@@ -62,12 +62,13 @@ safest = ["safe", "devela/safest"] # forbids unsafe recursively
 #* nightly features *#
 nightly = [] # enables nightly features
 nightly_docs = [ # enables features for docs.rs
-	"nightly", "std", "all",
+	"nightly", "full", "std",
 ]
 
 #* deprecated features *#
 no-std = ["no_std"] # since 0.4.0
 non-safe = ["unsafe"] # since 0.4.0
+all = ["full"] # since 0.5.0
 
 # ------------------------------------------------------------------------------
 
