@@ -13,7 +13,7 @@ include = [
 	"/src/**/*.rs",
 	"/src/**/*.md",
 	"/res/*.html",
-	"/LICENSE-*.md",
+	"/LICENSE-*",
 	"/README.md",
 ]
 categories = ["mathematics", "no-std::no-alloc"]
