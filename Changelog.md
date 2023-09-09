@@ -15,14 +15,22 @@ The format is based on [Keep a Changelog], and this project adheres to
 - remove reexported items at the root.
 
 ### Changed
-- rename traits in plural form to singular form.
-- rename enums in singular form to plural form.
+- update `devela` to `0.9.0`.
+- remove `std` from default features.
 - rename enums prefixed by `Any` to `All`.
+- rename enums in singular form to plural form.
+- rename traits in plural form to singular form.
+- deprecate features: `all_nostd`, `all_nostd_fast`.
+- deprecate and rename feature `all_fast` to `full_fast`.
+- deprecate and rename feature `all` to `full`.
 
 ### Fixed
-- avoid destructuring enums.
+- fix prime doc examples to avoid long exec times.
+- fix including licenses in crate.
+- fix enabling `devela/alloc`.
 - misc. internal refactoring.
-- fix some tests.
+- avoid destructuring enums.
+- fix several tests.
 
 ## [0.4.0] - 2023-08-29
 
